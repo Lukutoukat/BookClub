@@ -7,8 +7,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.ts"
+    "start": "node index.ts",
+    "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
   },
   "dependencies": {
     "express": "^5.2.1",
@@ -16,6 +18,8 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
-    "@types/node": "^25.7.0"
+    "@types/node": "^25.7.0",
+    "concurrently": "^9.2.1",
+    "typescript": "^6.0.3"
   }
 }

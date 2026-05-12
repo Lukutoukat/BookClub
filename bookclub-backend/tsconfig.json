@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node", "express"]
+    "types": ["node", "express"],
+    "noEmit": true
   }
 }
