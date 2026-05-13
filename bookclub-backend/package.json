@@ -13,10 +13,12 @@
     "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "pg": "^8.20.0"
   },
   "devDependencies": {
+    "@types/axios": "^0.9.36",
     "@types/express": "^5.0.6",
     "@types/node": "^25.7.0",
     "concurrently": "^9.2.1",
