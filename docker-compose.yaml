@@ -3,11 +3,12 @@ services:
     image: postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: username
       POSTGRES_PASSWORD: password
       POSTGRES_DB: clubdb
 
   bookclub-backend:
+    build: ./bookclub-backend
     image: bookclub-backend
     environment:
       - POSTGRES_HOST=db
@@ -19,6 +20,9 @@ services:
       - db
 
   bookclub-frontend:
+    build:
+      context: ./bookclub-front
+      dockerfile: Dockerfile.dev
     image: bookclub-frontend
     ports:
       - 5173:5173
