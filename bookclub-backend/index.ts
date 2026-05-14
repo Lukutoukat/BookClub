@@ -12,7 +12,12 @@ app.get('/', (_req, res) => {
 })
 
 app.get('/api/books', (_req, res) => {
-  res.send(['book1', 'book2', 'book3'])
+  res.send([
+    { content: 'book1' },
+    { content: 'book2' },
+    { content: 'book3' }
+  ])
+
   console.log('smth happened in backend')
 })
 const PORT = 3003;
