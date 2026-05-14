@@ -27,7 +27,7 @@ const App = () => {
       <h1>Books</h1>
 
       <ul>
-        {books.map((book, index) => (
+        {books.map((book) => (
           <li key={book.isbn}>{book.name}</li>
         ))}
       </ul>

@@ -1,5 +1,6 @@
 import express from 'express'
 const app = express()
+import { pool } from './db.ts'
 
 app.use(express.json())
 app.use(express.static('dist'))
@@ -12,25 +13,17 @@ app.get('/', (_req, res) => {
   res.send('<h1>Hello World!<h1>')
 })
 
-// Lisään mock-dataa Books varten (Hertta)
-let books = [
-  {
-    isbn: '1',
-    name: 'Book 1',
-    author: '',
-    year: '',
-    pages: '',
-    comment: '',
-    language: '',
-    genre: ''
+app.get('/api/books', async (_req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM "Book"')
+    res.json(result.rows)
+  } catch (error) {
+    console.error('GET /api/books error:', error)
+    res.status(500).json({ error: 'database error' })
   }
-]
-
-app.get('/api/books', (_req, res) => {
-  res.json(books)
 })
 
-app.post('/api/books', (_req, res) => {
+app.post('/api/books', async (_req, res) => {
   const newBook = {
     isbn: String(Date.now()),
     name: _req.body.name,
@@ -42,8 +35,25 @@ app.post('/api/books', (_req, res) => {
     genre: ''
   }
 
-  books = books.concat(newBook)
-  res.json(newBook)
+  const values = [newBook.isbn,
+            newBook.name,
+            newBook.author,
+            newBook.year,
+            newBook.pages,
+            newBook.comment,
+            newBook.language,
+            newBook.genre]
+
+  try {
+    const query = `INSERT INTO "Book" (isbn, name, author, year, pages, comment, language, genre)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
+
+    await pool.query(query, values)
+    res.json(newBook)
+  } catch (error) {
+    console.error('POST /api/books error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
 })
 
   console.log('smth happened in backend')
