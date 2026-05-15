@@ -22,7 +22,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./bookclub-backend
+          context: .
           file: ./bookclub-backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/demoapp:1
