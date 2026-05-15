@@ -3,6 +3,10 @@
     "axios": "^1.16.1"
   },
   "devDependencies": {
+<<<<<<< Updated upstream
     "@types/express": "^5.0.6"
+=======
+    "@types/pg": "^8.20.0"
+>>>>>>> Stashed changes
   }
 }

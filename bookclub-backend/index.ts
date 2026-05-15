@@ -56,7 +56,23 @@ app.post('/api/books', async (_req, res) => {
   }
 })
 
+app.delete('/api/books/:isbn', async (_req, res) => {
+  const isbn = _req.params.isbn
+
+  try {
+    await pool.query(
+      'DELETE FROM "Book" WHERE isbn = $1', [isbn]
+    )
+    res.status(204).end()
+  } catch(error) {
+    console.error('DELETE /api/books error: ', error)
+    res.status(500).json({error: 'database error' })
+  }
+})
+
   console.log('smth happened in backend')
+  console.log('Books')
+
 
 const PORT = 3003
 

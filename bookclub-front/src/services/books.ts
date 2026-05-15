@@ -27,4 +27,8 @@ const create = (book: CreateBook) => {
     .then(res => res.data)
 }
 
-export default {getAll, create}
+const remove = (isbn: string) => {
+    return axios.delete(`${baseUrl}/${isbn}`)
+}
+
+export default {getAll, create, remove}

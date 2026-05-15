@@ -6,6 +6,7 @@ const App = () => {
   const [books, setBooks] = useState<Book[]>([])
   const [newName, setNewName] = useState('')
 
+  console.log('FRONT IS RUNNING')
   useEffect(() => {
     bookService.getAll().then(setBooks)
   }, [])
@@ -22,13 +23,27 @@ const App = () => {
       setNewName('')
     })
   }
+
+  const deleteBook = (isbn: string) => {
+    bookService.remove(isbn)
+    .then(() => {
+      setBooks(books.filter(book => book.isbn !== isbn))
+    })
+  }
+
   return (
     <div>
       <h1>Books</h1>
 
       <ul>
         {books.map((book) => (
-          <li key={book.isbn}>{book.name}</li>
+          <li key={book.isbn}>
+            {book.name}
+
+            <button onClick={() => deleteBook(book.isbn)}>
+                DELETE
+            </button>
+          </li>
         ))}
       </ul>
 
