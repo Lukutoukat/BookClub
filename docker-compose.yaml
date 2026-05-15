@@ -6,23 +6,20 @@ services:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
       POSTGRES_DB: clubdb
+    volumes:
+      - ./bookclub-backend/database.sql:/docker-entrypoint-initdb.d/init.sql
 
   bookclub-backend:
-    build: ./bookclub-backend
+    container_name: bookclub-backend
+    build:
+      context: .
+      dockerfile: ./bookclub-backend/Dockerfile
     image: bookclub-backend
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD=password
-      - REQUEST_ORIGIN=http://localhost:5173
+      - REQUEST_ORIGIN=localhost:3003
     ports:
       - "13000:3003"
     depends_on:
       - db
-
-  bookclub-frontend:
-    build:
-      context: ./bookclub-front
-      dockerfile: Dockerfile.dev
-    image: bookclub-frontend
-    ports:
-      - 5173:5173

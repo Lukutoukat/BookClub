@@ -1,22 +1,65 @@
-import express from 'express';
-const app = express();
+import express from 'express'
+const app = express()
+import { pool } from './db.ts'
 
+app.use(express.json())
 app.use(express.static('dist'))
 
 app.get('/ping', (_req, res) => {
-  res.send('pong');
-});
+  res.send('pong')
+})
 
 app.get('/', (_req, res) => {
   res.send('<h1>Hello World!<h1>')
 })
 
-app.get('/api/books', (_req, res) => {
-  res.send(['book1', 'book2', 'book3'])
-  console.log('smth happened in backend')
+app.get('/api/books', async (_req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM "Book"')
+    res.json(result.rows)
+  } catch (error) {
+    console.error('GET /api/books error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
 })
-const PORT = 3003;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.post('/api/books', async (_req, res) => {
+  const newBook = {
+    isbn: String(Date.now()),
+    name: _req.body.name,
+    author: '',
+    year: '',
+    pages: '',
+    comment: '',
+    language: '',
+    genre: ''
+  }
+
+  const values = [newBook.isbn,
+            newBook.name,
+            newBook.author,
+            newBook.year,
+            newBook.pages,
+            newBook.comment,
+            newBook.language,
+            newBook.genre]
+
+  try {
+    const query = `INSERT INTO "Book" (isbn, name, author, year, pages, comment, language, genre)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
+
+    await pool.query(query, values)
+    res.json(newBook)
+  } catch (error) {
+    console.error('POST /api/books error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
+})
+
+  console.log('smth happened in backend')
+
+const PORT = 3003
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`)
+})

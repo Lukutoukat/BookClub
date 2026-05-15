@@ -1,0 +1,4 @@
+**/node_modules
+
+bookclub-front/dist
+bookclub-backend/dist

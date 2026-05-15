@@ -1,24 +1,45 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import bookService from './services/books'
+import type { Book, CreateBook } from  './services/books'
 
-const baseUrl = '/api/books'
 const App = () => {
-  const [books, setBooks] = useState([])
+  const [books, setBooks] = useState<Book[]>([])
+  const [newName, setNewName] = useState('')
 
   useEffect(() => {
-    axios
-      .get(baseUrl)
-      .then(response => {
-        console.log(books)
-        setBooks(response.data)
-    })
+    bookService.getAll().then(setBooks)
   }, [])
+
+  const addBook = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const newBook: CreateBook = {
+      name: newName
+    }
+
+    bookService.create(newBook).then(returned => {
+      setBooks(books.concat(returned))
+      setNewName('')
+    })
+  }
   return (
     <div>
-      <h1>books</h1>
+      <h1>Books</h1>
+
       <ul>
-        {books.map(book => <li>{book}</li>)}
+        {books.map((book) => (
+          <li key={book.isbn}>{book.name}</li>
+        ))}
       </ul>
+
+      <form onSubmit={addBook}>
+        <input
+          value={newName}
+          onChange={(event) => setNewName(event.target.value)}
+        />
+
+        <button type="submit">save</button>
+      </form>
     </div>
   )
 }
