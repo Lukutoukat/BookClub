@@ -6,8 +6,8 @@ app.use(express.json())
 app.use(express.static('dist'))
 
 app.get('/ping', (_req, res) => {
-  res.send('pong');
-});
+  res.send('pong')
+})
 
 app.get('/', (_req, res) => {
   res.send('<h1>Hello World!<h1>')
@@ -58,8 +58,8 @@ app.post('/api/books', async (_req, res) => {
 
   console.log('smth happened in backend')
 
-const PORT = 3003;
+const PORT = 3003
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log(`Server running on port ${PORT}`)
+})
