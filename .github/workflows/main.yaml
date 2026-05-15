@@ -23,6 +23,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./bookclub-backend/Dockerfile
+          file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/demoapp:1
+          tags: ${{ secrets.DOCKER_USERNAME }}/bookclub:latest

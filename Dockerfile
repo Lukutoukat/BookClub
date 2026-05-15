@@ -2,7 +2,7 @@
 FROM node:24.14.0-alpine AS frontend-builder
 WORKDIR /frontend
 
-COPY ../bookclub-front/ ./
+COPY ./bookclub-front/ ./
 RUN npm install
 RUN npm run build
 
