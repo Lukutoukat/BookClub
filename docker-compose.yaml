@@ -10,7 +10,10 @@ services:
       - ./bookclub-backend/database.sql:/docker-entrypoint-initdb.d/init.sql
 
   bookclub-backend:
-    build: ./bookclub-backend
+    container_name: bookclub-backend
+    build:
+      context: .
+      dockerfile: ./bookclub-backend/Dockerfile
     image: bookclub-backend
     environment:
       - POSTGRES_HOST=db
