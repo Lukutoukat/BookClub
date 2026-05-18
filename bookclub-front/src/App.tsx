@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import bookService from './services/books'
 import type { Book, CreateBook } from  './services/books'
 
@@ -15,42 +15,36 @@ const App = () => {
     genre: ''
   })
 
-
   useEffect(() => {
     void bookService.getAll().then(setBooks)
   }, [])
 
-  const addBook = (event: React.FormEvent<HTMLFormElement>) => {
+  const addBook = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    void bookService.create(newBook).then((returned) => {
-      setBooks((books) => books.concat(returned))
-
-      setNewBook({
-        isbn: '',
-        name: '',
-        author: '',
-        year: '',
-        pages: '',
-        comment: '',
-        language: '',
-        genre: ''
-      })
+    const returned = await bookService.create(newBook)
+    setBooks(books.concat(returned))
+    setNewBook({
+      isbn: '',
+      name: '',
+      author: '',
+      year: '',
+      pages: '',
+       comment: '',
+      language: '',
+      genre: ''
     })
   }
 
-  const deleteBook = (isbn: string) => {
-    void bookService.remove(isbn)
-    .then(() => {
-      setBooks((books) => books.filter(book => book.isbn !== isbn))
-    })
+  const deleteBook = async (isbn: string) => {
+    await bookService.remove(isbn)
+    setBooks(books.filter(book => book.isbn !== isbn))
   }
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target
-
     setNewBook({
       ...newBook,
       [name]: value
@@ -60,7 +54,6 @@ const App = () => {
   return (
     <div>
       <h1>Books</h1>
-
       <ul>
         {books.map((book) => (
           <li key={book.isbn}>
@@ -72,14 +65,12 @@ const App = () => {
             Language: {book.language}<br />
             Genre: {book.genre}<br />
             Comment: {book.comment}
-
             <button onClick={() => deleteBook(book.isbn)}>
                 DELETE
             </button>
           </li>
         ))}
       </ul>
-
       <form onSubmit={addBook}>
         <div>
           ISBN:
@@ -89,7 +80,6 @@ const App = () => {
             onChange={handleChange}
           />
         </div>
-
         <div>
           Name:
           <input
@@ -98,7 +88,6 @@ const App = () => {
             onChange={handleChange}
           />
         </div>
-
         <div>
           Author:
           <input
@@ -107,7 +96,6 @@ const App = () => {
             onChange={handleChange}
           />
         </div>
-
         <div>
           Year:
           <input
@@ -116,7 +104,6 @@ const App = () => {
             onChange={handleChange}
           />
         </div>
-
         <div>
           Pages:
           <input
@@ -125,7 +112,6 @@ const App = () => {
             onChange={handleChange}
           />
         </div>
-
         <div>
           Language:
           <input
@@ -134,7 +120,6 @@ const App = () => {
             onChange={handleChange}
           />
         </div>
-
         <div>
           Genre:
           <input
@@ -143,7 +128,6 @@ const App = () => {
             onChange={handleChange}
           />
         </div>
-
         <div>
           Comment:
           <textarea
@@ -152,7 +136,6 @@ const App = () => {
             onChange={handleChange}
           />
         </div>
-
         <button type="submit">save</button>
       </form>
     </div>
