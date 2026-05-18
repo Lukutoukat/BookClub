@@ -6,7 +6,7 @@ app.use(express.json())
 app.use(express.static('dist'))
 
 interface Book {
-  isbn: number,
+  isbn: string,
   name: string,
   author: string,
   year: number,
