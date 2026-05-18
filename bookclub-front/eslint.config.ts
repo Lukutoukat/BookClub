@@ -33,6 +33,12 @@ export default defineConfig([
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/restrict-plus-operands': 'off',
+      '@typescript-eslint/no-inferrable-types': ['error', { 'ignoreParameters': false }],
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/prefer-nullish-coalescing': 'error',
+      '@typescript-eslint/prefer-optional-chain': 'error',
+      '@typescript-eslint/no-array-constructor': 'error',
       'no-console': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'error',
