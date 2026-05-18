@@ -5,6 +5,17 @@ import { pool } from './db.ts'
 app.use(express.json())
 app.use(express.static('dist'))
 
+interface Book {
+  isbn: string,
+  name: string,
+  author: string,
+  year: number,
+  pages: number,
+  comment: string,
+  language: string,
+  genre: string
+}
+
 app.get('/ping', (_req, res) => {
   res.send('pong')
 })
@@ -24,7 +35,7 @@ app.get('/api/books', async (_req, res) => {
 })
 
 app.post('/api/books', async (_req, res) => {
-  const newBook = {
+  const newBook: Book = {
     isbn: _req.body.isbn,
     name: _req.body.name,
     author: _req.body.author,
@@ -57,7 +68,7 @@ app.post('/api/books', async (_req, res) => {
 })
 
 app.delete('/api/books/:isbn', async (_req, res) => {
-  const isbn = _req.params.isbn
+  const isbn: string = _req.params.isbn
 
   try {
     await pool.query(
