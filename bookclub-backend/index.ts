@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { type Request, type Response } from 'express'
 const app = express()
 import { pool } from './db.ts'
 
@@ -24,7 +24,7 @@ app.get('/', (_req, res) => {
   res.send('<h1>Hello World!<h1>')
 })
 
-app.get('/api/books', async (_req, res) => {
+app.get('/api/books', async (_req: Request, res: Response) => {
   try {
     const result = await pool.query('SELECT * FROM "Book"')
     res.json(result.rows)
@@ -34,17 +34,8 @@ app.get('/api/books', async (_req, res) => {
   }
 })
 
-app.post('/api/books', async (_req, res) => {
-  const newBook: Book = {
-    isbn: _req.body.isbn,
-    name: _req.body.name,
-    author: _req.body.author,
-    year: _req.body.year,
-    pages: _req.body.pages,
-    comment: _req.body.comment,
-    language: _req.body.language,
-    genre: _req.body.genre
-  }
+app.post('/api/books', async (req: Request<unknown, unknown, Book>, res: Response) => {
+  const newBook: Book = req.body
 
   const values = [newBook.isbn,
             newBook.name,
