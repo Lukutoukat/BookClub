@@ -1,17 +1,24 @@
 name: Build and Push Docker Image
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Lint
     branches:
       - main
+    types:
+      - completed
 
 jobs:
   build-and-push:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
