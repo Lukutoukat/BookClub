@@ -9,14 +9,18 @@
   "scripts": {
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
     "start": "node index.ts",
     "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
   },
   "dependencies": {
     "axios": "^1.16.1",
     "cors": "^2.8.6",
+    "eslint-plugin-react": "^7.37.5",
     "express": "^5.2.1",
-    "pg": "^8.20.0"
+    "jiti": "^2.7.0",
+    "pg": "^8.20.0",
+    "typescript-eslint": "^8.59.3"
   },
   "devDependencies": {
     "@types/axios": "^0.9.36",
@@ -24,6 +28,7 @@
     "@types/node": "^25.7.0",
     "@types/pg": "^8.20.0",
     "concurrently": "^9.2.1",
+    "eslint": "^10.4.0",
     "typescript": "^6.0.3"
   }
 }
