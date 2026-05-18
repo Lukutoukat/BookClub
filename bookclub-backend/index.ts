@@ -25,14 +25,14 @@ app.get('/api/books', async (_req, res) => {
 
 app.post('/api/books', async (_req, res) => {
   const newBook = {
-    isbn: String(Date.now()),
+    isbn: _req.body.isbn,
     name: _req.body.name,
-    author: '',
-    year: '',
-    pages: '',
-    comment: '',
-    language: '',
-    genre: ''
+    author: _req.body.author,
+    year: _req.body.year,
+    pages: _req.body.pages,
+    comment: _req.body.comment,
+    language: _req.body.language,
+    genre: _req.body.genre
   }
 
   const values = [newBook.isbn,

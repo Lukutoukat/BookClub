@@ -14,8 +14,16 @@ export interface Book {
 }
 
 export interface CreateBook {
+    isbn: string
     name: string
+    author: string
+    year: string
+    pages: string
+    comment: string
+    language: string
+    genre: string
 }
+
 
 const getAll = () => {
     return axios.get<Book[]>(baseUrl)
