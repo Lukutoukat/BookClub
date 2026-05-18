@@ -14,8 +14,16 @@ export interface Book {
 }
 
 export interface CreateBook {
+    isbn: string
     name: string
+    author: string
+    year: string
+    pages: string
+    comment: string
+    language: string
+    genre: string
 }
+
 
 const getAll = () => {
     return axios.get<Book[]>(baseUrl)
@@ -27,4 +35,8 @@ const create = (book: CreateBook) => {
     .then(res => res.data)
 }
 
-export default {getAll, create}
+const remove = (isbn: string) => {
+    return axios.delete(`${baseUrl}/${isbn}`)
+}
+
+export default {getAll, create, remove}
