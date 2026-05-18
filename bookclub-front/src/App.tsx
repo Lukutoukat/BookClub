@@ -15,9 +15,8 @@ const App = () => {
     genre: ''
   })
 
-  console.log('FRONT IS RUNNING')
   useEffect(() => {
-    bookService.getAll().then(setBooks)
+    void bookService.getAll().then(setBooks)
   }, [])
 
   const addBook = async (event: React.SyntheticEvent<HTMLFormElement>) => {
