@@ -6,7 +6,36 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - name: backend
+            working-directory: bookclub-backend
+          - name: frontend
+            working-directory: bookclub-front
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '26'
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.working-directory }}
+        run: npm ci
+
+      - name: Lint ${{ matrix.name }}
+        working-directory: ${{ matrix.working-directory }}
+        run: npm run lint
+
   build-and-push:
+    needs: lint
     runs-on: ubuntu-latest
 
     steps:
