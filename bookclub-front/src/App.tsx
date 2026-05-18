@@ -16,16 +16,15 @@ const App = () => {
   })
 
 
-  console.log('FRONT IS RUNNING')
   useEffect(() => {
-    bookService.getAll().then(setBooks)
+    void bookService.getAll().then(setBooks)
   }, [])
 
   const addBook = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    bookService.create(newBook).then((returned) => {
-      setBooks(books.concat(returned))
+    void bookService.create(newBook).then((returned) => {
+      setBooks((books) => books.concat(returned))
 
       setNewBook({
         isbn: '',
@@ -41,9 +40,9 @@ const App = () => {
   }
 
   const deleteBook = (isbn: string) => {
-    bookService.remove(isbn)
+    void bookService.remove(isbn)
     .then(() => {
-      setBooks(books.filter(book => book.isbn !== isbn))
+      setBooks((books) => books.filter(book => book.isbn !== isbn))
     })
   }
 
