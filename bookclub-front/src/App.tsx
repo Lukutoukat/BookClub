@@ -1,3 +1,11 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
+
 import React, { useState, useEffect } from 'react'
 
 import {
@@ -224,49 +232,41 @@ const AppContent = () => {
       [name]: value
     })
   }
-
-  return (
-    <Routes>
-      <Route
-        path="/registration"
-        element={
-          <RegistrationPage
-            newUser={newUser}
-            handleUserChange={
-              handleUserChange
-            }
-            addUser={addUser}
-            registered={registered}
-          />
-        }
-      />
-      <Route
-        path="/"
-        element={
-          <BooksPage
-            books={books}
-            deleteBook={deleteBook}
-            addBook={addBook}
-            newBook={newBook}
-            handleBookChange={
-              handleBookChange
-            }
-            registered={registered}
-            logout={logout}
-          />
-        }
-      />
-    </Routes>
-  )
-}
-
-const App = () => {
-  return (
-    <BrowserRouter>
-      <AppContent 
-      />
-    </BrowserRouter>
-  )
+  const App = () => {
+    return (
+      <Routes>
+        <Route
+          path="/registration"
+          element={
+            <RegistrationPage
+              newUser={newUser}
+              handleUserChange={
+                handleUserChange
+              }
+              addUser={addUser}
+              registered={registered}
+            />
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <BooksPage
+              books={books}
+              deleteBook={deleteBook}
+              addBook={addBook}
+              newBook={newBook}
+              handleBookChange={
+                handleBookChange
+              }
+              registered={registered}
+              logout={logout}
+            />
+          }
+        />
+      </Routes>
+    )
+  }
 }
 
 export default App

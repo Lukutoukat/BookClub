@@ -1,8 +1,8 @@
-import axios from "axios"
+import axios from 'axios'
 
 const baseUrl = '/api/books'
 
-export interface Book {
+export interface BookFields {
     isbn: string
     name: string
     author: string
@@ -13,30 +13,19 @@ export interface Book {
     genre: string
 }
 
-export interface CreateBook {
-    isbn: string
-    name: string
-    author: string
-    year: string
-    pages: string
-    comment: string
-    language: string
-    genre: string
-}
-
+export type Book = BookFields
+export type CreateBook = BookFields
 
 const getAll = () => {
-    return axios.get<Book[]>(baseUrl)
-    .then(res => res.data)
+    return axios.get<Book[]>(baseUrl).then((res) => res.data)
 }
 
 const create = (book: CreateBook) => {
-    return axios.post<Book>(baseUrl, book)
-    .then(res => res.data)
+    return axios.post<Book>(baseUrl, book).then((res) => res.data)
 }
 
 const remove = (isbn: string) => {
     return axios.delete(`${baseUrl}/${isbn}`)
 }
 
-export default {getAll, create, remove}
+export default { getAll, create, remove }
