@@ -6,8 +6,6 @@ services:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
       POSTGRES_DB: clubdb
-    volumes:
-      - ./bookclub-backend/database.sql:/docker-entrypoint-initdb.d/init.sql
 
   bookclub-backend:
     container_name: bookclub-backend
@@ -16,6 +14,7 @@ services:
       dockerfile: Dockerfile
     image: bookclub-backend
     environment:
+      - DATABASE_URL=postgresql://username:password@db:5432/clubdb
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD=password
       - REQUEST_ORIGIN=localhost:3003

@@ -9,6 +9,7 @@
     "noFallthroughCasesInSwitch": true,
     "module": "nodenext",
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "preserveWatchOutput": true
   }
 }

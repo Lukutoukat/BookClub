@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from 'express'
 const app = express()
-import { pool } from './db.ts'
+import { prisma } from './db.ts'
 
 app.use(express.json())
 app.use(express.static('dist'))
@@ -9,8 +9,8 @@ interface Book {
   isbn: string,
   name: string,
   author: string,
-  year: number,
-  pages: number,
+  year: string,
+  pages: string,
   comment: string,
   language: string,
   genre: string
@@ -26,8 +26,8 @@ app.get('/', (_req, res) => {
 
 app.get('/api/books', async (_req: Request, res: Response) => {
   try {
-    const result = await pool.query('SELECT * FROM "Book"')
-    res.json(result.rows)
+    const result = await prisma.book.findMany()
+    res.json(result)
   } catch (error) {
     console.error('GET /api/books error:', error)
     res.status(500).json({ error: 'database error' })
@@ -37,20 +37,22 @@ app.get('/api/books', async (_req: Request, res: Response) => {
 app.post('/api/books', async (req: Request<unknown, unknown, Book>, res: Response) => {
   const newBook: Book = req.body
 
-  const values = [newBook.isbn,
-            newBook.name,
-            newBook.author,
-            newBook.year,
-            newBook.pages,
-            newBook.comment,
-            newBook.language,
-            newBook.genre]
 
+
+  
   try {
-    const query = `INSERT INTO "Book" (isbn, name, author, year, pages, comment, language, genre)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
-
-    await pool.query(query, values)
+    await prisma.book.create({
+      data: {
+        isbn: newBook.isbn,
+        name: newBook.name,
+        author: newBook.author,
+        year: newBook.year,
+        pages: newBook.pages,
+        comment: newBook.comment,
+        language: newBook.language,
+        genre: newBook.genre,
+      }
+    })
     res.json(newBook)
   } catch (error) {
     console.error('POST /api/books error:', error)
@@ -62,9 +64,9 @@ app.delete('/api/books/:isbn', async (_req, res) => {
   const isbn: string = _req.params.isbn
 
   try {
-    await pool.query(
-      'DELETE FROM "Book" WHERE isbn = $1', [isbn]
-    )
+    await prisma.book.delete({
+      where: { isbn }
+    })
     res.status(204).end()
   } catch(error) {
     console.error('DELETE /api/books error: ', error)
