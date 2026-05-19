@@ -8,7 +8,10 @@
     "noFallthroughCasesInSwitch": true,
     "module": "nodenext",
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "files": [],
   "references": [
