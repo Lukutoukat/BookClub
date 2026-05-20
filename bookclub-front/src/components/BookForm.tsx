@@ -82,30 +82,34 @@ const BookForm = ({ addBook }: BookFormProps) => {
   }
 
   return (
-    <Card className="w-full border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur gap-3 py-3 sm:gap-6 sm:py-6">
-      <CardHeader className="border-b border-border/60 px-4 py-2 sm:px-6 sm:py-6">
+    <Card className="w-full border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur gap-3 py-3 sm:gap-4 sm:py-4">
+      <CardHeader className="border-b border-border/60 px-4 py-2 sm:px-6 sm:py-4">
         <CardTitle className="text-lg sm:text-2xl">Add books</CardTitle>
         <CardDescription className="text-[0.7rem] leading-4 sm:text-base sm:leading-6">
           Suggest books to be read by your book club
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-4 pt-1 sm:px-6 sm:pt-6">
-        <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-5">
-          <div className="grid grid-cols-1 gap-1.5 sm:gap-5">
-            <Field
-              label="ISBN"
-              name="isbn"
-              value={newBook.isbn}
-              onChange={handleChange}
-              placeholder="9780141439600"
-            />
-            <Field
-              label="Title"
-              name="name"
-              value={newBook.name}
-              onChange={handleChange}
-              placeholder="A Tale of Two Cities"
-            />
+      <CardContent className="px-4 pt-1 sm:px-6 sm:pt-4">
+        <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
+          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
+            <div className="sm:col-span-2">
+              <Field
+                label="ISBN"
+                name="isbn"
+                value={newBook.isbn}
+                onChange={handleChange}
+                placeholder="9780141439600"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <Field
+                label="Title"
+                name="name"
+                value={newBook.name}
+                onChange={handleChange}
+                placeholder="A Tale of Two Cities"
+              />
+            </div>
             <Field
               label="Author"
               name="author"
@@ -134,13 +138,15 @@ const BookForm = ({ addBook }: BookFormProps) => {
               onChange={handleChange}
               placeholder="English"
             />
-            <Field
-              label="Genre"
-              name="genre"
-              value={newBook.genre}
-              onChange={handleChange}
-              placeholder="Historical fiction"
-            />
+            <div className="sm:col-span-2">
+              <Field
+                label="Genre"
+                name="genre"
+                value={newBook.genre}
+                onChange={handleChange}
+                placeholder="Historical fiction"
+              />
+            </div>
           </div>
 
           <div className="space-y-0.5 sm:space-y-1">
@@ -153,11 +159,11 @@ const BookForm = ({ addBook }: BookFormProps) => {
               value={newBook.comment}
               onChange={handleChange}
               placeholder="Add a short note about why this book should be read."
-              className="min-h-14 text-sm sm:min-h-20"
+              className="min-h-14 text-sm sm:min-h-16"
             />
           </div>
 
-          <div className="flex justify-end border-t border-border/60 pt-2 sm:pt-5">
+          <div className="flex justify-end border-t border-border/60 pt-2 sm:pt-3">
             <Button type="submit" className="h-8 w-full gap-2 px-6 text-sm sm:h-9 sm:w-auto sm:min-w-44">
               Add book
             </Button>
