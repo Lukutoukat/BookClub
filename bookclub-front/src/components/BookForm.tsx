@@ -32,13 +32,15 @@ type FieldProps = {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   placeholder?: string
   type?: string
+  required?: boolean
 }
 
-function Field({ label, name, value, onChange, placeholder, type = 'text' }: FieldProps) {
+function Field({ label, name, value, onChange, placeholder, type = 'text', required = true }: FieldProps) {
   return (
     <div className="space-y-0.5 sm:space-y-1">
       <Label htmlFor={name} className="text-[0.68rem] sm:text-sm">
         {label}
+        {required && <span className="text-destructive ml-1">*</span>}
       </Label>
       <Input
         id={name}
@@ -47,6 +49,7 @@ function Field({ label, name, value, onChange, placeholder, type = 'text' }: Fie
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        required={required}
         className="h-8 placeholder:text-muted-foreground/70 sm:h-9"
       />
     </div>

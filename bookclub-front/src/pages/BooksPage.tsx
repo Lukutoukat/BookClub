@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import BookForm from '../components/BookForm'
+import BookList from '../components/BookList'
 import bookService, { type Book, type CreateBook } from '../services/books'
 
 import { Badge } from '@/components/ui/badge'
@@ -14,7 +15,6 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 
 const BooksPage = () => {
   const [books, setBooks] = useState<Book[]>([])
@@ -96,45 +96,7 @@ const BooksPage = () => {
                 </div>
               ) : (
                 <ScrollArea className="h-[360px] pr-3 sm:h-[520px]">
-                  <div className="space-y-3 sm:space-y-4">
-                    {books.map((book, index) => (
-                      <div key={book.isbn} className="rounded-3xl border border-border/60 bg-background/80 p-4 shadow-sm">
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                          <div className="space-y-3">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h2 className="text-lg font-medium">{book.name}</h2>
-                              <Badge variant="outline">{book.genre || 'Uncategorized'}</Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground">
-                              {book.author} · {book.year} · {book.pages} pages · {book.language}
-                            </p>
-                            {book.comment ? (
-                              <p className="max-w-2xl text-sm leading-6 text-foreground/85">
-                                {book.comment}
-                              </p>
-                            ) : null}
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <Badge variant="secondary">#{index + 1}</Badge>
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => void deleteBook(book.isbn)}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        </div>
-
-                        <Separator className="my-4" />
-                        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                          ISBN {book.isbn}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <BookList books={books} onDelete={(isbn) => void deleteBook(isbn)} />
                 </ScrollArea>
               )}
             </CardContent>
