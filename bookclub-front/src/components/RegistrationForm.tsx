@@ -3,9 +3,7 @@ import type { CreateUser } from "../services/users"
 type RegistrationFormProps = {
   addUser: (event: React.SyntheticEvent<HTMLFormElement>) => Promise<void>,
   newUser: CreateUser,
-  handleChange: (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => void
+  handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 }
 
 const RegistrationForm = ({

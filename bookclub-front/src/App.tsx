@@ -22,12 +22,37 @@ import type {
 import BookForm from './components/BookForm'
 import RegistrationForm from './components/RegistrationForm'
 
+interface RegistrationPageProps {
+  newUser: CreateUser
+  handleUserChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
+  addUser: (
+    event: React.SyntheticEvent<HTMLFormElement>
+  ) => Promise<void>
+  registered: boolean
+}
+
+interface BooksPageProps {
+  books: Book[]
+  deleteBook: (isbn: string) => Promise<void>
+  addBook: (
+    event: React.SyntheticEvent<HTMLFormElement>
+  ) => Promise<void>
+  newBook: CreateBook
+  handleBookChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
+  registered: boolean
+  logout: () => void
+}
+
 const RegistrationPage = ({
   newUser,
   handleUserChange,
   addUser,
   registered
-}: any) => {
+}: RegistrationPageProps) => {
   if (registered) {
     return <Navigate to="/" />
   }
@@ -52,7 +77,7 @@ const BooksPage = ({
   handleBookChange,
   registered,
   logout
-}: any) => {
+}: BooksPageProps) => {
   if (!registered) {
     return <Navigate to="/registration" />
   }
@@ -178,7 +203,7 @@ const AppContent = () => {
       'true'
     )
     setRegistered(true)
-    navigate('/')
+    void navigate('/')
   }
 
   const logout = () => {
@@ -186,12 +211,12 @@ const AppContent = () => {
       'registered'
     )
     setRegistered(false)
-    navigate('/registration')
+    void navigate('/registration')
   }
 
 
   const handleUserChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target
     setNewUser({
