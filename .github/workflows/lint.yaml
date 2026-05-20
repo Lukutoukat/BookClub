@@ -21,6 +21,10 @@ jobs:
         working-directory: bookclub-backend
         run: npm ci
 
+      - name: Generate Prisma types
+        working-directory: bookclub-backend
+        run: npx prisma generate
+
       - name: Lint backend
         working-directory: bookclub-backend
         run: npm run lint
