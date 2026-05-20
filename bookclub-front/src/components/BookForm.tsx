@@ -17,6 +17,7 @@ const BookForm = ({addBook, newBook, handleChange}: BookFormProps) => {
               name="isbn"
               value={newBook.isbn}
               onChange={handleChange}
+              required
             />
           </div>
           <div>
