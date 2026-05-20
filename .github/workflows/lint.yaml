@@ -23,6 +23,8 @@ jobs:
 
       - name: Generate Prisma types
         working-directory: bookclub-backend
+        env:
+          DATABASE_URL: "postgresql://dummy:dummy@localhost/dummy"
         run: npx prisma generate
 
       - name: Lint backend
