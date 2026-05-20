@@ -1,3 +1,7 @@
+volumes:
+  backend-node-modules:
+  frontend-node-modules:
+
 services:
   db:
     image: postgres
@@ -7,18 +11,60 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: clubdb
 
-  bookclub-backend:
+    ports:
+      - "5000:5432"
+
+  backend:
     container_name: bookclub-backend
+
     build:
-      context: .
-      dockerfile: Dockerfile
-    image: bookclub-backend
+      context: ./bookclub-backend
+      dockerfile: Dockerfile.dev
+
+    working_dir: /app
+
+    volumes:
+      - ./bookclub-backend:/app
+      - backend-node-modules:/app/node_modules
+
+    ports:
+      - "3003:3003"
+
     environment:
       - DATABASE_URL=postgresql://username:password@db:5432/clubdb
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD=password
+      - CHOKIDAR_USEPOLLING=true
       - REQUEST_ORIGIN=localhost:3003
-    ports:
-      - "13000:3003"
+
+    entrypoint: sh -c "npx prisma db push --skip-generate && npm run dev"
+
     depends_on:
       - db
+
+    stdin_open: true
+    tty: true
+
+  frontend:
+    container_name: bookclub-front
+
+    build:
+      context: ./bookclub-front
+      dockerfile: Dockerfile.dev
+
+    working_dir: /app
+
+    volumes:
+      - ./bookclub-front:/app
+      - frontend-node-modules:/app/node_modules
+
+    ports:
+      - "13000:5173"
+
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+    command: npm run dev -- --host
+
+    stdin_open: true
+    tty: true
