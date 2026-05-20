@@ -60,7 +60,7 @@ const BooksPage = () => {
                 Books and suggestions
               </h1>
               <p className="max-w-xl text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">
-                Add books to the list, browse other&apos;s suggestions and decide together which ones to read next.
+                Add books to the list, browse others&apos; suggestions and decide together which ones to read next.
               </p>
             </div>
           </div>
