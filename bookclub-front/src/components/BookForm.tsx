@@ -1,15 +1,18 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
 
-import bookService, { type CreateBook } from '../services/books'
+import { type CreateBook } from '../services/books'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-
-type BookFormProps = {
-  submitLabel?: string
-}
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 
 const emptyBook: CreateBook = {
   isbn: '',
@@ -48,7 +51,11 @@ function Field({ label, name, value, onChange, placeholder, type = 'text' }: Fie
   )
 }
 
-const BookForm = ({ submitLabel = 'Save' }: BookFormProps) => {
+type BookFormProps = {
+  addBook: (book: CreateBook) => Promise<void>
+}
+
+const BookForm = ({ addBook }: BookFormProps) => {
   const [newBook, setNewBook] = useState<CreateBook>(emptyBook)
 
   const handleChange = (
@@ -62,16 +69,22 @@ const BookForm = ({ submitLabel = 'Save' }: BookFormProps) => {
     }))
   }
 
-  const addBook: SubmitEventHandler<HTMLFormElement> = async (event) => {
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
-    await bookService.create(newBook)
+    await addBook(newBook)
     setNewBook(emptyBook)
   }
 
   return (
-    <form onSubmit={addBook} className="space-y-5">
-      <div className="grid gap-5 sm:grid-cols-2">
+    <Card className="w-full border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
+      <CardHeader className="border-b border-border/60 py-5 sm:py-6">
+        <CardTitle className="text-2xl">Add books</CardTitle>
+        <CardDescription>Suggest books to be read by your book club</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-4 sm:pt-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 gap-1 sm:gap-2">
         <Field
           label="ISBN"
           name="isbn"
@@ -123,24 +136,26 @@ const BookForm = ({ submitLabel = 'Save' }: BookFormProps) => {
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="comment">Comment</Label>
-        <Textarea
-          id="comment"
-          name="comment"
-          value={newBook.comment}
-          onChange={handleChange}
-          placeholder="Add a short note about why this book should be read."
-          className="min-h-28"
-        />
-      </div>
+          <div className="col-span-2 space-y-1">
+            <Label htmlFor="comment">Comment</Label>
+            <Textarea
+              id="comment"
+              name="comment"
+              value={newBook.comment}
+              onChange={handleChange}
+              placeholder="Add a short note about why this book should be read."
+              className="min-h-16 sm:min-h-20"
+            />
+          </div>
 
       <div className="flex justify-end border-t border-border/60 pt-5">
-        <Button type="submit" className="gap-2">
-          {submitLabel}
+        <Button type="submit" className="w-full sm:w-auto sm:min-w-44 gap-2 px-8">
+          {"Add book"}
         </Button>
       </div>
     </form>
+    </CardContent>
+    </Card>
   )
 }
 
