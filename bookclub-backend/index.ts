@@ -1,6 +1,8 @@
 import express, { type Request, type Response } from 'express'
 const app = express()
 import { prisma } from './db.ts'
+import bcrypt from 'bcrypt'
+import path from 'path'
 
 app.use(express.json())
 app.use(express.static('dist'))
@@ -16,12 +18,16 @@ interface Book {
   genre: string
 }
 
+interface User {
+  id?: number,
+  email: string,
+  name: string,
+  password?: string,
+  password_hash?: string
+}
+
 app.get('/ping', (_req, res) => {
   res.send('pong')
-})
-
-app.get('/', (_req, res) => {
-  res.send('<h1>Hello World!<h1>')
 })
 
 app.get('/api/books', async (_req: Request, res: Response) => {
@@ -72,6 +78,57 @@ app.delete('/api/books/:isbn', async (_req, res) => {
     console.error('DELETE /api/books error: ', error)
     res.status(500).json({error: 'database error' })
   }
+})
+
+app.get('/api/users', async (_req: Request, res: Response) => {
+  try {
+    const users = await prisma.user.findMany()
+
+    res.json(users)
+  } catch (error) {
+    console.error('GET /api/users error:', error)
+
+    res.status(500).json({ error: 'database error' })
+  }
+})
+
+app.post('/api/users', async (req: Request<unknown, unknown, User>, res: Response) => {
+  const newUser: User = req.body
+
+  // Validate required fields
+  if (!newUser.email || !newUser.name || !newUser.password) {
+    res.status(400).json({ error: 'email, name, and password are required' })
+    return
+  }
+
+  try {
+    const saltRounds = 10
+    const password_hash = await bcrypt.hash(newUser.password, saltRounds)
+
+    const user = await prisma.user.create({
+      data: {
+        email: newUser.email,
+        name: newUser.name,
+        password_hash: password_hash
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true
+      }
+    })
+
+    res.json(user)
+  } catch (error) {
+    console.error('POST /api/users error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
+})
+
+app.get('/{*splat}', (_req, res) => {
+  res.sendFile(
+    path.resolve('dist', 'index.html')
+  )
 })
 
   console.log('smth happened in backend')
