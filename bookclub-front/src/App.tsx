@@ -36,9 +36,9 @@ const RegistrationPage = ({
     <div>
       <h1>Register</h1>
       <RegistrationForm
-        addUser={addUser}
+        addUser={(event: React.SyntheticEvent<HTMLFormElement>) => addUser(event)}
         newUser={newUser}
-        handleChange={handleUserChange}
+        handleChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleUserChange(event)}
       />
     </div>
   )
@@ -92,9 +92,9 @@ const BooksPage = ({
         ))}
       </ul>
       <BookForm
-        addBook={addBook}
+        addBook={(event: React.SyntheticEvent<HTMLFormElement>) => addBook(event)}
         newBook={newBook}
-        handleChange={handleBookChange}
+        handleChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleBookChange(event)}
       />
     </div>
   )
