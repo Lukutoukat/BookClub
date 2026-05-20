@@ -60,7 +60,7 @@ const BooksPage = () => {
                 Books and suggestions
               </h1>
               <p className="max-w-xl text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">
-                Keep the reading list in one place, add suggestions, and remove books when the club is done with them.
+                Add books to the list, browse other&apos;s suggestions and decide together which ones to read next.
               </p>
             </div>
           </div>
