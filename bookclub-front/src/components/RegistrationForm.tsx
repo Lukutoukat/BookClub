@@ -20,8 +20,8 @@ const RegistrationForm = ({
   handleConfirmPasswordChange
 }: RegistrationFormProps) => {
   return (
-    <form onSubmit={addUser} className="space-y-6">
-      <div className="grid gap-5 rounded-3xl border border-border/70 bg-muted/20 p-5 shadow-sm sm:p-6">
+    <form onSubmit={addUser} className="space-y-4 sm:space-y-6">
+      <div className="grid gap-4 rounded-3xl border border-border/70 bg-muted/20 p-4 shadow-sm sm:gap-5 sm:p-6">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm text-foreground">
             Email address
@@ -86,7 +86,7 @@ const RegistrationForm = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-border/60 pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
         <p className="max-w-md text-sm text-muted-foreground">
           Double-check the details before creating the account.
         </p>

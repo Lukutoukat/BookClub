@@ -48,18 +48,18 @@ const BooksPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.9),_rgba(240,243,255,0.9)_38%,_rgba(230,236,255,0.75)_70%,_rgba(244,244,240,1))] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-2xl space-y-3">
-            <Badge variant="secondary" className="w-fit uppercase tracking-[0.2em]">
+    <main className="min-h-dvh bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.9),_rgba(240,243,255,0.9)_38%,_rgba(230,236,255,0.75)_70%,_rgba(244,244,240,1))] px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 sm:gap-8">
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-2xl space-y-2">
+            <Badge variant="secondary" className="w-fit uppercase tracking-[0.2em] text-[0.7rem] sm:text-xs">
               Book Club
             </Badge>
-            <div className="space-y-2">
-              <h1 className="font-heading text-4xl leading-none sm:text-5xl">
+            <div className="space-y-1 sm:space-y-2">
+              <h1 className="font-heading text-3xl leading-none sm:text-5xl">
                 Books and suggestions
               </h1>
-              <p className="max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
+              <p className="max-w-xl text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">
                 Keep the reading list in one place, add suggestions, and remove books when the club is done with them.
               </p>
             </div>
@@ -69,13 +69,13 @@ const BooksPage = () => {
           </Button>
         </header>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)]">
+        <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8">
           <BookForm addBook={addBook} />
 
           <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
-            <CardHeader className="border-b border-border/60 py-5 sm:py-6">
-              <CardTitle className="text-2xl">Current books</CardTitle>
-              <CardDescription>
+            <CardHeader className="border-b border-border/60 py-4 sm:py-6">
+              <CardTitle className="text-xl sm:text-2xl">Current books</CardTitle>
+              <CardDescription className="text-sm sm:text-base">
                 {books.length} {books.length === 1 ? 'book' : 'books'} in the list
               </CardDescription>
             </CardHeader>
@@ -95,8 +95,8 @@ const BooksPage = () => {
                   No books yet. Add the first suggestion on the left.
                 </div>
               ) : (
-                <ScrollArea className="h-[520px] pr-3">
-                  <div className="space-y-4">
+                <ScrollArea className="h-[360px] pr-3 sm:h-[520px]">
+                  <div className="space-y-3 sm:space-y-4">
                     {books.map((book, index) => (
                       <div key={book.isbn} className="rounded-3xl border border-border/60 bg-background/80 p-4 shadow-sm">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
