@@ -1,6 +1,8 @@
 import express, { type Request, type Response } from 'express'
 const app = express()
 import { pool } from './db.ts'
+import bcrypt from 'bcrypt'
+import path from 'path'
 
 app.use(express.json())
 app.use(express.static('dist'))
@@ -16,12 +18,16 @@ interface Book {
   genre: string
 }
 
+interface User {
+  id?: number,
+  email: string,
+  name: string,
+  password?: string,
+  password_hash?: string
+}
+
 app.get('/ping', (_req, res) => {
   res.send('pong')
-})
-
-app.get('/', (_req, res) => {
-  res.send('<h1>Hello World!<h1>')
 })
 
 app.get('/api/books', async (_req: Request, res: Response) => {
@@ -70,6 +76,61 @@ app.delete('/api/books/:isbn', async (_req, res) => {
     console.error('DELETE /api/books error: ', error)
     res.status(500).json({error: 'database error' })
   }
+})
+
+app.get('/api/users', async (_req: Request, res: Response) => {
+  try {
+    const result = await pool.query('SELECT * FROM "User"')
+
+    res.json(result.rows)
+  } catch (error) {
+    console.error('GET /api/users error:', error)
+
+    res.status(500).json({ error: 'database error' })
+  }
+})
+
+app.post('/api/users', async (req: Request<unknown, unknown, User>, res: Response) => {
+    const newUser: User = req.body
+
+    try {
+      const saltRounds = 10
+
+      const password_hash = await bcrypt.hash(
+        newUser.password,
+        saltRounds
+      )
+
+      const values = [
+        newUser.email,
+        newUser.name,
+        password_hash
+      ]
+
+      const query = `
+        INSERT INTO "User" (email, name, password_hash)
+        VALUES ($1, $2, $3)
+        RETURNING id, email, name
+      `
+
+      const result = await pool.query(query, values)
+
+      res.json(result.rows[0])
+
+    } catch (error) {
+      console.error('POST /api/users error:', error)
+
+      res.status(500).json({
+        error: 'database error'
+      })
+    }
+  }
+)
+
+app.get('/{*splat}', (_req, res) => {
+  res.sendFile(
+    path.resolve('dist', 'index.html')
+  )
 })
 
   console.log('smth happened in backend')
