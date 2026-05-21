@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-// @ts-expect-error
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 
 import { type Book } from '../services/books'
