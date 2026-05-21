@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node", "express"],
+    "types": ["node", "express", "bcrypt"],
     "target": "esnext",
     "noEmit": true,
     "noUnusedLocals": true,
@@ -9,6 +9,7 @@
     "noFallthroughCasesInSwitch": true,
     "module": "nodenext",
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "preserveWatchOutput": true
   }
 }

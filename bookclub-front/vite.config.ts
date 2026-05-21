@@ -10,6 +10,11 @@ export default defineConfig({
     tailwindcss()
   ],
   server: {
+    host: '0.0.0.0',
+    hmr: {
+      host: 'localhost',
+      port: 13000,
+    },
     proxy: {
       '/api': {
         target: 'http://bookclub-backend:3003',
