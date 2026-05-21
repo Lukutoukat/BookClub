@@ -14,12 +14,6 @@ RUN npm install
 # Copy rest of the source code
 COPY . .
 
-# Ensure the "node" user owns the application files
-RUN chown -R node:node /app
-
-# Switch to the built-in non-root "node" user
-USER node
-
 # Expose backend port
 EXPOSE 3003
 
