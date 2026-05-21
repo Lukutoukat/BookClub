@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import BooksPage from './pages/BooksPage'

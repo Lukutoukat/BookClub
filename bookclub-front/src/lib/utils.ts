@@ -1,6 +1,6 @@
-// @ts-ignore
+// @ts-expect-error
 import { clsx, type ClassValue } from "clsx"
-// @ts-ignore
+// @ts-expect-error
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
