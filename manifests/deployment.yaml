@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookclub-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookclub
+  template:
+    metadata:
+      labels:
+        app: bookclub
+    spec:
+      containers:
+        - name: bookclub
+          image: neakovalaine/bookclub
+          ports:
+            - containerPort: 3003
+          env:
+           - name: DB_URL
+             value: postgresql://ohtuprojektitesti:passwordhere@hostnamehere:5432/ohtuprojekti?targetServerType=primary&ssl=true
