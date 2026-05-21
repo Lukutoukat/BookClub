@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  isbn         String         @id
+  name         String?
+  author       String?
+  year         String?
+  pages        String?
+  comment      String?
+  language     String?
+  genre        String?
+  BookProposed BookProposed[]
+  BookSaved    BookSaved[]
+  BookVoted    BookVoted[]
+}
+
+model BookClub {
+  id              Int               @id @default(autoincrement())
+  name            String?
+  status          Int?
+  owner_id        Int?
+  User            User?             @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  BookClubMembers BookClubMembers[]
+  BookProposed    BookProposed[]
+  BookVoted       BookVoted[]
+  Invite          Invite[]
+}
+
+model BookClubMembers {
+  id         Int       @id @default(autoincrement())
+  user_id    Int?
+  user_role  Int?
+  bookcub_id Int?
+  BookClub   BookClub? @relation(fields: [bookcub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User       User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model BookProposed {
+  id          Int       @id @default(autoincrement())
+  book_isbn   String?
+  bookclub_id Int?
+  Book        Book?     @relation(fields: [book_isbn], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+  BookClub    BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model BookSaved {
+  id        Int     @id @default(autoincrement())
+  user_id   Int?
+  book_isbn String?
+  Book      Book?   @relation(fields: [book_isbn], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+  User      User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model BookVoted {
+  id          Int       @id @default(autoincrement())
+  book_isbn   String?
+  user_id     Int?
+  bookclub_id Int?
+  score       Int?
+  Book        Book?     @relation(fields: [book_isbn], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+  BookClub    BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User        User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Invite {
+  id          Int       @id @default(autoincrement())
+  bookclub_id Int?
+  invite_code String?
+  BookClub    BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  email           String?
+  name            String?
+  password_hash   String?
+  BookClub        BookClub[]
+  BookClubMembers BookClubMembers[]
+  BookSaved       BookSaved[]
+  BookVoted       BookVoted[]
+}
