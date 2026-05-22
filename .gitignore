@@ -11,6 +11,7 @@ node_modules/
 **/node_modules/
 dist
 dist-ssr
+coverage
 *.local
 
 # Editor directories and files

@@ -11,6 +11,9 @@
     "allowImportingTsExtensions": true,
     "paths": {
       "@/*": ["./src/*"]
+    },
+    "compilerOptions": {
+      "types": ["vitest/globals"]
     }
   },
   "files": [],

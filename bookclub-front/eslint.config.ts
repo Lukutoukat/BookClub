@@ -1,10 +1,19 @@
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
 import { defineConfig } from 'eslint/config';
+import globals from 'globals';
 
 export default defineConfig([
   {
-    ignores: ['dist/**', 'node_modules/**', 'src/components/ui/**'],
+    files: ['**/*.test.{ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.vitest
+      }
+    }
+  },
+  {
+    ignores: ['dist/**', 'node_modules/**', 'src/components/ui/**', 'coverage/**'],
   },
   {
     languageOptions: {
