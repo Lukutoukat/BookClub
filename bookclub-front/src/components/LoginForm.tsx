@@ -2,13 +2,25 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-const LoginForm = () => {
-  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault()
-  }
+type LoginFormProps = {
+  email: string
+  password: string
+  setEmail: React.Dispatch<React.SetStateAction<string>>
+  setPassword: React.Dispatch<React.SetStateAction<string>>
+  handleLogin: (
+    event: React.SyntheticEvent<HTMLFormElement>
+  ) => Promise<void>
+}
 
+const LoginForm = ({
+  email,
+  password,
+  setEmail,
+  setPassword,
+  handleLogin
+}: LoginFormProps) => {
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+    <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
       <div className="grid gap-4 rounded-3xl border border-border/70 bg-muted/20 p-4 shadow-sm sm:gap-5 sm:p-6">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm text-foreground">
@@ -21,6 +33,10 @@ const LoginForm = () => {
             type="email"
             autoComplete="email"
             placeholder="you@example.com"
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
             required
           />
         </div>
@@ -36,6 +52,10 @@ const LoginForm = () => {
             name="password"
             autoComplete="current-password"
             placeholder="Password"
+            value={password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setPassword(e.target.value)
+            }
             required
           />
         </div>
