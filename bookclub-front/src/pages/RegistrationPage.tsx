@@ -99,6 +99,9 @@ const RegistrationPage = () => {
           <Button asChild variant="outline" className="w-full sm:w-auto">
             <Link to="/books">Back to books</Link>
           </Button>
+          <Button asChild variant="outline" className="w-full sm:w-auto">
+            <Link to="/login">Go to login</Link>
+          </Button>
         </header>
 
         <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
