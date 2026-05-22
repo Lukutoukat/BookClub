@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/card'
 import { PageLayout } from '@/components/PageLayout'
 import { PageHeader } from '@/components/PageHeader'
+import { PageMenu } from '@/components/PageMenu'
 
 const emptyUser: CreateUser = {
   email: '',
@@ -37,7 +38,7 @@ const RegistrationPage = () => {
 
   const handleConfirmPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  ) => {Settings
     setConfirmPassword(event.target.value)
   }
 
@@ -87,6 +88,7 @@ const RegistrationPage = () => {
             ) : null}
           </CardContent>
         </Card>
+    <PageMenu />
     </PageLayout>
   )
 }

@@ -5,6 +5,7 @@ import BookList from '../components/BookList'
 import bookService, { type Book, type CreateBook } from '../services/books'
 import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
+import { PageMenu } from '@/components/PageMenu'
 
 import {
   Card,
@@ -89,6 +90,7 @@ const BooksPage = () => {
             </CardContent>
           </Card>
         </div>
+        <PageMenu />
       </PageLayout>
   )
 }
