@@ -70,6 +70,9 @@ const RegistrationForm = ({
             pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
             title="Password must be at least 8 characters long and include uppercase, lowercase, and a number."
           />
+          <p className="text-xs text-muted-foreground">
+            Must be at least 8 characters and include uppercase, lowercase, and a number.
+          </p>
         </div>
 
         <div className="space-y-2">
