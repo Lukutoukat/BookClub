@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import BookForm from '../components/BookForm'
 import BookList from '../components/BookList'
 import bookService, { type Book, type CreateBook } from '../services/books'
+import { PageLayout } from '../components/PageLayout'
+import { PageHeader } from '../components/PageHeader'
 
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -48,26 +47,14 @@ const BooksPage = () => {
   }
 
   return (
-    <main className="min-h-dvh bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.9),_rgba(240,243,255,0.9)_38%,_rgba(230,236,255,0.75)_70%,_rgba(244,244,240,1))] px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 sm:gap-8">
-        <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-2xl space-y-2">
-            <Badge variant="secondary" className="w-fit uppercase tracking-[0.2em] text-[0.7rem] sm:text-xs">
-              Book Club
-            </Badge>
-            <div className="space-y-1 sm:space-y-2">
-              <h1 className="font-heading text-3xl leading-none sm:text-5xl">
-                Books and suggestions
-              </h1>
-              <p className="max-w-xl text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">
-                Add books to the list, browse others&apos; suggestions and decide together which ones to read next.
-              </p>
-            </div>
-          </div>
-          <Button asChild variant="outline" className="w-full sm:w-auto">
-            <Link to="/registration">Go to registration</Link>
-          </Button>
-        </header>
+    <PageLayout>
+          <PageHeader
+            badgeText="Book Club"
+            title="Books and suggestions"
+            description="Browse others&apos; books, suggest new ones, and decide together which to read next."
+            buttonText="Go to registration"
+            buttonLink="/registration"
+          />
 
         <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8">
           <BookForm addBook={addBook} />
@@ -102,8 +89,7 @@ const BooksPage = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
-    </main>
+      </PageLayout>
   )
 }
 
