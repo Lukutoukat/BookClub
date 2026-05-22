@@ -8,11 +8,11 @@ import { Separator } from '@/components/ui/separator'
 
 interface BookListProps {
   books: Book[]
-  onDelete?: (isbn: string) => void
+  onDelete?: (id: number) => void
   emptyMessage?: string
 }
 
-const BookItem = ({ book, index, onDelete }: { book: Book; index: number; onDelete?: (isbn: string) => void }) => {
+const BookItem = ({ book, index, onDelete }: { book: Book; index: number; onDelete?: (id: number) => void }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
@@ -61,7 +61,9 @@ const BookItem = ({ book, index, onDelete }: { book: Book; index: number; onDele
               className="h-8 w-8 text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-colors"
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation()
-                onDelete(book.isbn)
+                if (book.id) {
+                  onDelete(book.id)
+                }
               }}
               title="Delete book"
             >
@@ -83,10 +85,12 @@ const BookItem = ({ book, index, onDelete }: { book: Book; index: number; onDele
               <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">Pages</p>
               <p className="font-medium">{book.pages}</p>
             </div>
-            <div className="col-span-2">
-              <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">ISBN</p>
-              <p className="font-medium font-mono text-xs mt-1.5">{book.isbn}</p>
-            </div>
+            {book.isbn && (
+              <div className="col-span-2">
+                <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">ISBN</p>
+                <p className="font-medium font-mono text-xs mt-1.5">{book.isbn}</p>
+              </div>
+            )}
           </div>
           
           {book.comment && (
@@ -115,7 +119,7 @@ export default function BookList({ books, onDelete, emptyMessage = "No books yet
   return (
     <div className="space-y-3">
       {books.map((book, index) => (
-        <BookItem key={book.isbn} book={book} index={index} onDelete={onDelete} />
+        <BookItem key={book.id} book={book} index={index} onDelete={onDelete} />
       ))}
     </div>
   )

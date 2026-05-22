@@ -42,9 +42,9 @@ const BooksPage = () => {
     await loadBooks()
   }
 
-  const deleteBook = async (isbn: string) => {
-    await bookService.remove(isbn)
-    setBooks((currentBooks) => currentBooks.filter((book) => book.isbn !== isbn))
+  const deleteBook = async (id: number) => {
+    await bookService.remove(id)
+    setBooks((currentBooks) => currentBooks.filter((book) => book.id !== id))
   }
 
   return (

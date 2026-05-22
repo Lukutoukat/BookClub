@@ -3,20 +3,24 @@ const app = express()
 import { prisma } from './db.ts'
 import bcrypt from 'bcrypt'
 import path from 'path'
+import { cleanISBN, formatISBN, validateBook } from './validator.ts'
 
 app.use(express.json())
 app.use(express.static('dist'))
 
 interface Book {
-  isbn: string,
+  id: number,
+  isbn?: string,
   name: string,
   author: string,
-  year: string,
-  pages: string,
+  year: number,
+  pages: number,
   comment: string,
   language: string,
   genre: string
 }
+
+type CreateBook = Omit<Book, 'id'>
 
 interface User {
   id?: number,
@@ -33,45 +37,83 @@ app.get('/ping', (_req, res) => {
 app.get('/api/books', async (_req: Request, res: Response) => {
   try {
     const result = await prisma.book.findMany()
-    res.json(result)
+    
+    const booksWithFormattedISBN = result.map(book => ({
+      ...book,
+      isbn: book.isbn ? formatISBN(book.isbn) : undefined
+    }))
+    res.json(booksWithFormattedISBN)
   } catch (error) {
     console.error('GET /api/books error:', error)
     res.status(500).json({ error: 'database error' })
   }
 })
 
-app.post('/api/books', async (req: Request<unknown, unknown, Book>, res: Response) => {
-  const newBook: Book = req.body
+app.post('/api/books', async (req: Request<unknown, unknown, CreateBook>, res: Response) => {
+  const newBook: CreateBook = req.body
 
+  const validation = validateBook(newBook)
+  if (!validation.valid) {
+    res.status(400).json({ error: 'validation error', details: validation.errors })
+    return
+  }
 
-
-  
   try {
-    await prisma.book.create({
-      data: {
-        isbn: newBook.isbn,
-        name: newBook.name,
-        author: newBook.author,
-        year: newBook.year,
-        pages: newBook.pages,
-        comment: newBook.comment,
-        language: newBook.language,
-        genre: newBook.genre,
-      }
+    const bookData: {
+      isbn?: string,
+      name: string,
+      author: string,
+      year: number,
+      pages?: number,
+      comment?: string,
+      language?: string,
+      genre?: string
+    } = {
+      name: newBook.name,
+      author: newBook.author,
+      year: newBook.year,
+      language: newBook.language,
+      genre: newBook.genre,
+    }
+
+    if (newBook.pages !== undefined && newBook.pages !== null) {
+      bookData.pages = newBook.pages
+    }
+
+    if (newBook.comment) {
+      bookData.comment = newBook.comment
+    }
+
+    if (newBook.isbn) {
+      bookData.isbn = cleanISBN(newBook.isbn)
+    }
+
+    const createdBook = await prisma.book.create({
+      data: bookData
     })
-    res.json(newBook)
-  } catch (error) {
+
+    res.json({
+      ...createdBook,
+      isbn: createdBook.isbn ? formatISBN(createdBook.isbn) : undefined
+    })
+  } catch (error: unknown) {
     console.error('POST /api/books error:', error)
+    
     res.status(500).json({ error: 'database error' })
   }
 })
 
-app.delete('/api/books/:isbn', async (_req, res) => {
-  const isbn: string = _req.params.isbn
+app.delete('/api/books/:id', async (_req, res) => {
+  const id: number = parseInt(_req.params.id, 10)
+
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'invalid book id' })
+    return
+  }
 
   try {
     await prisma.book.delete({
-      where: { isbn }
+      where: { id }
     })
     res.status(204).end()
   } catch(error) {
@@ -130,10 +172,6 @@ app.get('/{*splat}', (_req, res) => {
     path.resolve('dist', 'index.html')
   )
 })
-
-  console.log('smth happened in backend')
-  console.log('Books')
-
 
 const PORT = 3003
 

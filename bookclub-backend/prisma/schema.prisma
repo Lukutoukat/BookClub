@@ -9,11 +9,12 @@ datasource db {
 }
 
 model Book {
-  isbn         String         @id
+  id           Int            @id @default(autoincrement())
+  isbn         String?
   name         String?
   author       String?
-  year         String?
-  pages        String?
+  year         Int?
+  pages        Int?
   comment      String?
   language     String?
   genre        String?
@@ -45,27 +46,27 @@ model BookClubMembers {
 
 model BookProposed {
   id          Int       @id @default(autoincrement())
-  book_isbn   String?
+  book_id     Int?
   bookclub_id Int?
-  Book        Book?     @relation(fields: [book_isbn], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+  Book        Book?     @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   BookClub    BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model BookSaved {
-  id        Int     @id @default(autoincrement())
-  user_id   Int?
-  book_isbn String?
-  Book      Book?   @relation(fields: [book_isbn], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
-  User      User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id      Int     @id @default(autoincrement())
+  user_id Int?
+  book_id Int?
+  Book    Book?   @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User    User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model BookVoted {
   id          Int       @id @default(autoincrement())
-  book_isbn   String?
+  book_id     Int?
   user_id     Int?
   bookclub_id Int?
   score       Int?
-  Book        Book?     @relation(fields: [book_isbn], references: [isbn], onDelete: NoAction, onUpdate: NoAction)
+  Book        Book?     @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   BookClub    BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   User        User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
