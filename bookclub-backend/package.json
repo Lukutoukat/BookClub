@@ -9,6 +9,7 @@
   "scripts": {
     "tsc": "tsc",
     "test": "jest",
+    "coverage": "jest --coverage",
     "lint": "eslint .",
     "start": "node index.ts",
     "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
