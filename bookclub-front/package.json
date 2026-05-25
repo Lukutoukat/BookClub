@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest run",
+    "coverage": "vitest run --coverage",
     "preview": "vite preview",
     "build:ui": "rm -rf dist && cd ../bookclub-front && npm run build && cp -r dist ../bookclub-backend"
   },
