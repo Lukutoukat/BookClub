@@ -15,6 +15,9 @@ export default defineConfig({
       host: 'localhost',
       port: 13000,
     },
+    watch: {
+      ignored: ['**/coverage']
+    },
     proxy: {
       '/api': {
         target: 'http://bookclub-backend:3003',
