@@ -17,7 +17,8 @@ class MockResizeObserver {
 globalThis.ResizeObserver = MockResizeObserver as any
 
 const mockBook = (overrides?: Partial<Book>): Book => ({
-  isbn: "1234567890",
+  id: 1,
+  isbn: "9780451524935",
   name: "Book 1",
   author: "Author 1",
   year: "2024",
@@ -38,8 +39,9 @@ const renderWithRouter = (component: React.ReactElement) => {
 
 describe('BooksPage', () => {
   const mockBooks = (count: number = 2): Book[] => {
+    const isbns = ['9780451524935', '9780596007126', '9781234567897']
     return Array.from({ length: count }, (_, i) => 
-      mockBook({ isbn: String(111 + i), name: `Book ${i + 1}` })
+      mockBook({ id: i + 1, isbn: isbns[i] || `978012345678${i}`, name: `Book ${i + 1}` })
     )
   }
 
@@ -150,7 +152,7 @@ describe('BooksPage', () => {
       await us.click(deleteButtons[0])
 
       await waitFor(() => {
-        expect(bookService.remove).toHaveBeenCalledWith('111')
+        expect(bookService.remove).toHaveBeenCalledWith(1)
         expect(screen.queryByText('Book 1')).toBeNull()
       })
     })
@@ -168,7 +170,7 @@ describe('BooksPage', () => {
       const us = user.setup()
       await us.click(screen.getByTitle('Delete book'))
 
-      expect(bookService.remove).toHaveBeenCalledWith('111')
+      expect(bookService.remove).toHaveBeenCalledWith(1)
     })
   })
 })
