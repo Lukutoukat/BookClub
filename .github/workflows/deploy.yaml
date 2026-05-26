@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/lint.yaml
 
   test:
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/test.yaml
 
   build-and-push:
     needs: [lint, test]
