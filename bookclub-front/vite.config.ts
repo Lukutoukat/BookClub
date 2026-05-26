@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
+import { defineConfig } from 'vitest/config';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,7 +13,10 @@ export default defineConfig({
     host: '0.0.0.0',
     hmr: {
       host: 'localhost',
-      port: 13000,
+      clientPort: 13000,
+    },
+    watch: {
+      ignored: ['**/coverage']
     },
     proxy: {
       '/api': {
@@ -27,4 +30,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './testSetup.ts', 
+  }
 })
