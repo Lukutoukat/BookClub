@@ -3,10 +3,10 @@ import bcrypt from 'bcrypt'
 import express from 'express'
 import { prisma } from '../db.ts'
 import dotenv from 'dotenv'
-
 import { type Request, type Response } from 'express'
-var loginRouter = express.Router()
+const loginRouter = express.Router()
 dotenv.config()
+
 interface User {
   id?: number,
   email: string,
@@ -15,11 +15,13 @@ interface User {
   password_hash?: string
 }
 
+interface LogIn {
+  name?: string,
+  password?: string
+}
+
 loginRouter.post('/', async (req: Request, res: Response) => {
-  console.log("ARE WE HERE???")
-  const { name, password } = req.body
-  console.log("HERE IS DEBUGGG", name, password)
-  console.log(req.body)
+  const { name, password } = req.body as LogIn
   if (!password) {
     return res.status(401).end()
   }
@@ -30,7 +32,7 @@ loginRouter.post('/', async (req: Request, res: Response) => {
     },
   })
 
-  const passwordCorrect = user === null
+  const passwordCorrect: boolean = user === null
     ? false
     : await bcrypt.compare(password, user.password_hash!)
 
