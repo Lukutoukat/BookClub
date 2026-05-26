@@ -27,7 +27,7 @@ export default defineConfig([
   tseslint.configs.recommendedTypeChecked,
   pluginReact.configs.flat.recommended,
   {
-    files: ['src/**/*.{ts,tsx}', '__tests__/**/*.{ts,tsx}', 'vite.config.ts'],
+    files: ['src/**/*.{ts,tsx}', 'vite.config.ts'],
     rules: {
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
