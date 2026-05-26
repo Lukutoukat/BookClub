@@ -91,16 +91,33 @@ app.get('/api/users', async (_req: Request, res: Response) => {
   }
 })
 
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+
 app.post('/api/users', async (req: Request<unknown, unknown, User>, res: Response) => {
   const newUser: User = req.body
 
-  // Validate required fields
   if (!newUser.email || !newUser.name || !newUser.password) {
     res.status(400).json({ error: 'email, name, and password are required' })
     return
   }
 
+  if (!PASSWORD_REGEX.test(newUser.password)) {
+    res.status(400).json({
+      error:
+        'Password must be at least 8 characters long and contain uppercase, lowercase, and a number'
+    })
+    return
+  }
+
   try {
+    const existingUser = await prisma.user.findFirst({
+      where: { name: newUser.name }
+    })
+    if (existingUser) {
+      res.status(400).json({ error: 'Username already exists' })
+      return
+    }
+
     const saltRounds = 10
     const password_hash = await bcrypt.hash(newUser.password, saltRounds)
 
@@ -136,6 +153,10 @@ app.get('/{*splat}', (_req, res) => {
 
 const PORT = 3003
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`)
-})
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`)
+  })
+}
+
+export { app }

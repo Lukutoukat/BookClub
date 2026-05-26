@@ -40,7 +40,7 @@ const RegistrationForm = ({
 
         <div className="space-y-2">
           <Label htmlFor="name" className="text-sm text-foreground">
-            Full name
+            Username
           </Label>
           <Input
             id="name"
@@ -66,6 +66,9 @@ const RegistrationForm = ({
             autoComplete="new-password"
             placeholder="Secure password"
             required
+            minLength={8}
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
+            title="Password must be at least 8 characters long and include uppercase, lowercase, and a number."
           />
         </div>
 

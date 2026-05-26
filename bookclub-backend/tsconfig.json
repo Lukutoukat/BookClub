@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node", "express", "bcrypt"],
+    "types": ["node", "express", "bcrypt", "jest"],
     "target": "esnext",
     "noEmit": true,
     "noUnusedLocals": true,

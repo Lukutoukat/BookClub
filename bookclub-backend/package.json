@@ -8,13 +8,15 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "coverage": "jest --coverage",
     "lint": "eslint .",
     "start": "node index.ts",
     "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "@types/supertest": "^7.2.0",
     "axios": "^1.16.1",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
@@ -31,12 +33,16 @@
     "@types/axios": "^0.9.36",
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.7.0",
     "@types/pg": "^8.20.0",
     "@types/tailwindcss": "^3.0.11",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
   }
 }
