@@ -12,6 +12,7 @@ WORKDIR /usr/src/app
 
 COPY ./bookclub-backend ./
 RUN npm ci
+ENV DATABASE_URL="dummy:dummy@localhost/dummy"
 RUN npx prisma generate --schema ./prisma/schema.prisma
 
 COPY --from=frontend-builder /frontend/dist ./dist

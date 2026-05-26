@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { AxiosError } from "axios"
 
 import RegistrationForm from '../components/RegistrationForm'
 import userService, { type CreateUser } from '../services/users'
@@ -42,6 +44,10 @@ const RegistrationPage = () => {
     setConfirmPassword(event.target.value)
   }
 
+  const isValidPassword = (password: string) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)
+  }
+
   const addUser = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
 
@@ -50,10 +56,31 @@ const RegistrationPage = () => {
       return
     }
 
-    await userService.create(newUser)
-    setNewUser(emptyUser)
-    setConfirmPassword('')
-    setMessage('Registration saved.')
+    if (!isValidPassword(newUser.password)) {
+      alert(
+        "Password must be at least 8 characters long and include uppercase, lowercase, and a number."
+      )
+      return
+    }
+
+    try {
+      await userService.create(newUser)
+      setNewUser(emptyUser)
+      setConfirmPassword('')
+      setMessage('Registration saved.')
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        if (err.response && typeof err.response.data === "object" && err.response.data !== null && "error" in err.response.data) {
+          const backendMessage = (err.response.data as { error: string }).error
+          setMessage(backendMessage)
+        } else {
+          setMessage("Registration failed")
+        }
+      } else {
+        setMessage("Unexpected error occurred")
+    }
+  }
+
   }
 
   return (

@@ -20,5 +20,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["eslint.config.ts", "vite.config.ts", "src"]
+  "include": ["eslint.config.ts", "vite.config.ts", "testSetup.ts", "src"]
 }

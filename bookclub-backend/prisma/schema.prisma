@@ -39,8 +39,8 @@ model BookClubMembers {
   id         Int       @id @default(autoincrement())
   user_id    Int?
   user_role  Int?
-  bookcub_id Int?
-  BookClub   BookClub? @relation(fields: [bookcub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  bookclub_id Int?
+  BookClub   BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   User       User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -79,10 +79,10 @@ model Invite {
 }
 
 model User {
-  id              Int               @id @default(autoincrement())
-  email           String?
-  name            String?
-  password_hash   String?
+  id              Int              @id @default(autoincrement())
+  email           String           @unique
+  name            String           @unique
+  password_hash   String
   BookClub        BookClub[]
   BookClubMembers BookClubMembers[]
   BookSaved       BookSaved[]
