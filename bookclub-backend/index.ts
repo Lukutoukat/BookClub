@@ -7,7 +7,7 @@ import bookRouter from './controllers/books.ts'
 
 app.use(express.json())
 app.use(express.static('dist'))
-app.use('api/books', bookRouter)
+app.use('/api/books', bookRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 

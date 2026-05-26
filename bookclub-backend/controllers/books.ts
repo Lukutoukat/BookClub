@@ -14,7 +14,7 @@ interface Book {
   genre: string
 }
 
-bookRouter.get('/api/books', async (_req: Request, res: Response) => {
+bookRouter.get('/', async (_req: Request, res: Response) => {
   try {
     const result = await prisma.book.findMany()
     res.json(result)
@@ -24,7 +24,7 @@ bookRouter.get('/api/books', async (_req: Request, res: Response) => {
   }
 })
 
-bookRouter.post('/api/books', async (req: Request<unknown, unknown, Book>, res: Response) => {
+bookRouter.post('/', async (req: Request<unknown, unknown, Book>, res: Response) => {
   const newBook: Book = req.body
 
   try {
@@ -47,7 +47,7 @@ bookRouter.post('/api/books', async (req: Request<unknown, unknown, Book>, res: 
   }
 })
 
-bookRouter.delete('/api/books/:isbn', async (_req, res) => {
+bookRouter.delete('/:isbn', async (_req, res) => {
   const isbn: string = _req.params.isbn
 
   try {
