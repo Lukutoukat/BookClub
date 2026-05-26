@@ -1,13 +1,15 @@
-import express, { type Request, type Response } from 'express'
+import express from 'express'
 const app = express()
-import { prisma } from './db.ts'
-import bcrypt from 'bcrypt'
 import path from 'path'
 import { cleanISBN, formatISBN, validateBook } from './validator.ts'
 import loginRouter from './controllers/login.ts'
+import userRouter from './controllers/users.ts'
+import bookRouter from './controllers/books.ts'
 
 app.use(express.json())
 app.use(express.static('dist'))
+app.use('/api/books', bookRouter)
+app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 
 interface Book {
@@ -191,6 +193,10 @@ app.get('/{*splat}', (_req, res) => {
     path.resolve('dist', 'index.html')
   )
 })
+
+console.log('smth happened in backend')
+console.log('Books')
+
 
 const PORT = 3003
 

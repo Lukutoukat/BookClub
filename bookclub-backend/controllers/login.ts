@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import express from 'express'
 import { prisma } from '../db.ts'
 import dotenv from 'dotenv'
-import { type Request, type Response } from 'express'
+import express, { type Request, type Response } from 'express'
+
 const loginRouter = express.Router()
 dotenv.config()
 

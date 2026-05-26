@@ -108,6 +108,7 @@ const BookItem = ({ book, index, onDelete }: { book: Book; index: number; onDele
 }
 
 export default function BookList({ books, onDelete, emptyMessage = "No books yet." }: BookListProps) {
+  console.log('books here: ', books)
   if (books.length === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-border/70 bg-muted/20 px-4 py-10 text-sm text-muted-foreground text-center">
