@@ -3,9 +3,11 @@ const app = express()
 import { prisma } from './db.ts'
 import bcrypt from 'bcrypt'
 import path from 'path'
+import loginRouter from './controllers/login.ts'
 
 app.use(express.json())
 app.use(express.static('dist'))
+app.use('/api/login', loginRouter)
 
 interface Book {
   isbn: string,
@@ -43,9 +45,6 @@ app.get('/api/books', async (_req: Request, res: Response) => {
 app.post('/api/books', async (req: Request<unknown, unknown, Book>, res: Response) => {
   const newBook: Book = req.body
 
-
-
-  
   try {
     await prisma.book.create({
       data: {

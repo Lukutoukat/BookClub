@@ -21,6 +21,7 @@
     "eslint-plugin-react": "^7.37.5",
     "express": "^5.2.1",
     "jiti": "^2.7.0",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.20.0",
     "prisma": "^6.19.3",
     "typescript-eslint": "^8.59.3"
@@ -29,8 +30,10 @@
     "@types/axios": "^0.9.36",
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.7.0",
     "@types/pg": "^8.20.0",
+    "@types/tailwindcss": "^3.0.11",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
     "typescript": "^6.0.3"
