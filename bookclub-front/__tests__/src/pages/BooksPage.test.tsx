@@ -69,7 +69,8 @@ describe('BooksPage', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Books and suggestions')).toBeDefined()
-        expect(screen.getByText(/Add books to the list/i)).toBeDefined()
+        expect(screen.getByText('Add books')).toBeDefined()
+        expect(screen.getByText(/Suggest books to be read by your book club/i)).toBeDefined()
         const registrationLink = screen.getByRole('link', { name: /go to registration/i })
         expect(registrationLink).toBeDefined()
         expect(registrationLink.getAttribute('href')).toBe('/registration')
