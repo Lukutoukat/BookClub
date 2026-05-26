@@ -15,12 +15,7 @@ RUN npm install
 COPY . .
  
  
-# Ensure the "node" user owns the application files
-RUN chown -R node:node /app
- 
- 
-# Switch to the built-in non-root "node" user
-USER node
+
  
  
 # Expose Vite dev server port

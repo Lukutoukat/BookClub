@@ -12,28 +12,33 @@ interface User {
   password_hash?: string
 }
 
-userRouter.get('/', async (_req: Request, res: Response) => {
-  try {
-    const users = await prisma.user.findMany()
-
-    res.json(users)
-  } catch (error) {
-    console.error('GET /api/users error:', error)
-
-    res.status(500).json({ error: 'database error' })
-  }
-})
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
 
 userRouter.post('/', async (req: Request<unknown, unknown, User>, res: Response) => {
   const newUser: User = req.body
 
-  // Validate required fields
   if (!newUser.email || !newUser.name || !newUser.password) {
     res.status(400).json({ error: 'email, name, and password are required' })
     return
   }
 
+  if (!PASSWORD_REGEX.test(newUser.password)) {
+    res.status(400).json({
+      error:
+        'Password must be at least 8 characters long and contain uppercase, lowercase, and a number'
+    })
+    return
+  }
+
   try {
+    const existingUser = await prisma.user.findFirst({
+      where: { name: newUser.name }
+    })
+    if (existingUser) {
+      res.status(400).json({ error: 'Username already exists' })
+      return
+    }
+
     const saltRounds = 10
     const password_hash = await bcrypt.hash(newUser.password, saltRounds)
 
@@ -53,6 +58,18 @@ userRouter.post('/', async (req: Request<unknown, unknown, User>, res: Response)
     res.json(user)
   } catch (error) {
     console.error('POST /api/users error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
+})
+
+userRouter.get('/', async (_req: Request, res: Response) => {
+  try {
+    const users = await prisma.user.findMany()
+
+    res.json(users)
+  } catch (error) {
+    console.error('GET /api/users error:', error)
+
     res.status(500).json({ error: 'database error' })
   }
 })

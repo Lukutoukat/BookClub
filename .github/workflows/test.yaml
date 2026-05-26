@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_call:
 
 jobs:
-  lint-backend:
+  test-backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,11 +28,11 @@ jobs:
           DATABASE_URL: "postgresql://dummy:dummy@localhost/dummy"
         run: npx prisma generate
 
-      - name: Lint backend
+      - name: Test backend
         working-directory: bookclub-backend
-        run: npm run lint
+        run: npm run test
 
-  lint-frontend:
+  test-frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -48,6 +48,6 @@ jobs:
         working-directory: bookclub-front
         run: npm ci
 
-      - name: Lint frontend
+      - name: Test frontend
         working-directory: bookclub-front
-        run: npm run lint
+        run: npm run test

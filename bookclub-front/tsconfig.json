@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["vitest/globals"],
     "target": "esnext",
     "noEmit": true,
     "noUnusedLocals": true,
@@ -11,7 +12,7 @@
     "allowImportingTsExtensions": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
   },
   "files": [],
   "references": [
