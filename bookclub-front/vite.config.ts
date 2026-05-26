@@ -13,7 +13,7 @@ export default defineConfig({
     host: '0.0.0.0',
     hmr: {
       host: 'localhost',
-      port: 13000,
+      clientPort: 13000,
     },
     watch: {
       ignored: ['**/coverage']
