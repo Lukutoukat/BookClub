@@ -18,5 +18,8 @@ spec:
           ports:
             - containerPort: 3003
           env:
-           - name: DB_URL
-             value: postgresql://ohtuprojektitesti:passwordhere@hostnamehere:5432/ohtuprojekti?targetServerType=primary&ssl=true
+           - name: DATABASE_URL
+             valueFrom:
+              configMapKeyRef:
+                name: bookclub-config
+                key: DATABASE_URL

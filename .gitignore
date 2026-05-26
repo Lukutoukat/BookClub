@@ -29,3 +29,5 @@ coverage
 */generated
 
 coverage
+configmap.yaml
+roles.yaml
