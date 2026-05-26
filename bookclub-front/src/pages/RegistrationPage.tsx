@@ -40,7 +40,7 @@ const RegistrationPage = () => {
 
   const handleConfirmPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => {Settings
+  ) => {
     setConfirmPassword(event.target.value)
   }
 
@@ -78,9 +78,8 @@ const RegistrationPage = () => {
         }
       } else {
         setMessage("Unexpected error occurred")
+      }
     }
-  }
-
   }
 
   return (
