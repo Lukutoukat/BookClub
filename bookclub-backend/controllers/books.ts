@@ -4,14 +4,14 @@ import { prisma } from '../db.ts'
 const bookRouter = express.Router()
 
 interface Book {
-  isbn: string,
   name: string,
   author: string,
-  year: string,
-  pages: string,
-  comment: string,
-  language: string,
-  genre: string
+  year: number,
+  isbn?: string,
+  pages?: number,
+  comment?: string,
+  language?: string,
+  genre?: string
 }
 
 bookRouter.get('/', async (_req: Request, res: Response) => {
@@ -47,12 +47,17 @@ bookRouter.post('/', async (req: Request<unknown, unknown, Book>, res: Response)
   }
 })
 
-bookRouter.delete('/:isbn', async (_req, res) => {
-  const isbn: string = _req.params.isbn
+bookRouter.delete('/:id', async (_req, res) => {
+  const id: number = parseInt(_req.params.id, 10)
+
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'invalid book id' })
+    return
+  }
 
   try {
     await prisma.book.delete({
-      where: { isbn }
+      where: { id }
     })
     res.status(204).end()
   } catch(error) {

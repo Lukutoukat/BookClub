@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
 
 import { type CreateBook } from '../services/books'
+import { isValidISBN, cleanISBN } from '../lib/isbnValidator'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,7 +15,18 @@ import {
   CardTitle
 } from '@/components/ui/card'
 
-const emptyBook: CreateBook = {
+interface BookFormState {
+  isbn: string
+  name: string
+  author: string
+  year: string
+  pages: string
+  comment: string
+  language: string
+  genre: string
+}
+
+const emptyBook: BookFormState = {
   isbn: '',
   name: '',
   author: '',
@@ -27,7 +39,7 @@ const emptyBook: CreateBook = {
 
 type FieldProps = {
   label: string
-  name: keyof CreateBook
+  name: keyof BookFormState
   value: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   placeholder?: string
@@ -61,7 +73,8 @@ type BookFormProps = {
 }
 
 const BookForm = ({ addBook }: BookFormProps) => {
-  const [newBook, setNewBook] = useState<CreateBook>(emptyBook)
+  const [newBook, setNewBook] = useState<BookFormState>(emptyBook)
+  const [errors, setErrors] = useState<string[]>([])
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -72,13 +85,82 @@ const BookForm = ({ addBook }: BookFormProps) => {
       ...currentBook,
       [name]: value
     }))
+    // Clear errors when user starts typing
+    if (errors.length > 0) {
+      setErrors([])
+    }
+  }
+
+  const validateForm = (): boolean => {
+    const formErrors: string[] = []
+
+    // Validate name (required)
+    if (!newBook.name || newBook.name.trim() === '') {
+      formErrors.push('Book title is required.')
+    }
+
+    // Validate author (required)
+    if (!newBook.author || newBook.author.trim() === '') {
+      formErrors.push('Author is required.')
+    }
+
+    // Validate year (required)
+    const yearNum = parseInt(newBook.year, 10)
+    
+    if (yearNum > new Date().getFullYear()) {
+      formErrors.push('Year cannot be in the future.')
+    } else if (yearNum == 0){
+      formErrors.push('The year zero does not exist.')
+    } else if (!newBook.year || isNaN(yearNum)) {
+      formErrors.push('Year must be a valid number.')
+    }
+
+    // Validate pages only if provided
+    if (newBook.pages) {
+      const pagesNum = parseInt(newBook.pages, 10)
+      if (isNaN(pagesNum) || pagesNum < 0) {
+        formErrors.push('Pages must be a non-negative number.')
+      }
+    }
+
+    // Validate ISBN only if provided
+    if (newBook.isbn && !isValidISBN(newBook.isbn)) {
+      formErrors.push('Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).')
+    }
+
+    if (formErrors.length > 0) {
+      setErrors(formErrors)
+      return false
+    }
+
+    return true
   }
 
   const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
-    await addBook(newBook)
-    setNewBook(emptyBook)
+    if (!validateForm()) {
+      return
+    }
+
+    const bookToSubmit: CreateBook = {
+      isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+      name: newBook.name,
+      author: newBook.author,
+      year: parseInt(newBook.year, 10),
+      pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+      comment: newBook.comment || undefined,
+      language: newBook.language || undefined,
+      genre: newBook.genre || undefined
+    }
+
+    try {
+      await addBook(bookToSubmit)
+      setNewBook(emptyBook)
+      setErrors([])
+    } catch (error) {
+      setErrors(['Failed to add book. Please try again.\n' + (error instanceof Error ? error.message : 'Unknown error')])
+    }
   }
 
   return (
@@ -90,17 +172,15 @@ const BookForm = ({ addBook }: BookFormProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent className="px-4 pt-1 sm:px-6 sm:pt-4">
+        {errors.length > 0 && (
+          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
+            {errors.map((error, idx) => (
+              <div key={idx}>{error}</div>
+            ))}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
           <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
-            <div className="sm:col-span-2">
-              <Field
-                label="ISBN"
-                name="isbn"
-                value={newBook.isbn}
-                onChange={handleChange}
-                placeholder="9780141439600"
-              />
-            </div>
             <div className="sm:col-span-2">
               <Field
                 label="Title"
@@ -108,6 +188,7 @@ const BookForm = ({ addBook }: BookFormProps) => {
                 value={newBook.name}
                 onChange={handleChange}
                 placeholder="A Tale of Two Cities"
+                required={true}
               />
             </div>
             <Field
@@ -116,6 +197,7 @@ const BookForm = ({ addBook }: BookFormProps) => {
               value={newBook.author}
               onChange={handleChange}
               placeholder="Charles Dickens"
+              required={true}
             />
             <Field
               label="Year"
@@ -123,6 +205,8 @@ const BookForm = ({ addBook }: BookFormProps) => {
               value={newBook.year}
               onChange={handleChange}
               placeholder="1859"
+              type="number"
+              required={true}
             />
             <Field
               label="Pages"
@@ -130,6 +214,8 @@ const BookForm = ({ addBook }: BookFormProps) => {
               value={newBook.pages}
               onChange={handleChange}
               placeholder="544"
+              type="number"
+              required={false}
             />
             <Field
               label="Language"
@@ -137,6 +223,7 @@ const BookForm = ({ addBook }: BookFormProps) => {
               value={newBook.language}
               onChange={handleChange}
               placeholder="English"
+              required={false}
             />
             <div className="sm:col-span-2">
               <Field
@@ -145,6 +232,17 @@ const BookForm = ({ addBook }: BookFormProps) => {
                 value={newBook.genre}
                 onChange={handleChange}
                 placeholder="Historical fiction"
+                required={false}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <Field
+                label="ISBN"
+                name="isbn"
+                value={newBook.isbn}
+                onChange={handleChange}
+                placeholder="9780141439600"
+                required={false}
               />
             </div>
           </div>

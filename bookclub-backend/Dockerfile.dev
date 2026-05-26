@@ -14,8 +14,6 @@ RUN npm install
 # Copy rest of the source code
 COPY . .
 
-
-
 # Expose backend port
 EXPOSE 3003
 

@@ -62,7 +62,7 @@ describe("BookForm", () => {
 
     render(<BookForm addBook={addBookMock} />);
 
-    await user.type(screen.getByPlaceholderText("9780141439600"), "1234567890");
+    await user.type(screen.getByPlaceholderText("9780141439600"), "9780451524935");
     await user.type(
       screen.getByPlaceholderText("A Tale of Two Cities"),
       "Clean Code",
@@ -91,11 +91,11 @@ describe("BookForm", () => {
     expect(addBookMock).toHaveBeenCalledTimes(1);
 
     expect(addBookMock).toHaveBeenCalledWith({
-      isbn: "1234567890",
+      isbn: "9780451524935",
       name: "Clean Code",
       author: "Robert C. Martin",
-      year: "2008",
-      pages: "464",
+      year: 2008,
+      pages: 464,
       language: "English",
       genre: "Programming",
       comment: "Must-read book",
@@ -109,7 +109,7 @@ describe("BookForm", () => {
 
     const titleInput = screen.getByPlaceholderText("A Tale of Two Cities");
 
-    await user.type(screen.getByPlaceholderText("9780141439600"), "1234567890");
+    await user.type(screen.getByPlaceholderText("9780141439600"), "9780596007126");
     await user.type(titleInput, "Clean Code");
     await user.type(
       screen.getByPlaceholderText("Charles Dickens"),
@@ -134,7 +134,7 @@ describe("BookForm", () => {
 
     render(<BookForm addBook={addBookMock} />);
 
-    await user.type(screen.getByPlaceholderText("9780141439600"), "1234567890");
+    await user.type(screen.getByPlaceholderText("9780141439600"), "9781234567897");
     await user.type(
       screen.getByPlaceholderText("A Tale of Two Cities"),
       "Clean Code",
@@ -158,5 +158,106 @@ describe("BookForm", () => {
     await user.click(button);
 
     expect(addBookMock).toHaveBeenCalled();
+  });
+
+  describe("ISBN validation", () => {
+    it("rejects invalid ISBN (too few digits)", async () => {
+      const user = userEvent.setup();
+
+      render(<BookForm addBook={addBookMock} />);
+
+      await user.type(screen.getByPlaceholderText("9780141439600"), "123");
+      await user.type(
+        screen.getByPlaceholderText("A Tale of Two Cities"),
+        "Clean Code",
+      );
+      await user.type(
+        screen.getByPlaceholderText("Charles Dickens"),
+        "Robert C. Martin",
+      );
+      await user.type(screen.getByPlaceholderText("1859"), "2008");
+
+      const button = screen.getByRole("button", { name: /add book/i });
+      await user.click(button);
+
+      expect(screen.getByText(/Invalid ISBN/i)).toBeInTheDocument();
+      expect(addBookMock).not.toHaveBeenCalled();
+    });
+
+    it("rejects invalid ISBN (incorrect checksum)", async () => {
+      const user = userEvent.setup();
+
+      render(<BookForm addBook={addBookMock} />);
+
+      await user.type(screen.getByPlaceholderText("9780141439600"), "9780451524936");
+      await user.type(
+        screen.getByPlaceholderText("A Tale of Two Cities"),
+        "Clean Code",
+      );
+      await user.type(
+        screen.getByPlaceholderText("Charles Dickens"),
+        "Robert C. Martin",
+      );
+      await user.type(screen.getByPlaceholderText("1859"), "2008");
+
+      const button = screen.getByRole("button", { name: /add book/i });
+      await user.click(button);
+
+      expect(screen.getByText(/Invalid ISBN/i)).toBeInTheDocument();
+      expect(addBookMock).not.toHaveBeenCalled();
+    });
+
+    it("accepts valid ISBN-13 with dashes", async () => {
+      const user = userEvent.setup();
+
+      render(<BookForm addBook={addBookMock} />);
+
+      await user.type(screen.getByPlaceholderText("9780141439600"), "978-0-451-52493-5");
+      await user.type(
+        screen.getByPlaceholderText("A Tale of Two Cities"),
+        "Clean Code",
+      );
+      await user.type(
+        screen.getByPlaceholderText("Charles Dickens"),
+        "Robert C. Martin",
+      );
+      await user.type(screen.getByPlaceholderText("1859"), "2008");
+
+      const button = screen.getByRole("button", { name: /add book/i });
+      await user.click(button);
+
+      expect(addBookMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          isbn: "9780451524935",
+        }),
+      );
+    });
+
+    it("accepts ISBN-10 format", async () => {
+      const user = userEvent.setup();
+
+      // 0-306-40615-2 is a valid ISBN-10
+      render(<BookForm addBook={addBookMock} />);
+
+      await user.type(screen.getByPlaceholderText("9780141439600"), "0-306-40615-2");
+      await user.type(
+        screen.getByPlaceholderText("A Tale of Two Cities"),
+        "Test Book",
+      );
+      await user.type(
+        screen.getByPlaceholderText("Charles Dickens"),
+        "Test Author",
+      );
+      await user.type(screen.getByPlaceholderText("1859"), "2008");
+
+      const button = screen.getByRole("button", { name: /add book/i });
+      await user.click(button);
+
+      expect(addBookMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          isbn: "0306406152",
+        }),
+      );
+    });
   });
 });
