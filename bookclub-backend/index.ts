@@ -28,6 +28,10 @@ app.get('/{*splat}', (_req, res) => {
 
 const PORT = 3003
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`)
-})
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`)
+  })
+}
+
+export { app }
