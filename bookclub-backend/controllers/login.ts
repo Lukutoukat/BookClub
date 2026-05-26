@@ -2,9 +2,11 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import express from 'express'
 import { prisma } from '../db.ts'
+import dotenv from 'dotenv'
+
 import { type Request, type Response } from 'express'
 var loginRouter = express.Router()
-
+dotenv.config()
 interface User {
   id?: number,
   email: string,
@@ -18,7 +20,7 @@ loginRouter.post('/', async (req: Request, res: Response) => {
   const { name, password } = req.body
   console.log("HERE IS DEBUGGG", name, password)
   console.log(req.body)
-  if (password) {
+  if (!password) {
     return res.status(401).end()
   }
 
@@ -42,8 +44,10 @@ loginRouter.post('/', async (req: Request, res: Response) => {
     username: user.name,
     id: user.id
   }
-
-  const token = jwt.sign(userForToken, process.env.SECRET!)
+  if (!process.env.SECRET) {
+    throw new Error('came across a problem related to token :)')
+  }
+  const token = jwt.sign(userForToken, process.env.SECRET)
 
   res
     .status(200)
