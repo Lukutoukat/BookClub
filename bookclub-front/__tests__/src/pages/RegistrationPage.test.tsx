@@ -20,68 +20,58 @@ describe('RegistrationPage', () => {
     vi.clearAllMocks()
   })
 
-  test('renders the page title', () => {
-    renderWithRouter(<RegistrationPage />)
+  describe('page structure and content', () => {
+    test('renders page title, heading, and description', () => {
+      renderWithRouter(<RegistrationPage />)
 
-    expect(screen.getByText('Join the club')).toBeDefined()
+      expect(screen.getByText('Join the club')).toBeDefined()
+      expect(screen.getByText('Register a user')).toBeDefined()
+      expect(screen.getByText('Create a new account to be able to suggest books and keep track of your reading list.')).toBeDefined()
+    })
+
+    test('renders registration badge and back link', () => {
+      renderWithRouter(<RegistrationPage />)
+
+      expect(screen.getByText('Registration')).toBeDefined()
+      const link = screen.getByRole('link', { name: 'Back to books' })
+      expect(link).toBeDefined()
+    })
+
+    test('renders registration form with all input fields and submit button', () => {
+      renderWithRouter(<RegistrationPage />)
+
+      expect(screen.getByLabelText('Email address')).toBeDefined()
+      expect(screen.getByLabelText('Username')).toBeDefined()
+      expect(screen.getByLabelText('Password')).toBeDefined()
+      expect(screen.getByLabelText('Confirm Password')).toBeDefined()
+      expect(screen.getByRole('button', { name: 'Register user' })).toBeDefined()
+    })
+
+    test('back link navigates to books page', () => {
+      renderWithRouter(<RegistrationPage />)
+
+      const link = screen.getByRole('link', { name: 'Back to books' })
+      expect(link.getAttribute('href')).toBe('/books')
+    })
   })
 
-  test('renders the registration card heading', () => {
-    renderWithRouter(<RegistrationPage />)
+  describe('form submission', () => {
+    test('handles form submission successfully', async () => {
+      vi.mocked(userService.create).mockResolvedValue({} as any)
 
-    expect(screen.getByText('Register a user')).toBeDefined()
-  })
+      const userInstance = user.setup()
+      renderWithRouter(<RegistrationPage />)
 
-  test('renders the registration form', () => {
-    renderWithRouter(<RegistrationPage />)
+      await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
+      await userInstance.type(screen.getByLabelText('Username'), 'testuser')
+      await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
+      await userInstance.type(screen.getByLabelText('Confirm Password'), 'TestPass123')
 
-    expect(screen.getByText('Create a new account to be able to suggest books and keep track of your reading list.')).toBeDefined()
-  })
+      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
 
-  test('renders the back to books link', () => {
-    renderWithRouter(<RegistrationPage />)
-
-    const link = screen.getByRole('link', { name: 'Back to books' })
-    expect(link).toBeDefined()
-  })
-
-  test('renders registration badge', () => {
-    renderWithRouter(<RegistrationPage />)
-
-    expect(screen.getByText('Registration')).toBeDefined()
-  })
-
-  test('renders all form input fields', () => {
-    renderWithRouter(<RegistrationPage />)
-
-    expect(screen.getByLabelText('Email address')).toBeDefined()
-    expect(screen.getByLabelText('Username')).toBeDefined()
-    expect(screen.getByLabelText('Password')).toBeDefined()
-    expect(screen.getByLabelText('Confirm Password')).toBeDefined()
-  })
-
-  test('renders submit button', () => {
-    renderWithRouter(<RegistrationPage />)
-
-    const submitButton = screen.getByRole('button', { name: 'Register user' })
-    expect(submitButton).toBeDefined()
-  })
-
-  test('handles form submission successfully', async () => {
-    vi.mocked(userService.create).mockResolvedValue({} as any)
-
-    const userInstance = user.setup()
-    renderWithRouter(<RegistrationPage />)
-
-    await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
-    await userInstance.type(screen.getByLabelText('Username'), 'testuser')
-    await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
-    await userInstance.type(screen.getByLabelText('Confirm Password'), 'TestPass123')
-
-    await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
-
-    await waitFor(() => {
-      expect(screen.getByText('Registration saved.')).toBeDefined()
+      await waitFor(() => {
+        expect(screen.getByText('Registration saved.')).toBeDefined()
+      })
     })
   })
 })

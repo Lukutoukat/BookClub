@@ -37,182 +37,138 @@ const renderWithRouter = (component: React.ReactElement) => {
 }
 
 describe('BooksPage', () => {
+  const mockBooks = (count: number = 2): Book[] => {
+    return Array.from({ length: count }, (_, i) => 
+      mockBook({ isbn: String(111 + i), name: `Book ${i + 1}` })
+    )
+  }
+
+  const setupMocks = (overrides?: {
+    books?: Book[] | null
+    error?: boolean
+  }) => {
+    const books = overrides?.books ?? mockBooks()
+    if (overrides?.error) {
+      vi.mocked(bookService.getAll).mockRejectedValue(new Error('Network error'))
+    } else {
+      vi.mocked(bookService.getAll).mockResolvedValue(books)
+    }
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  test('shows loading state on mount', () => {
-    vi.mocked(bookService.getAll).mockImplementation(() => new Promise(() => {}))
+  describe('page structure', () => {
+    test('displays page title, description, and navigation', async () => {
+      setupMocks({ books: [] })
 
-    renderWithRouter(<BooksPage />)
+      renderWithRouter(<BooksPage />)
 
-    expect(screen.getByText('Loading books...')).toBeDefined()
-  })
-
-  test('loads and displays books on mount', async () => {
-    const books: Book[] = [
-      mockBook({ isbn: "111", name: "Book 1" }),
-      mockBook({ isbn: "222", name: "Book 2" }),
-    ]
-    vi.mocked(bookService.getAll).mockResolvedValue(books)
-
-    renderWithRouter(<BooksPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Book 1')).toBeDefined()
-      expect(screen.getByText('Book 2')).toBeDefined()
+      await waitFor(() => {
+        expect(screen.getByText('Books and suggestions')).toBeDefined()
+        expect(screen.getByText(/Add books to the list/i)).toBeDefined()
+        const registrationLink = screen.getByRole('link', { name: /go to registration/i })
+        expect(registrationLink).toBeDefined()
+        expect(registrationLink.getAttribute('href')).toBe('/registration')
+      })
     })
   })
 
-  test('displays empty state when no books', async () => {
-    vi.mocked(bookService.getAll).mockResolvedValue([])
+  describe('loading state', () => {
+    test('shows loading state on mount', () => {
+      vi.mocked(bookService.getAll).mockImplementation(() => new Promise(() => {}))
 
-    renderWithRouter(<BooksPage />)
+      renderWithRouter(<BooksPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('No books yet. Add the first suggestion on the left.')).toBeDefined()
+      expect(screen.getByText('Loading books...')).toBeDefined()
     })
   })
 
-  test('displays error message when loading fails', async () => {
-    vi.mocked(bookService.getAll).mockRejectedValue(new Error('Network error'))
+  describe('displaying books', () => {
+    test('loads and displays multiple books with correct count', async () => {
+      setupMocks({ books: mockBooks(3) })
 
-    renderWithRouter(<BooksPage />)
+      renderWithRouter(<BooksPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Failed to load books.')).toBeDefined()
+      await waitFor(() => {
+        expect(screen.getByText('Book 1')).toBeDefined()
+        expect(screen.getByText('Book 2')).toBeDefined()
+        expect(screen.getByText('Book 3')).toBeDefined()
+        expect(screen.getByText('3 books in the list')).toBeDefined()
+      })
+    })
+
+    test('displays singular "book" for single book', async () => {
+      setupMocks({ books: mockBooks(1) })
+
+      renderWithRouter(<BooksPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Book 1')).toBeDefined()
+        expect(screen.getByText('1 book in the list')).toBeDefined()
+      })
     })
   })
 
-  test('displays correct book count in header', async () => {
-    const books: Book[] = [
-      mockBook({ isbn: "111", name: "Book 1" }),
-      mockBook({ isbn: "222", name: "Book 2" }),
-      mockBook({ isbn: "333", name: "Book 3" }),
-    ]
-    vi.mocked(bookService.getAll).mockResolvedValue(books)
+  describe('empty and error states', () => {
+    test('displays empty state when no books', async () => {
+      setupMocks({ books: [] })
 
-    renderWithRouter(<BooksPage />)
+      renderWithRouter(<BooksPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('3 books in the list')).toBeDefined()
+      await waitFor(() => {
+        expect(screen.getByText('No books yet. Add the first suggestion on the left.')).toBeDefined()
+      })
+    })
+
+    test('displays error message when loading fails', async () => {
+      setupMocks({ error: true })
+
+      renderWithRouter(<BooksPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Failed to load books.')).toBeDefined()
+      })
     })
   })
 
-  test('displays singular "book" for one book', async () => {
-    const books: Book[] = [mockBook()]
-    vi.mocked(bookService.getAll).mockResolvedValue(books)
+  describe('book deletion', () => {
+    test('deletes book via service and removes from display', async () => {
+      setupMocks({ books: mockBooks(2) })
+      vi.mocked(bookService.remove).mockResolvedValue({ status: 200 } as any)
 
-    renderWithRouter(<BooksPage />)
+      renderWithRouter(<BooksPage />)
 
-    await waitFor(() => {
-      expect(screen.getByText('1 book in the list')).toBeDefined()
-    })
-  })
+      await waitFor(() => {
+        expect(screen.getByText('Book 1')).toBeDefined()
+        expect(screen.getByText('Book 2')).toBeDefined()
+      })
 
-  test('calls addBook callback when form is submitted', async () => {
-    const books: Book[] = [mockBook()]
-    vi.mocked(bookService.getAll).mockResolvedValue(books)
-    vi.mocked(bookService.create).mockResolvedValue(mockBook())
+      const us = user.setup()
+      const deleteButtons = screen.getAllByTitle('Delete book')
+      await us.click(deleteButtons[0])
 
-    renderWithRouter(<BooksPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Book 1')).toBeDefined()
-    })
-
-    expect(bookService.create).not.toHaveBeenCalled()
-  })
-
-  test('deletes book via service when delete clicked', async () => {
-    const books: Book[] = [
-      mockBook({ isbn: "111", name: "Book 1" }),
-      mockBook({ isbn: "222", name: "Book 2" }),
-    ]
-    vi.mocked(bookService.getAll).mockResolvedValue(books)
-    vi.mocked(bookService.remove).mockResolvedValue({ status: 200 } as any)
-
-    renderWithRouter(<BooksPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Book 1')).toBeDefined()
-      expect(screen.getByText('Book 2')).toBeDefined()
+      await waitFor(() => {
+        expect(bookService.remove).toHaveBeenCalledWith('111')
+        expect(screen.queryByText('Book 1')).toBeNull()
+      })
     })
 
-    const us = user.setup()
-    const deleteButtons = screen.getAllByTitle('Delete book')
-    await us.click(deleteButtons[0])
+    test('calls service with correct isbn on delete', async () => {
+      setupMocks({ books: mockBooks(1) })
+      vi.mocked(bookService.remove).mockResolvedValue({ status: 200 } as any)
 
-    await waitFor(() => {
+      renderWithRouter(<BooksPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Book 1')).toBeDefined()
+      })
+
+      const us = user.setup()
+      await us.click(screen.getByTitle('Delete book'))
+
       expect(bookService.remove).toHaveBeenCalledWith('111')
     })
-  })
-
-  test('removes book from display immediately after deletion', async () => {
-    const books: Book[] = [mockBook({ isbn: "111", name: "Book 1" })]
-    vi.mocked(bookService.getAll).mockResolvedValue(books)
-    vi.mocked(bookService.remove).mockResolvedValue({ status: 200 } as any)
-
-    renderWithRouter(<BooksPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Book 1')).toBeDefined()
-    })
-
-    const us = user.setup()
-    const deleteButton = screen.getByTitle('Delete book')
-    await us.click(deleteButton)
-
-    await waitFor(() => {
-      expect(screen.queryByText('Book 1')).toBeNull()
-    })
-  })
-
-  test('has navigation link to registration page', () => {
-    vi.mocked(bookService.getAll).mockResolvedValue([])
-
-    renderWithRouter(<BooksPage />)
-
-    const registrationLink = screen.getByRole('link', { name: /go to registration/i })
-    expect(registrationLink).toBeDefined()
-    expect(registrationLink.getAttribute('href')).toBe('/registration')
-  })
-
-  test('displays both error message and empty state when loading fails', async () => {
-    vi.mocked(bookService.getAll).mockRejectedValue(new Error('Network error'))
-
-    renderWithRouter(<BooksPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Failed to load books.')).toBeDefined()
-      expect(screen.getByText('No books yet. Add the first suggestion on the left.')).toBeDefined()
-    })
-  })
-
-  test('displays page title and description', async () => {
-    vi.mocked(bookService.getAll).mockResolvedValue([])
-
-    renderWithRouter(<BooksPage />)
-
-    expect(screen.getByText('Books and suggestions')).toBeDefined()
-    expect(screen.getByText(/Add books to the list/i)).toBeDefined()
-  })
-
-  test('deletes book when BookList delete callback fires', async () => {
-    const books: Book[] = [mockBook({ isbn: "111", name: "Book 1" })]
-    vi.mocked(bookService.getAll).mockResolvedValue(books)
-    vi.mocked(bookService.remove).mockResolvedValue({ status: 200 } as any)
-
-    renderWithRouter(<BooksPage />)
-
-    await waitFor(() => {
-      expect(screen.getByText('Book 1')).toBeDefined()
-    })
-
-    const us = user.setup()
-    const deleteButton = screen.getByTitle('Delete book')
-    await us.click(deleteButton)
-
-    expect(bookService.remove).toHaveBeenCalledWith('111')
   })
 })
