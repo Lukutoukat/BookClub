@@ -1,12 +1,15 @@
 import express from 'express'
 const app = express()
+const tokenExtractor = require('./middleware/tokenExtractor')
 import path from 'path'
 import loginRouter from './controllers/login.ts'
 import userRouter from './controllers/users.ts'
 import bookRouter from './controllers/books.ts'
 
+
 app.use(express.json())
 app.use(express.static('dist'))
+app.use(tokenExtractor)
 app.use('/api/books', bookRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
