@@ -1,36 +1,59 @@
-import type { CreateBookclub } from "../services/bookclubs"
+import { useState } from 'react'
+import bookclubService, { type CreateBookclub } from "../services/bookclubs"
+import { SectionHeader } from './SectionHeader'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent } from '@/components/ui/card'
+import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
-type BookclubFormProps = {
-    addBookclub: (event: React.SyntheticEvent<HTMLFormElement>) => Promise<void>,
-    newBookclub: CreateBookclub,
-    handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+const emptyBookclub: CreateBookclub = {
+  name: '',
 }
 
-const BookclubForm = ({
-    addBookclub,
-    newBookclub,
-    handleChange
-}: BookclubFormProps) => {
+const BookclubForm = () => {
+  const [newBookclub, setNewBookclub] = useState<CreateBookclub>(emptyBookclub)
+  
+  const handleChange = (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+      const { name, value } = event.target
+
+      setNewBookclub((currentBookclub) => ({
+      ...currentBookclub,
+      [name]: value
+      }))
+  }
+
+  const addBookclub = async (event: React.SyntheticEvent<HTMLFormElement>) => {
+      event.preventDefault()
+      await bookclubService.create(newBookclub)
+  }
     return (
-      <form onSubmit={addBookclub} className="space-y-4 sm:space-y-6">
-      <div className="grid gap-4 rounded-3xl border border-border/70 bg-muted/20 p-4 shadow-sm sm:gap-5 sm:p-6">
-        <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm text-foreground">
-            Name your bookclub
-          </Label>
-          <Input
-            id="name"
-            name="name"
-            value={newBookclub.name}
-            onChange={handleChange}
-            autoComplete="name"
-            placeholder="Read It And Weep"
-            required
-          />
+      <Card className="card-base">
+        <SectionHeader 
+        title="Create a new bookclub" 
+        description="Create a new bookclub, where you can invite your friends to join"
+        />
+        
+      <CardContent className="card-content">
+      <form onSubmit={addBookclub} className="card-form">
+      <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
+        <div className="sm:col-span-2">
+          <Field>
+            <FieldLabel htmlFor="name">Name your bookclub</FieldLabel>
+            <FieldContent>
+              <Input
+                id="name"
+                name="name"
+                value={newBookclub.name}
+                onChange={handleChange}
+                autoComplete="name"
+                placeholder="Read It And Weep"
+                required
+              />
+            </FieldContent>
+          </Field>
         </div>  
         </div> 
 
@@ -41,10 +64,12 @@ const BookclubForm = ({
         <Button type="submit" size="lg" className="w-full sm:w-auto">
           Create
         </Button>
-      </div>
+      </div>  
 
     </form>
-    )
+    </CardContent>
+  </Card>
+  )
 }
 
 export default BookclubForm
