@@ -1,0 +1,13 @@
+POST http://localhost:13000/api/books
+Content-Type: application/json
+
+{
+  "isbn": "12345678",
+  "name": "hp",
+  "author": "hertta",
+  "year": "12345",
+  "pages": "2345",
+  "comment": "moi",
+  "language": "soomi",
+  "genre": "romance"
+}
