@@ -31,6 +31,15 @@ jobs:
       - name: Test backend
         working-directory: bookclub-backend
         run: npm run test
+        
+      - name: Coverage report
+        working-directory: bookclub-backend
+        run: npx vitest run --coverage
+
+      - name: Coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   test-frontend:
     runs-on: ubuntu-latest
@@ -51,3 +60,12 @@ jobs:
       - name: Test frontend
         working-directory: bookclub-front
         run: npm run test
+        
+      - name: Coverage report
+        working-directory: bookclub-front
+        run: npx vitest run --coverage
+
+      - name: Coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
