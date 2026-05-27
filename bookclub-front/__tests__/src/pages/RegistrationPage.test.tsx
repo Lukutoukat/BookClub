@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import RegistrationPage from '../../../src/pages/RegistrationPage'
@@ -32,7 +32,11 @@ describe('RegistrationPage', () => {
     test('renders registration badge and back link', () => {
       renderWithRouter(<RegistrationPage />)
 
-      expect(screen.getByText('Registration')).toBeDefined()
+      const heading = screen.getByRole('heading', { name: 'Join the club' })
+      const header = heading.closest('header')
+
+      expect(within(header as HTMLElement).getByText('Registration')).toBeDefined()
+
       const link = screen.getByRole('link', { name: 'Back to books' })
       expect(link).toBeDefined()
     })
