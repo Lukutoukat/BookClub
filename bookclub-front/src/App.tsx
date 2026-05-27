@@ -4,6 +4,7 @@ import BooksPage from './pages/BooksPage'
 import RegistrationPage from './pages/RegistrationPage'
 import HomePage from './pages/HomePage'
 import CreateBookclubPage from './pages/CreateBookclubPage'
+import SettingsPage from './pages/SettingsPage'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/create" element={<CreateBookclubPage />} />
         <Route path="/registration" element={<RegistrationPage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/settings" element={<SettingsPage />}/>
       </Routes>
     </BrowserRouter>
   )
