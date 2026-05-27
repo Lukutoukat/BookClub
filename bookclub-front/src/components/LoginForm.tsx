@@ -3,9 +3,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 type LoginFormProps = {
-  email: string
+  username: string
   password: string
-  setEmail: React.Dispatch<React.SetStateAction<string>>
+  setUsername: React.Dispatch<React.SetStateAction<string>>
   setPassword: React.Dispatch<React.SetStateAction<string>>
   handleLogin: (
     event: React.SyntheticEvent<HTMLFormElement>
@@ -13,9 +13,9 @@ type LoginFormProps = {
 }
 
 const LoginForm = ({
-  email,
+  username,
   password,
-  setEmail,
+  setUsername,
   setPassword,
   handleLogin
 }: LoginFormProps) => {
@@ -24,18 +24,18 @@ const LoginForm = ({
       <div className="grid gap-4 rounded-3xl border border-border/70 bg-muted/20 p-4 shadow-sm sm:gap-5 sm:p-6">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm text-foreground">
-            Email address
+            Username
           </Label>
 
           <Input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            value={email}
+            id="username"
+            name="username"
+            type="username"
+            autoComplete="username"
+            placeholder="ilovebookssomuch"
+            value={username}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
+              setUsername(e.target.value)
             }
             required
           />

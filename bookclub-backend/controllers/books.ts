@@ -77,8 +77,7 @@ bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>,
         pages: newBook.pages,
         comment: newBook.comment,
         language: newBook.language,
-        genre: newBook.genre,
-        user: user.id
+        genre: newBook.genre
       }
     })
     return res.json(newBook)

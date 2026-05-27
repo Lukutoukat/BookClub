@@ -18,7 +18,7 @@ import {
 
 const LoginPage = () => {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState<string | null>(null)
 
@@ -29,7 +29,7 @@ const LoginPage = () => {
 
     try {
       const user = await loginService.login({
-        email,
+        username,
         password
       })
 
@@ -38,7 +38,7 @@ const LoginPage = () => {
         JSON.stringify(user)
       )
 
-      setEmail('')
+      setUsername('')
       setPassword('')
 
       void navigate('/books')
@@ -93,16 +93,15 @@ const LoginPage = () => {
             <CardTitle className="text-xl sm:text-2xl">Login</CardTitle>
 
             <CardDescription className="text-sm sm:text-base">
-              Login to be able to suggest books and keep track of your reading
-              list.
+              Log in to be able to join bookclubs and save the books you want to read in one place.
             </CardDescription>
           </CardHeader>
 
           <CardContent className="pt-4 sm:pt-6">
             <LoginForm 
-              email={email}
+              username={username}
               password={password}
-              setEmail={setEmail}
+              setUsername={setUsername}
               setPassword={setPassword}
               handleLogin={handleLogin}
             />

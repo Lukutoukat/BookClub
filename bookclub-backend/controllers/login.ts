@@ -16,19 +16,20 @@ interface User {
 }
 
 interface LogIn {
-  name?: string,
+  username?: string,
   password?: string
 }
 
 loginRouter.post('/', async (req: Request, res: Response) => {
-  const { name, password } = req.body as LogIn
+  const { username, password } = req.body as LogIn
+  console.log('NIMI TULI TÄNNE!!!', username)
   if (!password) {
     return res.status(401).end()
   }
 
   const user: User | null = await prisma.user.findUnique({
     where: {
-      name: name
+      name: username
     },
   })
 
