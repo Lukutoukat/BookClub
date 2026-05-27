@@ -1,7 +1,13 @@
-POST http://localhost:13000/api/login
+POST http://localhost:13000/api/books
 Content-Type: application/json
 
 {
-  "name": "nene",
-  "password": "ne"
+  "isbn": "12345678",
+  "name": "hp",
+  "author": "hertta",
+  "year": "12345",
+  "pages": "2345",
+  "comment": "moi",
+  "language": "soomi",
+  "genre": "romance"
 }
