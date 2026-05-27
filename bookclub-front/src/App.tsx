@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import BooksPage from './pages/BooksPage'
 import RegistrationPage from './pages/RegistrationPage'
+import HomePage from './pages/HomePage'
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
         <Route path="/" element={<Navigate to="/registration" replace />} />
         <Route path="/books" element={<BooksPage />} />
         <Route path="/registration" element={<RegistrationPage />} />
+        <Route path="/home" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   )

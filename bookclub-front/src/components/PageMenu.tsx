@@ -16,8 +16,12 @@ export const PageMenu = () => {
       icon: <Bookmark className="h-5 w-5" />,
     },
     {
-      label: 'registration',
+      label: 'Registration',
       to: '/registration',
+      icon: <Settings className="h-5 w-5" />,
+    },{
+      label: 'Home',
+      to: '/home',
       icon: <Settings className="h-5 w-5" />,
     },
   ]
