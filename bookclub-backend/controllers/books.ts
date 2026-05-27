@@ -1,6 +1,7 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
 import jwt from 'jsonwebtoken'
+import userExtractor from '../middleware/userExtractor.ts'
 
 const bookRouter = express.Router()
 
@@ -33,7 +34,7 @@ bookRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
-bookRouter.post('/', async (req: Request<unknown, unknown, Book>, res: Response) => {
+bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>, res: Response) => {
   const newBook: Book = req.body
 
   const token = getTokenFrom(req)
@@ -77,6 +78,7 @@ bookRouter.post('/', async (req: Request<unknown, unknown, Book>, res: Response)
         comment: newBook.comment,
         language: newBook.language,
         genre: newBook.genre,
+        user: user.id
       }
     })
     return res.json(newBook)

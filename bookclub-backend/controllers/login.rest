@@ -1,18 +1,19 @@
-POST http://localhost:13000/api/login
+DELETE http://localhost:13000/api/books/12345678
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5lbmVuZW5lIiwiaWQiOjEsImlhdCI6MTc3OTg3MDIxNn0.BogdSiefn0IF6NhE06oWj5Ri5PGIT2PpQBxfLy0P0-A
 
 {
-  "name": "nene",
-  "password": "Moikka1234"
+  "isbn": "12345678",
+  "name": "hp",
+  "author": "hertta",
+  "year": "12345",
+  "pages": "2345",
+  "comment": "moi",
+  "language": "soomi",
+  "genre": "romance"
 }
 
-#{
-#   "isbn": "12345678",
-#   "name": "hp",
-#   "author": "hertta",
-#   "year": "12345",
-#   "pages": "2345",
-#   "comment": "moi",
-#   "language": "soomi",
-#   "genre": "romance"
+# {
+#   "name": "nenenene",
+#   "password": "Nenenene123"
 # }
