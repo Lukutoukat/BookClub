@@ -24,7 +24,7 @@ export const AppNavbar = ({ menuItems }: AppNavbarProps) => {
               key={item.to}
               asChild
               variant={isActive ? 'secondary' : 'ghost'}
-              className="flex h-12 w-20 flex-col items-center justify-center gap-1 px-2 py-1 text-[10px]"
+              className="flex h-15 w-18 flex-col items-center justify-center gap-1 px-2 py-1 text-[10px]"
             >
               <Link to={item.to}>
                 {item.icon}
