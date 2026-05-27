@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import BooksPage from './pages/BooksPage'
 import RegistrationPage from './pages/RegistrationPage'
+import CreateBookclubPage from './pages/CreateBookclubPage'
 
 const App = () => {
   return (
@@ -9,6 +10,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/registration" replace />} />
         <Route path="/books" element={<BooksPage />} />
+        <Route path="/create" element={<CreateBookclubPage />} />
         <Route path="/registration" element={<RegistrationPage />} />
       </Routes>
     </BrowserRouter>
