@@ -34,7 +34,7 @@ jobs:
         
       - name: Coverage report
         working-directory: bookclub-backend
-        run: npx vitest run --coverage
+        run: npm run coverage
 
       - name: Coverage report to Codecov
         uses: codecov/codecov-action@v5
