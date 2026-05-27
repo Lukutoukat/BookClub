@@ -58,7 +58,7 @@ const BookclubForm = () => {
         </div> 
 
         <div className="flex flex-col gap-3 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
-        <p className="max-w-md text-sm text-muted-foreground">
+        <p className="max-w-md text-xs text-muted-foreground">
           Double-check for spelling mistakes before creating a new bookclub.
         </p>
         <Button type="submit" size="lg" className="w-full sm:w-auto">
