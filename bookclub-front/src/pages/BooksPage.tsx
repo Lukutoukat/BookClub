@@ -23,10 +23,8 @@ const BooksPage = () => {
         buttonLink="/registration"
       />
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8">
-        <BookForm onBookAdded={handleBookAdded} />
-        <BookList ref={bookListRef} emptyMessage="No books suggested yet. Be the first to add one!" />
-      </div>
+      <BookForm onBookAdded={handleBookAdded} />
+      <BookList ref={bookListRef} emptyMessage="No books suggested yet. Be the first to add one!" />
     <PageMenu />
     </PageLayout>
   )
