@@ -5,7 +5,8 @@ import { type Book } from '../../../src/services/books'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 const mockBook = (overrides?: Partial<Book>): Book => ({
-  isbn: "1234567890",
+  id: 1,
+  isbn: "9780451524935",
   name: "Book 1",
   author: "Author 1",
   year: "2024",
@@ -59,9 +60,9 @@ describe('BookList', () => {
 
     test('renders multiple books with correct index badges', () => {
       const multipleBooks = [
-        mockBook({ isbn: "111", name: "Book 1" }),
-        mockBook({ isbn: "222", name: "Book 2" }),
-        mockBook({ isbn: "333", name: "Book 3" }),
+        mockBook({ id: 1, isbn: "9780451524935", name: "Book 1" }),
+        mockBook({ id: 2, isbn: "9780596007126", name: "Book 2" }),
+        mockBook({ id: 3, isbn: "9781234567897", name: "Book 3" }),
       ]
       renderComponent({ books: multipleBooks })
 
@@ -88,7 +89,7 @@ describe('BookList', () => {
       const expandButton = screen.getByText('More')
       await us.click(expandButton)
 
-      expect(screen.getByText('1234567890')).toBeDefined()
+      expect(screen.getByText('9780451524935')).toBeDefined()
       expect(screen.getByText('English')).toBeDefined()
       expect(screen.getByText('100')).toBeDefined()
       expect(screen.getByText('Comment 1')).toBeDefined()
@@ -100,7 +101,7 @@ describe('BookList', () => {
       const bookTitle = screen.getByText('Book 1')
       await us.click(bookTitle)
 
-      expect(screen.getByText('1234567890')).toBeDefined()
+      expect(screen.getByText('9780451524935')).toBeDefined()
     })
 
     test('collapses book details when clicking Less', async () => {
@@ -108,10 +109,10 @@ describe('BookList', () => {
       const us = user.setup()
 
       await us.click(screen.getByText('More'))
-      expect(screen.getByText('1234567890')).toBeDefined()
+      expect(screen.getByText('9780451524935')).toBeDefined()
 
       await us.click(screen.getByText('Less'))
-      expect(screen.queryByText('1234567890')).toBeNull()
+      expect(screen.queryByText('9780451524935')).toBeNull()
     })
 
     test('handles books without comments gracefully', async () => {
@@ -126,17 +127,61 @@ describe('BookList', () => {
   })
 
   describe('delete functionality', () => {
-    test('calls onDelete with isbn when delete button clicked', async () => {
+    test('calls onDelete with id when delete button clicked', async () => {
       renderComponent({ onDelete })
       const us = user.setup()
       await us.click(screen.getByTitle('Delete book'))
 
-      expect(onDelete).toHaveBeenCalledWith('1234567890')
+      expect(onDelete).toHaveBeenCalledWith(1)
     })
 
     test('does not show delete button when onDelete is undefined', () => {
       renderComponent({ onDelete: undefined })
       expect(screen.queryByTitle('Delete book')).toBeNull()
+    })
+  })
+
+  describe('ISBN display', () => {
+    test('displays ISBN correctly when expanded', async () => {
+      const bookWithISBN = mockBook({ isbn: "9780451524935" })
+      renderComponent({ books: [bookWithISBN] })
+      const us = user.setup()
+      
+      await us.click(screen.getByText('More'))
+      
+      expect(screen.getByText('9780451524935')).toBeDefined()
+    })
+
+    test('displays ISBN-10 correctly', async () => {
+      const bookWithISBN10 = mockBook({ isbn: "0306406152" })
+      renderComponent({ books: [bookWithISBN10] })
+      const us = user.setup()
+      
+      await us.click(screen.getByText('More'))
+      
+      expect(screen.getByText('0306406152')).toBeDefined()
+    })
+
+    test('does not display ISBN section when ISBN is undefined', async () => {
+      const bookWithoutISBN = mockBook({ isbn: undefined })
+      renderComponent({ books: [bookWithoutISBN] })
+      const us = user.setup()
+      
+      await us.click(screen.getByText('More'))
+      
+      expect(screen.queryByText(/ISBN/i)).toBeNull()
+    })
+
+    test('hides ISBN when collapsed', async () => {
+      const bookWithISBN = mockBook({ isbn: "9780451524935" })
+      renderComponent({ books: [bookWithISBN] })
+      const us = user.setup()
+      
+      await us.click(screen.getByText('More'))
+      expect(screen.getByText('9780451524935')).toBeDefined()
+      
+      await us.click(screen.getByText('Less'))
+      expect(screen.queryByText('9780451524935')).toBeNull()
     })
   })
 })

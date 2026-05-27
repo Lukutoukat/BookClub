@@ -6,14 +6,14 @@ import userExtractor from '../middleware/userExtractor.ts'
 const bookRouter = express.Router()
 
 interface Book {
-  isbn: string,
   name: string,
   author: string,
-  year: string,
-  pages: string,
-  comment: string,
-  language: string,
-  genre: string
+  year: number,
+  isbn?: string,
+  pages?: number,
+  comment?: string,
+  language?: string,
+  genre?: string
 }
 
 const getTokenFrom = (request: Request<unknown, unknown, Book>): string | null => {
@@ -88,12 +88,17 @@ bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>,
   }
 })
 
-bookRouter.delete('/:isbn', async (_req, res) => {
-  const isbn: string = _req.params.isbn
+bookRouter.delete('/:id', async (_req, res) => {
+  const id: number = parseInt(_req.params.id, 10)
+
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'invalid book id' })
+    return
+  }
 
   try {
     await prisma.book.delete({
-      where: { isbn }
+      where: { id }
     })
     res.status(204).end()
   } catch(error) {

@@ -17,7 +17,6 @@ app.use('/api/books', bookRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 
-
 app.get('/ping', (_req, res) => {
   res.send('pong')
 })
@@ -28,8 +27,8 @@ app.get('/{*splat}', (_req, res) => {
   )
 })
 
-  console.log('smth happened in backend')
-  console.log('Books')
+console.log('smth happened in backend')
+console.log('Books')
 
 
 const PORT = 3003
