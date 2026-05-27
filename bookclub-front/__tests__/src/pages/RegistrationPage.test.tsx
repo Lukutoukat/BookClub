@@ -25,7 +25,7 @@ describe('RegistrationPage', () => {
       renderWithRouter(<RegistrationPage />)
 
       expect(screen.getByText('Join the club')).toBeDefined()
-      expect(screen.getByText('Register a user')).toBeDefined()
+      expect(screen.getByText('Create account')).toBeDefined()
       expect(screen.getByText('Create a new account to be able to suggest books and keep track of your reading list.')).toBeDefined()
     })
 

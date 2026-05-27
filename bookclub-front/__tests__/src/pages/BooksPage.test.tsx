@@ -121,7 +121,7 @@ describe('BooksPage', () => {
       renderWithRouter(<BooksPage />)
 
       await waitFor(() => {
-        expect(screen.getByText('No books yet. Add the first suggestion on the left.')).toBeDefined()
+        expect(screen.getByText('No books suggested yet. Be the first to add one!')).toBeDefined()
       })
     })
 
