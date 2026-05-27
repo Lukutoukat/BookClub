@@ -1,6 +1,6 @@
 import { AppSidebar } from './AppSidebar'
 import { AppNavbar } from './AppNavbar'
-import { Bookmark, Settings, House } from 'lucide-react'
+import { Bookmark, Settings, House, BookUser } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 export interface MenuItem {
@@ -22,13 +22,23 @@ export const PageMenu = () => {
       icon: <Bookmark className="h-5 w-5" />,
     },
     {
+      label: 'Registration',
+      to: '/registration',
+      icon: <Settings className="h-5 w-5" />,
+    },
+    {
       label: 'Home',
       to: '/home',
       icon: <House className="h-5 w-5" />,
     },
     {
-      label: 'Registration',
-      to: '/registration',
+      label: 'Create',
+      to: '/create',
+      icon: <BookUser className="h-5 w-5" />,
+    },
+    {
+      label: 'Settings',
+      to: '/settings',
       icon: <Settings className="h-5 w-5" />,
     },
   ]
