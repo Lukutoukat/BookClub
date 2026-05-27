@@ -39,6 +39,7 @@
     "@types/node": "^25.7.0",
     "@types/pg": "^8.20.0",
     "@types/tailwindcss": "^3.0.11",
+    "@vitest/coverage-v8": "^4.1.7",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
     "jest": "^30.4.2",
