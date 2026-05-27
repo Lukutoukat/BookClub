@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Button } from './ui/button'
 import { Link, useLocation } from 'react-router-dom'
 import { type MenuItem } from './PageMenu'
@@ -12,6 +13,30 @@ interface AppNavbarProps {
  */
 export const AppNavbar = ({ menuItems }: AppNavbarProps) => {
   const location = useLocation()
+  
+  useEffect(() => {
+    const updatePadding = () => {
+        // We check how much space is left on the bottom of the page
+        const scrollHeight = document.documentElement.scrollHeight
+        const windowHeight = window.innerHeight
+        // We add padding to the bottom so the navbar doesnt overlay it
+        const needsPadding = scrollHeight - 50 > windowHeight
+
+        if (needsPadding) {
+            document.body.style.paddingBottom = '2rem'
+        } else {
+            document.body.style.paddingBottom = '0rem'
+        }
+        }
+
+        updatePadding()
+        window.addEventListener('resize', updatePadding)
+
+        return () => {
+        window.removeEventListener('resize', updatePadding)
+        document.body.style.paddingBottom = ''
+        }
+  }, [])
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
