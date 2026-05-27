@@ -148,7 +148,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: var(--font-sans);
+  --font-sans: 'Inter Variable', sans-serif;
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
 
@@ -165,6 +165,7 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+  --font-heading: 'Playfair Display Variable', serif;
 }
 
 @layer base {
@@ -180,5 +181,23 @@
     }
   main {
     @apply flex flex-col items-center justify-start min-h-dvh bg-[radial-gradient(circle_at_top,_rgba(255,247,240,0.95),_rgba(250,244,235,0.96)_35%,_rgba(238,242,246,0.92)_70%,_rgba(247,247,242,1))] px-4 py-4 sm:px-6 sm:py-8 lg:px-8;
+  }
+}
+
+@layer components {
+  .card-base {
+    @apply w-full border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur;
+  }
+
+  .card-header {
+    @apply border-b border-border/60 px-3 pt-1 sm:px-6 sm:pt-2 pb-4 sm:pb-5;
+  }
+
+  .card-content {
+    @apply px-3 pt-3 pb-1 sm:px-6 sm:pt-4 sm:pb-2;
+  }
+
+  .card-form {
+    @apply space-y-4 sm:space-y-5;
   }
 }
