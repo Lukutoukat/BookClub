@@ -1,6 +1,6 @@
 import { Button } from './ui/button'
 import { Link, useLocation } from 'react-router-dom'
-import { Bookmark, Settings } from 'lucide-react'
+import { Bookmark, Settings, House } from 'lucide-react'
 
 /**
  * PageMenu is a reusable component for displaying the bottom menu consistently across pages.
@@ -16,12 +16,13 @@ export const PageMenu = () => {
       icon: <Bookmark className="h-5 w-5" />,
     },
     {
-      label: 'Registration',
-      to: '/registration',
-      icon: <Settings className="h-5 w-5" />,
-    },{
       label: 'Home',
       to: '/home',
+      icon: <House className="h-5 w-5" />,
+    },
+    {
+      label: 'Registration',
+      to: '/registration',
       icon: <Settings className="h-5 w-5" />,
     },
   ]
