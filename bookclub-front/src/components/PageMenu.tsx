@@ -30,11 +30,11 @@ export const PageMenu = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <div className="sm:hidden">
+      <div className="md:hidden">
         {children}
         <AppNavbar menuItems={menuItems} />
       </div>
-      <div className="hidden sm:block w-full">
+      <div className="hidden md:block w-full">
         <AppSidebar menuItems={menuItems}>
           {children}
         </AppSidebar>

@@ -8,6 +8,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
+  SidebarInset,
 } from "@/components/ui/sidebar"
 import { Link, useLocation } from 'react-router-dom'
 import { type MenuItem } from './PageMenu'
@@ -49,9 +50,9 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
         </SidebarContent>
         <SidebarFooter />
         </Sidebar>
-        <main className="flex-1">
+        <SidebarInset>
           {children}
-        </main>
+        </SidebarInset>
     </SidebarProvider>
   )
 }
