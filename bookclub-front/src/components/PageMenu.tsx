@@ -14,7 +14,7 @@ export interface MenuItem {
  * - AppNavbar on mobile (< sm)
  * - AppSidebar on desktop (sm and up)
  */
-export const PageMenu = () => {
+export const PageMenu = ({ children }: { children: ReactNode }) => {
   const menuItems: MenuItem[] = [
     {
       label: 'Books',
@@ -31,10 +31,13 @@ export const PageMenu = () => {
   return (
     <>
       <div className="sm:hidden">
+        {children}
         <AppNavbar menuItems={menuItems} />
       </div>
-      <div className="hidden sm:block">
-        <AppSidebar menuItems={menuItems} />
+      <div className="hidden sm:block w-full">
+        <AppSidebar menuItems={menuItems}>
+          {children}
+        </AppSidebar>
       </div>
     </>
   )
