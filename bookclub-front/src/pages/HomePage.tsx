@@ -1,6 +1,7 @@
 import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
 import { PageMenu } from '@/components/PageMenu'
+import BookClubList from '@/components/BookClubList'
 
 const HomePage = () => {
 
@@ -14,8 +15,7 @@ const HomePage = () => {
         buttonLink="/books"
       />
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8">
-      </div>
+      <BookClubList />
     <PageMenu />
     </PageLayout>
   )
