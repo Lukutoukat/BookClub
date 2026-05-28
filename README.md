@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/Lukutoukat/BookClub/branch/main/graph/badge.svg?token=QA8RYX5HZM)](https://codecov.io/gh/Lukutoukat/BookClub)
+
 # BookClubApp
 
 ### Introduction
