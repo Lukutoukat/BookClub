@@ -1,6 +1,5 @@
 import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
-import { PageMenu } from '@/components/PageMenu'
 import BookClubList from '@/components/BookClubList'
 import JoinBookClubForm from '@/components/JoinBookClubForm'
 
@@ -18,7 +17,6 @@ const HomePage = () => {
 
       <BookClubList />
       <JoinBookClubForm />
-    <PageMenu />
     </PageLayout>
   )
 }

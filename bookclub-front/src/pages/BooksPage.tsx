@@ -4,7 +4,6 @@ import BookForm from '../components/BookForm'
 import BookList, { type BookListHandle } from '../components/BookList'
 import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
-import { PageMenu } from '@/components/PageMenu'
 
 const BooksPage = () => {
   const bookListRef = useRef<BookListHandle>(null)
@@ -25,7 +24,6 @@ const BooksPage = () => {
 
       <BookForm onBookAdded={handleBookAdded} />
       <BookList ref={bookListRef} emptyMessage="No books suggested yet. Be the first to add one!" />
-    <PageMenu />
     </PageLayout>
   )
 }
