@@ -25,7 +25,10 @@ const ClubSettings = () => {
 
   const handleJoinSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
       event.preventDefault()
-      setMessage(inviteCode.invite_code.trim().length === 5 ? 'Join request sent.' : 'Enter a 5-character code.')
+      if(inviteCode.invite_code.trim().length !== 5){
+        setMessage('Enter a 5-character code.')
+        return
+      }
       try {
         await bookclubmembersService.create({
           invite_code: inviteCode.invite_code.trim().toUpperCase()

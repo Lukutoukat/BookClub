@@ -2,7 +2,6 @@ import RegistrationForm from '../components/RegistrationForm'
 
 import { PageLayout } from '@/components/PageLayout'
 import { PageHeader } from '@/components/PageHeader'
-import { PageMenu } from '@/components/PageMenu'
 
 const RegistrationPage = () => {
   return (
@@ -16,8 +15,6 @@ const RegistrationPage = () => {
       />
 
       <RegistrationForm />
-      
-      <PageMenu />
     </PageLayout>
   )
 }

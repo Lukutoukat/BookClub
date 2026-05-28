@@ -2,7 +2,6 @@ import BookclubForm from '../components/BookclubForm'
 
 import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
-import { PageMenu } from '@/components/PageMenu'
 
 const CreateBookclubPage = () => {
     return (
@@ -14,10 +13,7 @@ const CreateBookclubPage = () => {
             buttonText="Back to books"
             buttonLink="/books"
         />
-
-            <BookclubForm />
-            
-            <PageMenu />
+        <BookclubForm />
         </PageLayout>
     )
 }

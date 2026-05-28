@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 
 import bookService, { type Book } from '../services/books'
+import { formatISBN } from '../lib/isbnValidator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -99,7 +100,7 @@ const BookItem = ({ book, onDelete }: { book: Book; onDelete: (id: number) => Pr
               {book.isbn && (
                 <div className="col-span-2">
                   <p className="text-muted-foreground text-xs uppercase tracking-wider mb-0.5">ISBN</p>
-                  <p className="font-medium font-mono text-xs">{book.isbn}</p>
+                  <p className="font-medium font-mono text-xs">{formatISBN(book.isbn)}</p>
                 </div>
               )}
             </div>

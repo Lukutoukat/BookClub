@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import bookclubService, { type CreateBookclub } from "../services/bookclubs"
+import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
+import bookclubService, { type CreateBookClub } from "../services/bookclubs"
 import { SectionHeader } from './SectionHeader'
 
 import { Button } from "@/components/ui/button"
@@ -7,27 +7,39 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
-const emptyBookclub: CreateBookclub = {
+const emptyBookclub: CreateBookClub = {
   name: '',
 }
 
 const BookclubForm = () => {
-  const [newBookclub, setNewBookclub] = useState<CreateBookclub>(emptyBookclub)
+  const [newBookclub, setNewBookclub] = useState<CreateBookClub>(emptyBookclub)
+  const [errors, setErrors] = useState<string[]>([])
   
   const handleChange = (
-      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+      event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
       const { name, value } = event.target
 
       setNewBookclub((currentBookclub) => ({
       ...currentBookclub,
       [name]: value
       }))
+      // Clear errors when user starts typing
+      if (errors.length > 0) {
+        setErrors([])
+      }
   }
 
-  const addBookclub = async (event: React.SyntheticEvent<HTMLFormElement>) => {
+  const addBookclub: SubmitEventHandler<HTMLFormElement> = async (event) => {
       event.preventDefault()
-      await bookclubService.create(newBookclub)
+      try {
+        await bookclubService.create(newBookclub)
+        setNewBookclub(emptyBookclub)
+        setErrors([])
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+        setErrors([`Failed to create bookclub: ${errorMessage}`])
+      }
   }
     return (
       <Card className="card-base">
@@ -37,6 +49,13 @@ const BookclubForm = () => {
         />
         
       <CardContent className="card-content">
+      {errors.length > 0 && (
+        <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
+          {errors.map((error, idx) => (
+            <div key={idx}>{error}</div>
+          ))}
+        </div>
+      )}
       <form onSubmit={addBookclub} className="card-form">
       <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
         <div className="sm:col-span-2">

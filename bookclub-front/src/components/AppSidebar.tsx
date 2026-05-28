@@ -8,19 +8,22 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
+  SidebarInset,
 } from "@/components/ui/sidebar"
 import { Link, useLocation } from 'react-router-dom'
 import { type MenuItem } from './PageMenu'
+import type { ReactNode } from 'react'
 
 interface AppSidebarProps {
   menuItems: MenuItem[]
+  children?: ReactNode
 }
 
-export function AppSidebar({ menuItems }: AppSidebarProps) {
+export function AppSidebar({ menuItems, children }: AppSidebarProps) {
   const location = useLocation()
 
   return (
-    <SidebarProvider className="min-h-auto h-auto">
+    <SidebarProvider>
         <Sidebar>
         <SidebarHeader />
         <SidebarContent>
@@ -47,6 +50,9 @@ export function AppSidebar({ menuItems }: AppSidebarProps) {
         </SidebarContent>
         <SidebarFooter />
         </Sidebar>
+        <SidebarInset>
+          {children}
+        </SidebarInset>
     </SidebarProvider>
   )
 }

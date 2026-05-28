@@ -2,16 +2,16 @@ import type { ReactNode } from 'react'
 
 /**
  * PageLayout is a reusable component that provides consistent style accross pages
- * @params size - determines the maximum width of the content, 'md' for 4xl and 'lg' for 7xl
+ * @params size - determines the maximum width of the content, 'sm' for 2xl, 'md' for 4xl, 'lg' for full width
  *
 **/
 interface PageLayoutProps {
   children: ReactNode
-  size?: 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg'
 }
 
 export const PageLayout = ({ children, size = 'lg' }: PageLayoutProps) => {
-  const maxWidthClass = size === 'md' ? 'max-w-4xl' : 'max-w-7xl'
+  const maxWidthClass = size === 'sm' ? 'max-w-2xl' : size === 'md' ? 'max-w-4xl' : 'max-w-full'
 
   return (
     <main className="px-4 py-6 sm:px-6 lg:px-8">
