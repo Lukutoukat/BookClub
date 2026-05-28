@@ -20,7 +20,7 @@ export const AppNavbar = ({ menuItems }: AppNavbarProps) => {
         const scrollHeight = document.documentElement.scrollHeight
         const windowHeight = window.innerHeight
         // We add padding to the bottom so the navbar doesnt overlay it
-        const needsPadding = scrollHeight - 50 > windowHeight
+        const needsPadding = scrollHeight > windowHeight
 
         if (needsPadding) {
             document.body.style.paddingBottom = '2rem'
