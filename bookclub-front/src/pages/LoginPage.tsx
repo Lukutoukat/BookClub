@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AxiosError } from 'axios'
 
 import LoginForm from '../components/LoginForm'
-import loginService from '../services/login'
+import loginService, {type userWithToken} from '../services/login'
+import bookService from '../services/books'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -21,6 +22,16 @@ const LoginPage = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState<string | null>(null)
+  const [currentUser, setCurrentUser] = useState< userWithToken | null>(null)
+
+  useEffect(() => {
+    const loggedUserJSON = localStorage.getItem('loggedBookappUser') 
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setCurrentUser(currentUser)
+      bookService.setToken(user.token)
+    }
+  }, [])
 
   const handleLogin = async (
     event: React.SyntheticEvent<HTMLFormElement>
@@ -38,10 +49,13 @@ const LoginPage = () => {
         JSON.stringify(user)
       )
 
+      bookService.setToken(user.token)
+      setCurrentUser(user)
       setUsername('')
       setPassword('')
 
       void navigate('/books')
+
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
         if (
@@ -59,9 +73,9 @@ const LoginPage = () => {
           setMessage('Wrong credentials')
         }
       } else {
-        setMessage('Wrong credentials')
+        setMessage('Something happened')
       }
-    }  
+    }
   }
 
   return (

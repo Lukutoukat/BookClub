@@ -13,7 +13,8 @@ interface Book {
   pages?: number,
   comment?: string,
   language?: string,
-  genre?: string
+  genre?: string,
+  user_id?: number
 }
 
 const getTokenFrom = (request: Request<unknown, unknown, Book>): string | null => {
@@ -77,9 +78,11 @@ bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>,
         pages: newBook.pages,
         comment: newBook.comment,
         language: newBook.language,
-        genre: newBook.genre
+        genre: newBook.genre,
+        user_id: user.id
       }
     })
+
     return res.json(newBook)
   } catch (error) {
     console.error('POST /api/books error:', error)

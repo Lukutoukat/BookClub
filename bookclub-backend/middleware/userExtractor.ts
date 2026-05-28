@@ -27,7 +27,6 @@ const userExtractor = async (req: TokenRequest, _res: Response, next: NextFuncti
     throw new Error('variable missing')
   }
   const decodedToken = jwt.verify(req.token, process.env.SECRET) as TokenPayload
-  console.log(req.user)
   req.user = await prisma.user.findUnique({
       where: {
         id: decodedToken.id

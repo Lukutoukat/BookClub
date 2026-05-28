@@ -24,6 +24,7 @@ interface BookFormState {
   comment: string
   language: string
   genre: string
+  user_id: number
 }
 
 const emptyBook: BookFormState = {
@@ -34,7 +35,8 @@ const emptyBook: BookFormState = {
   pages: '',
   comment: '',
   language: '',
-  genre: ''
+  genre: '',
+  user_id: 0
 }
 
 type FieldProps = {
@@ -151,7 +153,8 @@ const BookForm = ({ addBook }: BookFormProps) => {
       pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
       comment: newBook.comment || undefined,
       language: newBook.language || undefined,
-      genre: newBook.genre || undefined
+      genre: newBook.genre || undefined,
+      user_id: newBook.user_id
     }
 
     try {

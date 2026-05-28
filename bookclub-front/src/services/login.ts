@@ -6,14 +6,20 @@ type LoginCredentials = {
   password: string
 }
 
+export type userWithToken = {
+  email: string
+  name: string
+  token: string
+}
+
 // type User = {
 //   username: string
 // }
 
 const login = async (
   credentials: LoginCredentials
-): Promise<LoginCredentials> => {
-  const response = await axios.post<LoginCredentials>(baseUrl, credentials)
+): Promise<userWithToken> => {
+  const response = await axios.post<userWithToken>(baseUrl, credentials)
 
   return response.data
 }
