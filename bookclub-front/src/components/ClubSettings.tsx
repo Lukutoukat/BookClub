@@ -12,21 +12,39 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import bookclubmembersService, { type AddBookClubMember } from '../services/bookclubmembers'
+
+const emptyJoinRequest: AddBookClubMember = {
+  invite_code: ''
+}
 
 const ClubSettings = () => {
-  const [joinCode, setJoinCode] = useState('')
+  const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
   const [message, setMessage] = useState<string | null>(null)
 
-  const handleJoinSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleJoinSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
       event.preventDefault()
-      setMessage(joinCode.trim().length === 5 ? 'Join request sent.' : 'Enter a 5-character code.')
+      setMessage(inviteCode.invite_code.trim().length === 5 ? 'Join request sent.' : 'Enter a 5-character code.')
+      try {
+        await bookclubmembersService.create({
+          invite_code: inviteCode.invite_code.trim().toUpperCase()
+        })} catch (error) {
+          setMessage('Failed to send join request. Please try again.',)
+          
+        }
+      }
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target
+
+    setInviteCode((inviteCode) => ({
+      ...inviteCode,
+      [name]: value
+    }))
   }
 
-  const handleChange = (
-      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-      setJoinCode(event.target.value.toUpperCase())
-  }
+  
 
   return (
     <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
@@ -48,8 +66,9 @@ const ClubSettings = () => {
           <form className="flex items-center gap-2" onSubmit={handleJoinSubmit}>
             <Input
               id="join-code"
+              name="invite_code"
               maxLength={5}
-              value={joinCode}
+              value={inviteCode.invite_code}
               onChange={handleChange}
               className="w-[9ch]"
             />
