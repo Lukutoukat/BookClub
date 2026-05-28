@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import bookClubService, { type BookClub } from '../services/bookclubs'
