@@ -39,16 +39,24 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
   if (loading) return null
   if (!bookclub) return <div>Bookclub not found</div>
 
-    return (
+  return (
     <>
       <PageHeader
-        badgeText="Club"
-        title={`${bookclub.name}`}
-        description={`Invite code: ${bookclub.invite_code}`}
-      />
+      badgeText="Club"
+      title={bookclub.name}
+      description="Suggest books and decide together, what books you will enjoy with your friends."
+      buttonText={bookclub.invite_code}
+      buttonOnClick={async () => {
+        try {
+          await navigator.clipboard.writeText(bookclub.invite_code)
+          alert('Invite code copied!')
+        } catch {
+          alert('Failed to copy invite code')
+        }
+      }}
+    />
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
-
+    <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
     </>
   )
 }

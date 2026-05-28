@@ -8,6 +8,7 @@ interface PageHeaderProps {
   description: string
   buttonText?: string
   buttonLink?: string
+  buttonOnClick?: () => void
 }
 
 
@@ -25,7 +26,8 @@ export const PageHeader = ({
   title,
   description,
   buttonText,
-  buttonLink
+  buttonLink,
+  buttonOnClick
 }: PageHeaderProps) => {
   return (
     <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -45,12 +47,22 @@ export const PageHeader = ({
           </p>
         </div>
       </div>
-      {buttonText && buttonLink ? (
-        <Button asChild variant="outline" className="w-full sm:w-auto">
-          <Link to={buttonLink}>
+      {buttonText ? (
+        buttonLink ? (
+          <Button asChild variant="outline" className="w-full sm:w-auto">
+            <Link to={buttonLink}>
+              {buttonText}
+            </Link>
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={buttonOnClick}
+          >
             {buttonText}
-          </Link>
-        </Button>
+          </Button>
+        )
       ) : null}
     </header>
   )
