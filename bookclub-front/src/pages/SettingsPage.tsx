@@ -1,9 +1,9 @@
 import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
-import { PageMenu } from '@/components/PageMenu'
 
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
+import ThemeSelector from '@/components/ThemeSelector'
 
 const SettingsPage = () => {
   return (
@@ -17,8 +17,9 @@ const SettingsPage = () => {
       <ClubSettings />
 
       <AccountSettings />
+
+      <ThemeSelector />
   
-    <PageMenu />
     </PageLayout>
   )
 }

@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
+import { getInitialTheme, applyThemeToDOM } from '../lib/theme'
 
 /**
  * PageLayout is a reusable component that provides consistent style accross pages
@@ -11,6 +12,12 @@ interface PageLayoutProps {
 }
 
 export const PageLayout = ({ children, size = 'lg' }: PageLayoutProps) => {
+  // Initialize theme on mount
+  useEffect(() => {
+    const initialTheme = getInitialTheme()
+    applyThemeToDOM(initialTheme)
+  }, [])
+
   const maxWidthClass = size === 'sm' ? 'max-w-2xl' : size === 'md' ? 'max-w-4xl' : 'max-w-full'
 
   return (
