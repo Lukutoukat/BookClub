@@ -26,14 +26,14 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
           return
         }
 
-        const data = await res.json()
+        const data = (await res.json()) as Bookclub
         setBookclub(data)
       } finally {
         setLoading(false)
       }
     }
 
-    if (bookclubId) fetchBookclub()
+    if (bookclubId) void fetchBookclub()
   }, [bookclubId])
 
   if (loading) return null
