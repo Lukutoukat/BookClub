@@ -21,13 +21,32 @@ bookClubRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
+bookClubRouter.get('/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id)
+
+    const bookclub = await prisma.bookClub.findUnique({
+      where: { id }
+    })
+
+    if (!bookclub) {
+      res.status(404).json({ error: 'not found' })
+    }
+
+    res.json(bookclub)
+  } catch (error) {
+    console.error('GET /api/bookclubs/:id error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
+})
+
 bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: Response) => {
   const newBookClub: BookClub = req.body
   // Hopefully this random 5-letter generated code does not exist yet!
   newBookClub.invite_code = Math.random().toString(36).substring(2, 7).toUpperCase()
 
   try {
-    await prisma.bookClub.create({
+    const created = await prisma.bookClub.create({
       data: {
         name: newBookClub.name,
         status: newBookClub.status,
@@ -35,7 +54,7 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
         invite_code: newBookClub.invite_code,
       }
     })
-    res.json(newBookClub)
+    res.json(created)
   } catch (error) {
     console.error('POST /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
