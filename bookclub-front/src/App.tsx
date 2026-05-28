@@ -5,11 +5,8 @@ import RegistrationPage from './pages/RegistrationPage'
 import HomePage from './pages/HomePage'
 import CreateBookclubPage from './pages/CreateBookclubPage'
 import SettingsPage from './pages/SettingsPage'
-<<<<<<< HEAD
 import BookclubPage from './pages/BookclubPage'
-=======
 import { PageMenu } from './components/PageMenu'
->>>>>>> 810061fb3b947b4ffab8e20025a9433af8581890
 
 const App = () => {
   return (

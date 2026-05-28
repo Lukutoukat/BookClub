@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import { PageHeader } from '../components/PageHeader'
-import { PageMenu } from '@/components/PageMenu'
 
 type Bookclub = {
   id: string
@@ -44,15 +43,12 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
     <>
       <PageHeader
         badgeText="Club"
-        title={`${bookclub.name} • ${bookclub.invite_code}`}
-        description="Suggest books and decide what you will read next together"
-        buttonText="Go to books"
-        buttonLink="/books"
+        title={`${bookclub.name}`}
+        description={`Invite code: ${bookclub.invite_code}`}
       />
 
       <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
 
-      <PageMenu />
     </>
   )
 }
