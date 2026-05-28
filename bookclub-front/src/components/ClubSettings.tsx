@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import bookclubmembersService, { type AddBookClubMember } from '../services/bookclubmembers'
+import { AxiosError } from 'axios'
 
 const emptyJoinRequest: AddBookClubMember = {
   invite_code: ''
@@ -28,10 +29,20 @@ const ClubSettings = () => {
       try {
         await bookclubmembersService.create({
           invite_code: inviteCode.invite_code.trim().toUpperCase()
-        })} catch (error) {
-          setMessage('Failed to send join request. Please try again.',)
-          
-        }
+        })} catch (err: unknown) {
+              if (err instanceof AxiosError && err.response?.data) {
+                const errorData = err.response.data as Record<string, unknown>
+                if (errorData.error && typeof errorData.error === 'string') {
+                  setMessage(errorData.error)
+                } else {
+                  setMessage("Registration failed")
+                }
+              } else if (err instanceof AxiosError) {
+                setMessage("Registration failed")
+              } else {
+                setMessage("Unexpected error occurred")
+              }
+            }
       }
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
