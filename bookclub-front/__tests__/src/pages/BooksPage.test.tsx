@@ -21,8 +21,8 @@ const mockBook = (overrides?: Partial<Book>): Book => ({
   isbn: "9780451524935",
   name: "Book 1",
   author: "Author 1",
-  year: "2024",
-  pages: "100",
+  year: 2024,
+  pages: 100,
   comment: "Comment 1",
   language: "English",
   genre: "Fiction",
@@ -69,7 +69,8 @@ describe('BooksPage', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Books and suggestions')).toBeDefined()
-        expect(screen.getByText(/Add books to the list/i)).toBeDefined()
+        expect(screen.getByText('Add books')).toBeDefined()
+        expect(screen.getByText(/Suggest books to be read by your book club/i)).toBeDefined()
         const registrationLink = screen.getByRole('link', { name: /go to registration/i })
         expect(registrationLink).toBeDefined()
         expect(registrationLink.getAttribute('href')).toBe('/registration')
@@ -120,7 +121,7 @@ describe('BooksPage', () => {
       renderWithRouter(<BooksPage />)
 
       await waitFor(() => {
-        expect(screen.getByText('No books yet. Add the first suggestion on the left.')).toBeDefined()
+        expect(screen.getByText('No books suggested yet. Be the first to add one!')).toBeDefined()
       })
     })
 
