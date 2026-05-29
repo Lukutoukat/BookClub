@@ -1,0 +1,19 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: bookclub-route
+  namespace: bookclub-ohtu-k2026
+  labels:
+    app: bookclub
+    type: external
+spec:
+  host: bookclub-ohtuprojekti-staging.apps.okd-cs-test-0.k8s.cs.helsinki.fi
+  port:
+    targetPort: 3003
+  to:
+    kind: Service
+    name: bookclub-svc
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

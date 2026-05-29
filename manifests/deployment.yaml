@@ -1,6 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: "*"
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"bookclub:staging","namespace":"bookclub-ohtu-k2026"},"fieldPath":"spec.template.spec.containers[?(@.name==\"bookclub\")].image","pause":"false"}]
   name: bookclub-dep
 spec:
   replicas: 1
@@ -14,7 +18,7 @@ spec:
     spec:
       containers:
         - name: bookclub
-          image: neakovalaine/bookclub
+          image: bookclub:staging
           ports:
             - containerPort: 3003
           env:
