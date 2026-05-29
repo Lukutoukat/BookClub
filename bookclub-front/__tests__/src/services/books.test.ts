@@ -37,7 +37,15 @@ test('create returns created book', async () => {
 
   const result = await books.create(mockBook)
 
-  expect(mockedAxios.post).toHaveBeenCalledWith('/api/books', mockBook)
+  expect(mockedAxios.post).toHaveBeenCalledWith(
+    '/api/books',
+    mockBook,
+    expect.objectContaining({
+      headers: expect.objectContaining({
+        Authorization: null,
+      }),
+    }),
+  )
   expect(result).toEqual(mockBook)
 })
 

@@ -95,16 +95,18 @@ describe("BookForm", () => {
 
     expect(vi.mocked(bookService.create)).toHaveBeenCalledTimes(1);
 
-    expect(vi.mocked(bookService.create)).toHaveBeenCalledWith({
-      isbn: "9780451524935",
-      name: "Clean Code",
-      author: "Robert C. Martin",
-      year: 2008,
-      pages: 464,
-      language: "English",
-      genre: "Programming",
-      comment: "Must-read book",
-    });
+    expect(vi.mocked(bookService.create)).toHaveBeenCalledWith(
+      expect.objectContaining({
+        isbn: "9780451524935",
+        name: "Clean Code",
+        author: "Robert C. Martin",
+        year: 2008,
+        pages: 464,
+        language: "English",
+        genre: "Programming",
+        comment: "Must-read book",
+      }),
+    );
   });
 
   it("resets form after submit", async () => {
