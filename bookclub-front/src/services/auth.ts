@@ -17,3 +17,8 @@ export const getAuthConfig = () => {
 export const clearToken = () => {
   token = null
 }
+
+// TÄMÄ EI TOIMI VIELÄ
+export const isLoggedIn = () => {
+    return Boolean(localStorage.getItem('loggedBookappUser'))
+}
