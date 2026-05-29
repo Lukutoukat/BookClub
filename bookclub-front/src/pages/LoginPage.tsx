@@ -1,11 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { AxiosError } from 'axios'
+import { useState } from 'react'
 
 import LoginForm from '../components/LoginForm'
-import loginService, {type userWithToken} from '../services/login'
-import bookService from '../services/books'
+import { useLogin } from '@/hooks/useLogin'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -18,66 +15,22 @@ import {
 } from '@/components/ui/card'
 
 const LoginPage = () => {
-  const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [message, setMessage] = useState<string | null>(null)
-  const [currentUser, setCurrentUser] = useState< userWithToken | null>(null)
-
-  useEffect(() => {
-    const loggedUserJSON = localStorage.getItem('loggedBookappUser') 
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setCurrentUser(currentUser)
-      bookService.setToken(user.token)
-    }
-  }, [])
+  const { login, message } = useLogin()
 
   const handleLogin = async (
     event: React.SyntheticEvent<HTMLFormElement>
   ) => {
     event.preventDefault()
 
-    try {
-      const user = await loginService.login({
-        username,
-        password
-      })
-
-      localStorage.setItem(
-        'loggedBookappUser',
-        JSON.stringify(user)
-      )
-
-      bookService.setToken(user.token)
-      setCurrentUser(user)
-      setUsername('')
-      setPassword('')
-
-      void navigate('/books')
-
-    } catch (err: unknown) {
-      if (err instanceof AxiosError) {
-        if (
-          err.response &&
-          typeof err.response.data === 'object' &&
-          err.response.data !== null &&
-          'error' in err.response.data
-        ) {
-          const backendMessage = (
-            err.response.data as { error: string }
-          ).error
-
-          setMessage(backendMessage)
-        } else {
-          setMessage('Wrong credentials')
-        }
-      } else {
-        setMessage('Something happened')
-      }
-    }
+    await login(username, password)
+    setUsername('')
+    setPassword('')
   }
 
+
+    
   return (
     <main className="min-h-dvh bg-[radial-gradient(circle_at_top,_rgba(255,247,240,0.95),_rgba(250,244,235,0.96)_35%,_rgba(238,242,246,0.92)_70%,_rgba(247,247,242,1))] px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-5 sm:gap-8">

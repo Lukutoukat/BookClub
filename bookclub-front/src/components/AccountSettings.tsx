@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 import {
   Card,
   CardContent,
@@ -10,8 +8,11 @@ import {
 
 import { Button } from '@/components/ui/button'
 
-const AccountSettings = () => {
+type AccountSettingsProps = {
+  handleLogOut: () => void
+}
 
+const AccountSettings = ({ handleLogOut }: AccountSettingsProps) => {
   return (
     <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
 
@@ -24,8 +25,8 @@ const AccountSettings = () => {
 
       <CardContent className="space-y-3 pt-4 sm:space-y-4 sm:pt-6">
       <div className="space-y-2">
-        <Button asChild>
-        <Link to="/">Log out</Link>
+        <Button onClick={handleLogOut} size="lg" className="w-full sm:w-auto">
+          Logout
         </Button>
       </div>
 
