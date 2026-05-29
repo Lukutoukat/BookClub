@@ -20,5 +20,11 @@ export default {
   roots: ['<rootDir>/__tests__'],
   testMatch: ['**/__tests__/*.test.ts'],
   moduleFileExtensions: ['ts', 'js'],
-  collectCoverageFrom: ['*.ts', '!__tests__/**', '!node_modules/**'],
+  collectCoverageFrom: [
+    '**/*.ts',
+    '!__tests__/**',
+    '!node_modules/**',
+    '!**/*.config.ts',
+    '!generated/**',
+  ],
 }

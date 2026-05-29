@@ -2,6 +2,7 @@ import { AppSidebar } from './AppSidebar'
 import { AppNavbar } from './AppNavbar'
 import { Bookmark, Settings, House, BookUser } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { useIsMobile } from '../hooks/use-mobile'
 
 export interface MenuItem {
   label: string
@@ -10,11 +11,13 @@ export interface MenuItem {
 }
 
 /**
- * PageMenu is a responsive navigation component that uses Tailwind breakpoints:
- * - AppNavbar on mobile (< sm)
- * - AppSidebar on desktop (sm and up)
+ * PageMenu is a responsive navigation component that uses the useIsMobile hook:
+ * - AppNavbar on mobile
+ * - AppSidebar on desktop
  */
 export const PageMenu = ({ children }: { children: ReactNode }) => {
+  const isMobile = useIsMobile()
+
   const menuItems: MenuItem[] = [
     {
       label: 'Books',
@@ -43,17 +46,19 @@ export const PageMenu = ({ children }: { children: ReactNode }) => {
     },
   ]
 
+  if (isMobile != undefined && isMobile) {
+    return (
+    <>
+      {children}
+      <AppNavbar menuItems={menuItems} />
+    </>
+    )
+  }
   return (
     <>
-      <div className="md:hidden">
+      <AppSidebar menuItems={menuItems}>
         {children}
-        <AppNavbar menuItems={menuItems} />
-      </div>
-      <div className="hidden md:block w-full">
-        <AppSidebar menuItems={menuItems}>
-          {children}
-        </AppSidebar>
-      </div>
+      </AppSidebar>
     </>
-  )
+  )  
 }
