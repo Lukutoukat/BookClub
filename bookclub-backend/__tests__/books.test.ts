@@ -16,6 +16,7 @@ import { app } from '../index.ts'
 import { prisma } from '../db.ts'
 
 const mockBook_1 = {
+    id:1,
     isbn: "1234567890",
     name: "Book 1",
     author: "Author 1",
@@ -26,6 +27,7 @@ const mockBook_1 = {
     genre: "Fiction",
 }
 const mockBook_2 = {
+    id: 2,
     isbn: "111111111",
     name: "Book 2",
     author: "Author 2",
@@ -113,20 +115,20 @@ describe('/api/books', () => {
         it('deletes a book', async () => {
             ;(prisma.book.delete as jest.Mock).mockResolvedValue({})
 
-            const response = await request(app).delete('/api/books/1234567890')
+            const response = await request(app).delete('/api/books/1')
 
             expect(response.status).toBe(204)
             expect(response.body).toEqual({})
             expect(prisma.book.delete).toHaveBeenCalledTimes(1)
             expect(prisma.book.delete).toHaveBeenCalledWith({
-                where: {isbn: '1234567890'},
+                where: {id:1},
             })
         })
 
         it('returns 500 if delete fails', async () => {
             ;(prisma.book.delete as jest.Mock).mockRejectedValue(new Error('Database failed'))
             
-            const response = await request(app).delete('/api/books/1234567890')
+            const response = await request(app).delete('/api/books/1')
 
             expect(response.status).toBe(500)
             expect(response.body).toEqual({error: 'database error'})
