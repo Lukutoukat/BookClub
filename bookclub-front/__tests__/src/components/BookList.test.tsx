@@ -85,7 +85,7 @@ describe('BookList', () => {
       const expandButton = getExpandButton()
       await us.click(expandButton)
 
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
       expect(screen.getByText('English')).toBeDefined()
       expect(screen.getByText('100')).toBeDefined()
       expect(screen.getByText('Comment 1')).toBeDefined()
@@ -98,7 +98,7 @@ describe('BookList', () => {
       const bookTitle = screen.getByText('Book 1')
       await us.click(bookTitle)
 
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
     })
 
     test('collapses book details when clicking Less', async () => {
@@ -108,10 +108,10 @@ describe('BookList', () => {
       const expandButton = getExpandButton()
 
       await us.click(expandButton)
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
 
       await us.click(expandButton)
-      expect(screen.queryByText('9780451524935')).toBeNull()
+      expect(screen.queryByText('978-0-451-52493-5')).toBeNull()
     })
 
     test('handles books without comments gracefully', async () => {
@@ -153,14 +153,14 @@ describe('BookList', () => {
     }
 
     test('displays ISBN correctly when expanded', async () => {
-      const bookWithISBN = mockBook({ isbn: "9780451524935" })
+      const bookWithISBN = mockBook({ isbn: "978-0-451-52493-5" })
       renderComponent({ books: [bookWithISBN] })
       const us = user.setup()
       
       await screen.findByText('Book 1')
       await us.click(getExpandButton())
       
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
     })
 
     test('displays ISBN-10 correctly', async () => {
@@ -171,7 +171,7 @@ describe('BookList', () => {
       await screen.findByText('Book 1')
       await us.click(getExpandButton())
       
-      expect(screen.getByText('0306406152')).toBeDefined()
+      expect(screen.getByText('0-306-40615-2')).toBeDefined()
     })
 
     test('does not display ISBN section when ISBN is undefined', async () => {
@@ -192,10 +192,10 @@ describe('BookList', () => {
       
       await screen.findByText('Book 1')
       await us.click(getExpandButton())
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
       
       await us.click(getExpandButton())
-      expect(screen.queryByText('9780451524935')).toBeNull()
+      expect(screen.queryByText('978-0-451-52493-5')).toBeNull()
     })
   })
 })
