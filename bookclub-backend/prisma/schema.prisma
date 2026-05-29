@@ -27,7 +27,8 @@ model Book {
 
 model BookClub {
   id              Int               @id @default(autoincrement())
-  name            String?
+  name            String            @unique
+  invite_code     String?           @unique
   status          Int?
   owner_id        Int?
   User            User?             @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

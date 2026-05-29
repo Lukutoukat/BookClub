@@ -1,19 +1,14 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
 
-import { type CreateBook } from '../services/books'
+import bookService, { type CreateBook } from '../services/books'
 import { isValidISBN, cleanISBN } from '../lib/isbnValidator'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
+import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
+import { SectionHeader } from './SectionHeader'
 
 interface BookFormState {
   isbn: string
@@ -39,42 +34,11 @@ const emptyBook: BookFormState = {
   user_id: 0
 }
 
-type FieldProps = {
-  label: string
-  name: keyof BookFormState
-  value: string
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
-  placeholder?: string
-  type?: string
-  required?: boolean
-}
-
-function Field({ label, name, value, onChange, placeholder, type = 'text', required = true }: FieldProps) {
-  return (
-    <div className="space-y-0.5 sm:space-y-1">
-      <Label htmlFor={name} className="text-[0.68rem] sm:text-sm">
-        {label}
-        {required && <span className="text-destructive ml-1">*</span>}
-      </Label>
-      <Input
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={required}
-        className="h-8 placeholder:text-muted-foreground/70 sm:h-9"
-      />
-    </div>
-  )
-}
-
 type BookFormProps = {
-  addBook: (book: CreateBook) => Promise<void>
+  onBookAdded?: () => Promise<void> | void
 }
 
-const BookForm = ({ addBook }: BookFormProps) => {
+const BookForm = ({ onBookAdded }: BookFormProps) => {
   const [newBook, setNewBook] = useState<BookFormState>(emptyBook)
   const [errors, setErrors] = useState<string[]>([])
 
@@ -158,23 +122,24 @@ const BookForm = ({ addBook }: BookFormProps) => {
     }
 
     try {
-      await addBook(bookToSubmit)
+      await bookService.create(bookToSubmit)
       setNewBook(emptyBook)
       setErrors([])
+      if (onBookAdded) {
+        await onBookAdded()
+      }
     } catch (error) {
       setErrors(['Failed to add book. Please try again.\n' + (error instanceof Error ? error.message : 'Unknown error')])
     }
   }
 
   return (
-    <Card className="w-full border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur gap-3 py-3 sm:gap-4 sm:py-4">
-      <CardHeader className="border-b border-border/60 px-4 py-2 sm:px-6 sm:py-4">
-        <CardTitle className="text-lg sm:text-2xl">Add books</CardTitle>
-        <CardDescription className="text-[0.7rem] leading-4 sm:text-base sm:leading-6">
-          Suggest books to be read by your book club
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="px-4 pt-1 sm:px-6 sm:pt-4">
+    <Card className="card-base">
+      <SectionHeader
+        title="Add books"
+        description="Suggest books to be read by your book club"
+      />
+      <CardContent className="card-content">
         {errors.length > 0 && (
           <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
             {errors.map((error, idx) => (
@@ -182,78 +147,121 @@ const BookForm = ({ addBook }: BookFormProps) => {
             ))}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
+        <form onSubmit={handleSubmit} className="card-form">
           <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
+            <Field>
+              <FieldLabel htmlFor="name">
+                Title
+                <span className="text-destructive ml-1">*</span>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={newBook.name}
+                  onChange={handleChange}
+                  placeholder="A Tale of Two Cities"
+                  required
+                />
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="author">
+                Author
+                <span className="text-destructive ml-1">*</span>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="author"
+                  name="author"
+                  type="text"
+                  value={newBook.author}
+                  onChange={handleChange}
+                  placeholder="Charles Dickens"
+                  required
+                />
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="year">
+                Year
+                <span className="text-destructive ml-1">*</span>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="year"
+                  name="year"
+                  type="number"
+                  value={newBook.year}
+                  onChange={handleChange}
+                  placeholder="1859"
+                  required
+                />
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="pages">Pages</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="pages"
+                  name="pages"
+                  type="number"
+                  value={newBook.pages}
+                  onChange={handleChange}
+                  placeholder="544"
+                />
+              </FieldContent>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="language">Language</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="language"
+                  name="language"
+                  type="text"
+                  value={newBook.language}
+                  onChange={handleChange}
+                  placeholder="English"
+                />
+              </FieldContent>
+            </Field>
             <div className="sm:col-span-2">
-              <Field
-                label="Title"
-                name="name"
-                value={newBook.name}
-                onChange={handleChange}
-                placeholder="A Tale of Two Cities"
-                required={true}
-              />
+              <Field>
+                <FieldLabel htmlFor="genre">Genre</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="genre"
+                    name="genre"
+                    type="text"
+                    value={newBook.genre}
+                    onChange={handleChange}
+                    placeholder="Historical fiction"
+                  />
+                </FieldContent>
+              </Field>
             </div>
-            <Field
-              label="Author"
-              name="author"
-              value={newBook.author}
-              onChange={handleChange}
-              placeholder="Charles Dickens"
-              required={true}
-            />
-            <Field
-              label="Year"
-              name="year"
-              value={newBook.year}
-              onChange={handleChange}
-              placeholder="1859"
-              type="number"
-              required={true}
-            />
-            <Field
-              label="Pages"
-              name="pages"
-              value={newBook.pages}
-              onChange={handleChange}
-              placeholder="544"
-              type="number"
-              required={false}
-            />
-            <Field
-              label="Language"
-              name="language"
-              value={newBook.language}
-              onChange={handleChange}
-              placeholder="English"
-              required={false}
-            />
             <div className="sm:col-span-2">
-              <Field
-                label="Genre"
-                name="genre"
-                value={newBook.genre}
-                onChange={handleChange}
-                placeholder="Historical fiction"
-                required={false}
-              />
-            </div>
-            <div className="sm:col-span-2">
-              <Field
-                label="ISBN"
-                name="isbn"
-                value={newBook.isbn}
-                onChange={handleChange}
-                placeholder="9780141439600"
-                required={false}
-              />
+              <Field>
+                <FieldLabel htmlFor="isbn">ISBN</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="isbn"
+                    name="isbn"
+                    type="text"
+                    value={newBook.isbn}
+                    onChange={handleChange}
+                    placeholder="9780141439600"
+                  />
+                </FieldContent>
+              </Field>
             </div>
           </div>
 
-          <div className="space-y-0.5 sm:space-y-1">
-            <Label htmlFor="comment" className="text-[0.68rem] sm:text-sm">
+          <div className="space-y-2">
+            <FieldLabel htmlFor="comment">
               Comment
-            </Label>
+            </FieldLabel>
             <Textarea
               id="comment"
               name="comment"
@@ -264,8 +272,8 @@ const BookForm = ({ addBook }: BookFormProps) => {
             />
           </div>
 
-          <div className="flex justify-end border-t border-border/60 pt-2 sm:pt-3">
-            <Button type="submit" className="h-8 w-full gap-2 px-6 text-sm sm:h-9 sm:w-auto sm:min-w-44">
+          <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
+            <Button type="submit" size="lg" className="w-full sm:w-auto">
               Add book
             </Button>
           </div>

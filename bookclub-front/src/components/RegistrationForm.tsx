@@ -1,106 +1,179 @@
-import type { CreateUser } from "../services/users"
+import { useState } from 'react'
+import { AxiosError } from 'axios'
+import userService, { type CreateUser } from '../services/users'
+import { SectionHeader } from './SectionHeader'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent } from '@/components/ui/card'
+import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
-type RegistrationFormProps = {
-  addUser: (event: React.SyntheticEvent<HTMLFormElement>) => Promise<void>,
-  newUser: CreateUser,
-  confirmPassword: string,
-  handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-  handleConfirmPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+const emptyUser: CreateUser = {
+  email: '',
+  name: '',
+  password: ''
 }
 
-const RegistrationForm = ({
-  addUser,
-  newUser,
-  confirmPassword,
-  handleChange,
-  handleConfirmPasswordChange
-}: RegistrationFormProps) => {
+const RegistrationForm = () => {
+  const [newUser, setNewUser] = useState<CreateUser>(emptyUser)
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [message, setMessage] = useState<string | null>(null)
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target
+
+    setNewUser((currentUser) => ({
+      ...currentUser,
+      [name]: value
+    }))
+  }
+
+  const handleConfirmPasswordChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setConfirmPassword(event.target.value)
+  }
+
+  const isValidPassword = (password: string) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)
+  }
+
+  const addUser = async (event: React.SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (newUser.password !== confirmPassword) {
+      setMessage('Passwords do not match.')
+      return
+    }
+
+    if (!isValidPassword(newUser.password)) {
+      alert(
+        "Password must be at least 8 characters long and include uppercase, lowercase, and a number."
+      )
+      return
+    }
+
+    try {
+      await userService.create(newUser)
+      setNewUser(emptyUser)
+      setConfirmPassword('')
+      setMessage('Registration saved.')
+    } catch (err: unknown) {
+      if (err instanceof AxiosError && err.response?.data) {
+        const errorData = err.response.data as Record<string, unknown>
+        if (errorData.error && typeof errorData.error === 'string') {
+          setMessage(errorData.error)
+        } else {
+          setMessage("Registration failed")
+        }
+      } else if (err instanceof AxiosError) {
+        setMessage("Registration failed")
+      } else {
+        setMessage("Unexpected error occurred")
+      }
+    }
+  }
+
   return (
-    <form onSubmit={addUser} className="space-y-4 sm:space-y-6">
-      <div className="grid gap-4 rounded-3xl border border-border/70 bg-muted/20 p-4 shadow-sm sm:gap-5 sm:p-6">
-        <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm text-foreground">
-            Email address
-          </Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={newUser.email}
-            onChange={handleChange}
-            autoComplete="email"
-            placeholder="you@example.com"
-            required
-          />
-        </div>
+      <Card className="card-base">
+        <SectionHeader 
+        title="Create account" 
+        description="Create a new account to be able to suggest books and keep track of your reading list."
+        />
+        
+      <CardContent className="card-content">
+        <form onSubmit={addUser} className="card-form">
+          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
+            <div className="sm:col-span-2">
+              <Field>
+                <FieldLabel htmlFor="email">Email address</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={newUser.email}
+                    onChange={handleChange}
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    required
+                  />
+                </FieldContent>
+              </Field>
+            </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="name" className="text-sm text-foreground">
-            Username
-          </Label>
-          <Input
-            id="name"
-            name="name"
-            value={newUser.name}
-            onChange={handleChange}
-            autoComplete="name"
-            placeholder="Your name"
-            required
-          />
-        </div>
+            <div className="sm:col-span-2">
+              <Field>
+                <FieldLabel htmlFor="name">Username</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={newUser.name}
+                    onChange={handleChange}
+                    autoComplete="name"
+                    placeholder="Your name"
+                    required
+                  />
+                </FieldContent>
+              </Field>
+            </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm text-foreground">
-            Password
-          </Label>
-          <Input
-            id="password"
-            type="password"
-            name="password"
-            value={newUser.password}
-            onChange={handleChange}
-            autoComplete="new-password"
-            placeholder="Secure password"
-            required
-            minLength={8}
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
-            title="Password must be at least 8 characters long and include uppercase, lowercase, and a number."
-          />
-          <p className="text-xs text-muted-foreground">
-            Must be at least 8 characters and include uppercase, lowercase, and a number.
-          </p>
-        </div>
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="password"
+                  type="password"
+                  name="password"
+                  value={newUser.password}
+                  onChange={handleChange}
+                  autoComplete="new-password"
+                  placeholder="Secure password"
+                  required
+                  minLength={8}
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
+                  title="Password must be at least 8 characters long and include uppercase, lowercase, and a number."
+                />
+              </FieldContent>
+            </Field>
 
-        <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="text-sm text-foreground">
-            Confirm Password
-          </Label>
-          <Input
-            id="confirmPassword"
-            type="password"
-            name="confirmPassword"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            autoComplete="new-password"
-            placeholder="Confirm your password"
-            required
-          />
-        </div>
-      </div>
+            <Field>
+              <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  autoComplete="new-password"
+                  placeholder="Confirm your password"
+                  required
+                />
+              </FieldContent>
+            </Field>
+          </div>
 
-      <div className="flex flex-col gap-3 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
-        <p className="max-w-md text-sm text-muted-foreground">
-          Double-check the details before creating the account.
-        </p>
-        <Button type="submit" size="lg" className="w-full sm:w-auto">
-          Register user
-        </Button>
-      </div>
-    </form>
+          {message && (
+            <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded text-primary text-sm">
+              {message}
+            </div>
+          )}
+
+          <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
+            <p className="max-w-md text-xs text-muted-foreground">
+              Double-check the details before creating the account.
+            </p>
+            <Button type="submit" size="lg" className="w-full sm:w-auto">
+              Register user
+            </Button>
+          </div>
+        </form>
+        </CardContent>
+      </Card>
   )
 }
 
