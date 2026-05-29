@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["vitest/globals"],
     "target": "esnext",
     "noEmit": true,
     "noUnusedLocals": true,
@@ -12,9 +13,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "compilerOptions": {
-      "types": ["vitest/globals"]
-    }
   },
   "files": [],
   "references": [
