@@ -1,12 +1,10 @@
-import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { AxiosError } from 'axios'
 
-import loginService from '@/services/login'
-import { setToken, clearToken } from '@/services/auth'
+import loginService from '../services/login'
+import { setToken, clearToken } from '../services/auth'
 
 export const useLogin = () => {
-  const navigate = useNavigate()
   const [message, setMessage] = useState<string | null>(null)
 
   const login = async (username: string, password: string) => {
