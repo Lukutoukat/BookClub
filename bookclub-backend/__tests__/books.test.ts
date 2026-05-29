@@ -44,7 +44,7 @@ describe('/api/books', () => {
     })
 
     afterEach(() => {
-        jest.restoreAllMocks
+        jest.restoreAllMocks()
     })
 
     describe('GET', () => {
@@ -123,6 +123,17 @@ describe('/api/books', () => {
             expect(prisma.book.delete).toHaveBeenCalledWith({
                 where: {id:1},
             })
+        })
+
+        it('returns 400 for invalid id', async () => {
+            const response = await request(app).delete('/api/books/not-a-number')
+
+            expect(response.status).toBe(400)
+            expect(response.body).toEqual({
+                error: 'invalid book id'
+            })
+
+            expect(prisma.book.delete).not.toHaveBeenCalled()
         })
 
         it('returns 500 if delete fails', async () => {
