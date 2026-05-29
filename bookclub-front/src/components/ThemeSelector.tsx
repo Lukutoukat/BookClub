@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card'
 
 import { Button } from '@/components/ui/button'
-import { getInitialTheme, applyThemeToDOM, saveTheme, type Theme } from '../lib/theme'
+import { getInitialTheme, applyThemeToDOM, saveTheme, type Theme } from '@/lib/theme'
 
 const ThemeSelector = () => {
   const [theme, setTheme] = useState<Theme>(getInitialTheme())

@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
-import bookclubService, { type CreateBookClub } from "../services/bookclubs"
+import bookclubService, { type CreateBookClub } from '@/services/bookclubs'
 import { SectionHeader } from './SectionHeader'
 
 import { Button } from "@/components/ui/button"

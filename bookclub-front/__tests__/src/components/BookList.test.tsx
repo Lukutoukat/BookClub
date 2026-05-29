@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import user from '@testing-library/user-event'
-import BookList from '../../../src/components/BookList'
-import bookService, { type Book } from '../../../src/services/books'
+import BookList from '@/components/BookList'
+import bookService, { type Book } from '@/services/books'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 vi.mock('../../../src/services/books')

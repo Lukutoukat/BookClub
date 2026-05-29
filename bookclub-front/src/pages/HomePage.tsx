@@ -1,5 +1,5 @@
-import { PageLayout } from '../components/PageLayout'
-import { PageHeader } from '../components/PageHeader'
+import { PageLayout } from '@/components/PageLayout'
+import { PageHeader } from '@/components/PageHeader'
 import BookClubList from '@/components/BookClubList'
 import JoinBookClubForm from '@/components/JoinBookClubForm'
 

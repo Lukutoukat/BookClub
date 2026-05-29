@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
-import LoginForm from '../components/LoginForm'
+import LoginForm from '@/components/LoginForm'
 import { useLogin } from '@/hooks/useLogin'
 
 import { Badge } from '@/components/ui/badge'

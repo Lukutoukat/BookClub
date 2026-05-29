@@ -1,7 +1,7 @@
-import BookclubForm from '../components/BookclubForm'
+import BookclubForm from '@/components/BookclubForm'
 
-import { PageLayout } from '../components/PageLayout'
-import { PageHeader } from '../components/PageHeader'
+import { PageLayout } from '@/components/PageLayout'
+import { PageHeader } from '@/components/PageHeader'
 
 const CreateBookclubPage = () => {
     return (

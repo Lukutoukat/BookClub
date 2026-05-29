@@ -2,7 +2,7 @@ import { AppSidebar } from './AppSidebar'
 import { AppNavbar } from './AppNavbar'
 import { Bookmark, Settings, House, BookUser } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { useIsMobile } from '../hooks/use-mobile'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export interface MenuItem {
   label: string

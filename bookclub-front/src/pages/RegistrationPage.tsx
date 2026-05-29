@@ -1,4 +1,4 @@
-import RegistrationForm from '../components/RegistrationForm'
+import RegistrationForm from '@/components/RegistrationForm'
 
 import { PageLayout } from '@/components/PageLayout'
 import { PageHeader } from '@/components/PageHeader'

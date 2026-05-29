@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import bookclubmembersService, { type AddBookClubMember } from '../services/bookclubmembers'
+import bookclubmembersService, { type AddBookClubMember } from '@/services/bookclubmembers'
 import { AxiosError } from 'axios'
 
 const emptyJoinRequest: AddBookClubMember = {

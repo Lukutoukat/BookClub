@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AxiosError } from "axios";
-import BookForm from "../../../src/components/BookForm";
-import bookService from "../../../src/services/books";
+import BookForm from '@/components/BookForm'
+import bookService from '@/services/books'
 export default BookForm;
 import "@testing-library/jest-dom/vitest";
 

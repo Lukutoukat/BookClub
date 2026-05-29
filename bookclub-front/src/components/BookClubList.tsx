@@ -1,7 +1,7 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import bookClubService, { type BookClub } from '../services/bookclubs'
+import bookClubService, { type BookClub } from '@/services/bookclubs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'

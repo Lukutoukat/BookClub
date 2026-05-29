@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { test, expect, vi } from 'vitest'
 import type { Mocked } from 'vitest'
-import books from '../../../src/services/books'
+import books from '@/services/books'
 
 vi.mock('axios')
 

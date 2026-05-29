@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
 
-import bookService, { type CreateBook } from '../services/books'
-import { isValidISBN, cleanISBN } from '../lib/isbnValidator'
+import bookService, { type CreateBook } from '@/services/books'
+import { isValidISBN, cleanISBN } from '@/lib/isbnValidator'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

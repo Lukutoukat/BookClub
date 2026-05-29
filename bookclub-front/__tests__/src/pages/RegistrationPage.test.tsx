@@ -1,8 +1,8 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
-import RegistrationPage from '../../../src/pages/RegistrationPage'
-import userService from '../../../src/services/users'
+import RegistrationPage from '@/pages/RegistrationPage'
+import userService from '@/services/users'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 vi.mock('../../../src/services/users')

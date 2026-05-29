@@ -1,5 +1,5 @@
-import { PageLayout } from '../components/PageLayout'
-import { PageHeader } from '../components/PageHeader'
+import { PageLayout } from '@/components/PageLayout'
+import { PageHeader } from '@/components/PageHeader'
 import { useLogin } from '@/hooks/useLogin'
 
 import ClubSettings from '@/components/ClubSettings'
