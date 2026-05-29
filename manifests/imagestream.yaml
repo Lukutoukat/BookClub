@@ -1,0 +1,19 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+
+metadata:
+  name: bookclub
+  labels:
+    app: bookclub
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: staging
+      from:
+        kind: DockerImage
+        name: neakovalaine/bookclub:staging
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
