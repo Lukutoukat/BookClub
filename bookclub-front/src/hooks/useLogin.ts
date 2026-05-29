@@ -24,7 +24,7 @@ export const useLogin = () => {
       setToken(user.token)
       setMessage(null)
 
-      void navigate('/books')
+      window.location.href = '/home'
       return true
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
@@ -53,7 +53,7 @@ export const useLogin = () => {
     localStorage.removeItem('loggedBookappUser')
     clearToken()
     setMessage(null)
-    void navigate('/login')
+    window.location.href = '/login'
   }
 
   return { login, logout, message }
