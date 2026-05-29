@@ -44,7 +44,7 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
       <PageHeader
       badgeText="Club"
       title={bookclub.name}
-      description="Suggest books and decide together, what books you will enjoy with your friends."
+      description="Suggest books and decide together, what will you enjoy reading with your friends."
       buttonText={bookclub.invite_code}
       buttonOnClick={async () => {
         try {
