@@ -1,11 +1,10 @@
 import BookclubForm from '../components/BookclubForm'
 
-import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
 
 const CreateBookclubPage = () => {
     return (
-        <PageLayout>
+        <>
         <PageHeader
             badgeText="Create a bookclub"
             title="New bookclub"
@@ -14,7 +13,7 @@ const CreateBookclubPage = () => {
             buttonLink="/books"
         />
         <BookclubForm />
-        </PageLayout>
+        </>
     )
 }
 

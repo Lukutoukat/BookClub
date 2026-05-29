@@ -7,20 +7,23 @@ import CreateBookclubPage from './pages/CreateBookclubPage'
 import SettingsPage from './pages/SettingsPage'
 import BookclubPage from './pages/BookclubPage'
 import { PageMenu } from './components/PageMenu'
+import { PageLayout } from './components/PageLayout'
 
 const App = () => {
   return (
     <BrowserRouter>
       <PageMenu>
-        <Routes>
-        <Route path="/" element={<Navigate to="/registration" replace />} />
-        <Route path="/books" element={<BooksPage />} />
-        <Route path="/create" element={<CreateBookclubPage />} />
-        <Route path="/registration" element={<RegistrationPage />} />
-        <Route path="/club/:bookclubId" element={<BookclubPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/settings" element={<SettingsPage />}/>
-        </Routes>
+        <PageLayout>
+          <Routes>
+          <Route path="/" element={<Navigate to="/registration" replace />} />
+          <Route path="/books" element={<BooksPage />} />
+          <Route path="/create" element={<CreateBookclubPage />} />
+          <Route path="/registration" element={<RegistrationPage />} />
+          <Route path="/club/:bookclubId" element={<BookclubPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/settings" element={<SettingsPage />}/>
+          </Routes>
+        </PageLayout>
       </PageMenu>
     </BrowserRouter>
   )

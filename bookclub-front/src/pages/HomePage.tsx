@@ -1,4 +1,3 @@
-import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
 import BookClubList from '@/components/BookClubList'
 import JoinBookClubForm from '@/components/JoinBookClubForm'
@@ -6,7 +5,7 @@ import JoinBookClubForm from '@/components/JoinBookClubForm'
 const HomePage = () => {
 
   return (
-    <PageLayout>
+    <>
       <PageHeader
         badgeText="Home"
         title="Clubs, books and more"
@@ -17,7 +16,7 @@ const HomePage = () => {
 
       <BookClubList />
       <JoinBookClubForm />
-    </PageLayout>
+    </>
   )
 }
 

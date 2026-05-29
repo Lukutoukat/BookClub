@@ -2,7 +2,6 @@ import { useRef } from 'react'
 
 import BookForm from '../components/BookForm'
 import BookList, { type BookListHandle } from '../components/BookList'
-import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
 
 const BooksPage = () => {
@@ -13,7 +12,7 @@ const BooksPage = () => {
   }
 
   return (
-    <PageLayout>
+    <>
       <PageHeader
         badgeText="Book Club"
         title="Books and suggestions"
@@ -24,7 +23,7 @@ const BooksPage = () => {
 
       <BookForm onBookAdded={handleBookAdded} />
       <BookList ref={bookListRef} emptyMessage="No books suggested yet. Be the first to add one!" />
-    </PageLayout>
+    </>
   )
 }
 

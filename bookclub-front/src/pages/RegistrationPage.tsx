@@ -1,11 +1,10 @@
 import RegistrationForm from '../components/RegistrationForm'
 
-import { PageLayout } from '@/components/PageLayout'
 import { PageHeader } from '@/components/PageHeader'
 
 const RegistrationPage = () => {
   return (
-    <PageLayout>
+    <>
       <PageHeader
         badgeText="Registration"
         title="Join the club"
@@ -15,7 +14,7 @@ const RegistrationPage = () => {
       />
 
       <RegistrationForm />
-    </PageLayout>
+    </>
   )
 }
 

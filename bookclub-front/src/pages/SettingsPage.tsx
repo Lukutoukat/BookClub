@@ -1,4 +1,3 @@
-import { PageLayout } from '../components/PageLayout'
 import { PageHeader } from '../components/PageHeader'
 
 import ClubSettings from '@/components/ClubSettings'
@@ -7,7 +6,7 @@ import ThemeSelector from '@/components/ThemeSelector'
 
 const SettingsPage = () => {
   return (
-    <PageLayout>
+    <>
       <PageHeader
         badgeText="Settings"
         title="Settings"
@@ -20,7 +19,7 @@ const SettingsPage = () => {
 
       <ThemeSelector />
   
-    </PageLayout>
+    </>
   )
 }
 
