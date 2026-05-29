@@ -56,5 +56,12 @@ test('remove deletes the correct book', async () => {
 
   await books.remove(mockIsbn)
 
-  expect(mockedAxios.delete).toHaveBeenCalledWith(`/api/books/${mockIsbn}`)
+  expect(mockedAxios.delete).toHaveBeenCalledWith(
+    `/api/books/${mockIsbn}`,
+    expect.objectContaining({
+      headers: expect.objectContaining({
+        Authorization: null,
+      }),
+    }),
+  )
 })

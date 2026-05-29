@@ -5,13 +5,11 @@ export const setToken = (newToken: string | null) => {
 }
 
 export const getAuthConfig = () => {
-  return token
-    ? {
+  return {
         headers: {
           Authorization: token
         }
       }
-    : undefined
 }
 
 export const clearToken = () => {
