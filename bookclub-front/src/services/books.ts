@@ -1,8 +1,7 @@
 import axios from 'axios'
+import { getAuthConfig } from '@/services/auth'
 
 const baseUrl = '/api/books'
-
-let token: string | null = null
 
 export interface BookFields {
     id: number
@@ -20,25 +19,16 @@ export interface BookFields {
 export type Book = BookFields
 export type CreateBook = Omit<BookFields, 'id'>
 
-const setToken = (newToken: string) => {
-    token = `Bearer ${newToken}`
-}
-
 const getAll = () => {
-    return axios.get<Book[]>(baseUrl).then((res) => res.data)
+    return axios.get<Book[]>(baseUrl, getAuthConfig()).then((res) => res.data)
 }
 
 const create = (book: CreateBook) => {
-    const config = {
-        headers: { Authorization: token}
-    }
-
-    return axios.post<Book>(baseUrl, book, config).then((res) => res.data)
+    return axios.post<Book>(baseUrl, book, getAuthConfig()).then((res) => res.data)
 }
 
 const remove = (id: number) => {
-    return axios.delete(`${baseUrl}/${id}`)
+    return axios.delete(`${baseUrl}/${id}`, getAuthConfig())
 }
 
-
-export default { getAll, create, remove, setToken }
+export default { getAll, create, remove }

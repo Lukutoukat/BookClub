@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { AxiosError } from 'axios'
 
 import loginService from '@/services/login'
-import bookService from '@/services/books'
+import { setToken, clearToken } from '@/services/auth'
 
 export const useLogin = () => {
   const navigate = useNavigate()
@@ -21,7 +21,7 @@ export const useLogin = () => {
         JSON.stringify(user)
       )
 
-      bookService.setToken(user.token)
+      setToken(user.token)
       setMessage(null)
 
       void navigate('/books')
@@ -51,7 +51,7 @@ export const useLogin = () => {
 
   const logout = () => {
     localStorage.removeItem('loggedBookappUser')
-    bookService.setToken('')
+    clearToken()
     setMessage(null)
     void navigate('/login')
   }
