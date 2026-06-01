@@ -17,8 +17,6 @@ const BooksPage = () => {
         badgeText="Book Club"
         title="Books and suggestions"
         description="Browse others&apos; books, suggest new ones, and decide together which to read next."
-        buttonText="Go to registration"
-        buttonLink="/registration"
       />
 
       <BookForm onBookAdded={handleBookAdded} />

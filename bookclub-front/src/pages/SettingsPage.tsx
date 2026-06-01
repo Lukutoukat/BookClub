@@ -1,4 +1,5 @@
 import { PageHeader } from '@/components/PageHeader'
+import { BottomDescription } from '@/components/BottomDescription'
 import { useLogin } from '@/hooks/useLogin'
 
 import ClubSettings from '@/components/ClubSettings'
@@ -21,6 +22,8 @@ const SettingsPage = () => {
       <AccountSettings handleLogOut={logout} />
 
       <ThemeSelector />
+
+      <BottomDescription />
   
     </>
   )
