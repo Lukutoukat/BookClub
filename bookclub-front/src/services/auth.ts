@@ -1,22 +1,28 @@
-let token: string | null = null
 
-export const setToken = (newToken: string | null) => {
-  token = newToken ? `Bearer ${newToken}` : null
+export const getToken = () => {
+  return localStorage.getItem('loggedBookappUser')
+}
+
+export const setToken = (newToken: string) => {
+  localStorage.setItem('loggedBookappUser', newToken)
 }
 
 export const getAuthConfig = () => {
-  return {
+  const token = getToken()
+
+  return token
+    ? {
         headers: {
-          Authorization: token
+          Authorization: `Bearer ${token}`
         }
       }
+    : {}
 }
 
 export const clearToken = () => {
-  token = null
+  localStorage.removeItem('loggedBookappUser')
 }
 
-// TÄMÄ EI TOIMI VIELÄ
 export const isLoggedIn = () => {
     return Boolean(localStorage.getItem('loggedBookappUser'))
 }
