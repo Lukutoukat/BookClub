@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import user from '@testing-library/user-event'
-import RegistrationForm from '../../../src/components/RegistrationForm'
-import userService from '../../../src/services/users'
+import RegistrationForm from '@/components/RegistrationForm'
+import userService from '@/services/users'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 import { AxiosError } from 'axios'
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 
-import bookService, { type Book } from '../services/books'
-import { formatISBN } from '../lib/isbnValidator'
+import bookService, { type Book } from '@/services/books'
+import { formatISBN } from '@/lib/isbnValidator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { AxiosError } from 'axios'
 
-import bookclubmembersService, { type AddBookClubMember } from '../services/bookclubmembers'
+import bookclubmembersService, { type AddBookClubMember } from '@/services/bookclubmembers'
 import { SectionHeader } from './SectionHeader'
 
 import { Button } from '@/components/ui/button'

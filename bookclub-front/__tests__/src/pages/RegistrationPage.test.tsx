@@ -1,8 +1,8 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
-import RegistrationPage from '../../../src/pages/RegistrationPage'
-import userService from '../../../src/services/users'
+import RegistrationPage from '@/pages/RegistrationPage'
+import userService from '@/services/users'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 vi.mock('../../../src/services/users')
@@ -29,7 +29,7 @@ describe('RegistrationPage', () => {
       expect(screen.getByText('Create a new account to be able to suggest books and keep track of your reading list.')).toBeDefined()
     })
 
-    test('renders registration badge and back link', () => {
+    test('renders registration badge and login link', () => {
       renderWithRouter(<RegistrationPage />)
 
       const heading = screen.getByRole('heading', { name: 'Join the club' })
@@ -37,7 +37,7 @@ describe('RegistrationPage', () => {
 
       expect(within(header as HTMLElement).getByText('Registration')).toBeDefined()
 
-      const link = screen.getByRole('link', { name: 'Back to books' })
+      const link = screen.getByRole('link', { name: 'Go to login' })
       expect(link).toBeDefined()
     })
 
@@ -51,11 +51,11 @@ describe('RegistrationPage', () => {
       expect(screen.getByRole('button', { name: 'Register user' })).toBeDefined()
     })
 
-    test('back link navigates to books page', () => {
+    test('login link navigates to login page', () => {
       renderWithRouter(<RegistrationPage />)
 
-      const link = screen.getByRole('link', { name: 'Back to books' })
-      expect(link.getAttribute('href')).toBe('/books')
+      const link = screen.getByRole('link', { name: 'Go to login' })
+      expect(link.getAttribute('href')).toBe('/login')
     })
   })
 

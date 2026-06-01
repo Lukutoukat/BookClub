@@ -164,9 +164,6 @@
   * {
     @apply border-border outline-ring/50;
     }
-  html {
-    @apply bg-[radial-gradient(circle_at_top,_rgba(255,247,240,0.95),_rgba(250,244,235,0.96)_35%,_rgba(238,242,246,0.92)_70%,_rgba(247,247,242,1))];
-  }
   html.dark {
     @apply bg-background;
   }
@@ -175,7 +172,7 @@
     margin: 0;
     }
   main {
-    @apply flex flex-col items-center justify-start min-h-dvh px-4 py-4 sm:px-6 sm:py-8 lg:px-8;
+    @apply bg-[radial-gradient(circle_at_top,_rgba(255,247,240,0.95),_rgba(250,244,235,0.96)_35%,_rgba(238,242,246,0.92)_70%,_rgba(247,247,242,1))] flex flex-col items-center justify-start min-h-dvh px-4 py-4 sm:px-6 sm:py-8 lg:px-8;
   }
 }
 

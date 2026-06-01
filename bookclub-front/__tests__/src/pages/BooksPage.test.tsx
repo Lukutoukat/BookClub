@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
-import BooksPage from '../../../src/pages/BooksPage'
-import { type Book } from '../../../src/services/books'
-import bookService from '../../../src/services/books'
+import BooksPage from '@/pages/BooksPage'
+import { type Book } from '@/services/books'
+import bookService from '@/services/books'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 vi.mock('../../../src/services/books')

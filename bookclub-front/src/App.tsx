@@ -2,14 +2,27 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import BooksPage from './pages/BooksPage'
 import RegistrationPage from './pages/RegistrationPage'
+import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import CreateBookclubPage from './pages/CreateBookclubPage'
 import SettingsPage from './pages/SettingsPage'
 import BookclubPage from './pages/BookclubPage'
 import { PageMenu } from './components/PageMenu'
 import { PageLayout } from './components/PageLayout'
+import { isLoggedIn } from './services/auth'
 
 const App = () => {
+  if (!isLoggedIn()) {
+    return(
+      <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/registration" element={<RegistrationPage />} />
+          </Routes>
+      </BrowserRouter>
+    )
+  }
+
   return (
     <BrowserRouter>
       <PageMenu>

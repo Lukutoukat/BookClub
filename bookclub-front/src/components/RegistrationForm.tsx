@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AxiosError } from 'axios'
-import userService, { type CreateUser } from '../services/users'
+import userService, { type CreateUser } from '@/services/users'
 import { SectionHeader } from './SectionHeader'
 
 import { Button } from "@/components/ui/button"

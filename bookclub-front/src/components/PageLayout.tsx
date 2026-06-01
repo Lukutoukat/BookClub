@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react'
-import { getInitialTheme, applyThemeToDOM } from '../lib/theme'
+import { getInitialTheme, applyThemeToDOM } from '@/lib/theme'
 
 /**
  * PageLayout is a reusable component that provides consistent style accross pages

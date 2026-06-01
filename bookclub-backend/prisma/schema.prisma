@@ -18,6 +18,8 @@ model Book {
   comment      String?
   language     String?
   genre        String?
+  user_id      Int?
+  user         User?          @relation(fields: [user_id], references: [id])
   BookProposed BookProposed[]
   BookSaved    BookSaved[]
   BookVoted    BookVoted[]
@@ -88,4 +90,5 @@ model User {
   BookClubMembers BookClubMembers[]
   BookSaved       BookSaved[]
   BookVoted       BookVoted[]
+  Books           Book[]
 }

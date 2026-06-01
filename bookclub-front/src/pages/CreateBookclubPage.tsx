@@ -1,4 +1,4 @@
-import BookclubForm from '../components/BookclubForm'
+import BookclubForm from '@/components/BookclubForm'
 
 import { PageHeader } from '../components/PageHeader'
 

@@ -1,7 +1,19 @@
-POST http://localhost:13000/api/login
+POST http://localhost:13000/api/books
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5lbmUiLCJpZCI6MSwiaWF0IjoxNzc5OTU0Nzc5fQ.g73S6sq-OszdAdEA1JaRh5JWkZ9P4HPtjLvKr_o9mMs
 
 {
-  "name": "nene",
-  "password": "ne"
+  "isbn": "12345678",
+  "name": "hp",
+  "author": "hertta",
+  "year": 20,
+  "pages": 300,
+  "comment": "moi",
+  "language": "soomi",
+  "genre": "romance"
 }
+
+# {
+  # "username": "nene",
+  # "password": "Moikka1234"
+# }
