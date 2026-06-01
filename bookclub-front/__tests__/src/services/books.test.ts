@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { test, expect, vi } from 'vitest'
 import type { Mocked } from 'vitest'
-import books from '../../../src/services/books'
+import books from '@/services/books'
 
 vi.mock('axios')
 
@@ -37,7 +37,15 @@ test('create returns created book', async () => {
 
   const result = await books.create(mockBook)
 
-  expect(mockedAxios.post).toHaveBeenCalledWith('/api/books', mockBook)
+  expect(mockedAxios.post).toHaveBeenCalledWith(
+    '/api/books',
+    mockBook,
+    expect.objectContaining({
+      headers: expect.objectContaining({
+        Authorization: null,
+      }),
+    }),
+  )
   expect(result).toEqual(mockBook)
 })
 
@@ -48,5 +56,12 @@ test('remove deletes the correct book', async () => {
 
   await books.remove(mockIsbn)
 
-  expect(mockedAxios.delete).toHaveBeenCalledWith(`/api/books/${mockIsbn}`)
+  expect(mockedAxios.delete).toHaveBeenCalledWith(
+    `/api/books/${mockIsbn}`,
+    expect.objectContaining({
+      headers: expect.objectContaining({
+        Authorization: null,
+      }),
+    }),
+  )
 })

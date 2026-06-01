@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { cn } from '../../../src/lib/utils'
+import { cn } from '@/lib/utils'
 
 test('cn combines single class', () => {
   const result = cn('px-2')

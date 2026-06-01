@@ -1,48 +1,20 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import user from '@testing-library/user-event'
-import RegistrationForm from '../../../src/components/RegistrationForm'
-import type { CreateUser } from '../../../src/services/users'
+import RegistrationForm from '@/components/RegistrationForm'
+import userService from '@/services/users'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
+import { AxiosError } from 'axios'
 
-const mockNewUser = (overrides?: Partial<CreateUser>): CreateUser => ({
-  email: "Antero@example.com",
-  name: "Antero Antero",
-  password: "AnteroSalasana123",
-  ...overrides,
-})
+vi.mock('../../../src/services/users')
 
 describe('RegistrationForm', () => {
-  let mockAddUser: ReturnType<typeof vi.fn>
-  let mockHandleChange: ReturnType<typeof vi.fn>
-  let mockHandleConfirmPasswordChange: ReturnType<typeof vi.fn>
-  let newUser: CreateUser
-
   beforeEach(() => {
-    mockAddUser = vi.fn()
-    mockHandleChange = vi.fn()
-    mockHandleConfirmPasswordChange = vi.fn()
-    newUser = mockNewUser()
+    vi.clearAllMocks()
   })
-
-  const renderComponent = (overrides?: {
-    newUser?: CreateUser
-    confirmPassword?: string
-    handleChange?: ReturnType<typeof vi.fn>
-    handleConfirmPasswordChange?: ReturnType<typeof vi.fn>
-  }) => {
-    const props = {
-      addUser: mockAddUser,
-      newUser: overrides?.newUser ?? newUser,
-      confirmPassword: overrides?.confirmPassword ?? "",
-      handleChange: overrides?.handleChange ?? mockHandleChange,
-      handleConfirmPasswordChange: overrides?.handleConfirmPasswordChange ?? mockHandleConfirmPasswordChange,
-    }
-    render(<RegistrationForm {...props} />)
-  }
 
   describe('rendering', () => {
     test('renders all form fields', () => {
-      renderComponent()
+      render(<RegistrationForm />)
       expect(screen.getByLabelText('Email address')).toBeDefined()
       expect(screen.getByLabelText('Username')).toBeDefined()
       expect(screen.getByLabelText('Password')).toBeDefined()
@@ -50,7 +22,7 @@ describe('RegistrationForm', () => {
     })
 
     test('renders labels, placeholders and button', () => {
-      renderComponent()
+      render(<RegistrationForm />)
       expect(screen.getByText('Email address')).toBeDefined()
       expect(screen.getByText('Username')).toBeDefined()
       expect(screen.getByText('Password')).toBeDefined()
@@ -63,14 +35,12 @@ describe('RegistrationForm', () => {
     })
 
     test('renders helper text', () => {
-      renderComponent()
+      render(<RegistrationForm />)
       expect(screen.getByText('Double-check the details before creating the account.')).toBeDefined()
     })
 
     test('renders form with empty initial values', () => {
-      renderComponent({
-        newUser: { email: "", name: "", password: "" },
-      })
+      render(<RegistrationForm />)
       const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
       const nameInput = screen.getByLabelText('Username') as HTMLInputElement
       const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
@@ -83,32 +53,16 @@ describe('RegistrationForm', () => {
     })
   })
 
-  describe('input values', () => {
-    test('displays inputs with correct values', () => {
-      const customUser = mockNewUser({
-        email: "john@example.com",
-        name: "Jane Smith",
-        password: "MyPassword123",
-      })
-      renderComponent({ newUser: customUser, confirmPassword: "MyPassword123" })
-
-      expect((screen.getByLabelText('Email address') as HTMLInputElement).value).toBe("john@example.com")
-      expect((screen.getByLabelText('Username') as HTMLInputElement).value).toBe("Jane Smith")
-      expect((screen.getByLabelText('Password') as HTMLInputElement).value).toBe("MyPassword123")
-      expect((screen.getByLabelText('Confirm Password') as HTMLInputElement).value).toBe("MyPassword123")
-    })
-  })
-
   describe('input attributes', () => {
     test('inputs have correct types', () => {
-      renderComponent()
+      render(<RegistrationForm />)
       expect((screen.getByLabelText('Email address') as HTMLInputElement).type).toBe('email')
       expect((screen.getByLabelText('Password') as HTMLInputElement).type).toBe('password')
       expect((screen.getByLabelText('Confirm Password') as HTMLInputElement).type).toBe('password')
     })
 
     test('inputs have autocomplete attributes', () => {
-      renderComponent()
+      render(<RegistrationForm />)
       const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
       const nameInput = screen.getByLabelText('Username') as HTMLInputElement
       const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
@@ -121,14 +75,14 @@ describe('RegistrationForm', () => {
     })
 
     test('password field has minLength and pattern constraints', () => {
-      renderComponent()
+      render(<RegistrationForm />)
       const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
       expect(passwordInput.minLength).toBe(8)
       expect(passwordInput.pattern).toBe('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$')
     })
 
     test('password field has title attribute with validation guidance', () => {
-      renderComponent()
+      render(<RegistrationForm />)
       const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
       expect(passwordInput.title).toContain('must be at least 8 characters long')
       expect(passwordInput.title).toContain('uppercase')
@@ -137,43 +91,114 @@ describe('RegistrationForm', () => {
     })
   })
 
-  describe('event handlers', () => {
-    test('calls handleChange when email, name, or password fields change', async () => {
-      renderComponent({ handleChange: mockHandleChange })
-      const us = user.setup()
+  describe('form submission', () => {
+    test('handles form submission successfully', async () => {
+      vi.mocked(userService.create).mockResolvedValue({} as any)
 
-      await us.type(screen.getByLabelText('Email address'), 'new@example.com')
-      expect(mockHandleChange).toHaveBeenCalled()
+      const userInstance = user.setup()
+      render(<RegistrationForm />)
 
-      mockHandleChange.mockClear()
-      await us.type(screen.getByLabelText('Username'), 'New Name')
-      expect(mockHandleChange).toHaveBeenCalled()
+      await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
+      await userInstance.type(screen.getByLabelText('Username'), 'testuser')
+      await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
+      await userInstance.type(screen.getByLabelText('Confirm Password'), 'TestPass123')
 
-      mockHandleChange.mockClear()
-      await us.type(screen.getByLabelText('Password'), 'NewPassword123')
-      expect(mockHandleChange).toHaveBeenCalled()
+      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Registration saved.')).toBeDefined()
+      })
     })
 
-    test('calls handleConfirmPasswordChange when confirm password field changes', async () => {
-      renderComponent({ handleConfirmPasswordChange: mockHandleConfirmPasswordChange })
-      const us = user.setup()
-      await us.type(screen.getByLabelText('Confirm Password'), 'Password123')
-      expect(mockHandleConfirmPasswordChange).toHaveBeenCalled()
+    test('shows error when passwords do not match', async () => {
+      vi.mocked(userService.create).mockResolvedValue({} as any)
+
+      const userInstance = user.setup()
+      render(<RegistrationForm />)
+
+      await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
+      await userInstance.type(screen.getByLabelText('Username'), 'testuser')
+      await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
+      await userInstance.type(screen.getByLabelText('Confirm Password'), 'DifferentPass123')
+
+      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Passwords do not match.')).toBeDefined()
+      })
     })
 
-    test('calls addUser when form is submitted', async () => {
-      renderComponent({ confirmPassword: newUser.password })
-      const us = user.setup()
-      await us.click(screen.getByText('Register user'))
-      expect(mockAddUser).toHaveBeenCalled()
+    test('shows error when invalid password is provided', async () => {
+      const userInstance = user.setup()
+      render(<RegistrationForm />)
+
+      await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
+      await userInstance.type(screen.getByLabelText('Username'), 'testuser')
+      await userInstance.type(screen.getByLabelText('Password'), 'weak')
+      await userInstance.type(screen.getByLabelText('Confirm Password'), 'weak')
+
+      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+
+      // The alert is shown by the browser, but we can check that the service wasn't called
+      expect(vi.mocked(userService.create)).not.toHaveBeenCalled()
     })
 
-    test('addUser handler is async', async () => {
-      mockAddUser.mockResolvedValue(undefined)
-      renderComponent({ confirmPassword: newUser.password })
-      const us = user.setup()
-      await us.click(screen.getByText('Register user'))
-      expect(mockAddUser).toHaveBeenCalledTimes(1)
+    test('shows error message from failed API call', async () => {
+      const error = new AxiosError(
+        'Email already in use',
+        '400',
+        undefined,
+        undefined,
+        {
+          data: { error: 'Email already in use' },
+          status: 400,
+          statusText: 'Bad Request',
+          headers: {},
+          config: {} as any
+        } as any
+      )
+      vi.mocked(userService.create).mockRejectedValue(error)
+
+      const userInstance = user.setup()
+      render(<RegistrationForm />)
+
+      await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
+      await userInstance.type(screen.getByLabelText('Username'), 'testuser')
+      await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
+      await userInstance.type(screen.getByLabelText('Confirm Password'), 'TestPass123')
+
+      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Email already in use')).toBeDefined()
+      })
+    })
+
+    test('clears form after successful registration', async () => {
+      vi.mocked(userService.create).mockResolvedValue({} as any)
+
+      const userInstance = user.setup()
+      render(<RegistrationForm />)
+
+      const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
+      const nameInput = screen.getByLabelText('Username') as HTMLInputElement
+      const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
+      const confirmPasswordInput = screen.getByLabelText('Confirm Password') as HTMLInputElement
+
+      await userInstance.type(emailInput, 'test@example.com')
+      await userInstance.type(nameInput, 'testuser')
+      await userInstance.type(passwordInput, 'TestPass123')
+      await userInstance.type(confirmPasswordInput, 'TestPass123')
+
+      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+
+      await waitFor(() => {
+        expect(emailInput.value).toBe('')
+        expect(nameInput.value).toBe('')
+        expect(passwordInput.value).toBe('')
+        expect(confirmPasswordInput.value).toBe('')
+      })
     })
   })
 })
+

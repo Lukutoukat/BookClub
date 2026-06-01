@@ -6,7 +6,9 @@
     "module": "esnext",
     "types": ["node", "vite/client"],
     "skipLibCheck": true,
-
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
@@ -20,5 +22,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["eslint.config.ts", "vite.config.ts", "testSetup.ts", "src"]
+  "include": ["eslint.config.ts", "vite.config.ts", "src"]
 }

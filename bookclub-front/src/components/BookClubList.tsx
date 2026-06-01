@@ -1,0 +1,122 @@
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import bookClubService, { type BookClub } from '@/services/bookclubs'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { SectionHeader } from './SectionHeader'
+
+export interface BookClubListHandle {
+  reload: () => Promise<void>
+}
+
+interface BookClubListProps {
+  emptyMessage?: string
+}
+
+const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    void navigate(`/club/${bookClub.id}`)
+  }
+
+  return (
+    <Button
+      onClick={handleClick}
+      variant="ghost"
+      className="w-full justify-start h-auto"
+    >
+      <Card className="w-full border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90 cursor-pointer">
+        <CardContent className="px-3 py-2 sm:px-4 sm:py-3 pl-4 sm:pl-5">
+          <h3 className="text-lg font-semibold text-foreground/90">{bookClub.name}</h3>
+        </CardContent>
+      </Card>
+    </Button>
+  )
+}
+
+const BookClubList = forwardRef<BookClubListHandle, BookClubListProps>(({ emptyMessage = "No bookclubs yet." }, ref) => {
+  const [bookClubs, setBookClubs] = useState<BookClub[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const loadBookClubs = async () => {
+    try {
+      setErrorMessage(null)
+      const loadedClubs = await bookClubService.getAll()
+      setBookClubs(loadedClubs)
+    } catch {
+      setErrorMessage('Failed to load bookclubs.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useImperativeHandle(ref, () => ({
+    reload: loadBookClubs
+  }), [])
+
+  useEffect(() => {
+    void loadBookClubs()
+  }, [])
+
+  const clubCount = bookClubs.length
+  const description = `${clubCount} ${clubCount === 1 ? 'bookclub' : 'bookclubs'}`
+
+  if (isLoading) {
+    return (
+      <Card className="card-base">
+        <SectionHeader title="All bookclubs" description={description} />
+        <CardContent className="card-content">
+          <div className="text-sm text-muted-foreground text-center py-6">
+            Loading bookclubs...
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (errorMessage) {
+    return (
+      <Card className="card-base">
+        <SectionHeader title="All bookclubs" description={description} />
+        <CardContent className="card-content">
+          <div className="p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
+            {errorMessage}
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (bookClubs.length === 0) {
+    return (
+      <Card className="card-base">
+        <SectionHeader title="All bookclubs" description={description} />
+        <CardContent className="card-content">
+          <div className="text-sm text-muted-foreground text-center py-6">
+            {emptyMessage}
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  return (
+    <Card className="card-base">
+      <SectionHeader title="All bookclubs" description={description} />
+      <CardContent className="card-content">
+        <div className="space-y-3">
+          {bookClubs.map((club) => (
+            <BookClubItem key={club.id} bookClub={club} />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  )
+})
+
+BookClubList.displayName = 'BookClubList'
+
+export default BookClubList

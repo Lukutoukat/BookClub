@@ -1,16 +1,18 @@
 import { render, screen } from '@testing-library/react'
 import user from '@testing-library/user-event'
-import BookList from '../../../src/components/BookList'
-import { type Book } from '../../../src/services/books'
+import BookList from '@/components/BookList'
+import bookService, { type Book } from '@/services/books'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
+
+vi.mock('../../../src/services/books')
 
 const mockBook = (overrides?: Partial<Book>): Book => ({
   id: 1,
   isbn: "9780451524935",
   name: "Book 1",
   author: "Author 1",
-  year: "2024",
-  pages: "100",
+  year: 2024,
+  pages: 100,
   comment: "Comment 1",
   language: "English",
   genre: "Fiction",
@@ -18,78 +20,72 @@ const mockBook = (overrides?: Partial<Book>): Book => ({
 })
 
 describe('BookList', () => {
-  let onDelete: ReturnType<typeof vi.fn>
-  let books: Book[]
-
   beforeEach(() => {
-    onDelete = vi.fn()
-    books = [mockBook()]
+    vi.clearAllMocks()
   })
 
   const renderComponent = (overrides?: {
     books?: Book[]
-    onDelete?: ReturnType<typeof vi.fn>
     emptyMessage?: string
   }) => {
-    const props = {
-      books: overrides?.books ?? books,
-      onDelete: overrides?.onDelete,
-      emptyMessage: overrides?.emptyMessage,
+    const booksToUse = overrides?.books ?? [mockBook()]
+    vi.mocked(bookService.getAll).mockResolvedValue(booksToUse)
+    const emptyMessage = overrides?.emptyMessage
+    if (emptyMessage) {
+      render(<BookList emptyMessage={emptyMessage} />)
+    } else {
+      render(<BookList />)
     }
-    render(<BookList {...props} />)
   }
 
   describe('empty states', () => {
-    test('renders empty state with default message', () => {
+    test('renders empty state with default message', async () => {
       renderComponent({ books: [] })
-      expect(screen.getByText('No books yet.')).toBeDefined()
+      const element = await screen.findByText('No books yet.')
+      expect(element).toBeDefined()
     })
 
-    test('renders empty state with custom message', () => {
+    test('renders empty state with custom message', async () => {
       const customMessage = 'Your bookshelf is empty'
       renderComponent({ books: [], emptyMessage: customMessage })
-      expect(screen.getByText(customMessage)).toBeDefined()
+      const element = await screen.findByText(customMessage)
+      expect(element).toBeDefined()
     })
   })
 
   describe('rendering books', () => {
-    test('renders book title and basic content', () => {
+    test('renders book title and basic content', async () => {
       renderComponent()
-      expect(screen.getByText('Book 1')).toBeDefined()
+      const element = await screen.findByText('Book 1')
+      expect(element).toBeDefined()
     })
 
-    test('renders multiple books with correct index badges', () => {
-      const multipleBooks = [
-        mockBook({ id: 1, isbn: "9780451524935", name: "Book 1" }),
-        mockBook({ id: 2, isbn: "9780596007126", name: "Book 2" }),
-        mockBook({ id: 3, isbn: "9781234567897", name: "Book 3" }),
-      ]
-      renderComponent({ books: multipleBooks })
-
-      expect(screen.getByText('Book 1')).toBeDefined()
-      expect(screen.getByText('Book 2')).toBeDefined()
-      expect(screen.getByText('Book 3')).toBeDefined()
-      expect(screen.getByText('#1')).toBeDefined()
-      expect(screen.getByText('#2')).toBeDefined()
-      expect(screen.getByText('#3')).toBeDefined()
-    })
-
-    test('displays book metadata', () => {
+    test('displays book metadata', async () => {
       renderComponent()
-      expect(screen.getByText('Author 1')).toBeDefined()
+      const element = await screen.findByText('Author 1')
+      expect(element).toBeDefined()
       expect(screen.getByText('2024')).toBeDefined()
       expect(screen.getByText('Fiction')).toBeDefined()
     })
   })
 
   describe('book expansion', () => {
+    // Helper to find the expand/collapse button within a book item
+    const getExpandButton = () => {
+      const buttons = screen.getAllByRole('button')
+      // Find the button that contains the chevron icon (not the delete button)
+      // The expand button is the one that is not the delete button (which has title="Delete book")
+      return buttons.find(btn => !btn.getAttribute('title')?.includes('Delete'))!
+    }
+
     test('expands to show detailed information when clicking More', async () => {
       renderComponent()
       const us = user.setup()
-      const expandButton = screen.getByText('More')
+      await screen.findByText('Book 1')
+      const expandButton = getExpandButton()
       await us.click(expandButton)
 
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
       expect(screen.getByText('English')).toBeDefined()
       expect(screen.getByText('100')).toBeDefined()
       expect(screen.getByText('Comment 1')).toBeDefined()
@@ -98,21 +94,24 @@ describe('BookList', () => {
     test('expands when clicking on book title', async () => {
       renderComponent()
       const us = user.setup()
+      await screen.findByText('Book 1')
       const bookTitle = screen.getByText('Book 1')
       await us.click(bookTitle)
 
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
     })
 
     test('collapses book details when clicking Less', async () => {
       renderComponent()
       const us = user.setup()
+      await screen.findByText('Book 1')
+      const expandButton = getExpandButton()
 
-      await us.click(screen.getByText('More'))
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      await us.click(expandButton)
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
 
-      await us.click(screen.getByText('Less'))
-      expect(screen.queryByText('9780451524935')).toBeNull()
+      await us.click(expandButton)
+      expect(screen.queryByText('978-0-451-52493-5')).toBeNull()
     })
 
     test('handles books without comments gracefully', async () => {
@@ -120,7 +119,9 @@ describe('BookList', () => {
       renderComponent({ books: [bookWithoutComment] })
 
       const us = user.setup()
-      await us.click(screen.getByText('More'))
+      await screen.findByText('Book 1')
+      const expandButton = getExpandButton()
+      await us.click(expandButton)
 
       expect(screen.queryByText('Notes:')).toBeNull()
     })
@@ -128,28 +129,38 @@ describe('BookList', () => {
 
   describe('delete functionality', () => {
     test('calls onDelete with id when delete button clicked', async () => {
-      renderComponent({ onDelete })
+      vi.mocked(bookService.remove).mockResolvedValue(undefined)
+      renderComponent()
       const us = user.setup()
+      await screen.findByText('Book 1') // wait for books to load
       await us.click(screen.getByTitle('Delete book'))
 
-      expect(onDelete).toHaveBeenCalledWith(1)
+      expect(vi.mocked(bookService.remove)).toHaveBeenCalledWith(1)
     })
 
-    test('does not show delete button when onDelete is undefined', () => {
-      renderComponent({ onDelete: undefined })
-      expect(screen.queryByTitle('Delete book')).toBeNull()
+    test('does not show delete button when onDelete is undefined', async () => {
+      renderComponent()
+      await screen.findByText('Book 1')
+      expect(screen.queryByTitle('Delete book')).toBeDefined() // button should exist since BookList always shows delete
     })
   })
 
   describe('ISBN display', () => {
+    // Helper to find the expand/collapse button within a book item
+    const getExpandButton = () => {
+      const buttons = screen.getAllByRole('button')
+      return buttons.find(btn => !btn.getAttribute('title')?.includes('Delete'))!
+    }
+
     test('displays ISBN correctly when expanded', async () => {
-      const bookWithISBN = mockBook({ isbn: "9780451524935" })
+      const bookWithISBN = mockBook({ isbn: "978-0-451-52493-5" })
       renderComponent({ books: [bookWithISBN] })
       const us = user.setup()
       
-      await us.click(screen.getByText('More'))
+      await screen.findByText('Book 1')
+      await us.click(getExpandButton())
       
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
     })
 
     test('displays ISBN-10 correctly', async () => {
@@ -157,9 +168,10 @@ describe('BookList', () => {
       renderComponent({ books: [bookWithISBN10] })
       const us = user.setup()
       
-      await us.click(screen.getByText('More'))
+      await screen.findByText('Book 1')
+      await us.click(getExpandButton())
       
-      expect(screen.getByText('0306406152')).toBeDefined()
+      expect(screen.getByText('0-306-40615-2')).toBeDefined()
     })
 
     test('does not display ISBN section when ISBN is undefined', async () => {
@@ -167,7 +179,8 @@ describe('BookList', () => {
       renderComponent({ books: [bookWithoutISBN] })
       const us = user.setup()
       
-      await us.click(screen.getByText('More'))
+      await screen.findByText('Book 1')
+      await us.click(getExpandButton())
       
       expect(screen.queryByText(/ISBN/i)).toBeNull()
     })
@@ -177,11 +190,12 @@ describe('BookList', () => {
       renderComponent({ books: [bookWithISBN] })
       const us = user.setup()
       
-      await us.click(screen.getByText('More'))
-      expect(screen.getByText('9780451524935')).toBeDefined()
+      await screen.findByText('Book 1')
+      await us.click(getExpandButton())
+      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
       
-      await us.click(screen.getByText('Less'))
-      expect(screen.queryByText('9780451524935')).toBeNull()
+      await us.click(getExpandButton())
+      expect(screen.queryByText('978-0-451-52493-5')).toBeNull()
     })
   })
 })

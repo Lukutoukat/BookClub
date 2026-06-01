@@ -13,7 +13,7 @@ export default defineConfig([
     }
   },
   {
-    ignores: ['dist/**', 'node_modules/**', 'src/components/ui/**', 'coverage/**', '__tests__/**'],
+    ignores: ['dist/**', 'node_modules/**', 'src/components/ui/**', 'coverage/**', '__tests__/**', 'testSetup.ts'],
   },
   {
     languageOptions: {

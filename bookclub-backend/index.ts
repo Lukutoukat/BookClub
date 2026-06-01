@@ -1,13 +1,23 @@
 import express from 'express'
 const app = express()
 import path from 'path'
+
 import loginRouter from './controllers/login.ts'
 import userRouter from './controllers/users.ts'
 import bookRouter from './controllers/books.ts'
+import bookClubRouter from './controllers/bookclubs.ts'
+import bookClubMembersRouter from './controllers/bookclubmembers.ts'
+
+import tokenExtractor from './middleware/tokenExtractor.ts'
+import userExtractor from './middleware/userExtractor.ts'
 
 app.use(express.json())
 app.use(express.static('dist'))
+app.use(tokenExtractor)
+loginRouter.use(userExtractor)
 app.use('/api/books', bookRouter)
+app.use('/api/bookclubs', bookClubRouter)
+app.use('/api/bookclubmembers', bookClubMembersRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 

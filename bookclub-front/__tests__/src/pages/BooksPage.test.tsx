@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
-import BooksPage from '../../../src/pages/BooksPage'
-import { type Book } from '../../../src/services/books'
-import bookService from '../../../src/services/books'
+import BooksPage from '@/pages/BooksPage'
+import { type Book } from '@/services/books'
+import bookService from '@/services/books'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 vi.mock('../../../src/services/books')
@@ -21,8 +21,8 @@ const mockBook = (overrides?: Partial<Book>): Book => ({
   isbn: "9780451524935",
   name: "Book 1",
   author: "Author 1",
-  year: "2024",
-  pages: "100",
+  year: 2024,
+  pages: 100,
   comment: "Comment 1",
   language: "English",
   genre: "Fiction",
@@ -69,10 +69,8 @@ describe('BooksPage', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Books and suggestions')).toBeDefined()
-        expect(screen.getByText(/Add books to the list/i)).toBeDefined()
-        const registrationLink = screen.getByRole('link', { name: /go to registration/i })
-        expect(registrationLink).toBeDefined()
-        expect(registrationLink.getAttribute('href')).toBe('/registration')
+        expect(screen.getByText('Add books')).toBeDefined()
+        expect(screen.getByText(/Suggest books to be read by your book club/i)).toBeDefined()
       })
     })
   })
@@ -120,7 +118,7 @@ describe('BooksPage', () => {
       renderWithRouter(<BooksPage />)
 
       await waitFor(() => {
-        expect(screen.getByText('No books yet. Add the first suggestion on the left.')).toBeDefined()
+        expect(screen.getByText('No books suggested yet. Be the first to add one!')).toBeDefined()
       })
     })
 
