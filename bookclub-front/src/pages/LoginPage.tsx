@@ -35,6 +35,8 @@ const LoginPage = () => {
         badgeText="Login"
         title="Join the club"
         description="Log in to be able to join bookclubs and save the books you want to read in one place."
+        buttonText="Go to registration"
+        buttonLink="/registration"
       />
 
         <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
