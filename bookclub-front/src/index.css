@@ -164,15 +164,32 @@
   * {
     @apply border-border outline-ring/50;
     }
-  html.dark {
-    @apply bg-background;
-  }
   body {
-    @apply text-foreground;
+    @apply bg-background text-foreground;
     margin: 0;
     }
+  .dark body {
+    @apply bg-background text-foreground;
+    margin: 0;
+  }
   main {
-    @apply bg-[radial-gradient(circle_at_top,_rgba(255,247,240,0.95),_rgba(250,244,235,0.96)_35%,_rgba(238,242,246,0.92)_70%,_rgba(247,247,242,1))] flex flex-col items-center justify-start min-h-dvh px-4 py-4 sm:px-6 sm:py-8 lg:px-8;
+    @apply flex flex-col items-center justify-start min-h-dvh px-4 py-4 sm:px-6 sm:py-8 lg:px-8
+    ;
+    background: radial-gradient(
+      circle at top,
+      rgba(255, 247, 240, 0.95),
+      rgba(250, 244, 235, 0.96) 35%,
+      rgba(238, 242, 246, 0.92) 70%,
+      rgba(247, 247, 242, 1)
+    );
+  }
+  .dark main {
+    background: radial-gradient(
+      circle at top,
+      oklch(0.18 0.02 25),
+      oklch(0.15 0.02 25) 40%,
+      oklch(0.12 0.02 25) 100%
+    );
   }
 }
 

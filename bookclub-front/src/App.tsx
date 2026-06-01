@@ -15,10 +15,14 @@ const App = () => {
   if (!isLoggedIn()) {
     return(
       <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/registration" element={<RegistrationPage />} />
-          </Routes>
+        <main>
+          <PageLayout>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/registration" element={<RegistrationPage />} />
+            </Routes>
+          </PageLayout>
+        </main>
       </BrowserRouter>
     )
   }

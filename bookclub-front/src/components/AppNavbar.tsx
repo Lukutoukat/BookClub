@@ -24,7 +24,7 @@ export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
         const needsPadding = scrollHeight > windowHeight
 
         if (needsPadding) {
-            document.body.style.paddingBottom = '2rem'
+            document.body.style.paddingBottom = '4rem'
         } else {
             document.body.style.paddingBottom = '0rem'
         }
