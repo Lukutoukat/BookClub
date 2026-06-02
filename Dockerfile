@@ -27,9 +27,11 @@ COPY --from=backend-builder /usr/src/app/prisma ./prisma
 COPY ./bookclub-backend/index.ts ./
 COPY ./bookclub-backend/db.ts ./
 COPY ./bookclub-backend/prisma.config.ts ./
-COPY ./bookclub-backend/controllers ./controllers
 COPY ./bookclub-backend/package.json ./
 COPY ./bookclub-backend/package-lock.json ./
+
+COPY ./bookclub-backend/controllers ./controllers
+COPY ./bookclub-backend/middleware ./middleware
 
 # Install production dependencies only
 RUN npm ci --omit=dev
