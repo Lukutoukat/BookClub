@@ -89,12 +89,13 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
         invite_code: newBookClub.invite_code,
       }
     })
-    res.json(created)
+    console.log('CREATED IN BACK', created)
+    //return res.json(created)
   } catch (error) {
     console.error('POST /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
   }
-  return
+  return 
 })
 
 bookClubRouter.delete('/:id', async (req, res) => {

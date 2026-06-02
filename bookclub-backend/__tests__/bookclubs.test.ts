@@ -1,6 +1,7 @@
 /// <reference types="jest" />
 
 import request from 'supertest'
+import jwt from 'jsonwebtoken'
 
 jest.mock('../db.ts', () => ({
   prisma: {
@@ -30,10 +31,21 @@ const mockBookClub_2 = {
   owner_id: 2,
 }
 
+const authHeaders = () => {
+    if (!process.env.SECRET) {
+        process.env.SECRET = 'testsecret'
+    }
+
+    return {
+        Authorization: `Bearer ${jwt.sign({ id: 1 }, process.env.SECRET)}`
+    }
+}
+
 describe('/api/bookclubs', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.spyOn(console, 'error').mockImplementation(() => {})
+    process.env.SECRET = 'testsecret'
   })
 
   afterEach(() => {
@@ -88,8 +100,7 @@ describe('/api/bookclubs', () => {
     it('creates a book club', async () => {
       const newBookClub = {
         name: 'Read it and weep',
-        status: 1,
-        owner_id: 1,
+        owner_id: 0,
       }
 
       ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(
@@ -98,8 +109,10 @@ describe('/api/bookclubs', () => {
 
       const response = await request(app)
         .post('/api/bookclubs')
+        .set(authHeaders())
         .send(newBookClub)
-
+      console.log('UUSKLUBI', newBookClub)
+      console.log('RESPONSEE', response.body)
       expect(response.status).toBe(200)
 
       expect(response.body.name).toBe('Read it and weep')
@@ -128,6 +141,7 @@ describe('/api/bookclubs', () => {
 
       const response = await request(app)
         .post('/api/bookclubs')
+        .set(authHeaders())
         .send({
           name: 'Wrong bookclub',
         })
