@@ -61,7 +61,7 @@ bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>,
       id: decodedToken.id
     }
   })
-
+  
   if (!user) {
     return res.status(400).json({
       error: 'userId missing or not valid'
