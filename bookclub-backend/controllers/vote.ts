@@ -3,7 +3,7 @@ import { prisma } from '../db.ts'
 import jwt from 'jsonwebtoken'
 import userExtractor from '../middleware/userExtractor.ts'
 
-const VotesRouter = express.Router()
+const voteRouter = express.Router()
 
 interface VoteRequest {
   id: string,
@@ -23,7 +23,7 @@ const getTokenFrom = (request: Request<unknown, unknown, VoteRequest>): string |
 }
 
 
-VotesRouter.get('/', async (_req: Request, res: Response) => {
+voteRouter.get('/', async (_req: Request, res: Response) => {
   try {
     const result = await prisma.bookClubMembers.findMany()
     res.json(result)
@@ -33,7 +33,7 @@ VotesRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
-VotesRouter.post('/', userExtractor, async (req: Request<unknown, unknown, VoteRequest>, res: Response) => {
+voteRouter.post('/', userExtractor, async (req: Request<unknown, unknown, VoteRequest>, res: Response) => {
   const newVote: VoteRequest = req.body
   // Change this to middleware
 
@@ -150,6 +150,7 @@ VotesRouter.post('/', userExtractor, async (req: Request<unknown, unknown, VoteR
     console.error('POST /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
   }
+  return
 })
 
-export default VotesRouter
+export default voteRouter

@@ -4,7 +4,7 @@ import { getAuthConfig } from '@/services/auth'
 const baseUrl = '/api/books'
 
 export interface BookFields {
-    id: number
+    id: string
     isbn?: string
     name: string
     author: string
@@ -13,7 +13,6 @@ export interface BookFields {
     comment?: string
     language?: string
     genre?: string,
-    user_id?: number
 }
 
 export type Book = BookFields
@@ -27,8 +26,12 @@ const create = (book: CreateBook) => {
     return axios.post<Book>(baseUrl, book, getAuthConfig()).then((res) => res.data)
 }
 
-const remove = (id: number) => {
+const update = (id: string, book: CreateBook) => {
+    return axios.put<Book>(`${baseUrl}/${id}`, book, getAuthConfig()).then((res) => res.data)
+}
+
+const remove = (id: string) => {
     return axios.delete(`${baseUrl}/${id}`, getAuthConfig())
 }
 
-export default { getAll, create, remove }
+export default { getAll, create, update, remove }

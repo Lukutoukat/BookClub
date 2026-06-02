@@ -90,6 +90,66 @@ bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>,
   }
 })
 
+bookRouter.put('/:id', userExtractor, async (req: Request<unknown, unknown, Book>, res: Response) => {
+  const id: string = req.params.id
+  const updatedBook: Book = req.body
+
+  const token = getTokenFrom(req)
+  if (!token) {
+    return res.status(401).json({
+      error: 'missing token'
+    })
+  }
+
+  const decodedToken = jwt.verify(
+    token,
+    process.env.SECRET as string
+  ) as { id: string }
+
+  if (!decodedToken.id) {
+    return res.status(401).json({
+      error: 'token invalid'
+    })
+  }
+
+  try {
+    const book = await prisma.book.findUnique({
+      where: { id }
+    })
+
+    if (!book) {
+      return res.status(404).json({
+        error: 'book not found'
+      })
+    }
+
+    if (book.user_id !== decodedToken.id) {
+      return res.status(403).json({
+        error: 'not authorized to update this book'
+      })
+    }
+
+    const result = await prisma.book.update({
+      where: { id },
+      data: {
+        isbn: updatedBook.isbn,
+        name: updatedBook.name,
+        author: updatedBook.author,
+        year: updatedBook.year,
+        pages: updatedBook.pages,
+        comment: updatedBook.comment,
+        language: updatedBook.language,
+        genre: updatedBook.genre
+      }
+    })
+
+    return res.json(result)
+  } catch (error) {
+    console.error('PUT /api/books/:id error:', error)
+    return res.status(500).json({ error: 'database error' })
+  }
+})
+
 bookRouter.delete('/:id', async (_req, res) => {
   const id: string = _req.params.id
 

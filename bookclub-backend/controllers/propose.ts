@@ -3,7 +3,7 @@ import { prisma } from '../db.ts'
 import jwt from 'jsonwebtoken'
 import userExtractor from '../middleware/userExtractor.ts'
 
-const ProposesRouter = express.Router()
+const proposeRouter = express.Router()
 
 interface ProposeRequest {
   id: string,
@@ -22,7 +22,7 @@ const getTokenFrom = (request: Request<unknown, unknown, ProposeRequest>): strin
 }
 
 
-ProposesRouter.get('/', async (_req: Request, res: Response) => {
+proposeRouter.get('/', async (_req: Request, res: Response) => {
   try {
     const result = await prisma.bookClubMembers.findMany()
     res.json(result)
@@ -32,7 +32,7 @@ ProposesRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
-ProposesRouter.post('/', userExtractor, async (req: Request<unknown, unknown, ProposeRequest>, res: Response) => {
+proposeRouter.post('/', userExtractor, async (req: Request<unknown, unknown, ProposeRequest>, res: Response) => {
   const newPropose: ProposeRequest = req.body
   // Change this to middleware
 
@@ -130,6 +130,7 @@ ProposesRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Pr
     console.error('POST /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
   }
+  return
 })
 
-export default ProposesRouter
+export default proposeRouter

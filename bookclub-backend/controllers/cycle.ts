@@ -3,7 +3,7 @@ import { prisma } from '../db.ts'
 import jwt from 'jsonwebtoken'
 import userExtractor from '../middleware/userExtractor.ts'
 
-const CyclesRouter = express.Router()
+const cycleRouter = express.Router()
 
 interface CycleRequest {
   id: string,
@@ -23,7 +23,7 @@ const getTokenFrom = (request: Request<unknown, unknown, CycleRequest>): string 
 }
 
 
-CyclesRouter.get('/', async (_req: Request, res: Response) => {
+cycleRouter.get('/', async (_req: Request, res: Response) => {
   try {
     const result = await prisma.bookClubMembers.findMany()
     res.json(result)
@@ -33,11 +33,7 @@ CyclesRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
-CyclesRouter.post('/', userExtractor, async (req: Request<unknown, unknown, CycleRequest>, res: Response) => {
-  enum role {
-    MEMBER = 1,
-    ADMIN = 0
-  }
+cycleRouter.post('/', userExtractor, async (req: Request<unknown, unknown, CycleRequest>, res: Response) => {
   const newCycle: CycleRequest = req.body
   // Change this to middleware
 
@@ -84,7 +80,7 @@ CyclesRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Cycl
         res.status(400).json({ error: 'User is not member of book club!' })
         return
     }
-    if (result.user_role !== role.ADMIN) {
+    if (result.user_role !== 0) {
         res.status(403).json({ error: 'User is not admin of book club!' })
         return
     }
@@ -100,6 +96,7 @@ CyclesRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Cycl
     console.error('POST /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
   }
+  return
 })
 
-export default CyclesRouter
+export default cycleRouter
