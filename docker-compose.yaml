@@ -38,7 +38,9 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - REQUEST_ORIGIN=localhost:3003
 
-    entrypoint: sh -c "npx prisma db push --skip-generate && npm run dev"
+    # command for creating a new migration, overrides the entrypoint
+    # docker compose run --rm --entrypoint "npx prisma migrate dev --name <name>" backend
+    entrypoint: sh -c "npx prisma migrate deploy && npm run dev"
 
     depends_on:
       - db
