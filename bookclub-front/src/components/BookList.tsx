@@ -24,12 +24,13 @@ const BookItem = ({ book, onDelete }: { book: Book; onDelete: (id: number) => Pr
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation()
     if (!book.id) return
-    
-    setIsDeleting(true)
-    try {
-      await onDelete(book.id)
-    } finally {
-      setIsDeleting(false)
+    if (window.confirm('are you sure you want to delete?')) {
+      setIsDeleting(true)
+        try {
+          await onDelete(book.id)
+        } finally {
+          setIsDeleting(false)
+        }
     }
   }
 
