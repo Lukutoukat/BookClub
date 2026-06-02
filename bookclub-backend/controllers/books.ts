@@ -14,7 +14,7 @@ interface Book {
   comment?: string,
   language?: string,
   genre?: string,
-  user_id?: number
+  user_id?: string
 }
 
 const getTokenFrom = (request: Request<unknown, unknown, Book>): string | null => {
@@ -48,7 +48,7 @@ bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>,
   const decodedToken = jwt.verify(
     token,
     process.env.SECRET as string
-  ) as { id: number }
+  ) as { id: string }
 
   if (!decodedToken.id) {
     return res.status(401).json({
@@ -91,12 +91,7 @@ bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>,
 })
 
 bookRouter.delete('/:id', async (_req, res) => {
-  const id: number = parseInt(_req.params.id, 10)
-
-  if (isNaN(id)) {
-    res.status(400).json({ error: 'invalid book id' })
-    return
-  }
+  const id: string = _req.params.id
 
   try {
     await prisma.book.delete({

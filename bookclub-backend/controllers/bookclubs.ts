@@ -4,11 +4,11 @@ import { prisma } from '../db.ts'
 const bookClubRouter = express.Router()
 
 interface BookClub {
-  id: number,
+  id: string,
   name: string,
   invite_code?: string,
   status?: number,
-  owner_id?: number
+  owner_id?: string
 }
 
 bookClubRouter.get('/', async (_req: Request, res: Response) => {
@@ -23,7 +23,7 @@ bookClubRouter.get('/', async (_req: Request, res: Response) => {
 
 bookClubRouter.get('/:id', async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.id)
+    const id = req.params.id as string | undefined
 
     const bookclub = await prisma.bookClub.findUnique({
       where: { id }

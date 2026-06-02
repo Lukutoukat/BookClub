@@ -8,7 +8,7 @@ const loginRouter = express.Router()
 dotenv.config()
 
 interface User {
-  id?: number,
+  id?: string,
   email: string,
   name: string,
   password?: string,

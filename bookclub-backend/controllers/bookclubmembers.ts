@@ -4,8 +4,8 @@ import { prisma } from '../db.ts'
 const BookClubMembersRouter = express.Router()
 
 interface BookClubMembersRequest {
-  id: number,
-  user_id?: number,
+  id: string,
+  user_id?: string,
   user_role?: number,
   bookclub_id?: number,
   invite_code: string,

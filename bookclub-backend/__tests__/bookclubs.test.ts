@@ -15,19 +15,19 @@ import { app } from '../index.ts'
 import { prisma } from '../db.ts'
 
 const mockBookClub_1 = {
-  id: 1,
+  id: '1',
   name: 'Read it and weep',
   invite_code: 'ABCDE',
   status: 1,
-  owner_id: 1,
+  owner_id: '1',
 }
 
 const mockBookClub_2 = {
-  id: 2,
+  id: '2',
   name: 'Bookclub 2',
   invite_code: 'FGHIJ',
   status: 0,
-  owner_id: 2,
+  owner_id: '2',
 }
 
 describe('/api/bookclubs', () => {
@@ -54,18 +54,18 @@ describe('/api/bookclubs', () => {
       expect(response.status).toBe(200)
       expect(response.body).toEqual([
         {
-          id: 1,
+          id: '1',
           name: 'Read it and weep',
           invite_code: 'ABCDE',
           status: 1,
-          owner_id: 1,
+          owner_id: '1',
         },
         {
-          id: 2,
+          id: '2',
           name: 'Bookclub 2',
           invite_code: 'FGHIJ',
           status: 0,
-          owner_id: 2,
+          owner_id: '2',
         }
       ])
 
@@ -89,7 +89,7 @@ describe('/api/bookclubs', () => {
       const newBookClub = {
         name: 'Read it and weep',
         status: 1,
-        owner_id: 1,
+        owner_id: '1',
       }
 
       ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(
@@ -104,7 +104,7 @@ describe('/api/bookclubs', () => {
 
       expect(response.body.name).toBe('Read it and weep')
       expect(response.body.status).toBe(1)
-      expect(response.body.owner_id).toBe(1)
+      expect(response.body.owner_id).toBe('1')
 
       expect(response.body.invite_code).toBeDefined()
       expect(response.body.invite_code).toHaveLength(5)
@@ -115,7 +115,7 @@ describe('/api/bookclubs', () => {
         data: {
           name: 'Read it and weep',
           status: 1,
-          owner_id: 1,
+          owner_id: '1',
           invite_code: expect.any(String),
         },
       })

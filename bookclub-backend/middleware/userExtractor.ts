@@ -4,7 +4,7 @@ import { prisma } from '../db.ts'
 import jwt, { type JwtPayload} from 'jsonwebtoken'
 
 interface User {
-  id?: number,
+  id?: string,
   email: string,
   name: string,
   password?: string,
@@ -17,7 +17,7 @@ interface TokenRequest extends Request {
 }
 
 interface TokenPayload extends JwtPayload {
-  id: number
+  id: string
 }
 const userExtractor = async (req: TokenRequest, _res: Response, next: NextFunction) => {
   if (!req.token) {
