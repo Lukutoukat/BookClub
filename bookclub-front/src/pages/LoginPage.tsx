@@ -39,8 +39,8 @@ const LoginPage = () => {
         buttonLink="/registration"
       />
 
-        <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
-          <CardHeader className="border-b border-border/60 py-4 sm:py-6">
+        <Card className="card-base">
+          <CardHeader className="card-header">
             <CardTitle className="text-xl sm:text-2xl">Login</CardTitle>
 
             <CardDescription className="text-sm sm:text-base">
