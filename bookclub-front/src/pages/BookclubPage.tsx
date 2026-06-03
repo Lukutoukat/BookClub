@@ -1,6 +1,7 @@
 import { PageLayout } from '../components/PageLayout'
 import { useParams } from 'react-router-dom'
 import { BookclubComponent } from '../components/BookclubComponent'
+import BookSelector from '@/components/BookSelector'
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId : string }>()
@@ -10,6 +11,7 @@ const BookclubPage = () => {
   return (
     <PageLayout>
       <BookclubComponent bookclubId={bookclubId} />
+      <BookSelector onBookSelected={(bookId) => console.log('Selected book ID:', bookId)} />
     </PageLayout>
   )
 }

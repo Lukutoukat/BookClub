@@ -137,30 +137,20 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
       return
     }
 
-    const bookToSubmit: CreateBook = {
-      isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
-      name: newBook.name,
-      author: newBook.author,
-      year: parseInt(newBook.year, 10),
-      pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
-      comment: newBook.comment || undefined,
-      language: newBook.language || undefined,
-      genre: newBook.genre || undefined,
-    }
-    const bookToUpdateSubmit: BookFields = {
-      id: newBook.id ?? "",
-      isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
-      name: newBook.name,
-      author: newBook.author,
-      year: parseInt(newBook.year, 10),
-      pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
-      comment: newBook.comment || undefined,
-      language: newBook.language || undefined,
-      genre: newBook.genre || undefined,
-    }
-
     try {
       if (bookToEdit) {
+        console.log('Updating book with ID:', bookToEdit.id)
+        const bookToUpdateSubmit: BookFields = {
+          id: newBook.id ?? "",
+          isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+          name: newBook.name,
+          author: newBook.author,
+          year: parseInt(newBook.year, 10),
+          pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+          comment: newBook.comment || undefined,
+          language: newBook.language || undefined,
+          genre: newBook.genre || undefined,
+        }
         // Update existing book
         await bookService.update(bookToEdit.id, bookToUpdateSubmit)
         setErrors([])
@@ -171,6 +161,17 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
           buttonAction()
         }
       } else {
+        console.log('Creating new book')
+        const bookToSubmit: CreateBook = {
+          isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+          name: newBook.name,
+          author: newBook.author,
+          year: parseInt(newBook.year, 10),
+          pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+          comment: newBook.comment || undefined,
+          language: newBook.language || undefined,
+          genre: newBook.genre || undefined,
+        }
         // Create new book
         await bookService.create(bookToSubmit)
         setNewBook(emptyBook)

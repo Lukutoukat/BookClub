@@ -58,11 +58,23 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
         invite_code: newBookClub.invite_code,
       }
     })
+    const addedMember = await prisma.bookClubMembers.create({
+      data: {
+        user_id: newBookClub.owner_id,
+        user_role: 0,
+        bookclub_id: created.id,
+      }
+    })
+    if (!addedMember) {
+      res.status(500).json({ error: 'database error adding member' })
+    }
     res.json(created)
   } catch (error) {
     console.error('POST /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
   }
+    
+
 })
 
 export default bookClubRouter
