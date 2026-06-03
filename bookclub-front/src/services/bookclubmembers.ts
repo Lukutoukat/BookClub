@@ -4,6 +4,7 @@ const baseUrl = '/api/bookclubmembers'
 
 export interface BookclubMember {
   id: number,
+  user_role: number,
   invite_code: string,
 }
 

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-
+import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../components/PageHeader'
-
+import { Button } from './ui/button'
+import bookclubService from '@/services/bookclubs'
 type Bookclub = {
-  id: string
+  id: number
   name: string
   invite_code: string
 }
@@ -15,7 +16,7 @@ type Props = {
 export const BookclubComponent = ({ bookclubId }: Props) => {
   const [bookclub, setBookclub] = useState<Bookclub | null>(null)
   const [loading, setLoading] = useState(true)
-
+  let navigate = useNavigate()
   useEffect(() => {
     const fetchBookclub = async () => {
       try {
@@ -39,6 +40,20 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
   if (loading) return null
   if (!bookclub) return <div>Bookclub not found</div>
 
+
+  const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    console.log('id in front', bookclub.id)
+    if (window.confirm('are you sure you want to delete your bookclub and all info related to it?')) {
+      try {
+        await bookclubService.remove(bookclub.id)
+        navigate('/home', { replace: true })
+      } catch(error) {
+        console.error('error during deletion')
+      }
+    }
+  }
+
   return (
     <>
       <PageHeader
@@ -54,9 +69,13 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
           alert('Failed to copy invite code')
         }
       }}
-    />
-
-    <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
+      />
+      <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
+          <Button onClick={(handleDeletion)}>
+            delete
+          </Button>
+      </div>
+      <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
     </>
   )
 }

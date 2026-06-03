@@ -135,7 +135,8 @@ describe('BookList', () => {
   })
 
   describe('delete functionality', () => {
-    test('calls onDelete with id when delete button clicked', async () => {
+    test('calls onDelete with id when delete button clicked and window.confirm is accepted', async () => {
+      vi.spyOn(window, 'confirm').mockReturnValue(true)
       vi.mocked(bookService.remove).mockResolvedValue(undefined)
       renderComponent()
       const us = user.setup()

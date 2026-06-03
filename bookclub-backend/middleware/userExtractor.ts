@@ -28,10 +28,10 @@ const userExtractor = async (req: TokenRequest, _res: Response, next: NextFuncti
   }
   const decodedToken = jwt.verify(req.token, process.env.SECRET) as TokenPayload
   req.user = await prisma.user.findUnique({
-      where: {
-        id: decodedToken.id
-      }
-    })
+    where: {
+      id: decodedToken.id
+    }
+  })
   next()
 }
 

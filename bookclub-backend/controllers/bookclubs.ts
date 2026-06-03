@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
-
+import jwt from 'jsonwebtoken'
 const bookClubRouter = express.Router()
 
 interface BookClub {
@@ -11,6 +11,13 @@ interface BookClub {
   owner_id?: string
 }
 
+const getTokenFrom = (request: Request<unknown, unknown, BookClub>): string | null => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
 
 bookClubRouter.get('/', async (_req: Request, res: Response) => {
   try {
@@ -25,17 +32,10 @@ bookClubRouter.get('/', async (_req: Request, res: Response) => {
 bookClubRouter.get('/:id', async (req: Request, res: Response) => {
 
   try {
-    
     const id = req.params.id as string | undefined
-
     const bookclub = await prisma.bookClub.findUnique({
       where: { id }
     })
-
-    //if (!bookclub) {
-    //  res.status(404).json({ error: 'not found' })
-    //}
-
     res.json(bookclub)
   } catch (error) {
     console.error('GET /api/bookclubs/:id error:', error)
@@ -46,18 +46,48 @@ bookClubRouter.get('/:id', async (req: Request, res: Response) => {
 
 bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: Response) => {
   const newBookClub: BookClub = req.body
+  console.log('BODYYYY', newBookClub)
+  const token = getTokenFrom(req)
+  if (!token) {
+    return res.status(401).json({
+      error: 'missing token'
+    })
+  }
+  const decodedToken = jwt.verify(
+    token,
+    process.env.SECRET as string
+  ) as { id: string }
+
+  if (!decodedToken.id) {
+    return res.status(401).json({
+      error: 'token invalid'
+    })
+  }
+  console.log('decoded token', decodedToken.id)
+  const user = await prisma.user.findUnique({
+    where: {
+      id: decodedToken.id
+    }
+  })
+  console.log('TULIKO TÄNNE')
+  if (!user) {
+    return res.status(400).json({
+      error: 'userId missing or not valid'
+    })
+  }
   // Hopefully this random 5-letter generated code does not exist yet!
   newBookClub.invite_code = Math.random().toString(36).substring(2, 7).toUpperCase()
-
+  console.log('kayttajaid', user)
   try {
     const created = await prisma.bookClub.create({
       data: {
         name: newBookClub.name,
         status: newBookClub.status,
-        owner_id: newBookClub.owner_id,
+        owner_id: user.id,
         invite_code: newBookClub.invite_code,
       }
     })
+<<<<<<< HEAD
     const addedMember = await prisma.bookClubMembers.create({
       data: {
         user_id: newBookClub.owner_id,
@@ -68,13 +98,38 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
     if (!addedMember) {
       res.status(500).json({ error: 'database error adding member' })
     }
+=======
+    console.log('CREATED IN BACK', created)
+>>>>>>> join
     res.json(created)
   } catch (error) {
     console.error('POST /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
   }
+<<<<<<< HEAD
     
 
+=======
+  return 
+})
+
+bookClubRouter.delete('/:id', async (req, res) => {
+  const id = req.params.id as string | undefined
+
+  if (id === undefined) {
+    res.status(400).json({ error: 'bookclub id is undefined' })
+    return
+  }
+  try {
+    await prisma.bookClub.delete({
+      where: { id }
+    })
+    res.status(204).end()
+  } catch(error) {
+      console.error('DELETE /api/bookclubs error: ', error)
+      res.status(500).json({ error: 'database error in deleting bookclub'})
+  }
+>>>>>>> join
 })
 
 export default bookClubRouter
