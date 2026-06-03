@@ -26,7 +26,7 @@ const create = (book: CreateBook) => {
     return axios.post<Book>(baseUrl, book, getAuthConfig()).then((res) => res.data)
 }
 
-const update = (id: string, book: CreateBook) => {
+const update = (id: string, book: BookFields) => {
     return axios.put<Book>(`${baseUrl}/${id}`, book, getAuthConfig()).then((res) => res.data)
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, type ChangeEvent, type SubmitEventHandler } from 'react'
 
-import bookService, { type CreateBook, type Book } from '@/services/books'
+import bookService, { type CreateBook, type Book, type BookFields } from '@/services/books'
 import { isValidISBN, cleanISBN } from '@/lib/isbnValidator'
 
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { SectionHeader } from './SectionHeader'
 
 interface BookFormState {
-  book_id?: string
+  id?: string
   isbn: string
   name: string
   author: string
@@ -23,7 +23,7 @@ interface BookFormState {
 }
 
 const emptyBook: BookFormState = {
-  book_id: '',
+  id: '',
   isbn: '',
   name: '',
   author: '',
@@ -54,7 +54,7 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
   useEffect(() => {
     if (bookToEdit) {
       setNewBook({
-        book_id: bookToEdit.id,
+        id: bookToEdit.id,
         isbn: bookToEdit.isbn ?? '',
         name: bookToEdit.name,
         author: bookToEdit.author,
@@ -147,11 +147,22 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
       language: newBook.language || undefined,
       genre: newBook.genre || undefined,
     }
+    const bookToUpdateSubmit: BookFields = {
+      id: newBook.id ?? "",
+      isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+      name: newBook.name,
+      author: newBook.author,
+      year: parseInt(newBook.year, 10),
+      pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+      comment: newBook.comment || undefined,
+      language: newBook.language || undefined,
+      genre: newBook.genre || undefined,
+    }
 
     try {
       if (bookToEdit) {
         // Update existing book
-        await bookService.update(bookToEdit.id, bookToSubmit)
+        await bookService.update(bookToEdit.id, bookToUpdateSubmit)
         setErrors([])
         if (onBookAdded) {
           await onBookAdded()
