@@ -29,23 +29,26 @@ bookClubRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
-bookClubRouter.get('/:id', async (req: Request, res: Response) => {
+bookClubRouter.get('/:id', async (req: Request<unknown, unknown, BookClub>, res: Response) => {
+
   try {
+    
     const id = req.params.id as string | undefined
 
     const bookclub = await prisma.bookClub.findUnique({
       where: { id }
     })
 
-    if (!bookclub) {
-      res.status(404).json({ error: 'not found' })
-    }
+    //if (!bookclub) {
+    //  res.status(404).json({ error: 'not found' })
+    //}
 
     res.json(bookclub)
   } catch (error) {
     console.error('GET /api/bookclubs/:id error:', error)
     res.status(500).json({ error: 'database error' })
   }
+  return
 })
 
 bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: Response) => {

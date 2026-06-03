@@ -6,6 +6,7 @@ import userExtractor from '../middleware/userExtractor.ts'
 const bookRouter = express.Router()
 
 interface Book {
+  id?: string,
   name: string,
   author: string,
   year: number,
@@ -91,7 +92,6 @@ bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>,
 })
 
 bookRouter.put('/:id', userExtractor, async (req: Request<unknown, unknown, Book>, res: Response) => {
-  const id: string = req.params.id
   const updatedBook: Book = req.body
 
   const token = getTokenFrom(req)
@@ -114,7 +114,7 @@ bookRouter.put('/:id', userExtractor, async (req: Request<unknown, unknown, Book
 
   try {
     const book = await prisma.book.findUnique({
-      where: { id }
+      where: { id: updatedBook.id }
     })
 
     if (!book) {
@@ -130,8 +130,9 @@ bookRouter.put('/:id', userExtractor, async (req: Request<unknown, unknown, Book
     }
 
     const result = await prisma.book.update({
-      where: { id },
+      where: { id: updatedBook.id },
       data: {
+        id: updatedBook.id,
         isbn: updatedBook.isbn,
         name: updatedBook.name,
         author: updatedBook.author,
