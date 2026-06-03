@@ -9,6 +9,9 @@ jest.mock('../db.ts', () => ({
       findMany: jest.fn(),
       create: jest.fn(),
     },
+    user: {
+      findUnique: jest.fn(),
+    },
   },
 }))
 
@@ -19,7 +22,7 @@ const mockBookClub_1 = {
   id: 1,
   name: 'Read it and weep',
   invite_code: 'ABCDE',
-  status: 1,
+  status: undefined,
   owner_id: 1,
 }
 
@@ -27,7 +30,7 @@ const mockBookClub_2 = {
   id: 2,
   name: 'Bookclub 2',
   invite_code: 'FGHIJ',
-  status: 0,
+  status: undefined,
   owner_id: 2,
 }
 
@@ -45,7 +48,13 @@ describe('/api/bookclubs', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.spyOn(console, 'error').mockImplementation(() => {})
-    process.env.SECRET = 'testsecret'
+    process.env.SECRET = 'testsecret' 
+
+    ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
+        id: 1,
+        email: 'matti@test.com',
+        name: 'matti',
+    })
   })
 
   afterEach(() => {
@@ -69,14 +78,14 @@ describe('/api/bookclubs', () => {
           id: 1,
           name: 'Read it and weep',
           invite_code: 'ABCDE',
-          status: 1,
+          status: undefined,
           owner_id: 1,
         },
         {
           id: 2,
           name: 'Bookclub 2',
           invite_code: 'FGHIJ',
-          status: 0,
+          status: undefined,
           owner_id: 2,
         }
       ])
@@ -100,7 +109,7 @@ describe('/api/bookclubs', () => {
     it('creates a book club', async () => {
       const newBookClub = {
         name: 'Read it and weep',
-        owner_id: 0,
+        owner_id: 1,
       }
 
       ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(
@@ -112,11 +121,11 @@ describe('/api/bookclubs', () => {
         .set(authHeaders())
         .send(newBookClub)
       console.log('UUSKLUBI', newBookClub)
-      console.log('RESPONSEE', response.body)
+      console.log('RESPONSEE', response.status)
       expect(response.status).toBe(200)
 
       expect(response.body.name).toBe('Read it and weep')
-      expect(response.body.status).toBe(1)
+      expect(response.body.status).toBe(undefined)
       expect(response.body.owner_id).toBe(1)
 
       expect(response.body.invite_code).toBeDefined()
@@ -127,7 +136,7 @@ describe('/api/bookclubs', () => {
       expect(prisma.bookClub.create).toHaveBeenCalledWith({
         data: {
           name: 'Read it and weep',
-          status: 1,
+          status: undefined,
           owner_id: 1,
           invite_code: expect.any(String),
         },
