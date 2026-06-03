@@ -29,7 +29,7 @@ bookClubRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
-bookClubRouter.get('/:id', async (req: Request<unknown, unknown, BookClub>, res: Response) => {
+bookClubRouter.get('/:id', async (req: Request, res: Response) => {
 
   try {
     
