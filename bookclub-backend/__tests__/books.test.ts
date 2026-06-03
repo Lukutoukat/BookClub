@@ -20,7 +20,7 @@ import { app } from '../index.ts'
 import { prisma } from '../db.ts'
 
 const mockBook_1 = {
-    id:1,
+    id: '1',
     isbn: "1234567890",
     name: "Book 1",
     author: "Author 1",
@@ -29,10 +29,10 @@ const mockBook_1 = {
     comment: "Comment 1",
     language: "English",
     genre: "Fiction",
-    user_id: 1
+    user_id: '1'
 }
 const mockBook_2 = {
-    id: 2,
+    id: '2',
     isbn: "111111111",
     name: "Book 2",
     author: "Author 2",
@@ -41,7 +41,7 @@ const mockBook_2 = {
     comment: "Comment 2",
     language: "English",
     genre: "Fiction",
-    user_id: 1
+    user_id: '1'
 }
 
 const authHeaders = () => {
@@ -50,7 +50,7 @@ const authHeaders = () => {
     }
 
     return {
-        Authorization: `Bearer ${jwt.sign({ id: 1 }, process.env.SECRET)}`
+        Authorization: `Bearer ${jwt.sign({ id: '1' }, process.env.SECRET)}`
     }
 }
 
@@ -61,7 +61,7 @@ describe('/api/books', () => {
         process.env.SECRET = 'testsecret'
 
         ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
-            id: 1,
+            id: '1',
             email: 'matti@test.com',
             name: 'matti',
         })
@@ -121,7 +121,7 @@ describe('/api/books', () => {
                     comment: "Comment 1",
                     language: "English",
                     genre: "Fiction",
-                    user_id: 1
+                    user_id: '1'
                 },
             })
         })
@@ -152,19 +152,8 @@ describe('/api/books', () => {
             expect(response.body).toEqual({})
             expect(prisma.book.delete).toHaveBeenCalledTimes(1)
             expect(prisma.book.delete).toHaveBeenCalledWith({
-                where: {id:1},
+                where: {id:'1'},
             })
-        })
-
-        it('returns 400 for invalid id', async () => {
-            const response = await request(app).delete('/api/books/not-a-number')
-
-            expect(response.status).toBe(400)
-            expect(response.body).toEqual({
-                error: 'invalid book id'
-            })
-
-            expect(prisma.book.delete).not.toHaveBeenCalled()
         })
 
         it('returns 500 if delete fails', async () => {

@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 const userRouter = express.Router()
 
 interface User {
-  id?: number,
+  id?: string,
   email: string,
   name: string,
   password?: string,

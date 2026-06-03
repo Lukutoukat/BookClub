@@ -18,6 +18,11 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
+  value: vi.fn(),
+  writable: true,
+})
+
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {

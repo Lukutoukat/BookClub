@@ -18,7 +18,7 @@ export const PageLayout = ({ children, size = 'lg' }: PageLayoutProps) => {
     applyThemeToDOM(initialTheme)
   }, [])
 
-  const maxWidthClass = size === 'sm' ? 'max-w-2xl' : size === 'md' ? 'max-w-4xl' : 'max-w-full'
+  const maxWidthClass = size === 'sm' ? 'max-w-2xl' : size === 'md' ? 'max-w-xl' : 'max-w-xl'
 
   return (
     <div className={`px-4 py-6 sm:px-6 lg:px-8 mx-auto flex w-full flex-col gap-5 sm:gap-8 ${maxWidthClass}`}>

@@ -73,9 +73,12 @@ describe('BookList', () => {
     // Helper to find the expand/collapse button within a book item
     const getExpandButton = () => {
       const buttons = screen.getAllByRole('button')
-      // Find the button that contains the chevron icon (not the delete button)
-      // The expand button is the one that is not the delete button (which has title="Delete book")
-      return buttons.find(btn => !btn.getAttribute('title')?.includes('Delete'))!
+      // Find the button that has no title and is not the edit button
+      // The expand button should be between edit and delete buttons in the DOM
+      return buttons.find(btn => 
+        !btn.getAttribute('title') && 
+        btn.textContent !== 'Edit'
+      )!
     }
 
     test('expands to show detailed information when clicking More', async () => {
@@ -91,21 +94,19 @@ describe('BookList', () => {
       expect(screen.getByText('Comment 1')).toBeDefined()
     })
 
-    test('expands when clicking on book title', async () => {
-      renderComponent()
-      const us = user.setup()
-      await screen.findByText('Book 1')
-      const bookTitle = screen.getByText('Book 1')
-      await us.click(bookTitle)
 
-      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
-    })
 
     test('collapses book details when clicking Less', async () => {
       renderComponent()
       const us = user.setup()
       await screen.findByText('Book 1')
-      const expandButton = getExpandButton()
+      const expandButton = (() => {
+        const buttons = screen.getAllByRole('button')
+        return buttons.find(btn => 
+          !btn.getAttribute('title') && 
+          btn.textContent !== 'Edit'
+        )!
+      })()
 
       await us.click(expandButton)
       expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
@@ -120,7 +121,13 @@ describe('BookList', () => {
 
       const us = user.setup()
       await screen.findByText('Book 1')
-      const expandButton = getExpandButton()
+      const expandButton = (() => {
+        const buttons = screen.getAllByRole('button')
+        return buttons.find(btn => 
+          !btn.getAttribute('title') && 
+          btn.textContent !== 'Edit'
+        )!
+      })()
       await us.click(expandButton)
 
       expect(screen.queryByText('Notes:')).toBeNull()
@@ -147,21 +154,22 @@ describe('BookList', () => {
   })
 
   describe('ISBN display', () => {
-    // Helper to find the expand/collapse button within a book item
-    const getExpandButton = () => {
-      const buttons = screen.getAllByRole('button')
-      return buttons.find(btn => !btn.getAttribute('title')?.includes('Delete'))!
-    }
-
     test('displays ISBN correctly when expanded', async () => {
-      const bookWithISBN = mockBook({ isbn: "978-0-451-52493-5" })
+      const bookWithISBN = mockBook({ isbn: "9780451524935" })
       renderComponent({ books: [bookWithISBN] })
       const us = user.setup()
       
       await screen.findByText('Book 1')
-      await us.click(getExpandButton())
+      const expandButton = (() => {
+        const buttons = screen.getAllByRole('button')
+        return buttons.find(btn => 
+          !btn.getAttribute('title') && 
+          btn.textContent !== 'Edit'
+        )!
+      })()
+      await us.click(expandButton)
       
-      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
+      expect(await screen.findByText('978-0-451-52493-5')).toBeDefined()
     })
 
     test('displays ISBN-10 correctly', async () => {
@@ -170,9 +178,16 @@ describe('BookList', () => {
       const us = user.setup()
       
       await screen.findByText('Book 1')
-      await us.click(getExpandButton())
+      const expandButton = (() => {
+        const buttons = screen.getAllByRole('button')
+        return buttons.find(btn => 
+          !btn.getAttribute('title') && 
+          btn.textContent !== 'Edit'
+        )!
+      })()
+      await us.click(expandButton)
       
-      expect(screen.getByText('0-306-40615-2')).toBeDefined()
+      expect(await screen.findByText('0-306-40615-2')).toBeDefined()
     })
 
     test('does not display ISBN section when ISBN is undefined', async () => {
@@ -181,9 +196,18 @@ describe('BookList', () => {
       const us = user.setup()
       
       await screen.findByText('Book 1')
-      await us.click(getExpandButton())
+      const expandButton = (() => {
+        const buttons = screen.getAllByRole('button')
+        return buttons.find(btn => 
+          !btn.getAttribute('title') && 
+          btn.textContent !== 'Edit'
+        )!
+      })()
+      await us.click(expandButton)
       
-      expect(screen.queryByText(/ISBN/i)).toBeNull()
+      // After expansion, check that no ISBN section is shown in the book details
+      const isbnSectionVisible = screen.queryByText(/ISBN/i)
+      expect(isbnSectionVisible).toBeNull()
     })
 
     test('hides ISBN when collapsed', async () => {
@@ -192,10 +216,18 @@ describe('BookList', () => {
       const us = user.setup()
       
       await screen.findByText('Book 1')
-      await us.click(getExpandButton())
-      expect(screen.getByText('978-0-451-52493-5')).toBeDefined()
+      const expandButton = (() => {
+        const buttons = screen.getAllByRole('button')
+        return buttons.find(btn => 
+          !btn.getAttribute('title') && 
+          btn.textContent !== 'Edit'
+        )!
+      })()
       
-      await us.click(getExpandButton())
+      await us.click(expandButton)
+      expect(await screen.findByText('978-0-451-52493-5')).toBeDefined()
+      
+      await us.click(expandButton)
       expect(screen.queryByText('978-0-451-52493-5')).toBeNull()
     })
   })

@@ -4,11 +4,11 @@ import jwt from 'jsonwebtoken'
 const bookClubRouter = express.Router()
 
 interface BookClub {
-  id: number,
+  id: string,
   name: string,
   invite_code?: string,
   status?: number,
-  owner_id?: number
+  owner_id?: string
 }
 
 const getTokenFrom = (request: Request<unknown, unknown, BookClub>): string | null => {
@@ -31,7 +31,7 @@ bookClubRouter.get('/', async (_req: Request, res: Response) => {
 
 bookClubRouter.get('/:id', async (req: Request, res: Response) => {
   try {
-    const id = Number(req.params.id)
+    const id = req.params.id as string | undefined
 
     const bookclub = await prisma.bookClub.findUnique({
       where: { id }
@@ -60,7 +60,7 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
   const decodedToken = jwt.verify(
     token,
     process.env.SECRET as string
-  ) as { id: number }
+  ) as { id: string }
 
   if (!decodedToken.id) {
     return res.status(401).json({
@@ -101,10 +101,10 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
 })
 
 bookClubRouter.delete('/:id', async (req, res) => {
-  const id: number = parseInt(req.params.id)
+  const id = req.params.id as string | undefined
 
-  if (isNaN(id)) {
-    res.status(400).json({ error: 'invalid bookclub id' })
+  if (id === undefined) {
+    res.status(400).json({ error: 'bookclub id is undefined' })
     return
   }
   try {

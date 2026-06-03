@@ -38,4 +38,4 @@ RUN npm ci --omit=dev
 COPY --from=frontend-builder /frontend/dist ./dist
 
 EXPOSE 3003
-CMD ["sh", "-c", "npx prisma db push --skip-generate && npm start"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]

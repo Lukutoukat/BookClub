@@ -307,7 +307,7 @@ describe("BookForm", () => {
       await user.click(button);
 
       await waitFor(() => {
-        expect(screen.getByText(/Failed to add book/i)).toBeInTheDocument();
+        expect(screen.getByText(/Failed to save book/i)).toBeInTheDocument();
       });
     });
   });
