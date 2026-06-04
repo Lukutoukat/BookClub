@@ -25,10 +25,10 @@ const getTokenFrom = (request: Request<unknown, unknown, CycleRequest>): string 
 
 cycleRouter.get('/', async (_req: Request, res: Response) => {
   try {
-    const result = await prisma.bookClubMembers.findMany()
+    const result = await prisma.cycle.findMany()
     res.json(result)
   } catch (error) {
-    console.error('GET /api/bookclubs error:', error)
+    console.error('GET /api/cycles error:', error)
     res.status(500).json({ error: 'database error' })
   }
 })
@@ -93,7 +93,7 @@ cycleRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Cycle
     })
     res.json(newCycle)
   } catch (error) {
-    console.error('POST /api/bookclubs error:', error)
+    console.error('POST /api/cycles error:', error)
     res.status(500).json({ error: 'database error' })
   }
   return
