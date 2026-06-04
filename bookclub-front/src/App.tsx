@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage'
 import CreateBookclubPage from './pages/CreateBookclubPage'
 import SettingsPage from './pages/SettingsPage'
 import BookclubPage from './pages/BookclubPage'
+import PasswordResetPage from './pages/PasswordResetPage'
 import { PageMenu } from './components/PageMenu'
 import { PageLayout } from './components/PageLayout'
 import { isLoggedIn } from './services/auth'
@@ -20,6 +21,7 @@ const App = () => {
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/registration" element={<RegistrationPage />} />
+              <Route path="/passwordreset" element={<PasswordResetPage />} />
             </Routes>
           </PageLayout>
         </main>
