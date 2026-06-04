@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage'
 import CreateBookclubPage from './pages/CreateBookclubPage'
 import SettingsPage from './pages/SettingsPage'
 import BookclubPage from './pages/BookclubPage'
+import NewCyclePage from './pages/NewCyclePage'
 import { PageMenu } from './components/PageMenu'
 import { PageLayout } from './components/PageLayout'
 import { isLoggedIn } from './services/auth'
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="/create" element={<CreateBookclubPage />} />
             <Route path="/registration" element={<RegistrationPage />} />
             <Route path="/club/:bookclubId" element={<BookclubPage />} />
+            <Route path="/newcycle/:bookclubId" element={<NewCyclePage />} /> 
             <Route path="/home" element={<HomePage />} />
             <Route path="/settings" element={<SettingsPage />}/>
           </Routes>
