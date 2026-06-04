@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
-import { useGetClubs } from '@/hooks/getClubs'
 
 
 const emptyJoinRequest: AddBookClubMember = {
@@ -23,7 +22,6 @@ type Props = {
 const JoinBookClubForm = ({listMutated }: Props) => {
   const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
   const [message, setMessage] = useState<string | null>(null)
-  //const { listMutated } = useGetClubs()
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
