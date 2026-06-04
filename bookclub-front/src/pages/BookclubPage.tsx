@@ -1,7 +1,8 @@
-import { PageLayout } from '../components/PageLayout'
 import { useParams } from 'react-router-dom'
-import { BookclubComponent } from '../components/BookclubComponent'
+import { BookclubComponent } from '@/components/BookclubComponent'
 import BookSelector from '@/components/BookSelector'
+import BookList from '@/components/BookList'
+import BookClubGoCycleSetting from '@/components/bookClubGoCycleSetting'
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId : string }>()
@@ -9,10 +10,12 @@ const BookclubPage = () => {
   if (!bookclubId) return <div>Missing bookclub id</div>
 
   return (
-    <PageLayout>
+    <>
       <BookclubComponent bookclubId={bookclubId} />
       <BookSelector onBookSelected={(bookId) => console.log('Selected book ID:', bookId)} />
-    </PageLayout>
+      <BookList/>
+      <BookClubGoCycleSetting />
+    </>
   )
 }
 
