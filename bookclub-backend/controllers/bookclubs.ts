@@ -87,10 +87,9 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
         invite_code: newBookClub.invite_code,
       }
     })
-<<<<<<< HEAD
     const addedMember = await prisma.bookClubMembers.create({
       data: {
-        user_id: newBookClub.owner_id,
+        user_id: user.id,
         user_role: 0,
         bookclub_id: created.id,
       }
@@ -98,18 +97,11 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
     if (!addedMember) {
       res.status(500).json({ error: 'database error adding member' })
     }
-=======
-    console.log('CREATED IN BACK', created)
->>>>>>> join
     res.json(created)
   } catch (error) {
     console.error('POST /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
   }
-<<<<<<< HEAD
-    
-
-=======
   return 
 })
 
@@ -129,7 +121,6 @@ bookClubRouter.delete('/:id', async (req, res) => {
       console.error('DELETE /api/bookclubs error: ', error)
       res.status(500).json({ error: 'database error in deleting bookclub'})
   }
->>>>>>> join
 })
 
 export default bookClubRouter
