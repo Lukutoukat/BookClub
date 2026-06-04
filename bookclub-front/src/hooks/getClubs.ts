@@ -35,7 +35,9 @@ export const useGetClubs = () => {
         )
         console.log('mappauksen jälkeen', clubIds)
         const loadedClubs = await bookClubService.get(clubIds)
-        setList(loadedClubs)
+        console.log('before', loadedClubs)
+        setList([...loadedClubs])
+        console.log('after', loadedClubs)
       } catch {
         setErrorMessage('Failed to load bookclubs.')
       } finally {

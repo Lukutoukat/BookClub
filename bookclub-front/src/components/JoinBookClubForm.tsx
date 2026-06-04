@@ -16,10 +16,14 @@ const emptyJoinRequest: AddBookClubMember = {
   invite_code: ''
 }
 
-const JoinBookClubForm = () => {
+type Props = {
+  listMutated: () => void
+}
+
+const JoinBookClubForm = ({listMutated }: Props) => {
   const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
   const [message, setMessage] = useState<string | null>(null)
-  const { listMutated } = useGetClubs()
+  //const { listMutated } = useGetClubs()
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -49,6 +53,7 @@ const JoinBookClubForm = () => {
       })
       console.log('member', member)
       setInviteCode({...emptyJoinRequest})
+      console.log('mutated called here!!')
       listMutated()
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data) {
