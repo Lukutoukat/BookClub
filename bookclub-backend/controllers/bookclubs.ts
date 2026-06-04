@@ -19,9 +19,24 @@ const getTokenFrom = (request: Request<unknown, unknown, BookClub>): string | nu
   return null
 }
 
-bookClubRouter.get('/', async (_req: Request, res: Response) => {
+bookClubRouter.get('/', async (req: Request, res: Response) => {
+  const clubs = req.query.clubIds
+
+  const clubIds = Array.isArray(clubs)
+    ? clubs.filter((id): id is string => typeof id === 'string')
+    : typeof clubs === 'string'
+      ? [clubs]
+      : []
+
+  console.log('clubit', clubIds)
+
   try {
-    const result = await prisma.bookClub.findMany()
+    const result = await prisma.bookClub.findMany({
+      where: {
+        id: {in: clubIds,
+        }
+      }
+    })
     res.json(result)
   } catch (error) {
     console.error('GET /api/bookclubs error:', error)

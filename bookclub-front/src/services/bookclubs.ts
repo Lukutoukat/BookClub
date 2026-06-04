@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { getAuthConfig } from './auth'
-
 const baseUrl = '/api/bookclubs'
 
 export interface BookClubFields {
@@ -20,11 +19,23 @@ const getAll = () => {
     return axios.get<BookClub[]>(baseUrl).then((res) => res.data)
 }
 
+const get = (clubIds: string[]) => {
+  return axios.
+    get<BookClub[]>(baseUrl, {
+      ...getAuthConfig(), params: {clubIds},
+      paramsSerializer: {
+        indexes: null
+      }
+    })
+    .then((res) => res.data)
+}
+
 const remove = (id: number) => {
   return axios.delete(`${baseUrl}/${id}`, getAuthConfig())
 }
 export default {
   create,
   getAll,
+  get,
   remove
 }

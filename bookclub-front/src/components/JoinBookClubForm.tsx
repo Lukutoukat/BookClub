@@ -8,14 +8,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
+import { useGetClubs } from '@/hooks/getClubs'
+
 
 const emptyJoinRequest: AddBookClubMember = {
+  user_role: 1,
   invite_code: ''
 }
 
 const JoinBookClubForm = () => {
   const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
   const [message, setMessage] = useState<string | null>(null)
+  const { listMutated } = useGetClubs()
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -39,11 +43,13 @@ const JoinBookClubForm = () => {
     }
 
     try {
-      await bookclubmembersService.create({
+      const member = await bookclubmembersService.create({
+        user_role: 1,
         invite_code: trimmedCode.toUpperCase()
       })
-      setInviteCode(emptyJoinRequest)
-      setMessage('Join request sent.')
+      console.log('member', member)
+      setInviteCode({...emptyJoinRequest})
+      listMutated()
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data) {
         const errorData = err.response.data as Record<string, unknown>

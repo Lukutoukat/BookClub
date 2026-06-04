@@ -5,6 +5,8 @@ import bookClubService, { type BookClub } from '@/services/bookclubs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
+import bookclubmembersService from '@/services/bookclubmembers'
+import { useGetClubs } from '@/hooks/getClubs'
 
 export interface BookClubListHandle {
   reload: () => Promise<void>
@@ -37,29 +39,37 @@ const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
 }
 
 const BookClubList = forwardRef<BookClubListHandle, BookClubListProps>(({ emptyMessage = "No bookclubs yet." }, ref) => {
-  const [bookClubs, setBookClubs] = useState<BookClub[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  // const [bookClubs, setBookClubs] = useState<BookClub[]>([])
+  // const [isLoading, setIsLoading] = useState(true)
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const loadBookClubs = async () => {
-    try {
-      setErrorMessage(null)
-      const loadedClubs = await bookClubService.getAll()
-      setBookClubs(loadedClubs)
-    } catch {
-      setErrorMessage('Failed to load bookclubs.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  // const loadBookClubs = async () => {
+  //   try {
+  //     setErrorMessage(null)
+  //     const usersClubs = await bookclubmembersService.get()
+  //     console.log('users clubs after first call', usersClubs)
+  //     const clubIds = usersClubs.map(
+  //       (club: any) => club.bookclub_id
+  //     )
+  //     console.log('mappauksen jälkeen', clubIds)
+  //     const loadedClubs = await bookClubService.get(clubIds)
+  //     setBookClubs(loadedClubs)
+  //   } catch {
+  //     setErrorMessage('Failed to load bookclubs.')
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
 
-  useImperativeHandle(ref, () => ({
-    reload: loadBookClubs
-  }), [])
+  // useImperativeHandle(ref, () => ({
+  //   reload: loadBookClubs
+  // }), [])
 
-  useEffect(() => {
-    void loadBookClubs()
-  }, [])
+  // useEffect(() => {
+  //   void loadBookClubs()
+  // }, [])
+
+  const { bookClubs, isLoading, errorMessage } = useGetClubs()
 
   const clubCount = bookClubs.length
   const description = `${clubCount} ${clubCount === 1 ? 'bookclub' : 'bookclubs'}`
