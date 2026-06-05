@@ -12,6 +12,9 @@ jest.mock('../db.ts', () => ({
     user: {
       findUnique: jest.fn(),
     },
+    bookClubMembers: {
+      create: jest.fn(),
+    }
   },
 }))
 
@@ -34,6 +37,12 @@ const mockBookClub_2 = {
   owner_id: '2',
 }
 
+const mockUser_1 = {
+  user_id: '1',
+  user_role: 0,
+  bookclub_id: '1'
+}
+
 const authHeaders = () => {
     if (!process.env.SECRET) {
         process.env.SECRET = 'testsecret'
@@ -51,7 +60,7 @@ describe('/api/bookclubs', () => {
     process.env.SECRET = 'testsecret' 
 
     ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
-        id: 1,
+        id: '1',
         email: 'matti@test.com',
         name: 'matti',
     })
@@ -115,7 +124,11 @@ describe('/api/bookclubs', () => {
       ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(
         mockBookClub_1
       )
-
+      
+      ;(prisma.bookClubMembers.create as jest.Mock).mockResolvedValue(
+        mockUser_1
+      )
+      
       const response = await request(app)
         .post('/api/bookclubs')
         .set(authHeaders())
