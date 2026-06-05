@@ -22,7 +22,6 @@ model Book {
   user         User?          @relation(fields: [user_id], references: [id])
   BookProposed BookProposed[]
   BookSaved    BookSaved[]
-  BookVoted    BookVoted[]
 }
 
 model BookClub {
@@ -33,8 +32,6 @@ model BookClub {
   owner_id        String?
   User            User?             @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   BookClubMembers BookClubMembers[]
-  BookProposed    BookProposed[]
-  BookVoted       BookVoted[]
   Invite          Invite[]
   Cycle          Cycle[]
 }
@@ -55,10 +52,6 @@ model BookVoted {
   weight       Int?
   BookProposed BookProposed? @relation(fields: [proposal_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   User         User?         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  book         Book?         @relation(fields: [bookId], references: [id])
-  bookId       String?
-  bookClub     BookClub?     @relation(fields: [bookClubId], references: [id])
-  bookClubId   String?
 }
 
 model BookProposed {
@@ -69,8 +62,6 @@ model BookProposed {
   Book       Book?       @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Cycle      Cycle?      @relation(fields: [cycle_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   User       User?       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  bookClub   BookClub?   @relation(fields: [bookClubId], references: [id])
-  bookClubId String?
   bookVoteds BookVoted[]
 }
 

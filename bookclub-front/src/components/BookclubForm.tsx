@@ -17,7 +17,7 @@ const emptyBookclub: CreateBookClub = {
 const BookclubForm = () => {
   const [newBookclub, setNewBookclub] = useState<CreateBookClub>(emptyBookclub)
   const [errors, setErrors] = useState<string[]>([])
-  let navigate = useNavigate()
+  const navigate = useNavigate()
   const handleChange = (
       event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {

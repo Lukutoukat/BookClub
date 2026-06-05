@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { addDays } from 'date-fns'
 import { PageHeader } from '../components/PageHeader'
 import { Button } from './ui/button'
-import bookclubService from '@/services/bookclubs'
+import { RangeCalendarComponent } from './RangeCalendarComponent'
+import { type DateRange } from 'react-day-picker'
+import cycleService, {type CreateCycle} from '../services/cycle'
+
+
 type Bookclub = {
   id: number
   name: string
@@ -13,10 +18,15 @@ type Props = {
   bookclubId: string
 }
 
-export const BookclubComponent = ({ bookclubId }: Props) => {
+export const NewCycle = ({ bookclubId }: Props) => {
   const [bookclub, setBookclub] = useState<Bookclub | null>(null)
   const [loading, setLoading] = useState(true)
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(new Date().getFullYear(), 0, 12),
+    to: addDays(new Date(new Date().getFullYear(), 0, 12), 30),
+  })
   const navigate = useNavigate()
+
   useEffect(() => {
     const fetchBookclub = async () => {
       try {
@@ -37,42 +47,35 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
     if (bookclubId) void fetchBookclub()
   }, [bookclubId])
 
-  if (loading) return null
-  if (!bookclub) return <div>Bookclub not found</div>
-
-
-  const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    console.log('id in front', bookclub.id)
-    if (window.confirm('are you sure you want to delete your bookclub and all info related to it?')) {
+  const handleCreate = async () => {
+    if (dateRange?.from && dateRange?.to) {
+      const createdcycle: CreateCycle = {
+        bookclub_id: bookclubId,
+        proposalEnd: dateRange.from,
+        votingEnd: dateRange.to,
+      }
       try {
-        await bookclubService.remove(bookclub.id)
-        navigate('/home', { replace: true })
-      } catch(error) {
-        console.error('error during deletion', error)
+        await cycleService.create(createdcycle)
+        await navigate(`/club/${bookclubId}`)
+      } catch (error) {
+        console.error('Failed to create cycle:', error)
       }
     }
   }
 
-  return (
+  if (loading) return null
+  if (!bookclub) return <div>Bookclub not found</div>
+  return (  
     <>
       <PageHeader
-      badgeText="Club"
+      badgeText="New Cycle"
       title={bookclub.name}
       description="Suggest books and decide together, what will you enjoy reading with your friends."
-      buttonText={bookclub.invite_code}
-      buttonOnClick={async () => {
-        try {
-          await navigator.clipboard.writeText(bookclub.invite_code)
-          alert('Invite code copied!')
-        } catch {
-          alert('Failed to copy invite code')
-        }
-      }}
       />
+      <RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange}/>
       <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
-          <Button onClick={handleDeletion}>
-            delete
+          <Button onClick={handleCreate}>
+            Create
           </Button>
       </div>
       <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
