@@ -8,24 +8,23 @@ type Props = {
 }
 
 export const bookClubGoCycleSetting = ({ bookclubId }: Props) => {
-    return (
-        <Card className="card-base">
-              <SectionHeader
-                title="Manage book club"
-              />
-                <Button>
-                <Link to={`/newcycle/${bookclubId}`}>
-                    Manage cycle
-                </Link>
-            </Button>
-                <Button>
-                <Link to="/bookclubsettings">
-                    Manage club
-                </Link>
-            </Button>
-            
-        </Card>
-    )
+  return (
+    <Card className="card-base">
+      <SectionHeader
+        title="Manage book club"
+      />
+      <Button>
+        <Link to={`/newcycle/${bookclubId}`}>
+          Manage cycle
+        </Link>
+      </Button>
+      <Button asChild>
+        <Link to="/bookclubsettings">
+          Manage club
+        </Link>
+      </Button>
+    </Card>
+  )
 }
 
 export default bookClubGoCycleSetting
