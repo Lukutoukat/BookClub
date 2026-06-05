@@ -1,7 +1,6 @@
-import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import bookClubService, { type BookClub } from '@/services/bookclubs'
+import { type BookClub } from '@/services/bookclubs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
@@ -10,8 +9,11 @@ export interface BookClubListHandle {
   reload: () => Promise<void>
 }
 
-interface BookClubListProps {
-  emptyMessage?: string
+
+type Props = {
+  bookClubs: any
+  isLoading: boolean
+  errorMessage: string | null
 }
 
 const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
@@ -36,31 +38,7 @@ const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
   )
 }
 
-const BookClubList = forwardRef<BookClubListHandle, BookClubListProps>(({ emptyMessage = "No bookclubs yet." }, ref) => {
-  const [bookClubs, setBookClubs] = useState<BookClub[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
-  const loadBookClubs = async () => {
-    try {
-      setErrorMessage(null)
-      const loadedClubs = await bookClubService.getAll()
-      setBookClubs(loadedClubs)
-    } catch {
-      setErrorMessage('Failed to load bookclubs.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  useImperativeHandle(ref, () => ({
-    reload: loadBookClubs
-  }), [])
-
-  useEffect(() => {
-    void loadBookClubs()
-  }, [])
-
+const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
   const clubCount = bookClubs.length
   const description = `${clubCount} ${clubCount === 1 ? 'bookclub' : 'bookclubs'}`
 
@@ -96,7 +74,7 @@ const BookClubList = forwardRef<BookClubListHandle, BookClubListProps>(({ emptyM
         <SectionHeader title="All bookclubs" description={description} />
         <CardContent className="card-content">
           <div className="text-sm text-muted-foreground text-center py-6">
-            {emptyMessage}
+            No bookclubs yet
           </div>
         </CardContent>
       </Card>
@@ -108,7 +86,7 @@ const BookClubList = forwardRef<BookClubListHandle, BookClubListProps>(({ emptyM
       <SectionHeader title="All bookclubs" description={description} />
       <CardContent className="card-content">
         <div className="space-y-3">
-          {bookClubs.map((club) => (
+          {bookClubs.map((club: any) => (
             <BookClubItem key={club.id} bookClub={club} />
           ))}
         </div>
@@ -116,7 +94,5 @@ const BookClubList = forwardRef<BookClubListHandle, BookClubListProps>(({ emptyM
     </Card>
   )
 })
-
-BookClubList.displayName = 'BookClubList'
 
 export default BookClubList

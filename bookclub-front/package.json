@@ -24,6 +24,7 @@
     "eslint-plugin-react": "^7.37.5",
     "jiti": "^2.7.0",
     "lucide-react": "^1.16.0",
+    "qs": "^6.15.2",
     "radix-ui": "^1.4.3",
     "react": "^19.2.6",
     "react-day-picker": "^10.0.1",

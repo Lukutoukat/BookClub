@@ -8,7 +8,9 @@ jest.mock('../db.ts', () => ({
     book: {
       findMany: jest.fn(),
       create: jest.fn(),
-      delete: jest.fn()
+      delete: jest.fn(),
+      findUnique: jest.fn(),
+      update: jest.fn()
     },
         user: {
             findUnique: jest.fn(),
@@ -163,6 +165,49 @@ describe('/api/books', () => {
 
             expect(response.status).toBe(500)
             expect(response.body).toEqual({error: 'database error'})
+        })
+    })
+    
+    describe('PUT', () => {
+        it('edits a book', async () => {
+            const editedBook = {
+                id: '1',
+                isbn: "1234567890",
+                name: "Book 1",
+                author: "Author 1",
+                year: 2024,
+                pages: 100,
+                comment: "edited version",
+                language: "English",
+                genre: "Fiction",
+                user_id: '1'
+            }
+            ;(prisma.book.findUnique as jest.Mock).mockResolvedValue(mockBook_1)
+            ;(prisma.book.update as jest.Mock).mockResolvedValue(editedBook)
+
+            const response = await request(app)
+                .put('/api/books/1')
+                .set(authHeaders())
+                .send(editedBook)
+
+            expect(response.status).toBe(200)
+            expect(response.body).toEqual(editedBook)
+            expect(prisma.book.update).toHaveBeenCalledTimes(1)
+            expect(prisma.book.update).toHaveBeenCalledWith({
+                where: { id: "1"},
+                data: {
+                    id: "1",
+                    isbn: "1234567890",
+                    name: "Book 1",
+                    author: "Author 1",
+                    year: 2024,
+                    pages: 100,
+                    comment: "edited version",
+                    language: "English",
+                    genre: "Fiction"
+                },
+            })
+
         })
     })
 })

@@ -21,7 +21,7 @@ interface BookListProps {
   cycleId?: string
 }
 
-const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: number) => Promise<void>; onEdit: () => void }) => {
+const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: string) => Promise<void>; onEdit: () => void }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
