@@ -71,6 +71,12 @@ const BookclubPage = () => {
     )
   }
 
+  return (
+    <>
+      <BookclubComponent bookclubId={bookclubId} />
+      <BookClubGoCycleSetting bookclubId={bookclubId} />
+    </>
+    )
 }
 
 export default BookclubPage
