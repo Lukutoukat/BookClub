@@ -7,24 +7,17 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 
 import bookService, { type Book } from "@/services/books"
-import { cn } from "@/lib/utils"
-import { ChevronDown } from "lucide-react"
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react"
-import { Card } from "./ui/card"
+import proposeService from "@/services/propose"
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
 
 
 export interface BookListHandle {
   reload: () => Promise<void>
 }
 
-const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: string) => void }>(({ onBookSelected }, ref) => {
+const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: string) => void; bookclubId: string }>(({ onBookSelected, bookclubId }, ref) => {
 
 
   const [open, setOpen] = useState(false)
@@ -90,11 +83,17 @@ const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: strin
     setOpen(false)
   }
 
+  const submitSelectedBook = async () => {
+    if (selectedBookId) {
+        await proposeService.create({ book_id: selectedBookId, bookclub_id: bookclubId })
+    }
+  }
+
   return (
         <Command
             shouldFilter={true}
             // Added [&_[cmdk-input-wrapper]]:border-none to remove standard shadcn bottom border
-            className="overflow-visible rounded-2xl border border-border/60 bg-background/80 shadow-sm [&_[cmdk-input-wrapper]]:border-none"
+            className="h-fit overflow-visible rounded-2xl border border-border/60 bg-background/80 shadow-sm [&_[cmdk-input-wrapper]]:border-none"
         >
             {/* The Search Input replaces the Button entirely */}
         <div ref={containerRef} className="flex w-full min-w-0 items-center gap-2 [&_[data-slot=command-input-wrapper]]:flex-1 [&_[data-slot=command-input-wrapper]]:p-0">
@@ -109,7 +108,7 @@ const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: strin
             />
             <Button
             className="h-9 px-4 text-sm sm:h-8 sm:px-3 sm:text-xs shrink-0"
-            onClick={() => null}>
+            onClick={submitSelectedBook}>
                 Submit
             </Button>
             

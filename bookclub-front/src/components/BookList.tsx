@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } f
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 
 import bookService, { type Book } from '@/services/books'
+import proposeService from '@/services/propose'
 import { formatISBN } from '@/lib/isbnValidator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ export interface BookListHandle {
 
 interface BookListProps {
   emptyMessage?: string
+  cycleId: string
 }
 
 const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: number) => Promise<void>; onEdit: () => void }) => {
@@ -133,7 +135,7 @@ const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: numbe
   )
 }
 
-const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet." }, ref) => {
+const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", cycleId }, ref) => {
   const [books, setBooks] = useState<Book[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -143,8 +145,16 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   const loadBooks = async () => {
     try {
       setErrorMessage(null)
-      const loadedBooks = await bookService.getAll()
-      setBooks(loadedBooks)
+      if(cycleId) {
+        const loadedBooks = await proposeService.getProposedBooks(cycleId)
+        setBooks(loadedBooks)
+        console.log('Set books...', loadedBooks)
+      }
+      else {
+        const loadedBooks = await bookService.getAll()
+        setBooks(loadedBooks)
+        console.log('Set books...', loadedBooks)
+      }
     } catch {
       setErrorMessage('Failed to load books.')
     } finally {
