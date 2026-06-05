@@ -24,7 +24,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
         <CardContent>
           <Calendar
             mode="range"
-            defaultMonth={dateRange?.from}
+            defaultMonth={new Date()}
             selected={dateRange}
             onSelect={setDateRange}
             numberOfMonths={2}
