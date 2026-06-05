@@ -22,7 +22,7 @@ const BookclubPage = () => {
       <BookclubComponent bookclubId={bookclubId} />
       <BookSelector onBookSelected={handleBookAdded} bookclubId={bookclubId} />
       <BookList cycleId={currentCycle} />
-      <BookClubGoCycleSetting />
+      <BookClubGoCycleSetting bookclubId={bookclubId} />
     </>
   )
 }
