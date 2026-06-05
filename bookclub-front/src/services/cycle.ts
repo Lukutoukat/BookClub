@@ -6,8 +6,8 @@ const baseUrl = '/api/cycles'
 export interface CycleFields {
 	id: string
 	bookclub_id?: string
-	proposalEnd?: string
-	votingEnd?: string
+	proposalEnd?: Date
+	votingEnd?: Date
 }
 
 export type Cycle = CycleFields
