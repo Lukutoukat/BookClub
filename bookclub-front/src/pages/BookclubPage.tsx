@@ -41,7 +41,7 @@ const BookclubPage = () => {
       <BookclubComponent bookclubId={bookclubId} />
       <BookSelector onBookAdded={handleBookAdded} bookclubId={bookclubId} />
       <BookList ref={bookListRef} show="proposedBooks" cycleId={cycleId} />
-      <BookClubGoCycleSetting />
+      <BookClubGoCycleSetting bookclubId={bookclubId} />
     </>
   )
 }
