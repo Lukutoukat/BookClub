@@ -33,6 +33,24 @@ cycleRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
+cycleRouter.get('/latest/:id', async (req: Request<{ id: string }>, res: Response) => {
+  const { id } = req.params
+  try {
+    const result = await prisma.cycle.findFirst({
+      where: {
+        bookclub_id: id
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+    res.json(result)
+  } catch (error) {
+    console.error('GET /api/cycles/latest/:id error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
+})
+
 cycleRouter.post('/', userExtractor, async (req: Request<unknown, unknown, CycleRequest>, res: Response) => {
   const newCycle: CycleRequest = req.body
   // Change this to middleware

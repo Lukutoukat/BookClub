@@ -17,8 +17,12 @@ const getAll = () => {
 	return axios.get<Cycle[]>(baseUrl).then((res) => res.data)
 }
 
+const getLatestCycle = (bookclubId: string) => {
+    return axios.get<Cycle>(`${baseUrl}/latest/${bookclubId}`).then((res) => res.data)
+}
+
 const create = (cycle: CreateCycle) => {
 	return axios.post<Cycle>(baseUrl, cycle, getAuthConfig()).then((res) => res.data)
 }
 
-export default { getAll, create }
+export default { getAll, create, getLatestCycle }
