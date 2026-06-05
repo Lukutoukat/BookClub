@@ -8,6 +8,7 @@ jest.mock('../db.ts', () => ({
     bookClub: {
       findMany: jest.fn(),
       create: jest.fn(),
+      delete: jest.fn()
     },
     user: {
       findUnique: jest.fn(),
@@ -51,7 +52,7 @@ describe('/api/bookclubs', () => {
     process.env.SECRET = 'testsecret' 
 
     ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
-        id: 1,
+        id: '1',
         email: 'matti@test.com',
         name: 'matti',
     })
@@ -157,6 +158,29 @@ describe('/api/bookclubs', () => {
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
+    })
+  })
+
+  describe('DELETE', () => {
+    it('deletes a bookclub', async () => {
+      ;(prisma.bookClub.delete as jest.Mock).mockResolvedValue({})
+
+      const response = await request(app).delete('/api/bookclubs/1')
+
+      expect(response.status).toBe(204)
+      expect(response.body).toEqual({})
+      expect(prisma.bookClub.delete).toHaveBeenCalledTimes(1)
+      expect(prisma.bookClub.delete).toHaveBeenCalledWith({
+        where: {id:'1'},
+      })
+    })
+
+    it('returns 500 if delete fails', async () => {
+      ;(prisma.bookClub.delete as jest.Mock).mockRejectedValue(new Error('Database failed'))
+      
+      const response = await request(app).delete('/api/bookclubs/1')
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({error: 'database error in deleting bookclub'})
     })
   })
 })

@@ -96,7 +96,7 @@ BookClubMembersRouter.post('/', async (req: Request<unknown, unknown, BookClubMe
       id: decodedToken.id
     }
   })
-
+  
   if (!user) {
     return res.status(400).json({
       error: 'userId missing or not valid'
