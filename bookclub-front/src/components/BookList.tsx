@@ -17,7 +17,8 @@ export interface BookListHandle {
 
 interface BookListProps {
   emptyMessage?: string
-  cycleId: string
+  show?: string
+  cycleId?: string
 }
 
 const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: number) => Promise<void>; onEdit: () => void }) => {
@@ -135,7 +136,7 @@ const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: numbe
   )
 }
 
-const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", cycleId }, ref) => {
+const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", show = "savedBooks", cycleId = "nocycle"}, ref) => {
   const [books, setBooks] = useState<Book[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -145,15 +146,16 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   const loadBooks = async () => {
     try {
       setErrorMessage(null)
-      if(cycleId) {
+      if(show === "proposedBooks") {
+        console.log('Loading books for cycleId:', cycleId)
         const loadedBooks = await proposeService.getProposedBooks(cycleId)
         setBooks(loadedBooks)
-        console.log('Set books...', loadedBooks)
+        console.log('Set proposed books...', loadedBooks)
       }
-      else {
+      if (show === "savedBooks") {
         const loadedBooks = await bookService.getAll()
         setBooks(loadedBooks)
-        console.log('Set books...', loadedBooks)
+        console.log('Set users books...', loadedBooks)
       }
     } catch {
       setErrorMessage('Failed to load books.')
@@ -178,7 +180,8 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
 
   const deleteBook = async (id: string) => {
     try {
-      await bookService.remove(id)
+      if (show ==="savedBooks") await bookService.remove(id)
+      if (show === "proposedBooks") await proposeService.removeProposedBook(cycleId, id)
       setBooks((currentBooks) => currentBooks.filter((book) => book.id !== id))
     } catch {
       setErrorMessage('Failed to delete book.')

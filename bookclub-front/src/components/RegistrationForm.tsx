@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
+import { useNavigate } from 'react-router-dom'
 
 const emptyUser: CreateUser = {
   email: '',
@@ -18,6 +19,7 @@ const RegistrationForm = () => {
   const [newUser, setNewUser] = useState<CreateUser>(emptyUser)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -60,6 +62,7 @@ const RegistrationForm = () => {
       setNewUser(emptyUser)
       setConfirmPassword('')
       setMessage('Registration saved.')
+      await navigate('/login')
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data) {
         const errorData = err.response.data as Record<string, unknown>
