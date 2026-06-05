@@ -4,46 +4,73 @@ import { BookclubComponent } from '@/components/BookclubComponent'
 import BookSelector from '@/components/BookSelector'
 import BookList, { type BookListHandle} from '@/components/BookList'
 import BookClubGoCycleSetting from '@/components/bookClubGoCycleSetting'
-import getLatestCycle from '@/services/cycle'
+import cycleService from '@/services/cycle'
+import { type CycleWithStatus } from '@/services/cycle'
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId : string }>()
   const bookListRef = useRef<BookListHandle>(null)
-  const [cycleId, setCycleId] = useState<string | undefined>(undefined)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!bookclubId) return
+    const fetchCycle = async () => {
+      try {
+        const cycle = await cycleService.getLatestCycle(bookclubId as string)
+        setCurrentCycle(cycle)
+      } catch (error) {
+        console.error('Failed to load cycle:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-    setIsLoading(true)
-    getLatestCycle.getLatestCycle(bookclubId)
-      .then((cycle) => {
-        setCycleId(cycle?.id)
-      })
-      .catch((error) => {
-        console.error("Error fetching cycle:", error)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
+    if (bookclubId) void fetchCycle()
   }, [bookclubId])
 
   const handleBookAdded = async () => {
     await bookListRef.current?.reload()
   }
 
+  if (loading) return null
+
+  // not in a book club
   if (!bookclubId) return <div>Missing bookclub id</div>
 
-  if (isLoading) return <div>Loading cycle data...</div>
+  // cycle in proposal phase
+  if (currentCycle?.phase === 'proposal') {
+    return (
+      <>
+        <BookclubComponent bookclubId={bookclubId} />
+        <BookSelector onBookSelected={handleBookAdded} bookclubId={bookclubId} />
+        <BookList ref={bookListRef} show="proposedBooks" cycleId={currentCycle.id} />
+        <BookClubGoCycleSetting bookclubId={bookclubId} />
+      </>
+    )
+  }
 
-  return (
-    <>
-      <BookclubComponent bookclubId={bookclubId} />
-      <BookSelector onBookAdded={handleBookAdded} bookclubId={bookclubId} />
-      <BookList ref={bookListRef} show="proposedBooks" cycleId={cycleId} />
-      <BookClubGoCycleSetting bookclubId={bookclubId} />
-    </>
-  )
+  // cycle in voting phase
+  if (currentCycle?.phase === 'voting') {
+    return (
+      <>
+        <BookclubComponent bookclubId={bookclubId} />
+        <BookList ref={bookListRef} show="votedBooks" cycleId={currentCycle.id} />
+        <BookClubGoCycleSetting bookclubId={bookclubId} />
+      </>
+    )
+  }
+
+  // no cycle in progress
+  if (currentCycle?.phase === 'over') {
+    return (
+      <>
+        <BookclubComponent bookclubId={bookclubId} />
+        <BookClubGoCycleSetting bookclubId={bookclubId} />
+      </>
+    )
+  }
+
 }
 
 export default BookclubPage
