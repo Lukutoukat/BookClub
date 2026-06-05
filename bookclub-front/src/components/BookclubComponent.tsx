@@ -16,7 +16,7 @@ type Props = {
 export const BookclubComponent = ({ bookclubId }: Props) => {
   const [bookclub, setBookclub] = useState<Bookclub | null>(null)
   const [loading, setLoading] = useState(true)
-  let navigate = useNavigate()
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchBookclub = async () => {
       try {
@@ -49,7 +49,7 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
         await bookclubService.remove(bookclub.id)
         navigate('/home', { replace: true })
       } catch(error) {
-        console.error('error during deletion')
+        console.error('error during deletion', error)
       }
     }
   }
@@ -71,7 +71,7 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
       }}
       />
       <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
-          <Button onClick={(handleDeletion)}>
+          <Button onClick={handleDeletion}>
             delete
           </Button>
       </div>
