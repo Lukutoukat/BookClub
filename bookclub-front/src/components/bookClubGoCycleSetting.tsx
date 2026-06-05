@@ -13,7 +13,7 @@ export const bookClubGoCycleSetting = ({ bookclubId }: Props) => {
       <SectionHeader
         title="Manage book club"
       />
-      <Button>
+      <Button asChild>
         <Link to={`/newcycle/${bookclubId}`}>
           Manage cycle
         </Link>
