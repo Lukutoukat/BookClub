@@ -36,6 +36,52 @@ proposeRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
+proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, res: Response) => {
+  console.log("tried deleting", req.params)
+  const { cycle_id, book_id } = req.params
+  const token = getTokenFrom(req)
+    if (!token) {
+      return res.status(401).json({
+        error: 'missin token'
+      })
+    }
+
+  const decodedToken = jwt.verify(
+    token,
+    process.env.SECRET as string
+  ) as { id: string }
+
+  if (!decodedToken.id) {
+    return res.status(401).json({
+      error: 'token invalid'
+    })
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: decodedToken.id
+    }
+  })
+  
+  if (!user) {
+    return res.status(400).json({
+      error: 'userId missing or not valid'
+    })
+  }
+  try {
+    await prisma.bookProposed.deleteMany({
+        where: {
+            book_id: book_id as string | undefined,
+            cycle_id: cycle_id as string | undefined,
+        }
+    })
+    res.json({ message: 'Proposed book removed successfully' })
+  } catch (error) {
+    console.error('DELETE /api/propose/:id error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
+  return
+})
 
 proposeRouter.post('/:id', async (req: Request<ParamCycleId, unknown, ProposeRequest>, res: Response) => {
   const { id: cycleId }: ParamCycleId = req.params
@@ -171,7 +217,18 @@ proposeRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Pro
         res.status(400).json({ error: 'User is not member of book club!' })
         return
     }
-    
+    const bookProposedResult = await prisma.bookProposed.findFirst({
+        where: {
+            cycle_id: cycleResult.id,
+            book_id: newPropose.book_id,
+        },
+        select: { id: true },
+    })
+    if (bookProposedResult) {
+        res.status(400).json({ error: 'Book already proposed for this cycle!' })
+        return
+    }
+
     await prisma.bookProposed.create({
       data: {
         cycle_id: cycleResult.id,

@@ -10,16 +10,23 @@ import {
 
 import bookService, { type Book } from "@/services/books"
 import proposeService from "@/services/propose"
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
-
+import { useEffect, useRef, useState } from "react"
+import { AlertCircleIcon, InfoIcon } from "lucide-react"
+import { getErrorMessage } from "@/lib/errorMessage"
+import errorMessage from "./errorMessageDisplay"
+import ErrorMessageDisplay from "./errorMessageDisplay"
 
 export interface BookListHandle {
   reload: () => Promise<void>
+  onBookAdded?: () => Promise<void> | void
 }
 
-const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: string) => void; bookclubId: string }>(({ onBookSelected, bookclubId }, ref) => {
+type bookSelectorProps = {
+  onBookAdded?: () => Promise<void> | void
+  bookclubId: string
+}
 
-
+const BookSelector = (({ onBookAdded, bookclubId }: bookSelectorProps) => {
   const [open, setOpen] = useState(false)
   const [books, setBooks] = useState<Book[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -33,7 +40,7 @@ const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: strin
 
   const loadBooks = async () => {
     try {
-      setErrorMessage(null)
+      removeErrorMessage()
       const loadedBooks = await bookService.getAll()
       setBooks(loadedBooks)
     } catch {
@@ -43,9 +50,9 @@ const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: strin
     }
   }
 
-  useImperativeHandle(ref, () => ({
-    reload: loadBooks,
-  }), [])
+  const removeErrorMessage = () => {
+    setErrorMessage(null)
+  }
 
   useEffect(() => {
     void loadBooks()
@@ -78,25 +85,33 @@ const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: strin
     if (book) {
       setSelectedBookId(bookId)
       setInputValue(book.name)
-      onBookSelected(bookId)
     }
     setOpen(false)
   }
 
   const submitSelectedBook = async () => {
     if (selectedBookId) {
+      try {
         await proposeService.create({ book_id: selectedBookId, bookclub_id: bookclubId })
+        if (onBookAdded) await onBookAdded()
+      } catch (error) {
+        setErrorMessage(getErrorMessage(error, 'Failed to propose book.'))
+      }
     }
+    setInputValue("")
   }
 
   return (
+    <>
+      <ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />
         <Command
+            ref={containerRef}
             shouldFilter={true}
             // Added [&_[cmdk-input-wrapper]]:border-none to remove standard shadcn bottom border
             className="h-fit overflow-visible rounded-2xl border border-border/60 bg-background/80 shadow-sm [&_[cmdk-input-wrapper]]:border-none"
         >
             {/* The Search Input replaces the Button entirely */}
-        <div ref={containerRef} className="flex w-full min-w-0 items-center gap-2 [&_[data-slot=command-input-wrapper]]:flex-1 [&_[data-slot=command-input-wrapper]]:p-0">
+        <div className="flex w-full min-w-0 items-center gap-2 [&_[data-slot=command-input-wrapper]]:flex-1 [&_[data-slot=command-input-wrapper]]:p-0">
             <CommandInput
             placeholder="Search saved books..."
             value={inputValue}
@@ -118,8 +133,6 @@ const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: strin
                 <CommandList>
                 {isLoading ? (
                     <CommandEmpty>Loading books...</CommandEmpty>
-                ) : errorMessage ? (
-                    <CommandEmpty>{errorMessage}</CommandEmpty>
                 ) : (
                     <>
                     <CommandEmpty>No books found.</CommandEmpty>
@@ -146,9 +159,9 @@ const BookSelector = forwardRef<BookListHandle, { onBookSelected: (bookId: strin
                 </CommandList>
             )}
         </Command>
+        </>
   )
 })
 
-BookSelector.displayName = 'BookSelector'
 
 export default BookSelector
