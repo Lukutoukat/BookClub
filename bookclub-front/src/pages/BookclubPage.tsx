@@ -1,6 +1,7 @@
 import { PageLayout } from '../components/PageLayout'
 import { useParams } from 'react-router-dom'
 import { BookclubComponent } from '../components/BookclubComponent'
+import { Grid } from '@/components/Grid'
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId : string }>()

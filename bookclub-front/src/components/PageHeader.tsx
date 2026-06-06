@@ -30,7 +30,7 @@ export const PageHeader = ({
   buttonOnClick
 }: PageHeaderProps) => {
   return (
-    <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <header className="flex py-10 flex-col gap-3 sm:flex-row items-start sm:items-end sm:justify-between">
       <div className="max-w-2xl space-y-2">
         <Badge
           variant="secondary"

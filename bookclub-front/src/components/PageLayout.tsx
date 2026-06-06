@@ -11,17 +11,21 @@ interface PageLayoutProps {
   size?: 'sm' | 'md' | 'lg'
 }
 
-export const PageLayout = ({ children, size = 'lg' }: PageLayoutProps) => {
+export const PageLayout = ({ children }: PageLayoutProps) => {
   // Initialize theme on mount
   useEffect(() => {
     const initialTheme = getInitialTheme()
     applyThemeToDOM(initialTheme)
   }, [])
 
-  const maxWidthClass = size === 'sm' ? 'max-w-2xl' : size === 'md' ? 'max-w-4xl' : 'max-w-full'
-
   return (
-    <div className={`px-4 py-6 sm:px-6 lg:px-8 mx-auto flex w-full flex-col gap-5 sm:gap-8 ${maxWidthClass}`}>
+    <div className={`px-1 py-1 sm:px-4 lg:py-1 lg:px-4 mx-auto gap-5 sm:gap-8 
+        w-full
+        max-w-md             /* Mobile: Max 448px */
+        md:max-w-3xl         /* Tablet: Max 768px */
+        lg:max-w-5xl         /* Laptop: Max 1024px */
+        xl:max-w-[1440px]     /* Large Desktop: Max 1440px */
+        2xl:max-w-[1600px]    /* Extra Large Desktop: Max 1600px */`}>
       {children}
     </div>
   )
