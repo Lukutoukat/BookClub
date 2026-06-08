@@ -15,7 +15,6 @@ interface BookClubMembersRequest {
 
 const getTokenFrom = (request: Request<unknown, unknown, BookClubMembersRequest>): string | null => {
   const authorization = request.get('authorization')
-  console.log(authorization)
   if (authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
   }
@@ -24,7 +23,6 @@ const getTokenFrom = (request: Request<unknown, unknown, BookClubMembersRequest>
 
 BookClubMembersRouter.get('/', async (req: Request<unknown, unknown, BookClubMembersRequest>, res: Response) => {
   const token = getTokenFrom(req)
-  console.log('TOKEN', token)
     if (!token) {
       return res.status(401).json({
         error: 'missing token'

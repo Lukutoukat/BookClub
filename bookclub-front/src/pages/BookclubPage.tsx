@@ -30,7 +30,6 @@ const BookclubPage = () => {
   }, [bookclubId])
 
   const handleBookAdded = async () => {
-    console.log("Loading books")
     await bookListRef.current?.reload()
   }
 

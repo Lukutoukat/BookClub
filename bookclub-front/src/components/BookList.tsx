@@ -147,15 +147,12 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
     try {
       setErrorMessage(null)
       if(show === "proposedBooks") {
-        console.log('Loading books for cycleId:', cycleId)
         const loadedBooks = await proposeService.getProposedBooks(cycleId)
         setBooks(loadedBooks)
-        console.log('Set proposed books...', loadedBooks)
       }
       if (show === "savedBooks") {
         const loadedBooks = await bookService.getAll()
         setBooks(loadedBooks)
-        console.log('Set users books...', loadedBooks)
       }
     } catch {
       setErrorMessage('Failed to load books.')

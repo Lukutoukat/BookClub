@@ -115,7 +115,7 @@ const BookSelector = (({ onBookAdded, bookclubId }: bookSelectorProps) => {
             <CommandInput
             placeholder="Search saved books..."
             value={inputValue}
-            onValueChange={(search: any) => {
+            onValueChange={(search: string) => {
                 setInputValue(search)
                 if (!open) setOpen(true) // Open dropdown as user types
             }}

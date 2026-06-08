@@ -74,7 +74,6 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
       error: 'token invalid'
     })
   }
-  console.log('decoded token', decodedToken.id)
   const user = await prisma.user.findUnique({
     where: {
       id: decodedToken.id

@@ -37,7 +37,6 @@ proposeRouter.get('/', async (_req: Request, res: Response) => {
 })
 
 proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, res: Response) => {
-  console.log("tried deleting", req.params)
   const { cycle_id, book_id } = req.params
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const token = getTokenFrom(req)
@@ -135,7 +134,6 @@ proposeRouter.post('/:id', async (req: Request<ParamCycleId, unknown, ProposeReq
 
 proposeRouter.post('/', userExtractor, async (req: Request<unknown, unknown, ProposeRequest>, res: Response) => {
   const newPropose: ProposeRequest = req.body
-  console.log('BODYYYY', newPropose)
   // Change this to middleware
 
     const token = getTokenFrom(req)
@@ -185,7 +183,6 @@ proposeRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Pro
             id: true, bookclub_id: true, createdAt: true
         },
     });
-    console.log(cycleResult)
     if(!cycleResult) {
         res.status(400).json({ error: 'No active cycle for the book club!' })
         return

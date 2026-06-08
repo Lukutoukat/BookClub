@@ -11,7 +11,7 @@ import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
 const emptyBookclub: CreateBookClub = {
   name: '',
-  owner_id: 0
+  owner_id: '0'
 }
 
 const BookclubForm = () => {
@@ -22,7 +22,6 @@ const BookclubForm = () => {
       event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
       const { name, value } = event.target
-      console.log('VALUE', value)
       setNewBookclub((currentBookclub) => ({
       ...currentBookclub,
       [name]: value,
