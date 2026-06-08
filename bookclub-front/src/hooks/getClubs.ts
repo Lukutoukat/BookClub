@@ -18,7 +18,7 @@ export const useGetClubs = () => {
         const usersClubs = await bookclubmembersService.get()
         console.log('users clubs after first call', usersClubs)
         const clubIds = usersClubs.map(
-          (club: any) => club.bookclub_id
+          (club) => club.bookclub_id
         )
         console.log('mappauksen jälkeen', clubIds)
         const loadedClubs = await bookClubService.get(clubIds)

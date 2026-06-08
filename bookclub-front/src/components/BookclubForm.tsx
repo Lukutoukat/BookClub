@@ -39,7 +39,7 @@ const BookclubForm = () => {
         const created = await bookclubService.create(newBookclub)
         setNewBookclub(emptyBookclub)
         setErrors([])
-        navigate(`/club/${created.id}`)
+        void navigate(`/club/${created.id}`)
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
         setErrors([`Failed to create bookclub: ${errorMessage}`])

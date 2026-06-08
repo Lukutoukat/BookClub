@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Clock2Icon } from "lucide-react"
 
 import { Calendar } from "@/components/ui/calendar"
@@ -8,6 +9,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
+import { SectionHeader } from './SectionHeader'
 
 import { type DateRange } from "react-day-picker"
 
@@ -17,16 +19,71 @@ type Props = {
 }
 
 export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
+  const [startTime, setStartTime] = useState("12:00")
+  const [endTime, setEndTime] = useState("12:00")
+
+  const applyTimeToDate = (date: Date, timeString: string): Date => {
+    const newDate = new Date(date)
+    const [hours, minutes, seconds] = timeString.split(":").map(Number)
+    newDate.setHours(hours || 0, minutes || 0, seconds || 0, 0)
+    return newDate
+  }
+
+  const handleDateSelect = (newRange: DateRange | undefined) => {
+    if (!newRange) {
+      setDateRange(undefined)
+      return
+    }
+
+    const updatedRange: DateRange = { ...newRange }
+
+    if (updatedRange.from) {
+      updatedRange.from = applyTimeToDate(updatedRange.from, startTime)
+    }
+    if (updatedRange.to) {
+      updatedRange.to = applyTimeToDate(updatedRange.to, endTime)
+    }
+
+    setDateRange(updatedRange)
+  }
+
+  const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = e.target.value
+    setStartTime(newTime)
+
+    if (dateRange?.from) {
+      setDateRange({
+        ...dateRange,
+        from: applyTimeToDate(dateRange.from, newTime),
+      })
+    }
+  }
+
+  const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = e.target.value
+    setEndTime(newTime)
+
+    if (dateRange?.to) {
+      setDateRange({
+        ...dateRange,
+        to: applyTimeToDate(dateRange.to, newTime),
+      })
+    }
+  }
 
   return (
     <>
       <Card size="sm" className="mx-auto w-fit card-base">
+        <SectionHeader
+          title={"Select Dates"}
+          description={"Select the end date the proposal phase and the end date for voting phase."}>
+        </SectionHeader>
         <CardContent>
           <Calendar
             mode="range"
             defaultMonth={new Date()}
             selected={dateRange}
-            onSelect={setDateRange}
+            onSelect={handleDateSelect}
             numberOfMonths={2}
             disabled={(date) =>
               date < new Date("1900-01-01") || date < new Date()
@@ -36,13 +93,15 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
         <CardFooter className="border-t bg-card">
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="time-from">Start Time</FieldLabel>
+              <FieldLabel htmlFor="time-from">Proposal End Time</FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   id="time-from"
                   type="time"
-                  step="1"
-                  defaultValue="12:00:00"
+                  step="60"
+                  value={startTime}
+                  onChange={handleStartTimeChange}
+                  disabled={!dateRange?.from} // Disabled if no start date is selected
                   className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                 />
                 <InputGroupAddon>
@@ -51,13 +110,15 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
               </InputGroup>
             </Field>
             <Field>
-              <FieldLabel htmlFor="time-to">End Time</FieldLabel>
+              <FieldLabel htmlFor="time-to">Voting End Time</FieldLabel>
               <InputGroup>
                 <InputGroupInput
                   id="time-to"
                   type="time"
-                  step="1"
-                  defaultValue="12:00:00"
+                  step="60"
+                  value={endTime}
+                  onChange={handleEndTimeChange}
+                  disabled={!dateRange?.to} // Disabled if no end date is selected yet
                   className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                 />
                 <InputGroupAddon>

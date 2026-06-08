@@ -23,7 +23,7 @@ const LoginForm = ({
   message
 }: LoginFormProps) => {
 
-  let navigate = useNavigate()
+  const navigate = useNavigate()
   return (
     <>
       <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
