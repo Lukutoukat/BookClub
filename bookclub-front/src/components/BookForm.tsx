@@ -188,8 +188,8 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
   return (
     <Card className={`card-base ${className}`}>
       <SectionHeader
-        title={title ?? "Add books"}
-        description={description ?? "Suggest books to be read by your book club"}>
+        title={title ?? "Add a book"}
+        description={description ?? ""}>
         {secondaryButtonAction && (
         <Button variant="secondary" size="sm" onClick={secondaryButtonAction} className="gap-3 ml-auto shrink-0">
           {secondaryButtonText ?? "Cancel"}
@@ -197,13 +197,6 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
         )}
       </SectionHeader>
       <CardContent className="card-content">
-        {errors.length > 0 && (
-          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
-            {errors.map((error, idx) => (
-              <div key={idx}>{error}</div>
-            ))}
-          </div>
-        )}
         <form onSubmit={handleSubmit} className="card-form">
           <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
             <Field>
@@ -328,7 +321,13 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
               className="min-h-14 text-sm sm:min-h-16"
             />
           </div>
-
+          {errors.length > 0 && (
+            <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
+              {errors.map((error, idx) => (
+                <div key={idx}>{error}</div>
+              ))}
+            </div>
+          )}
           <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
             <Button type="submit" size="lg" className="w-full sm:w-auto">
               {buttonText ?? "Add book"}

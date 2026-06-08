@@ -46,13 +46,13 @@ const RegistrationForm = () => {
     event.preventDefault()
 
     if (newUser.password !== confirmPassword) {
-      setMessage('Passwords do not match.')
+      setMessage('Passwords do not match!')
       return
     }
 
     if (!isValidPassword(newUser.password)) {
       alert(
-        "Password must be at least 8 characters long and include uppercase, lowercase, and a number."
+        "Password must be at least 8 characters long and include uppercase, lowercase and a number."
       )
       return
     }
@@ -83,7 +83,7 @@ const RegistrationForm = () => {
       <Card className="card-base">
         <SectionHeader 
         title="Create account" 
-        description="Create a new account to be able to suggest books and keep track of your reading list."
+        description="Create an account and begin your reading journey with friends."
         />
         
       <CardContent className="card-content">

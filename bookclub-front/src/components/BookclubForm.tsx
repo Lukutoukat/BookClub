@@ -49,7 +49,7 @@ const BookclubForm = () => {
       <Card className="card-base">
         <SectionHeader 
         title="Create a new bookclub" 
-        description="Create a new bookclub, where you can invite your friends to join"
+        description=""
         />
         
       <CardContent className="card-content">

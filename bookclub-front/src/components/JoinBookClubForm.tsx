@@ -73,7 +73,7 @@ const JoinBookClubForm = ({listMutated }: Props) => {
     <Card className="card-base">
       <SectionHeader
         title="Join a book club"
-        description="Enter an invite code to join an existing book club and start tracking your reading."
+        description=""
       />
 
       <CardContent className="card-content">

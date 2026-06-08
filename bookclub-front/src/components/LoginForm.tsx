@@ -11,6 +11,7 @@ type LoginFormProps = {
   handleLogin: (
     event: React.SyntheticEvent<HTMLFormElement>
   ) => Promise<void>
+  message: string | null
 }
 
 const LoginForm = ({
@@ -18,7 +19,8 @@ const LoginForm = ({
   password,
   setUsername,
   setPassword,
-  handleLogin
+  handleLogin,
+  message
 }: LoginFormProps) => {
 
   let navigate = useNavigate()
@@ -64,7 +66,11 @@ const LoginForm = ({
             />
           </div>
         </div>
-
+          {message ? (
+            <p className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded text-primary text-sm">
+              {message}
+            </p>
+          ) : null}
         <div className="flex flex-col gap-3 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
           <Button type="submit" size="lg" className="w-full sm:w-auto">
             Login
