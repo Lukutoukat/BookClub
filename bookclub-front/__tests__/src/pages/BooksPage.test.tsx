@@ -68,9 +68,9 @@ describe('BooksPage', () => {
       renderWithRouter(<BooksPage />)
 
       await waitFor(() => {
-        expect(screen.getByText('Books and suggestions')).toBeDefined()
-        expect(screen.getByText('Add books')).toBeDefined()
-        expect(screen.getByText(/Suggest books to be read by your book club/i)).toBeDefined()
+        expect(screen.getByText('Your saved books')).toBeDefined()
+        expect(screen.getByText('Books')).toBeDefined()
+        expect(screen.getByText(/Save the books you want to read and suggest in the future./i)).toBeDefined()
       })
     })
   })
@@ -95,7 +95,7 @@ describe('BooksPage', () => {
         expect(screen.getByText('Book 1')).toBeDefined()
         expect(screen.getByText('Book 2')).toBeDefined()
         expect(screen.getByText('Book 3')).toBeDefined()
-        expect(screen.getByText('3 books in the list')).toBeDefined()
+        expect(screen.getByText('Books: 3')).toBeDefined()
       })
     })
 
@@ -106,7 +106,7 @@ describe('BooksPage', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Book 1')).toBeDefined()
-        expect(screen.getByText('1 book in the list')).toBeDefined()
+        expect(screen.getByText('Books: 1')).toBeDefined()
       })
     })
   })

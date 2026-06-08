@@ -51,7 +51,7 @@ describe("login tests", () => {
     });
 
     expect(response.status).toBe(401);
-    expect(response.body.error).toContain("invalid");
+    expect(response.body.error).toContain("Invalid");
   });
 
   test("login fails if user does not exist", async () => {

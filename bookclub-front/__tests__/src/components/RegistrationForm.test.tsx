@@ -125,7 +125,7 @@ describe('RegistrationForm', () => {
       await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
 
       await waitFor(() => {
-        expect(screen.getByText('Passwords do not match.')).toBeDefined()
+        expect(screen.getByText('Passwords do not match!')).toBeDefined()
       })
     })
 
