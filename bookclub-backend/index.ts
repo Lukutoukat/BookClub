@@ -7,6 +7,9 @@ import userRouter from './controllers/users.ts'
 import bookRouter from './controllers/books.ts'
 import bookClubRouter from './controllers/bookclubs.ts'
 import bookClubMembersRouter from './controllers/bookclubmembers.ts'
+import cycleRouter from './controllers/cycle.ts'
+import proposeRouter from './controllers/propose.ts'
+import voteRouter from './controllers/vote.ts'
 
 import tokenExtractor from './middleware/tokenExtractor.ts'
 import userExtractor from './middleware/userExtractor.ts'
@@ -18,6 +21,9 @@ loginRouter.use(userExtractor)
 app.use('/api/books', bookRouter)
 app.use('/api/bookclubs', bookClubRouter)
 app.use('/api/bookclubmembers', bookClubMembersRouter)
+app.use('/api/cycles', cycleRouter)
+app.use('/api/propose', proposeRouter)
+app.use('/api/vote', voteRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 
@@ -31,15 +37,12 @@ app.get('/{*splat}', (_req, res) => {
   )
 })
 
-console.log('smth happened in backend')
-console.log('Books')
 
 
 const PORT = 3003
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`)
   })
 }
 

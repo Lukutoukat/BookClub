@@ -16,7 +16,8 @@ import bookclubmembersService, { type AddBookClubMember } from '@/services/bookc
 import { AxiosError } from 'axios'
 
 const emptyJoinRequest: AddBookClubMember = {
-  invite_code: ''
+  invite_code: '',
+  user_role: 1
 }
 
 const ClubSettings = () => {
@@ -31,7 +32,8 @@ const ClubSettings = () => {
       }
       try {
         await bookclubmembersService.create({
-          invite_code: inviteCode.invite_code.trim().toUpperCase()
+          invite_code: inviteCode.invite_code.trim().toUpperCase(),
+          user_role: 1
         })} catch (err: unknown) {
               if (err instanceof AxiosError && err.response?.data) {
                 const errorData = err.response.data as Record<string, unknown>

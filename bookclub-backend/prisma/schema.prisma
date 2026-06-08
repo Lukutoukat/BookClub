@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Book {
-  id           Int            @id @default(autoincrement())
+  id           String         @id @default(uuid())
   isbn         String?
   name         String?
   author       String?
@@ -18,77 +18,87 @@ model Book {
   comment      String?
   language     String?
   genre        String?
-  user_id      Int?
+  user_id      String?
   user         User?          @relation(fields: [user_id], references: [id])
   BookProposed BookProposed[]
   BookSaved    BookSaved[]
-  BookVoted    BookVoted[]
 }
 
 model BookClub {
-  id              Int               @id @default(autoincrement())
+  id              String            @id @default(uuid())
   name            String            @unique
   invite_code     String?           @unique
   status          Int?
-  owner_id        Int?
+  owner_id        String?
   User            User?             @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   BookClubMembers BookClubMembers[]
-  BookProposed    BookProposed[]
-  BookVoted       BookVoted[]
   Invite          Invite[]
+  Cycle          Cycle[]
 }
 
 model BookClubMembers {
-  id         Int       @id @default(autoincrement())
-  user_id    Int?
-  user_role  Int?
-  bookclub_id Int?
-  BookClub   BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  User       User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model BookProposed {
-  id          Int       @id @default(autoincrement())
-  book_id     Int?
-  bookclub_id Int?
-  Book        Book?     @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  BookClub    BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model BookSaved {
-  id      Int     @id @default(autoincrement())
-  user_id Int?
-  book_id Int?
-  Book    Book?   @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  User    User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model BookVoted {
-  id          Int       @id @default(autoincrement())
-  book_id     Int?
-  user_id     Int?
-  bookclub_id Int?
-  score       Int?
-  Book        Book?     @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          String    @id @default(uuid())
+  user_id     String?
+  user_role   Int?
+  bookclub_id String?
   BookClub    BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   User        User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model BookVoted {
+  id           String        @id @default(uuid())
+  proposal_id  String?
+  user_id      String?
+  weight       Int?
+  BookProposed BookProposed? @relation(fields: [proposal_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User         User?         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model BookProposed {
+  id         String      @id @default(uuid())
+  book_id    String?
+  cycle_id   String?
+  user_id    String?
+  Book       Book?       @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Cycle      Cycle?      @relation(fields: [cycle_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User       User?       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  bookVoteds BookVoted[]
+}
+
+model Cycle {
+  id            String         @id @default(uuid())
+  bookclub_id   String?
+  createdAt     DateTime?      @default(now())
+  proposalEnd   DateTime?
+  votingEnd     DateTime?
+  BookClub      BookClub?      @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  bookProposeds BookProposed[]
+}
+
+model BookSaved {
+  id      String  @id @default(uuid())
+  user_id String?
+  book_id String?
+  Book    Book?   @relation(fields: [book_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  User    User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
 model Invite {
-  id          Int       @id @default(autoincrement())
-  bookclub_id Int?
+  id          String    @id @default(uuid())
+  bookclub_id String?
   invite_code String?
   BookClub    BookClub? @relation(fields: [bookclub_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model User {
-  id              Int              @id @default(autoincrement())
-  email           String           @unique
-  name            String           @unique
+  id              String            @id @default(uuid())
+  email           String            @unique
+  name            String            @unique
   password_hash   String
   BookClub        BookClub[]
   BookClubMembers BookClubMembers[]
   BookSaved       BookSaved[]
   BookVoted       BookVoted[]
   Books           Book[]
+  bookProposeds   BookProposed[]
 }

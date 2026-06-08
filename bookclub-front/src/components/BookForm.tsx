@@ -1,6 +1,6 @@
-import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
+import { useState, useEffect, type ChangeEvent, type SubmitEventHandler } from 'react'
 
-import bookService, { type CreateBook } from '@/services/books'
+import bookService, { type CreateBook, type Book, type BookFields } from '@/services/books'
 import { isValidISBN, cleanISBN } from '@/lib/isbnValidator'
 
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,7 @@ import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { SectionHeader } from './SectionHeader'
 
 interface BookFormState {
+  id?: string
   isbn: string
   name: string
   author: string
@@ -19,10 +20,10 @@ interface BookFormState {
   comment: string
   language: string
   genre: string
-  user_id: number
 }
 
 const emptyBook: BookFormState = {
+  id: '',
   isbn: '',
   name: '',
   author: '',
@@ -31,16 +32,43 @@ const emptyBook: BookFormState = {
   comment: '',
   language: '',
   genre: '',
-  user_id: 0
 }
 
 type BookFormProps = {
+  title?: string
+  description?: string
+  bookToEdit?: Book
+  buttonText?: string
+  buttonAction?: () => void
+  secondaryButtonText?: string
+  secondaryButtonAction?: () => void
   onBookAdded?: () => Promise<void> | void
+  className?: string
 }
 
-const BookForm = ({ onBookAdded }: BookFormProps) => {
+const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, secondaryButtonText, secondaryButtonAction, onBookAdded, className }: BookFormProps) => {
   const [newBook, setNewBook] = useState<BookFormState>(emptyBook)
   const [errors, setErrors] = useState<string[]>([])
+
+  // Initialize form with bookToEdit data when it's provided
+  useEffect(() => {
+    if (bookToEdit) {
+      setNewBook({
+        id: bookToEdit.id,
+        isbn: bookToEdit.isbn ?? '',
+        name: bookToEdit.name,
+        author: bookToEdit.author,
+        year: bookToEdit.year.toString(),
+        pages: bookToEdit.pages ? bookToEdit.pages.toString() : '',
+        comment: bookToEdit.comment ?? '',
+        language: bookToEdit.language ?? '',
+        genre: bookToEdit.genre ?? '',
+      })
+      setErrors([])
+    } else {
+      setNewBook(emptyBook)
+    }
+  }, [bookToEdit])
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -109,44 +137,64 @@ const BookForm = ({ onBookAdded }: BookFormProps) => {
       return
     }
 
-    const bookToSubmit: CreateBook = {
-      isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
-      name: newBook.name,
-      author: newBook.author,
-      year: parseInt(newBook.year, 10),
-      pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
-      comment: newBook.comment || undefined,
-      language: newBook.language || undefined,
-      genre: newBook.genre || undefined,
-      user_id: newBook.user_id
-    }
-
     try {
-      await bookService.create(bookToSubmit)
-      setNewBook(emptyBook)
-      setErrors([])
-      if (onBookAdded) {
-        await onBookAdded()
+      if (bookToEdit) {
+        const bookToUpdateSubmit: BookFields = {
+          id: newBook.id ?? "",
+          isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+          name: newBook.name,
+          author: newBook.author,
+          year: parseInt(newBook.year, 10),
+          pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+          comment: newBook.comment || undefined,
+          language: newBook.language || undefined,
+          genre: newBook.genre || undefined,
+        }
+        // Update existing book
+        await bookService.update(bookToEdit.id, bookToUpdateSubmit)
+        setErrors([])
+        if (onBookAdded) {
+          await onBookAdded()
+        }
+        if (buttonAction) {
+          buttonAction()
+        }
+      } else {
+        const bookToSubmit: CreateBook = {
+          isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+          name: newBook.name,
+          author: newBook.author,
+          year: parseInt(newBook.year, 10),
+          pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+          comment: newBook.comment || undefined,
+          language: newBook.language || undefined,
+          genre: newBook.genre || undefined,
+        }
+        // Create new book
+        await bookService.create(bookToSubmit)
+        setNewBook(emptyBook)
+        setErrors([])
+        if (onBookAdded) {
+          await onBookAdded()
+        }
       }
     } catch (error) {
-      setErrors(['Failed to add book. Please try again.\n' + (error instanceof Error ? error.message : 'Unknown error')])
+      setErrors(['Failed to save book. Please try again.\n' + (error instanceof Error ? error.message : 'Unknown error')])
     }
   }
 
   return (
-    <Card className="card-base">
+    <Card className={`card-base ${className}`}>
       <SectionHeader
-        title="Add books"
-        description="Suggest books to be read by your book club"
-      />
-      <CardContent className="card-content">
-        {errors.length > 0 && (
-          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
-            {errors.map((error, idx) => (
-              <div key={idx}>{error}</div>
-            ))}
-          </div>
+        title={title ?? "Add a book"}
+        description={description ?? ""}>
+        {secondaryButtonAction && (
+        <Button variant="secondary" size="sm" onClick={secondaryButtonAction} className="gap-3 ml-auto shrink-0">
+          {secondaryButtonText ?? "Cancel"}
+        </Button>
         )}
+      </SectionHeader>
+      <CardContent className="card-content">
         <form onSubmit={handleSubmit} className="card-form">
           <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
             <Field>
@@ -271,10 +319,16 @@ const BookForm = ({ onBookAdded }: BookFormProps) => {
               className="min-h-14 text-sm sm:min-h-16"
             />
           </div>
-
+          {errors.length > 0 && (
+            <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
+              {errors.map((error, idx) => (
+                <div key={idx}>{error}</div>
+              ))}
+            </div>
+          )}
           <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
             <Button type="submit" size="lg" className="w-full sm:w-auto">
-              Add book
+              {buttonText ?? "Add book"}
             </Button>
           </div>
         </form>

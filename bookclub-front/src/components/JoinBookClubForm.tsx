@@ -9,11 +9,17 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
+
 const emptyJoinRequest: AddBookClubMember = {
+  user_role: 1,
   invite_code: ''
 }
 
-const JoinBookClubForm = () => {
+type Props = {
+  listMutated: () => void
+}
+
+const JoinBookClubForm = ({listMutated }: Props) => {
   const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -40,10 +46,11 @@ const JoinBookClubForm = () => {
 
     try {
       await bookclubmembersService.create({
+        user_role: 1,
         invite_code: trimmedCode.toUpperCase()
       })
-      setInviteCode(emptyJoinRequest)
-      setMessage('Join request sent.')
+      setInviteCode({...emptyJoinRequest})
+      listMutated()
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data) {
         const errorData = err.response.data as Record<string, unknown>
@@ -64,7 +71,7 @@ const JoinBookClubForm = () => {
     <Card className="card-base">
       <SectionHeader
         title="Join a book club"
-        description="Enter an invite code to join an existing book club and start tracking your reading."
+        description=""
       />
 
       <CardContent className="card-content">
