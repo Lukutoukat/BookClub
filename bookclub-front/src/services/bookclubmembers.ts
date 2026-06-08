@@ -7,9 +7,10 @@ export interface BookclubMember {
   id: number,
   user_role: number,
   invite_code: string,
+  bookclub_id: string,
 }
 
-export type AddBookClubMember = Omit<BookclubMember, 'id'>
+export type AddBookClubMember = Omit<BookclubMember, 'id'| 'bookclub_id'>
 
 const create = (newBookClubMember: AddBookClubMember) => {
   return axios.post<BookclubMember>(baseUrl, newBookClubMember, getAuthConfig()).then((res) => res.data)

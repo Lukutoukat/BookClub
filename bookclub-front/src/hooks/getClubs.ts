@@ -4,7 +4,7 @@ import bookclubmembersService from '@/services/bookclubmembers'
 import bookClubService, { type BookClubFields } from '@/services/bookclubs'
 
 export const useGetClubs = () => {
-  //console.log("useGetClubs")
+  console.log("useGetClubs")
   const [list, setList] = useState<BookClubFields[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -16,21 +16,21 @@ export const useGetClubs = () => {
       try {
         setErrorMessage(null)
         const usersClubs = await bookclubmembersService.get()
-        //console.log('users clubs after first call', usersClubs)
+        console.log('users clubs after first call', usersClubs)
         const clubIds = usersClubs.map(
-          (club: any) => club.bookclub_id
+          (club) => club.bookclub_id
         )
-        //console.log('mappauksen jälkeen', clubIds)
+        console.log('mappauksen jälkeen', clubIds)
         const loadedClubs = await bookClubService.get(clubIds)
-        //console.log('before', loadedClubs)
+        console.log('before', loadedClubs)
         setList([...loadedClubs])
-        //console.log('after', loadedClubs)
+        console.log('after', loadedClubs)
       } catch {
         setErrorMessage('Failed to load bookclubs.')
       } finally {
         setIsLoading(false)
       }
-    //console.log(list)
+    console.log(list)
   }()), [dep])
 
   return { bookClubs: list, isLoading, errorMessage, listMutated }
