@@ -22,8 +22,8 @@ export const NewCycle = ({ bookclubId }: Props) => {
   const [bookclub, setBookclub] = useState<Bookclub | null>(null)
   const [loading, setLoading] = useState(true)
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(new Date().getFullYear(), 0, 12),
-    to: addDays(new Date(new Date().getFullYear(), 0, 12), 30),
+    from: addDays(new Date(new Date()), 14),
+    to: addDays(new Date(new Date), 28),
   })
   const navigate = useNavigate()
 
