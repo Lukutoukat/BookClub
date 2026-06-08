@@ -22,7 +22,7 @@ const getTokenFrom = (request: Request<unknown, unknown, BookClubMembersRequest>
   return null
 }
 
-BookClubMembersRouter.get('/', async (req: Request, res: Response) => {
+BookClubMembersRouter.get('/', async (req: Request<unknown, unknown, BookClubMembersRequest>, res: Response) => {
   const token = getTokenFrom(req)
   console.log('TOKEN', token)
     if (!token) {

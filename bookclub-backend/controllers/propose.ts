@@ -39,6 +39,7 @@ proposeRouter.get('/', async (_req: Request, res: Response) => {
 proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, res: Response) => {
   console.log("tried deleting", req.params)
   const { cycle_id, book_id } = req.params
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const token = getTokenFrom(req)
     if (!token) {
       return res.status(401).json({
