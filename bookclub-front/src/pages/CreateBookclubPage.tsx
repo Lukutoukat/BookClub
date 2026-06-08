@@ -6,9 +6,9 @@ const CreateBookclubPage = () => {
     return (
         <>
         <PageHeader
-            badgeText="Create a bookclub"
-            title="New bookclub"
-            description="Create a new bookclub for you and your friends to enjoy reading together."
+            badgeText="Create"
+            title="New book club"
+            description="Create a new book club for you and your friends to enjoy reading together."
         />
         <BookclubForm />
         </>

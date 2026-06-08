@@ -14,9 +14,9 @@ const BooksPage = () => {
   return (
     <>
       <PageHeader
-        badgeText="Book Club"
-        title="Books and suggestions"
-        description="Browse others&apos; books, suggest new ones, and decide together which to read next."
+        badgeText="Books"
+        title="Your saved books"
+        description="Save the books you want to read and suggest in the future."
       />
 
       <BookForm onBookAdded={handleBookAdded} />

@@ -134,10 +134,10 @@ describe('BooksPage', () => {
   })
 
   describe('book deletion', () => {
-    test('deletes book via service and removes from display', async () => {
+    test('deletes book via service and removes from display when confirmation is accepted', async () => {
       setupMocks({ books: mockBooks(2) })
       vi.mocked(bookService.remove).mockResolvedValue({ status: 200 } as any)
-
+      vi.spyOn(window, 'confirm').mockReturnValue(true)
       renderWithRouter(<BooksPage />)
 
       await waitFor(() => {

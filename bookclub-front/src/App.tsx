@@ -7,6 +7,8 @@ import HomePage from './pages/HomePage'
 import CreateBookclubPage from './pages/CreateBookclubPage'
 import SettingsPage from './pages/SettingsPage'
 import BookclubPage from './pages/BookclubPage'
+import PasswordResetPage from './pages/PasswordResetPage'
+import NewCyclePage from './pages/NewCyclePage'
 import { PageMenu } from './components/PageMenu'
 import { PageLayout } from './components/PageLayout'
 import { isLoggedIn } from './services/auth'
@@ -22,6 +24,7 @@ const App = () => {
               <Route path="/registration" element={<RegistrationPage />} />
               <Route path="/" element={<Navigate to="/login" replace />} />
               <Route path="*" element={<Navigate to="/login" replace />} />
+              <Route path="/passwordreset" element={<PasswordResetPage />} />
             </Routes>
           </PageLayout>
         </main>
@@ -39,6 +42,7 @@ const App = () => {
             <Route path="/create" element={<CreateBookclubPage />} />
             <Route path="/registration" element={<RegistrationPage />} />
             <Route path="/club/:bookclubId" element={<BookclubPage />} />
+            <Route path="/newcycle/:bookclubId" element={<NewCyclePage />} /> 
             <Route path="/home" element={<HomePage />} />
             <Route path="/settings" element={<SettingsPage />}/>
             <Route path="*" element={<Navigate to="/home" replace />} />

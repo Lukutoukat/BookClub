@@ -1,6 +1,8 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
+import { useNavigate } from 'react-router-dom'
 import bookclubService, { type CreateBookClub } from '@/services/bookclubs'
 import { SectionHeader } from './SectionHeader'
+// import bookclubmembersService from '@/services/bookclubmembers'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,20 +11,21 @@ import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
 const emptyBookclub: CreateBookClub = {
   name: '',
+  owner_id: 0
 }
 
 const BookclubForm = () => {
   const [newBookclub, setNewBookclub] = useState<CreateBookClub>(emptyBookclub)
   const [errors, setErrors] = useState<string[]>([])
-  
+  const navigate = useNavigate()
   const handleChange = (
       event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
       const { name, value } = event.target
-
+      console.log('VALUE', value)
       setNewBookclub((currentBookclub) => ({
       ...currentBookclub,
-      [name]: value
+      [name]: value,
       }))
       // Clear errors when user starts typing
       if (errors.length > 0) {
@@ -33,9 +36,10 @@ const BookclubForm = () => {
   const addBookclub: SubmitEventHandler<HTMLFormElement> = async (event) => {
       event.preventDefault()
       try {
-        await bookclubService.create(newBookclub)
+        const created = await bookclubService.create(newBookclub)
         setNewBookclub(emptyBookclub)
         setErrors([])
+        navigate(`/club/${created.id}`)
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
         setErrors([`Failed to create bookclub: ${errorMessage}`])
@@ -45,7 +49,7 @@ const BookclubForm = () => {
       <Card className="card-base">
         <SectionHeader 
         title="Create a new bookclub" 
-        description="Create a new bookclub, where you can invite your friends to join"
+        description=""
         />
         
       <CardContent className="card-content">
