@@ -19,8 +19,8 @@ type Props = {
 }
 
 export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
-  const [startTime, setStartTime] = useState("12:00:00")
-  const [endTime, setEndTime] = useState("12:00:00")
+  const [startTime, setStartTime] = useState("12:00")
+  const [endTime, setEndTime] = useState("12:00")
 
   const applyTimeToDate = (date: Date, timeString: string): Date => {
     const newDate = new Date(date)
@@ -98,7 +98,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
                 <InputGroupInput
                   id="time-from"
                   type="time"
-                  step="1"
+                  step="60"
                   value={startTime}
                   onChange={handleStartTimeChange}
                   disabled={!dateRange?.from} // Disabled if no start date is selected
