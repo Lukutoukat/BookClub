@@ -70,7 +70,7 @@ export const NewCycle = ({ bookclubId }: Props) => {
       <PageHeader
       badgeText="New Cycle"
       title={bookclub.name}
-      description="Suggest books and decide together, what will you enjoy reading with your friends."
+      description=""
       />
       <RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange}/>
       <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
