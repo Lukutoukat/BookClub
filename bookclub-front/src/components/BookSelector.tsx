@@ -11,9 +11,9 @@ import {
 import bookService, { type Book } from "@/services/books"
 import proposeService from "@/services/propose"
 import { useEffect, useRef, useState } from "react"
-import { AlertCircleIcon, InfoIcon } from "lucide-react"
+//import { AlertCircleIcon, InfoIcon } from "lucide-react"
 import { getErrorMessage } from "@/lib/errorMessage"
-import errorMessage from "./errorMessageDisplay"
+//import errorMessage from "./errorMessageDisplay"
 import ErrorMessageDisplay from "./errorMessageDisplay"
 
 export interface BookListHandle {

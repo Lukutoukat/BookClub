@@ -11,7 +11,7 @@ export interface BookClubListHandle {
 
 
 type Props = {
-  bookClubs: any
+  bookClubs: BookClub[]
   isLoading: boolean
   errorMessage: string | null
 }
@@ -86,7 +86,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
       <SectionHeader title="All bookclubs" description={description} />
       <CardContent className="card-content">
         <div className="space-y-3">
-          {bookClubs.map((club: any) => (
+          {bookClubs.map((club: BookClub) => (
             <BookClubItem key={club.id} bookClub={club} />
           ))}
         </div>

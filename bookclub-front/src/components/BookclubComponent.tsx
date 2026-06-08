@@ -47,7 +47,7 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
     if (window.confirm('are you sure you want to delete your bookclub and all info related to it?')) {
       try {
         await bookclubService.remove(bookclub.id)
-        navigate('/home', { replace: true })
+        void navigate('/home', { replace: true })
       } catch(error) {
         console.error('error during deletion', error)
       }
