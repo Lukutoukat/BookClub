@@ -1,14 +1,23 @@
-import { useState, useEffect, type ChangeEvent, type SubmitEventHandler } from 'react'
+import {
+  useState,
+  useEffect,
+  type ChangeEvent,
+  type SubmitEventHandler,
+} from "react"
 
-import bookService, { type CreateBook, type Book, type BookFields } from '@/services/books'
-import { isValidISBN, cleanISBN } from '@/lib/isbnValidator'
+import bookService, {
+  type CreateBook,
+  type Book,
+  type BookFields,
+} from "@/services/books"
+import { isValidISBN, cleanISBN } from "@/lib/isbnValidator"
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
-import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
-import { SectionHeader } from './SectionHeader'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent } from "@/components/ui/card"
+import { Field, FieldLabel, FieldContent } from "@/components/ui/field"
+import { SectionHeader } from "./SectionHeader"
 
 interface BookFormState {
   id?: string
@@ -23,46 +32,58 @@ interface BookFormState {
 }
 
 const emptyBook: BookFormState = {
-  id: '',
-  isbn: '',
-  name: '',
-  author: '',
-  year: '',
-  pages: '',
-  comment: '',
-  language: '',
-  genre: '',
+  id: "",
+  isbn: "",
+  name: "",
+  author: "",
+  year: "",
+  pages: "",
+  comment: "",
+  language: "",
+  genre: "",
 }
 
 type BookFormProps = {
   title?: string
   description?: string
-  bookToEdit?: Book
+  bookToEdit?: Book | boolean
   buttonText?: string
   buttonAction?: () => void
   secondaryButtonText?: string
   secondaryButtonAction?: () => void
   onBookAdded?: () => Promise<void> | void
+  cycle_id: string
   className?: string
 }
 
-const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, secondaryButtonText, secondaryButtonAction, onBookAdded, className }: BookFormProps) => {
+const BookForm = ({
+  title,
+  description,
+  bookToEdit,
+  buttonText,
+  buttonAction,
+  secondaryButtonText,
+  secondaryButtonAction,
+  onBookAdded,
+  cycle_id,
+  className,
+}: BookFormProps) => {
   const [newBook, setNewBook] = useState<BookFormState>(emptyBook)
   const [errors, setErrors] = useState<string[]>([])
 
   // Initialize form with bookToEdit data when it's provided
   useEffect(() => {
-    if (bookToEdit) {
+    if (typeof bookToEdit !== "boolean" && bookToEdit !== undefined) {
       setNewBook({
         id: bookToEdit.id,
-        isbn: bookToEdit.isbn ?? '',
+        isbn: bookToEdit.isbn ?? "",
         name: bookToEdit.name,
         author: bookToEdit.author,
         year: bookToEdit.year.toString(),
-        pages: bookToEdit.pages ? bookToEdit.pages.toString() : '',
-        comment: bookToEdit.comment ?? '',
-        language: bookToEdit.language ?? '',
-        genre: bookToEdit.genre ?? '',
+        pages: bookToEdit.pages ? bookToEdit.pages.toString() : "",
+        comment: bookToEdit.comment ?? "",
+        language: bookToEdit.language ?? "",
+        genre: bookToEdit.genre ?? "",
       })
       setErrors([])
     } else {
@@ -71,13 +92,13 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
   }, [bookToEdit])
 
   const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = event.target
 
     setNewBook((currentBook) => ({
       ...currentBook,
-      [name]: value
+      [name]: value,
     }))
     // Clear errors when user starts typing
     if (errors.length > 0) {
@@ -89,37 +110,39 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
     const formErrors: string[] = []
 
     // Validate name (required)
-    if (!newBook.name || newBook.name.trim() === '') {
-      formErrors.push('Book title is required.')
+    if (!newBook.name || newBook.name.trim() === "") {
+      formErrors.push("Book title is required.")
     }
 
     // Validate author (required)
-    if (!newBook.author || newBook.author.trim() === '') {
-      formErrors.push('Author is required.')
+    if (!newBook.author || newBook.author.trim() === "") {
+      formErrors.push("Author is required.")
     }
 
     // Validate year (required)
     const yearNum = parseInt(newBook.year, 10)
-    
+
     if (yearNum > new Date().getFullYear()) {
-      formErrors.push('Year cannot be in the future.')
-    } else if (yearNum == 0){
-      formErrors.push('The year zero does not exist.')
+      formErrors.push("Year cannot be in the future.")
+    } else if (yearNum == 0) {
+      formErrors.push("The year zero does not exist.")
     } else if (!newBook.year || isNaN(yearNum)) {
-      formErrors.push('Year must be a valid number.')
+      formErrors.push("Year must be a valid number.")
     }
 
     // Validate pages only if provided
     if (newBook.pages) {
       const pagesNum = parseInt(newBook.pages, 10)
       if (isNaN(pagesNum) || pagesNum < 0) {
-        formErrors.push('Pages must be a non-negative number.')
+        formErrors.push("Pages must be a non-negative number.")
       }
     }
 
     // Validate ISBN only if provided
     if (newBook.isbn && !isValidISBN(newBook.isbn)) {
-      formErrors.push('Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).')
+      formErrors.push(
+        "Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).",
+      )
     }
 
     if (formErrors.length > 0) {
@@ -138,21 +161,37 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
     }
 
     try {
-      if (bookToEdit) {
-        console.log('Updating book with ID:', bookToEdit.id)
-        const bookToUpdateSubmit: BookFields = {
-          id: newBook.id ?? "",
-          isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
-          name: newBook.name,
-          author: newBook.author,
-          year: parseInt(newBook.year, 10),
-          pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
-          comment: newBook.comment || undefined,
-          language: newBook.language || undefined,
-          genre: newBook.genre || undefined,
+      if (bookToEdit !== undefined) {
+        if (typeof bookToEdit !== "boolean") {
+          console.log("Updating book with ID:", bookToEdit.id)
+          const bookToUpdateSubmit: BookFields = {
+            id: newBook.id ?? "",
+            isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+            name: newBook.name,
+            author: newBook.author,
+            year: parseInt(newBook.year, 10),
+            pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+            comment: newBook.comment || undefined,
+            language: newBook.language || undefined,
+            genre: newBook.genre || undefined,
+          }
+          // Update existing book
+          await bookService.update(bookToEdit.id, bookToUpdateSubmit)
+        } else {
+          console.log("Creating new book")
+          const bookToSubmit: CreateBook = {
+            isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+            name: newBook.name,
+            author: newBook.author,
+            year: parseInt(newBook.year, 10),
+            pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+            comment: newBook.comment || undefined,
+            language: newBook.language || undefined,
+            genre: newBook.genre || undefined,
+          }
+          // Create new book
+          await bookService.createForPropose(cycle_id, bookToSubmit)
         }
-        // Update existing book
-        await bookService.update(bookToEdit.id, bookToUpdateSubmit)
         setErrors([])
         if (onBookAdded) {
           await onBookAdded()
@@ -161,7 +200,7 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
           buttonAction()
         }
       } else {
-        console.log('Creating new book')
+        console.log("Creating new book")
         const bookToSubmit: CreateBook = {
           isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
           name: newBook.name,
@@ -181,19 +220,30 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
         }
       }
     } catch (error) {
-      setErrors(['Failed to save book. Please try again.\n' + (error instanceof Error ? error.message : 'Unknown error')])
+      setErrors([
+        "Failed to save book. Please try again.\n" +
+          (error instanceof Error ? error.message : "Unknown error"),
+      ])
     }
   }
 
   return (
     <Card className={`card-base ${className}`}>
       <SectionHeader
-        title={title ?? "Add books"}
-        description={description ?? "Suggest books to be read by your book club"}>
+        title={title ?? "Add book"}
+        description={
+          description ?? "Suggest a book to be read by your book club"
+        }
+      >
         {secondaryButtonAction && (
-        <Button variant="secondary" size="sm" onClick={secondaryButtonAction} className="gap-3 ml-auto shrink-0">
-          {secondaryButtonText ?? "Cancel"}
-        </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={secondaryButtonAction}
+            className="gap-3 ml-auto shrink-0"
+          >
+            {secondaryButtonText ?? "Cancel"}
+          </Button>
         )}
       </SectionHeader>
       <CardContent className="card-content">
@@ -316,9 +366,7 @@ const BookForm = ({ title, description, bookToEdit, buttonText, buttonAction, se
           </div>
 
           <div className="space-y-2">
-            <FieldLabel htmlFor="comment">
-              Comment
-            </FieldLabel>
+            <FieldLabel htmlFor="comment">Comment</FieldLabel>
             <Textarea
               id="comment"
               name="comment"

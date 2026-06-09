@@ -1,37 +1,60 @@
-import axios from 'axios'
-import { getAuthConfig } from '@/services/auth'
+import axios from "axios"
+import { getAuthConfig } from "@/services/auth"
 
-const baseUrl = '/api/books'
+const baseUrl = "/api/books"
 
 export interface BookFields {
-    id: string
-    isbn?: string
-    name: string
-    author: string
-    year: number
-    pages?: number
-    comment?: string
-    language?: string
-    genre?: string,
+  id: string
+  isbn?: string
+  name: string
+  author: string
+  year: number
+  pages?: number
+  comment?: string
+  language?: string
+  genre?: string
 }
 
 export type Book = BookFields
-export type CreateBook = Omit<BookFields, 'id'>
+export type CreateBook = Omit<BookFields, "id">
 
 const getAll = () => {
-    return axios.get<Book[]>(baseUrl, getAuthConfig()).then((res) => res.data)
+  return axios.get<Book[]>(baseUrl, getAuthConfig()).then((res) => res.data)
+}
+
+const getPreviousSuggestions = () => {
+  return axios
+    .get<Book[]>(`${baseUrl}/previousSuggestions`, getAuthConfig())
+    .then((res) => res.data)
 }
 
 const create = (book: CreateBook) => {
-    return axios.post<Book>(baseUrl, book, getAuthConfig()).then((res) => res.data)
+  return axios
+    .post<Book>(baseUrl, book, getAuthConfig())
+    .then((res) => res.data)
+}
+
+const createForPropose = (cycle_id: string, book: CreateBook) => {
+  return axios
+    .post<Book>(`${baseUrl}/${cycle_id}`, book, getAuthConfig())
+    .then((res) => res.data)
 }
 
 const update = (id: string, book: BookFields) => {
-    return axios.put<Book>(`${baseUrl}/${id}`, book, getAuthConfig()).then((res) => res.data)
+  return axios
+    .put<Book>(`${baseUrl}/${id}`, book, getAuthConfig())
+    .then((res) => res.data)
 }
 
 const remove = (id: string) => {
-    return axios.delete(`${baseUrl}/${id}`, getAuthConfig())
+  return axios.delete(`${baseUrl}/${id}`, getAuthConfig())
 }
 
-export default { getAll, create, update, remove }
+export default {
+  getAll,
+  create,
+  createForPropose,
+  getPreviousSuggestions,
+  update,
+  remove,
+}

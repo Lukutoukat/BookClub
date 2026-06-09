@@ -6,6 +6,7 @@ import BookList, { type BookListHandle } from "@/components/BookList"
 import BookClubGoCycleSetting from "@/components/bookClubGoCycleSetting"
 import cycleService from "@/services/cycle"
 import { type CycleWithStatus } from "@/services/cycle"
+import { SuggestBook } from "@/components/SuggestBook"
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -44,7 +45,11 @@ const BookclubPage = () => {
     return (
       <>
         <BookclubComponent bookclubId={bookclubId} />
-        <BookSelector onBookAdded={handleBookAdded} bookclubId={bookclubId} />
+        <SuggestBook
+          onBookAdded={handleBookAdded}
+          bookclubId={bookclubId}
+          cycle_id={currentCycle.id}
+        />
         <BookList
           ref={bookListRef}
           show="proposedBooks"

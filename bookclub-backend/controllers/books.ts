@@ -1,167 +1,300 @@
-import express, { type Request, type Response } from 'express'
-import { prisma } from '../db.ts'
-import jwt from 'jsonwebtoken'
-import userExtractor from '../middleware/userExtractor.ts'
+import express, { type Request, type Response } from "express"
+import { prisma } from "../db.ts"
+import jwt from "jsonwebtoken"
+import userExtractor from "../middleware/userExtractor.ts"
 
 const bookRouter = express.Router()
 
 interface Book {
-  id?: string,
-  name: string,
-  author: string,
-  year: number,
-  isbn?: string,
-  pages?: number,
-  comment?: string,
-  language?: string,
-  genre?: string,
+  id?: string
+  name: string
+  author: string
+  year: number
+  isbn?: string
+  pages?: number
+  comment?: string
+  language?: string
+  genre?: string
   user_id?: string
 }
 
-const getTokenFrom = (request: Request<unknown, unknown, Book>): string | null => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
+const getTokenFrom = (
+  request: Request<unknown, unknown, Book>,
+): string | null => {
+  const authorization = request.get("authorization")
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.replace("Bearer ", "")
   }
   return null
 }
 
-bookRouter.get('/', async (_req: Request, res: Response) => {
+bookRouter.get("/", async (_req: Request, res: Response) => {
   try {
     const result = await prisma.book.findMany()
     res.json(result)
   } catch (error) {
-    console.error('GET /api/books error:', error)
-    res.status(500).json({ error: 'database error' })
+    console.error("GET /api/books error:", error)
+    res.status(500).json({ error: "database error" })
   }
 })
 
-bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>, res: Response) => {
-  const newBook: Book = req.body
-
-  const token = getTokenFrom(req)
+bookRouter.get(
+  "/previousSuggestions",
+  userExtractor,
+  async (_req: Request, res: Response) => {
+    const token = getTokenFrom(_req)
     if (!token) {
       return res.status(401).json({
-        error: 'missin token'
+        error: "missin token",
       })
     }
 
-  const decodedToken = jwt.verify(
-    token,
-    process.env.SECRET as string
-  ) as { id: string }
-
-  if (!decodedToken.id) {
-    return res.status(401).json({
-      error: 'token invalid'
-    })
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      id: decodedToken.id
+    const decodedToken = jwt.verify(token, process.env.SECRET as string) as {
+      id: string
     }
-  })
-  
-  if (!user) {
-    return res.status(400).json({
-      error: 'userId missing or not valid'
-    })
-  }
 
-  try {
-    await prisma.book.create({
-      data: {
-        isbn: newBook.isbn,
-        name: newBook.name,
-        author: newBook.author,
-        year: newBook.year,
-        pages: newBook.pages,
-        comment: newBook.comment,
-        language: newBook.language,
-        genre: newBook.genre,
-        user_id: user.id
+    if (!decodedToken.id) {
+      return res.status(401).json({
+        error: "token invalid",
+      })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: decodedToken.id,
+      },
+    })
+
+    if (!user) {
+      return res.status(400).json({
+        error: "userId missing or not valid",
+      })
+    }
+    try {
+      const books = await prisma.book.findMany({
+        where: {
+          BookProposed: {
+            some: {
+              user_id: user.id,
+            },
+          },
+        },
+      })
+      res.json(books)
+    } catch (error) {
+      console.error("GET /api/books error:", error)
+      res.status(500).json({ error: "database error" })
+    }
+    return
+  },
+)
+
+bookRouter.post(
+  "/",
+  userExtractor,
+  async (req: Request<unknown, unknown, Book>, res: Response) => {
+    const newBook: Book = req.body
+
+    const token = getTokenFrom(req)
+    if (!token) {
+      return res.status(401).json({
+        error: "missin token",
+      })
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET as string) as {
+      id: string
+    }
+
+    if (!decodedToken.id) {
+      return res.status(401).json({
+        error: "token invalid",
+      })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: decodedToken.id,
+      },
+    })
+
+    if (!user) {
+      return res.status(400).json({
+        error: "userId missing or not valid",
+      })
+    }
+
+    try {
+      await prisma.book.create({
+        data: {
+          isbn: newBook.isbn,
+          name: newBook.name,
+          author: newBook.author,
+          year: newBook.year,
+          pages: newBook.pages,
+          comment: newBook.comment,
+          language: newBook.language,
+          genre: newBook.genre,
+          user_id: user.id,
+        },
+      })
+
+      return res.json(newBook)
+    } catch (error) {
+      console.error("POST /api/books error:", error)
+      return res.status(500).json({ error: "database error" })
+    }
+  },
+)
+
+bookRouter.post(
+  "/:cycle_id",
+  userExtractor,
+  async (req: Request<unknown, unknown, Book>, res: Response) => {
+    let cycle_id = ""
+    if (
+      req.params !== undefined &&
+      req.params !== null &&
+      req.params.cycle_id !== undefined &&
+      typeof req.params.cycle_id === "string"
+    )
+      cycle_id = req.params.cycle_id
+    const newBook: Book = req.body
+
+    const token = getTokenFrom(req)
+    if (!token) {
+      return res.status(401).json({
+        error: "missin token",
+      })
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET as string) as {
+      id: string
+    }
+
+    if (!decodedToken.id) {
+      return res.status(401).json({
+        error: "token invalid",
+      })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: decodedToken.id,
+      },
+    })
+
+    if (!user) {
+      return res.status(400).json({
+        error: "userId missing or not valid",
+      })
+    }
+
+    try {
+      const createdBook = await prisma.book.create({
+        data: {
+          isbn: newBook.isbn,
+          name: newBook.name,
+          author: newBook.author,
+          year: newBook.year,
+          pages: newBook.pages,
+          comment: newBook.comment,
+          language: newBook.language,
+          genre: newBook.genre,
+          user_id: user.id,
+        },
+      })
+
+      await prisma.bookProposed.create({
+        data: {
+          book_id: createdBook.id,
+          user_id: createdBook.user_id,
+          cycle_id: cycle_id as string,
+        },
+      })
+
+      return res.json(newBook)
+    } catch (error) {
+      console.error("POST /api/books error:", error)
+      return res.status(500).json({ error: "database error" })
+    }
+  },
+)
+
+bookRouter.put(
+  "/:id",
+  userExtractor,
+  async (req: Request<unknown, unknown, Book>, res: Response) => {
+    const updatedBook: Book = req.body
+
+    const token = getTokenFrom(req)
+    if (!token) {
+      return res.status(401).json({
+        error: "missing token",
+      })
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET as string) as {
+      id: string
+    }
+
+    if (!decodedToken.id) {
+      return res.status(401).json({
+        error: "token invalid",
+      })
+    }
+
+    try {
+      const book = await prisma.book.findUnique({
+        where: { id: updatedBook.id },
+      })
+
+      if (!book) {
+        return res.status(404).json({
+          error: "book not found",
+        })
       }
-    })
 
-    return res.json(newBook)
-  } catch (error) {
-    console.error('POST /api/books error:', error)
-    return res.status(500).json({ error: 'database error' })
-  }
-})
-
-bookRouter.put('/:id', userExtractor, async (req: Request<unknown, unknown, Book>, res: Response) => {
-  const updatedBook: Book = req.body
-
-  const token = getTokenFrom(req)
-  if (!token) {
-    return res.status(401).json({
-      error: 'missing token'
-    })
-  }
-
-  const decodedToken = jwt.verify(
-    token,
-    process.env.SECRET as string
-  ) as { id: string }
-
-  if (!decodedToken.id) {
-    return res.status(401).json({
-      error: 'token invalid'
-    })
-  }
-
-  try {
-    const book = await prisma.book.findUnique({
-      where: { id: updatedBook.id }
-    })
-
-    if (!book) {
-      return res.status(404).json({
-        error: 'book not found'
-      })
-    }
-
-    if (book.user_id !== decodedToken.id) {
-      return res.status(403).json({
-        error: 'not authorized to update this book'
-      })
-    }
-
-    const result = await prisma.book.update({
-      where: { id: updatedBook.id },
-      data: {
-        id: updatedBook.id,
-        isbn: updatedBook.isbn,
-        name: updatedBook.name,
-        author: updatedBook.author,
-        year: updatedBook.year,
-        pages: updatedBook.pages,
-        comment: updatedBook.comment,
-        language: updatedBook.language,
-        genre: updatedBook.genre
+      if (book.user_id !== decodedToken.id) {
+        return res.status(403).json({
+          error: "not authorized to update this book",
+        })
       }
-    })
 
-    return res.json(result)
-  } catch (error) {
-    console.error('PUT /api/books/:id error:', error)
-    return res.status(500).json({ error: 'database error' })
-  }
-})
+      const result = await prisma.book.update({
+        where: { id: updatedBook.id },
+        data: {
+          id: updatedBook.id,
+          isbn: updatedBook.isbn,
+          name: updatedBook.name,
+          author: updatedBook.author,
+          year: updatedBook.year,
+          pages: updatedBook.pages,
+          comment: updatedBook.comment,
+          language: updatedBook.language,
+          genre: updatedBook.genre,
+        },
+      })
 
-bookRouter.delete('/:id', async (_req, res) => {
+      return res.json(result)
+    } catch (error) {
+      console.error("PUT /api/books/:id error:", error)
+      return res.status(500).json({ error: "database error" })
+    }
+  },
+)
+
+bookRouter.delete("/:id", async (_req, res) => {
   const id: string = _req.params.id
 
   try {
     await prisma.book.delete({
-      where: { id }
+      where: { id },
     })
     res.status(204).end()
-  } catch(error) {
-    console.error('DELETE /api/books error: ', error)
-    res.status(500).json({error: 'database error' })
+  } catch (error) {
+    console.error("DELETE /api/books error: ", error)
+    res.status(500).json({ error: "database error" })
   }
 })
 
