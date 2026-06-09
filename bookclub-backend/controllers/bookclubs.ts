@@ -28,8 +28,6 @@ bookClubRouter.get('/', async (req: Request, res: Response) => {
       ? [clubs]
       : []
 
-  console.log('clubit', clubIds)
-
   try {
     const result = await prisma.bookClub.findMany({
       where: {
@@ -45,7 +43,6 @@ bookClubRouter.get('/', async (req: Request, res: Response) => {
 })
 
 bookClubRouter.get('/:id', async (req: Request, res: Response) => {
-
   try {
     const id = req.params.id as string | undefined
     const bookclub = await prisma.bookClub.findUnique({
@@ -61,7 +58,6 @@ bookClubRouter.get('/:id', async (req: Request, res: Response) => {
 
 bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: Response) => {
   const newBookClub: BookClub = req.body
-  console.log('BODYYYY', newBookClub)
   const token = getTokenFrom(req)
   if (!token) {
     return res.status(401).json({
@@ -78,13 +74,11 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
       error: 'token invalid'
     })
   }
-  console.log('decoded token', decodedToken.id)
   const user = await prisma.user.findUnique({
     where: {
       id: decodedToken.id
     }
   })
-  console.log('TULIKO TÄNNE')
   if (!user) {
     return res.status(400).json({
       error: 'userId missing or not valid'
@@ -92,7 +86,6 @@ bookClubRouter.post('/', async (req: Request<unknown, unknown, BookClub>, res: R
   }
   // Hopefully this random 5-letter generated code does not exist yet!
   newBookClub.invite_code = Math.random().toString(36).substring(2, 7).toUpperCase()
-  console.log('kayttajaid', user)
   try {
     const created = await prisma.bookClub.create({
       data: {

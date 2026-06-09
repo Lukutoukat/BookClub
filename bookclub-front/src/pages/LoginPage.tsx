@@ -34,7 +34,7 @@ const LoginPage = () => {
       <PageHeader
         badgeText="Login"
         title="Join the club"
-        description="Log in to be able to join bookclubs and save the books you want to read in one place."
+        description="Create your own book club and start reading with your friends."
         buttonText="Go to registration"
         buttonLink="/registration"
       />
@@ -55,12 +55,8 @@ const LoginPage = () => {
             setUsername={setUsername}
             setPassword={setPassword}
             handleLogin={handleLogin}
+            message={message}
           />
-          {message ? (
-            <p className="rounded-3xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-primary">
-              {message}
-            </p>
-          ) : null}
         </CardContent>
       </Card>
     </>

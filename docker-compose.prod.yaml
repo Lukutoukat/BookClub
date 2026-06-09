@@ -1,0 +1,34 @@
+volumes:
+  postgres_data:
+
+services:
+  db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: clubdb
+    ports:
+      - "5000:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U username -d clubdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    container_name: bookclub-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    environment:
+      - DATABASE_URL=postgresql://username:password@db:5432/clubdb
+      - NODE_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy

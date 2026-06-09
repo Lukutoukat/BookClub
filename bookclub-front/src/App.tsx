@@ -22,6 +22,8 @@ const App = () => {
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/registration" element={<RegistrationPage />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="*" element={<Navigate to="/login" replace />} />
               <Route path="/passwordreset" element={<PasswordResetPage />} />
             </Routes>
           </PageLayout>
@@ -35,7 +37,7 @@ const App = () => {
       <PageMenu>
         <PageLayout>
           <Routes>
-            <Route path="/" element={<Navigate to="/registration" replace />} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/books" element={<BooksPage />} />
             <Route path="/create" element={<CreateBookclubPage />} />
             <Route path="/registration" element={<RegistrationPage />} />
@@ -43,6 +45,7 @@ const App = () => {
             <Route path="/newcycle/:bookclubId" element={<NewCyclePage />} /> 
             <Route path="/home" element={<HomePage />} />
             <Route path="/settings" element={<SettingsPage />}/>
+            <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </PageLayout>
       </PageMenu>

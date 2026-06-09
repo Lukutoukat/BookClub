@@ -28,7 +28,7 @@ const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: strin
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation()
     if (!book.id) return
-    if (window.confirm('are you sure you want to delete?')) {
+    if (window.confirm('Are you sure you want to delete?')) {
       setIsDeleting(true)
         try {
           await onDelete(book.id)
@@ -147,15 +147,12 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
     try {
       setErrorMessage(null)
       if(show === "proposedBooks") {
-        console.log('Loading books for cycleId:', cycleId)
         const loadedBooks = await proposeService.getProposedBooks(cycleId)
         setBooks(loadedBooks)
-        console.log('Set proposed books...', loadedBooks)
       }
       if (show === "savedBooks") {
         const loadedBooks = await bookService.getAll()
         setBooks(loadedBooks)
-        console.log('Set users books...', loadedBooks)
       }
     } catch {
       setErrorMessage('Failed to load books.')
@@ -189,12 +186,12 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   }
 
   const bookCount = books.length
-  const description = `${bookCount} ${bookCount === 1 ? 'book' : 'books'} in the list`
+  const description = `Books: ${bookCount}`
 
   if (isLoading) {
     return (
       <Card className="card-base">
-        <SectionHeader title="Current books" description={description} />
+        <SectionHeader title={description} />
         <CardContent className="card-content">
           <div className="text-sm text-muted-foreground text-center py-6">
             Loading books...
@@ -207,7 +204,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   if (errorMessage) {
     return (
       <Card className="card-base">
-        <SectionHeader title="Current books" description={description} />
+        <SectionHeader title="Your saved books" description={description} />
         <CardContent className="card-content">
           <div className="p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
             {errorMessage}
@@ -220,7 +217,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   if (books.length === 0) {
     return (
       <Card className="card-base">
-        <SectionHeader title="Current books" description={description} />
+        <SectionHeader title={description} />
         <CardContent className="card-content">
           <div className="text-sm text-muted-foreground text-center py-6">
             {emptyMessage}
@@ -231,7 +228,6 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   }
 
   return (
-
     <div className="space-y-6">
       {isShowingBookForm ? (
         <div ref={bookFormRef}>
@@ -240,7 +236,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
       ) 
       : <></>}
     <Card className="card-base">
-      <SectionHeader title="Current books" description={description} />
+      <SectionHeader title={description} />
       <CardContent className="card-content">
         <div className="space-y-3">
           {books.map((book) => (

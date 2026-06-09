@@ -22,7 +22,6 @@ interface LogIn {
 
 loginRouter.post('/', async (req: Request, res: Response) => {
   const { username, password } = req.body as LogIn
-  console.log('NIMI TULI TÄNNE!!!', username)
   if (!password) {
     return res.status(401).end()
   }
@@ -39,7 +38,7 @@ loginRouter.post('/', async (req: Request, res: Response) => {
 
   if (!(user && passwordCorrect)) {
     return res.status(401).json({
-      error: 'either username or the password is invalid, please check again'
+      error: 'Invalid username or password.'
     })
   }
 
@@ -48,7 +47,7 @@ loginRouter.post('/', async (req: Request, res: Response) => {
     id: user.id
   }
   if (!process.env.SECRET) {
-    throw new Error('came across a problem related to token :)')
+    throw new Error('Error with authentication.')
   }
   const token = jwt.sign(userForToken, process.env.SECRET)
 

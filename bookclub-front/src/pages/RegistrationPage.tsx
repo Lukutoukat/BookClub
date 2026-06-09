@@ -8,7 +8,7 @@ const RegistrationPage = () => {
       <PageHeader
         badgeText="Registration"
         title="Join the club"
-        description="Register, join your book club, suggest books, decide together, and keep track of books easily."
+        description=""
         buttonText="Go to login"
         buttonLink="/login"
       />
