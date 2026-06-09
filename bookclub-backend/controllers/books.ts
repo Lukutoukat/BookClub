@@ -146,19 +146,14 @@ bookRouter.post(
     }
   },
 )
-
+type cycleIdParams = {
+  cycle_id: string
+}
 bookRouter.post(
   "/:cycle_id",
   userExtractor,
-  async (req: Request<unknown, unknown, Book>, res: Response) => {
-    let cycle_id = ""
-    if (
-      req.params !== undefined &&
-      req.params !== null &&
-      req.params.cycle_id !== undefined &&
-      typeof req.params.cycle_id === "string"
-    )
-      cycle_id = req.params.cycle_id
+  async (req: Request<cycleIdParams, unknown, Book>, res: Response) => {
+    const { cycle_id } = req.params
     const newBook: Book = req.body
 
     const token = getTokenFrom(req)
