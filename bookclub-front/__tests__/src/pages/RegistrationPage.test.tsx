@@ -25,7 +25,7 @@ describe('RegistrationPage', () => {
       renderWithRouter(<RegistrationPage />)
 
       expect(screen.getByText('Join the club')).toBeDefined()
-      expect(screen.getByText('Create account')).toBeDefined()
+      expect(screen.getByText('Create an account')).toBeDefined()
     })
 
     test('renders registration badge and login link', () => {
@@ -46,8 +46,8 @@ describe('RegistrationPage', () => {
       expect(screen.getByLabelText('Email address')).toBeDefined()
       expect(screen.getByLabelText('Username')).toBeDefined()
       expect(screen.getByLabelText('Password')).toBeDefined()
-      expect(screen.getByLabelText('Confirm Password')).toBeDefined()
-      expect(screen.getByRole('button', { name: 'Register user' })).toBeDefined()
+      expect(screen.getByLabelText('Confirm password')).toBeDefined()
+      expect(screen.getByRole('button', { name: 'Create a new account' })).toBeDefined()
     })
 
     test('login link navigates to login page', () => {
@@ -68,9 +68,9 @@ describe('RegistrationPage', () => {
       await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
       await userInstance.type(screen.getByLabelText('Username'), 'testuser')
       await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
-      await userInstance.type(screen.getByLabelText('Confirm Password'), 'TestPass123')
+      await userInstance.type(screen.getByLabelText('Confirm password'), 'TestPass123')
 
-      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+      await userInstance.click(screen.getByRole('button', { name: 'Create a new account' }))
 
       await waitFor(() => {
         expect(screen.getByText('Registration saved.')).toBeDefined()
