@@ -163,7 +163,6 @@ const BookForm = ({
     try {
       if (bookToEdit !== undefined) {
         if (typeof bookToEdit !== "boolean") {
-          console.log("Updating book with ID:", bookToEdit.id)
           const bookToUpdateSubmit: BookFields = {
             id: newBook.id ?? "",
             isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
@@ -178,7 +177,6 @@ const BookForm = ({
           // Update existing book
           await bookService.update(bookToEdit.id, bookToUpdateSubmit)
         } else {
-          console.log("Creating new book")
           const bookToSubmit: CreateBook = {
             isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
             name: newBook.name,

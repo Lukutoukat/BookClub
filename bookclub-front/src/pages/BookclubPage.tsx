@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import { BookclubComponent } from "@/components/BookclubComponent"
-import BookSelector from "@/components/BookSelector"
 import BookList, { type BookListHandle } from "@/components/BookList"
 import BookClubGoCycleSetting from "@/components/bookClubGoCycleSetting"
 import cycleService from "@/services/cycle"
@@ -23,7 +22,7 @@ const BookclubPage = () => {
         const cycle = await cycleService.getLatestCycle(bookclubId as string)
         setCurrentCycle(cycle)
       } catch (error) {
-        console.error("Failed to load cycle:", error)
+        console.log(error)
       } finally {
         setLoading(false)
       }
@@ -33,7 +32,8 @@ const BookclubPage = () => {
       try {
         const memberships = await bookclubmembersService.get()
         const isAdminMember = memberships.some(
-          (member) => member.bookclub_id === bookclubId && member.user_role === 0
+          (member) =>
+            member.bookclub_id === bookclubId && member.user_role === 0,
         )
         setIsAdmin(isAdminMember)
       } catch (error) {
@@ -60,14 +60,14 @@ const BookclubPage = () => {
   return (
     <>
       <BookclubComponent bookclubId={bookclubId} />
-      
+
       {/* PROPOSAL PHASE */}
-      {currentCycle?.phase === 'proposal' && (
+      {currentCycle?.phase === "proposal" && (
         <>
           <SuggestBook
-          onBookAdded={handleBookAdded}
-          bookclubId={bookclubId}
-          cycle_id={currentCycle.id}
+            onBookAdded={handleBookAdded}
+            bookclubId={bookclubId}
+            cycle_id={currentCycle.id}
           />
           <BookList
             ref={bookListRef}
@@ -78,7 +78,7 @@ const BookclubPage = () => {
       )}
 
       {/* VOTING PHASE */}
-      {currentCycle?.phase === 'voting' && (
+      {currentCycle?.phase === "voting" && (
         <>
           <BookList
             ref={bookListRef}
@@ -88,11 +88,8 @@ const BookclubPage = () => {
         </>
       )}
 
-
       {/* Admin settings */}
-      { isAdmin && (
-        <BookClubGoCycleSetting bookclubId={bookclubId} />
-      )}
+      {isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
     </>
   )
 }
