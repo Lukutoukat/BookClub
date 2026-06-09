@@ -72,9 +72,8 @@ bookRouter.get('/', async (req: Request, res: Response) => {
   return
 })
 
-bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>, res: Response) => {
+bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
   const newBook: Book = req.body
-
   const token = getTokenFrom(req)
     if (!token) {
       return res.status(401).json({
