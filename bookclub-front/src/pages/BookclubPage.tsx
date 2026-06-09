@@ -74,6 +74,11 @@ const BookclubPage = () => {
     return (
       <>
         <BookclubComponent bookclubId={bookclubId} />
+        <BookList
+          ref={bookListRef}
+          show="over"
+          cycleId={currentCycle.id}
+        />
         <BookClubGoCycleSetting bookclubId={bookclubId} />
       </>
     )

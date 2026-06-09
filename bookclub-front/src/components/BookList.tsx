@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { SectionHeader } from './SectionHeader'
 import BookForm from './BookForm'
 
@@ -21,7 +23,7 @@ interface BookListProps {
   cycleId?: string
 }
 
-const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: string) => Promise<void>; onEdit: () => void }) => {
+const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase }: { book: Book; onDelete: (id: string) => Promise<void>; onEdit: () => void; isReadOnly: boolean; isVotingPhase: boolean }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -48,6 +50,7 @@ const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: strin
               <div className="flex flex-wrap items-center gap-2  w-full">
                 <h3 className="text-lg font-semibold text-foreground/90">{book.name}</h3>
                 <Badge variant="secondary" className="font-normal text-xs">{book.genre}</Badge>
+                {!isReadOnly && !isVotingPhase && (
                 <Button
                   type="button"
                   variant="secondary"
@@ -60,6 +63,7 @@ const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: strin
                 >
                   Edit
                 </Button>
+                )}
               </div>
               <div className="flex items-center text-sm text-muted-foreground gap-1.5">
                 <span className="font-medium text-foreground/70">{book.author}</span>
@@ -87,6 +91,24 @@ const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: strin
                 <span className="text-xs font-medium hidden sm:inline">{isExpanded ? 'Less' : 'More'}</span>
               </Button>
 
+              {isVotingPhase && (
+                <RadioGroup defaultValue="option-one">
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="option-one" id="option-one" />
+                    <Label htmlFor="option-one">Want to read</Label>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="option-two" id="option-two" />
+                    <Label htmlFor="option-two">Could read</Label>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="option-three" id="option-three" />
+                    <Label htmlFor="option-three">Don&apos;t want to read</Label>
+                  </div>
+                </RadioGroup>
+              )}
+              
+              {!isReadOnly && !isVotingPhase && (
               <Button
                 type="button"
                 variant="ghost"
@@ -98,6 +120,7 @@ const BookItem = ({ book, onDelete, onEdit }: { book: Book; onDelete: (id: strin
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
+              )}
             </div>
           </div>
 
@@ -142,11 +165,21 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isShowingBookForm, setIsShowingBookForm] = useState<Book | null>(null)
   const bookFormRef = useRef<HTMLDivElement>(null)
+  const isVotingPhase = show === "votedBooks"
+  const isReadOnly = show === "over"
 
   const loadBooks = async () => {
     try {
       setErrorMessage(null)
       if(show === "proposedBooks") {
+        const loadedBooks = await proposeService.getProposedBooks(cycleId)
+        setBooks(loadedBooks)
+      }
+      if(show === "votedBooks") {
+        const loadedBooks = await proposeService.getProposedBooks(cycleId)
+        setBooks(loadedBooks)
+      }
+      if(show === "over") {
         const loadedBooks = await proposeService.getProposedBooks(cycleId)
         setBooks(loadedBooks)
       }
@@ -245,6 +278,8 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
               book={book}
               onDelete={deleteBook}
               onEdit={() => setIsShowingBookForm(isShowingBookForm ? null : book)}
+              isReadOnly={isReadOnly}
+              isVotingPhase={isVotingPhase}
             />
           ))}
         </div>
