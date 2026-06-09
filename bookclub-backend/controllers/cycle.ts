@@ -117,18 +117,17 @@ cycleRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Cycle
   return
 })
 
-cycleRouter.put('/:id', userExtractor, async (req: Request<{ id: string }, unknown, Partial<CycleRequest>>, res: Response) => {
+cycleRouter.put('/:id', userExtractor, async (req: Request<{ id: string }, unknown, CycleRequest>, res: Response) => {
   const { id } = req.params
-  const updateData = req.body
+  const updateData: CycleRequest = req.body
 
-  
   // Change this to middleware
   const token = getTokenFrom(req)
-    if (!token) {
-      return res.status(401).json({
-        error: 'missin token'
-      })
-    }
+  if (!token) {
+    return res.status(401).json({
+      error: 'missin token'
+    })
+  }
 
   const decodedToken = jwt.verify(
     token,
@@ -192,6 +191,7 @@ cycleRouter.put('/:id', userExtractor, async (req: Request<{ id: string }, unkno
     console.error('PUT /api/cycles/:id error:', error)
     res.status(500).json({ error: 'database error' })
   }
+  return
 })
 
 export default cycleRouter
