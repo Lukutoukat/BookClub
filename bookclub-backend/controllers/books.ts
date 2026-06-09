@@ -26,14 +26,50 @@ const getTokenFrom = (request: Request<unknown, unknown, Book>): string | null =
   return null
 }
 
-bookRouter.get('/', async (_req: Request, res: Response) => {
+bookRouter.get('/', async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  const token = getTokenFrom(req)
+    if (!token) {
+      return res.status(401).json({
+        error: 'missin token'
+      })
+    }
+
+  const decodedToken = jwt.verify(
+    token,
+    process.env.SECRET as string
+  ) as { id: string }
+
+  if (!decodedToken.id) {
+    return res.status(401).json({
+      error: 'token invalid'
+    })
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: decodedToken.id
+    }
+  })
+  
+  if (!user) {
+    return res.status(400).json({
+      error: 'userId missing or not valid'
+    })
+  }
+
   try {
-    const result = await prisma.book.findMany()
+    const result = await prisma.book.findMany({
+      where: {
+        user_id: user.id
+      }
+    })
     res.json(result)
   } catch (error) {
     console.error('GET /api/books error:', error)
     res.status(500).json({ error: 'database error' })
   }
+  return
 })
 
 bookRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Book>, res: Response) => {

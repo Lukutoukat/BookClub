@@ -15,7 +15,6 @@ interface ProposeRequest {
 interface ParamCycleId {
     id: string
 }
-//Change this
 
 const getTokenFrom = (request: Request<unknown, unknown, ProposeRequest>): string | null => {
   const authorization = request.get('authorization')
