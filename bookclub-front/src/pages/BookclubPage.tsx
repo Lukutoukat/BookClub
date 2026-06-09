@@ -7,6 +7,7 @@ import BookClubGoCycleSetting from "@/components/bookClubGoCycleSetting"
 import cycleService from "@/services/cycle"
 import { type CycleWithStatus } from "@/services/cycle"
 import { SuggestBook } from "@/components/SuggestBook"
+import bookclubmembersService from "@/services/bookclubmembers"
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -14,6 +15,7 @@ const BookclubPage = () => {
 
   const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     const fetchCycle = async () => {
@@ -27,7 +29,23 @@ const BookclubPage = () => {
       }
     }
 
-    if (bookclubId) void fetchCycle()
+    const checkAdminStatus = async () => {
+      try {
+        const memberships = await bookclubmembersService.get()
+        const isAdminMember = memberships.some(
+          (member) => member.bookclub_id === bookclubId && member.user_role === 0
+        )
+        setIsAdmin(isAdminMember)
+      } catch (error) {
+        console.error("Failed to check admin status:", error)
+        setIsAdmin(false)
+      }
+    }
+
+    if (bookclubId) {
+      void fetchCycle()
+      void checkAdminStatus()
+    }
   }, [bookclubId])
 
   const handleBookAdded = async () => {
@@ -39,60 +57,42 @@ const BookclubPage = () => {
   // not in a book club
   if (!bookclubId) return <div>Missing bookclub id</div>
 
-  // cycle in proposal phase
-  if (currentCycle?.phase === "proposal") {
-    return (
-      <>
-        <BookclubComponent bookclubId={bookclubId} />
-        <SuggestBook
-          onBookAdded={handleBookAdded}
-          bookclubId={bookclubId}
-          cycle_id={currentCycle.id}
-        />
-        <BookList
-          ref={bookListRef}
-          show="proposedBooks"
-          cycleId={currentCycle.id}
-        />
-        <BookClubGoCycleSetting bookclubId={bookclubId} />
-      </>
-    )
-  }
-
-  // cycle in voting phase
-  if (currentCycle?.phase === "voting") {
-    return (
-      <>
-        <BookclubComponent bookclubId={bookclubId} />
-        <BookList
-          ref={bookListRef}
-          show="votedBooks"
-          cycleId={currentCycle.id}
-        />
-        <BookClubGoCycleSetting bookclubId={bookclubId} />
-      </>
-    )
-  }
-
-  // no cycle in progress
-  if (currentCycle?.phase === "over") {
-    return (
-      <>
-        <BookclubComponent bookclubId={bookclubId} />
-        <BookList
-          ref={bookListRef}
-          show="over"
-          cycleId={currentCycle.id}
-        />
-        <BookClubGoCycleSetting bookclubId={bookclubId} />
-      </>
-    )
-  }
-
   return (
     <>
       <BookclubComponent bookclubId={bookclubId} />
-      <BookClubGoCycleSetting bookclubId={bookclubId} />
+      
+      {/* PROPOSAL PHASE */}
+      {currentCycle?.phase === 'proposal' && (
+        <>
+          <SuggestBook
+          onBookAdded={handleBookAdded}
+          bookclubId={bookclubId}
+          cycle_id={currentCycle.id}
+          />
+          <BookList
+            ref={bookListRef}
+            show="proposedBooks"
+            cycleId={currentCycle.id}
+          />
+        </>
+      )}
+
+      {/* VOTING PHASE */}
+      {currentCycle?.phase === 'voting' && (
+        <>
+          <BookList
+            ref={bookListRef}
+            show="votedBooks"
+            cycleId={currentCycle.id}
+          />
+        </>
+      )}
+
+
+      {/* Admin settings */}
+      { isAdmin && (
+        <BookClubGoCycleSetting bookclubId={bookclubId} />
+      )}
     </>
   )
 }

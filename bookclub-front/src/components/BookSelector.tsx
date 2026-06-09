@@ -11,13 +11,7 @@ import {
 import bookService, { type Book } from "@/services/books"
 import proposeService from "@/services/propose"
 import { useEffect, useRef, useState } from "react"
-<<<<<<< HEAD
 import { getErrorMessage } from "@/lib/errorMessage"
-=======
-//import { AlertCircleIcon, InfoIcon } from "lucide-react"
-import { getErrorMessage } from "@/lib/errorMessage"
-//import errorMessage from "./errorMessageDisplay"
->>>>>>> 510bb38f0f765e4987c993e1f5bfda89a40ff9f1
 import ErrorMessageDisplay from "./errorMessageDisplay"
 import {
   AlertDialog,
@@ -176,15 +170,9 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
           <CommandInput
             placeholder="Search saved books..."
             value={inputValue}
-<<<<<<< HEAD
-            onValueChange={(search) => {
-              setInputValue(search)
-              if (!open) setOpen(true) // Open dropdown as user types
-=======
             onValueChange={(search: string) => {
                 setInputValue(search)
                 if (!open) setOpen(true) // Open dropdown as user types
->>>>>>> 510bb38f0f765e4987c993e1f5bfda89a40ff9f1
             }}
             onFocus={() => setOpen(true)}
           />
