@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 
 import bookService, { type Book } from '@/services/books'
 import proposeService from '@/services/propose'
+import voteService from '@/services/vote'
 import { formatISBN } from '@/lib/isbnValidator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -23,9 +24,10 @@ interface BookListProps {
   cycleId?: string
 }
 
-const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase }: { book: Book; onDelete: (id: string) => Promise<void>; onEdit: () => void; isReadOnly: boolean; isVotingPhase: boolean }) => {
+const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase, onVote }: { book: Book; onDelete: (id: string) => Promise<void>; onEdit: () => void; isReadOnly: boolean; isVotingPhase: boolean; onVote: (bookId: string, weight: number) => Promise<void> }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [weight, setWeight] = useState<number | null>(null)
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -92,18 +94,27 @@ const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase }: { book:
               </Button>
 
               {isVotingPhase && (
-                <RadioGroup defaultValue="option-one">
+                <RadioGroup
+                  value={weight?.toString() ?? ""}
+                  onValueChange={async (val) => {
+                    const w = Number(val)
+                    setWeight(w)
+                    if (!book.id) return
+                    await onVote(book.id, w)
+                  }
+                }
+                >
                   <div className="flex items-center gap-3">
-                    <RadioGroupItem value="option-one" id="option-one" />
-                    <Label htmlFor="option-one">Want to read</Label>
+                    <RadioGroupItem value="3" id={`want-${book.id}`} />
+                    <Label htmlFor={`want-${book.id}`}>Want to read</Label>
                   </div>
                   <div className="flex items-center gap-3">
-                    <RadioGroupItem value="option-two" id="option-two" />
-                    <Label htmlFor="option-two">Could read</Label>
+                    <RadioGroupItem value="2" id={`could-${book.id}`} />
+                    <Label htmlFor={`could-${book.id}`}>Could read</Label>
                   </div>
                   <div className="flex items-center gap-3">
-                    <RadioGroupItem value="option-three" id="option-three" />
-                    <Label htmlFor="option-three">Don&apos;t want to read</Label>
+                    <RadioGroupItem value="0" id={`dont-${book.id}`}/>
+                    <Label htmlFor={`dont-${book.id}`}>Don&apos;t want to read</Label>
                   </div>
                 </RadioGroup>
               )}
@@ -218,6 +229,17 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
     }
   }
 
+  const submitVote = async (proposalId: string, weight: number) => {
+    try  {
+      await voteService.create({
+        proposal_id: proposalId,
+        weight
+      })
+    } catch {
+      setErrorMessage('Failed to submit the vote.')
+    }
+  }
+
   const bookCount = books.length
   const description = `Books: ${bookCount}`
 
@@ -280,6 +302,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
               onEdit={() => setIsShowingBookForm(isShowingBookForm ? null : book)}
               isReadOnly={isReadOnly}
               isVotingPhase={isVotingPhase}
+              onVote={submitVote}
             />
           ))}
         </div>
