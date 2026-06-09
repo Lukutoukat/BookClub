@@ -5,6 +5,9 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import cycleService from '../services/cycle'
+import { useState } from "react"
+import ErrorMessageDisplay from "./errorMessageDisplay"
+import { getErrorMessage } from "@/lib/errorMessage"
 
 import { Button } from '@/components/ui/button'
 
@@ -13,12 +16,21 @@ type Props = {
 }
 
 export const EndPhase = ({ bookclubId }: Props) => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const removeErrorMessage = () => {
+    setErrorMessage(null)
+  }
 
   const handleEndPhase = async () => {
-    try {
-      await cycleService.endLatestCyclePhase(bookclubId)
-    } catch (error) {
-      console.error('Failed to end phase:', error)
+    removeErrorMessage()
+    
+    if (window.confirm('Are you sure you want to end the current phase??')) {
+      try {
+        await cycleService.endLatestCyclePhase(bookclubId)
+      } catch (error) {
+        setErrorMessage(getErrorMessage(error, 'Failed to end phase.')) 
+      }
     }
   }
 
@@ -35,6 +47,7 @@ export const EndPhase = ({ bookclubId }: Props) => {
           End current phase
         </Button>
       </div>
+      <ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />
 
       </CardContent>
     </Card>
