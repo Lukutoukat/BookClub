@@ -9,7 +9,7 @@ interface BookClubMembersRequest {
   id: string,
   user_id?: string,
   user_role?: number,
-  bookclub_id?: number,
+  bookclub_id?: string,
   invite_code: string,
 }
 
