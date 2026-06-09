@@ -11,7 +11,7 @@ import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
 const emptyBookclub: CreateBookClub = {
   name: '',
-  owner_id: 0
+  owner_id: '0'
 }
 
 const BookclubForm = () => {
@@ -22,7 +22,6 @@ const BookclubForm = () => {
       event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
       const { name, value } = event.target
-      console.log('VALUE', value)
       setNewBookclub((currentBookclub) => ({
       ...currentBookclub,
       [name]: value,
@@ -39,7 +38,7 @@ const BookclubForm = () => {
         const created = await bookclubService.create(newBookclub)
         setNewBookclub(emptyBookclub)
         setErrors([])
-        navigate(`/club/${created.id}`)
+        void navigate(`/club/${created.id}`)
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
         setErrors([`Failed to create bookclub: ${errorMessage}`])
@@ -49,7 +48,7 @@ const BookclubForm = () => {
       <Card className="card-base">
         <SectionHeader 
         title="Create a new bookclub" 
-        description="Create a new bookclub, where you can invite your friends to join"
+        description=""
         />
         
       <CardContent className="card-content">

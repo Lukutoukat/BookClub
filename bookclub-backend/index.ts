@@ -37,15 +37,12 @@ app.get('/{*splat}', (_req, res) => {
   )
 })
 
-console.log('smth happened in backend')
-console.log('Books')
 
 
 const PORT = 3003
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`)
   })
 }
 

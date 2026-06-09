@@ -134,8 +134,6 @@ describe('/api/bookclubs', () => {
         .post('/api/bookclubs')
         .set(authHeaders())
         .send(newBookClub)
-      console.log('UUSKLUBI', newBookClub)
-      console.log('RESPONSEE', response.status)
       expect(response.status).toBe(200)
 
       expect(response.body.name).toBe('Read it and weep')

@@ -13,16 +13,18 @@ export const bookClubGoCycleSetting = ({ bookclubId }: Props) => {
       <SectionHeader
         title="Manage book club"
       />
-      <Button asChild>
-        <Link to={`/newcycle/${bookclubId}`}>
-          Manage cycle
-        </Link>
-      </Button>
-      <Button asChild>
-        <Link to="/bookclubsettings">
-          Manage club
-        </Link>
-      </Button>
+      <div className='pl-30'>
+        <Button asChild>
+          <Link to={`/newcycle/${bookclubId}`}>
+            Manage cycle
+          </Link>
+        </Button>
+        <Button asChild>
+          <Link to="/bookclubsettings">
+            Manage club
+          </Link>
+        </Button>
+      </div>
     </Card>
   )
 }

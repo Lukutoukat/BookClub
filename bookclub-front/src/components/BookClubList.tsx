@@ -11,7 +11,7 @@ export interface BookClubListHandle {
 
 
 type Props = {
-  bookClubs: any
+  bookClubs: BookClub[]
   isLoading: boolean
   errorMessage: string | null
 }
@@ -45,7 +45,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
   if (isLoading) {
     return (
       <Card className="card-base">
-        <SectionHeader title="All bookclubs" description={description} />
+        <SectionHeader title="Your bookclubs" description={description} />
         <CardContent className="card-content">
           <div className="text-sm text-muted-foreground text-center py-6">
             Loading bookclubs...
@@ -58,7 +58,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
   if (errorMessage) {
     return (
       <Card className="card-base">
-        <SectionHeader title="All bookclubs" description={description} />
+        <SectionHeader title="Your bookclubs" description={description} />
         <CardContent className="card-content">
           <div className="p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
             {errorMessage}
@@ -71,7 +71,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
   if (bookClubs.length === 0) {
     return (
       <Card className="card-base">
-        <SectionHeader title="All bookclubs" description={description} />
+        <SectionHeader title="Your bookclubs" description={description} />
         <CardContent className="card-content">
           <div className="text-sm text-muted-foreground text-center py-6">
             No bookclubs yet
@@ -83,10 +83,10 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
 
   return (
     <Card className="card-base">
-      <SectionHeader title="All bookclubs" description={description} />
+      <SectionHeader title="Your bookclubs" description={description} />
       <CardContent className="card-content">
         <div className="space-y-3">
-          {bookClubs.map((club: any) => (
+          {bookClubs.map((club: BookClub) => (
             <BookClubItem key={club.id} bookClub={club} />
           ))}
         </div>

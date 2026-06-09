@@ -45,13 +45,11 @@ const JoinBookClubForm = ({listMutated }: Props) => {
     }
 
     try {
-      const member = await bookclubmembersService.create({
+      await bookclubmembersService.create({
         user_role: 1,
         invite_code: trimmedCode.toUpperCase()
       })
-      console.log('member', member)
       setInviteCode({...emptyJoinRequest})
-      console.log('mutated called here!!')
       listMutated()
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data) {
@@ -73,7 +71,7 @@ const JoinBookClubForm = ({listMutated }: Props) => {
     <Card className="card-base">
       <SectionHeader
         title="Join a book club"
-        description="Enter an invite code to join an existing book club and start tracking your reading."
+        description=""
       />
 
       <CardContent className="card-content">

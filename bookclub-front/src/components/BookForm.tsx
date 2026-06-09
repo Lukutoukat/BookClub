@@ -200,7 +200,6 @@ const BookForm = ({
           buttonAction()
         }
       } else {
-        console.log("Creating new book")
         const bookToSubmit: CreateBook = {
           isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
           name: newBook.name,
@@ -230,10 +229,8 @@ const BookForm = ({
   return (
     <Card className={`card-base ${className}`}>
       <SectionHeader
-        title={title ?? "Add book"}
-        description={
-          description ?? "Suggest a book to be read by your book club"
-        }
+        title={title ?? "Add a book"}
+        description={description ?? ""}
       >
         {secondaryButtonAction && (
           <Button
@@ -247,13 +244,6 @@ const BookForm = ({
         )}
       </SectionHeader>
       <CardContent className="card-content">
-        {errors.length > 0 && (
-          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
-            {errors.map((error, idx) => (
-              <div key={idx}>{error}</div>
-            ))}
-          </div>
-        )}
         <form onSubmit={handleSubmit} className="card-form">
           <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
             <Field>
@@ -376,7 +366,13 @@ const BookForm = ({
               className="min-h-14 text-sm sm:min-h-16"
             />
           </div>
-
+          {errors.length > 0 && (
+            <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
+              {errors.map((error, idx) => (
+                <div key={idx}>{error}</div>
+              ))}
+            </div>
+          )}
           <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
             <Button type="submit" size="lg" className="w-full sm:w-auto">
               {buttonText ?? "Add book"}

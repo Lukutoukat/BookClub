@@ -31,7 +31,6 @@ const BookclubPage = () => {
   }, [bookclubId])
 
   const handleBookAdded = async () => {
-    console.log("Loading books")
     await bookListRef.current?.reload()
   }
 
@@ -80,6 +79,11 @@ const BookclubPage = () => {
     return (
       <>
         <BookclubComponent bookclubId={bookclubId} />
+        <BookList
+          ref={bookListRef}
+          show="over"
+          cycleId={currentCycle.id}
+        />
         <BookClubGoCycleSetting bookclubId={bookclubId} />
       </>
     )

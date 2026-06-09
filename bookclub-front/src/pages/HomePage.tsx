@@ -11,7 +11,7 @@ const HomePage = () => {
       <PageHeader
         badgeText="Home"
         title="Clubs, books and more"
-        description="Explore your book club, suggest books, decide together, and keep track of your reading list easily."
+        description="Manage your book clubs, suggest new books and make decisions together."
       />
 
       <BookClubList bookClubs={bookClubs} isLoading={isLoading} errorMessage={errorMessage}/>

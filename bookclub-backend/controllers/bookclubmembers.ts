@@ -15,16 +15,14 @@ interface BookClubMembersRequest {
 
 const getTokenFrom = (request: Request<unknown, unknown, BookClubMembersRequest>): string | null => {
   const authorization = request.get('authorization')
-  console.log(authorization)
   if (authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
   }
   return null
 }
 
-BookClubMembersRouter.get('/', async (req: Request, res: Response) => {
+BookClubMembersRouter.get('/', async (req: Request<unknown, unknown, BookClubMembersRequest>, res: Response) => {
   const token = getTokenFrom(req)
-  console.log('TOKEN', token)
     if (!token) {
       return res.status(401).json({
         error: 'missing token'
@@ -60,7 +58,6 @@ BookClubMembersRouter.get('/', async (req: Request, res: Response) => {
         user_id: user.id
       }
     })
-    console.log('RESULTTI', result)
     res.json(result)
   } catch (error) {
     console.error('GET /api/bookclubs error:', error)
@@ -73,7 +70,6 @@ BookClubMembersRouter.post('/', async (req: Request<unknown, unknown, BookClubMe
   const newBookClub: BookClubMembersRequest = req.body
 
   const token = getTokenFrom(req)
-  console.log('TOKEN', token)
     if (!token) {
       return res.status(401).json({
         error: 'missing token'
@@ -108,7 +104,7 @@ BookClubMembersRouter.post('/', async (req: Request<unknown, unknown, BookClubMe
         where : { invite_code: newBookClub.invite_code }
     })
     if (!result) {
-        res.status(400).json({ error: 'invalid invite code' })
+        res.status(400).json({ error: 'Invalid invite code.' })
         return
     }
     await prisma.bookClubMembers.create({
