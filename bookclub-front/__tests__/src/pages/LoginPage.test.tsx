@@ -46,7 +46,7 @@ describe('RegistrationPage', () => {
 
       expect(screen.getByLabelText('Username')).toBeDefined()
       expect(screen.getByLabelText('Password')).toBeDefined()
-      expect(screen.getByRole('button', { name: 'Login' })).toBeDefined()
+      expect(screen.getByRole('button', { name: 'Log in' })).toBeDefined()
     })
 
     test('registration link navigates to registration page', () => {
@@ -66,7 +66,7 @@ describe('RegistrationPage', () => {
 
       const usernameInput = screen.getByLabelText('Username')
       const passwordInput = screen.getByLabelText('Password')
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const submitButton = screen.getByRole('button', { name: 'Log in' })
 
       await user.type(usernameInput, 'Antero')
       await user.type(passwordInput, 'Password123')

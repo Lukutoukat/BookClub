@@ -106,7 +106,7 @@ const JoinBookClubForm = ({listMutated }: Props) => {
               You&apos;ll receive an invite code from your book club administrator.
             </p>
             <Button type="submit" size="lg" className="w-full sm:w-auto">
-              Join club
+              Join
             </Button>
           </div>
         </form>

@@ -373,7 +373,7 @@ const BookForm = ({
           )}
           <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
             <Button type="submit" size="lg" className="w-full sm:w-auto">
-              {buttonText ?? "Add book"}
+              {buttonText ?? "Add"}
             </Button>
           </div>
         </form>
