@@ -12,19 +12,17 @@ import proposeRouter from './controllers/propose.ts'
 import voteRouter from './controllers/vote.ts'
 
 import tokenExtractor from './middleware/tokenExtractor.ts'
-import userExtractor from './middleware/userExtractor.ts'
 
 app.use(express.json())
 app.use(express.static('dist'))
 app.use(tokenExtractor)
-loginRouter.use(userExtractor)
+app.use('/api/users', userRouter)
 app.use('/api/books', bookRouter)
 app.use('/api/bookclubs', bookClubRouter)
 app.use('/api/bookclubmembers', bookClubMembersRouter)
 app.use('/api/cycles', cycleRouter)
 app.use('/api/propose', proposeRouter)
 app.use('/api/vote', voteRouter)
-app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 
 app.get('/ping', (_req, res) => {

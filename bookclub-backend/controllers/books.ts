@@ -28,14 +28,19 @@ const getTokenFrom = (
   return null
 }
 
-bookRouter.get("/", async (_req: Request, res: Response) => {
+bookRouter.get("/", userExtractor, async (_req: Request, res: Response) => {
   try {
-    const result = await prisma.book.findMany()
+    const result = await prisma.book.findMany({
+      where: {
+        user_id: req.user.id
+      }
+    })
     res.json(result)
   } catch (error) {
     console.error("GET /api/books error:", error)
     res.status(500).json({ error: "database error" })
   }
+  return
 })
 
 bookRouter.get(
