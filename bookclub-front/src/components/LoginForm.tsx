@@ -29,7 +29,7 @@ const LoginForm = ({
       <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
         <div className="grid gap-4 rounded-3xl border border-border/70 bg-muted/20 p-4 shadow-sm sm:gap-5 sm:p-6">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm text-foreground">
+            <Label htmlFor="username" className="text-sm text-foreground">
               Username
             </Label>
 
