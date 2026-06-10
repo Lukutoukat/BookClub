@@ -26,7 +26,7 @@ const AccountSettings = ({ handleLogOut }: AccountSettingsProps) => {
       <CardContent className="space-y-3 pt-4 sm:space-y-4 sm:pt-6">
       <div className="space-y-2">
         <Button onClick={handleLogOut} size="lg" className="w-full sm:w-auto">
-          Logout
+          Log out
         </Button>
       </div>
 

@@ -19,7 +19,7 @@ describe('RegistrationForm', () => {
       expect(screen.getByLabelText('Email address')).toBeDefined()
       expect(screen.getByLabelText('Username')).toBeDefined()
       expect(screen.getByLabelText('Password')).toBeDefined()
-      expect(screen.getByLabelText('Confirm Password')).toBeDefined()
+      expect(screen.getByLabelText('Confirm password')).toBeDefined()
     })
 
     test('renders labels, placeholders and button', () => {
@@ -27,12 +27,13 @@ describe('RegistrationForm', () => {
       expect(screen.getByText('Email address')).toBeDefined()
       expect(screen.getByText('Username')).toBeDefined()
       expect(screen.getByText('Password')).toBeDefined()
-      expect(screen.getByText('Confirm Password')).toBeDefined()
+      expect(screen.getByText('Confirm password')).toBeDefined()
       expect(screen.getByPlaceholderText('you@example.com')).toBeDefined()
       expect(screen.getByPlaceholderText('Your name')).toBeDefined()
       expect(screen.getByPlaceholderText('Secure password')).toBeDefined()
       expect(screen.getByPlaceholderText('Confirm your password')).toBeDefined()
-      expect(screen.getByText('Register user')).toBeDefined()
+      expect(screen.getByText('Create a new account')).toBeDefined()
+
     })
 
     test('renders helper text', () => {
@@ -45,7 +46,7 @@ describe('RegistrationForm', () => {
       const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
       const nameInput = screen.getByLabelText('Username') as HTMLInputElement
       const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
-      const confirmPasswordInput = screen.getByLabelText('Confirm Password') as HTMLInputElement
+      const confirmPasswordInput = screen.getByLabelText('Confirm password') as HTMLInputElement
 
       expect(emailInput.value).toBe("")
       expect(nameInput.value).toBe("")
@@ -59,7 +60,7 @@ describe('RegistrationForm', () => {
       render(<BrowserRouter><RegistrationForm /></BrowserRouter>)
       expect((screen.getByLabelText('Email address') as HTMLInputElement).type).toBe('email')
       expect((screen.getByLabelText('Password') as HTMLInputElement).type).toBe('password')
-      expect((screen.getByLabelText('Confirm Password') as HTMLInputElement).type).toBe('password')
+      expect((screen.getByLabelText('Confirm password') as HTMLInputElement).type).toBe('password')
     })
 
     test('inputs have autocomplete attributes', () => {
@@ -67,7 +68,7 @@ describe('RegistrationForm', () => {
       const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
       const nameInput = screen.getByLabelText('Username') as HTMLInputElement
       const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
-      const confirmPasswordInput = screen.getByLabelText('Confirm Password') as HTMLInputElement
+      const confirmPasswordInput = screen.getByLabelText('Confirm password') as HTMLInputElement
 
       expect(emailInput.autocomplete).toBe('email')
       expect(nameInput.autocomplete).toBe('name')
@@ -102,9 +103,9 @@ describe('RegistrationForm', () => {
       await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
       await userInstance.type(screen.getByLabelText('Username'), 'testuser')
       await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
-      await userInstance.type(screen.getByLabelText('Confirm Password'), 'TestPass123')
+      await userInstance.type(screen.getByLabelText('Confirm password'), 'TestPass123')
 
-      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+      await userInstance.click(screen.getByRole('button', { name: 'Create a new account' }))
 
       await waitFor(() => {
         expect(screen.getByText('Registration saved.')).toBeDefined()
@@ -120,9 +121,9 @@ describe('RegistrationForm', () => {
       await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
       await userInstance.type(screen.getByLabelText('Username'), 'testuser')
       await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
-      await userInstance.type(screen.getByLabelText('Confirm Password'), 'DifferentPass123')
+      await userInstance.type(screen.getByLabelText('Confirm password'), 'DifferentPass123')
 
-      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+      await userInstance.click(screen.getByRole('button', { name: 'Create a new account' }))
 
       await waitFor(() => {
         expect(screen.getByText('Passwords do not match!')).toBeDefined()
@@ -136,9 +137,9 @@ describe('RegistrationForm', () => {
       await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
       await userInstance.type(screen.getByLabelText('Username'), 'testuser')
       await userInstance.type(screen.getByLabelText('Password'), 'weak')
-      await userInstance.type(screen.getByLabelText('Confirm Password'), 'weak')
+      await userInstance.type(screen.getByLabelText('Confirm password'), 'weak')
 
-      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+      await userInstance.click(screen.getByRole('button', { name: 'Create a new account' }))
 
       // The alert is shown by the browser, but we can check that the service wasn't called
       expect(vi.mocked(userService.create)).not.toHaveBeenCalled()
@@ -166,9 +167,9 @@ describe('RegistrationForm', () => {
       await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
       await userInstance.type(screen.getByLabelText('Username'), 'testuser')
       await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
-      await userInstance.type(screen.getByLabelText('Confirm Password'), 'TestPass123')
+      await userInstance.type(screen.getByLabelText('Confirm password'), 'TestPass123')
 
-      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+      await userInstance.click(screen.getByRole('button', { name: 'Create a new account' }))
 
       await waitFor(() => {
         expect(screen.getByText('Email already in use')).toBeDefined()
@@ -184,14 +185,14 @@ describe('RegistrationForm', () => {
       const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
       const nameInput = screen.getByLabelText('Username') as HTMLInputElement
       const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
-      const confirmPasswordInput = screen.getByLabelText('Confirm Password') as HTMLInputElement
+      const confirmPasswordInput = screen.getByLabelText('Confirm password') as HTMLInputElement
 
       await userInstance.type(emailInput, 'test@example.com')
       await userInstance.type(nameInput, 'testuser')
       await userInstance.type(passwordInput, 'TestPass123')
       await userInstance.type(confirmPasswordInput, 'TestPass123')
 
-      await userInstance.click(screen.getByRole('button', { name: 'Register user' }))
+      await userInstance.click(screen.getByRole('button', { name: 'Create a new account' }))
 
       await waitFor(() => {
         expect(emailInput.value).toBe('')
