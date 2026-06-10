@@ -2,12 +2,14 @@ import { PageHeader } from '../components/PageHeader'
 import BookClubList from '@/components/BookClubList'
 import JoinBookClubForm from '@/components/JoinBookClubForm'
 import { useGetClubs } from '@/hooks/getClubs'
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 
 const HomePage = () => {
   const { bookClubs, isLoading, errorMessage, listMutated } = useGetClubs()
 
   return (
     <>
+      <UserLoginDisplay />
       <PageHeader
         badgeText="Home"
         title="Clubs, books and more"

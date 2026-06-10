@@ -18,6 +18,7 @@ export const useLogin = () => {
         'loggedBookappUser',
         JSON.stringify(user)
       )
+      console.log("login stored", localStorage.getItem('loggedBookappUser'))
 
       setToken(user.token)
       setMessage(null)

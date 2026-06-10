@@ -1,7 +1,7 @@
 import { PageHeader } from '@/components/PageHeader'
 import { BottomDescription } from '@/components/BottomDescription'
 import { useLogin } from '@/hooks/useLogin'
-
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
@@ -11,6 +11,7 @@ const SettingsPage = () => {
 
   return (
     <>
+      <UserLoginDisplay />
       <PageHeader
         badgeText="Settings"
         title="Settings"

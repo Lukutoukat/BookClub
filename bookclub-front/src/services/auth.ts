@@ -1,10 +1,12 @@
 
 export const getToken = () => {
-  return localStorage.getItem('loggedBookappUser')
+  const raw = localStorage.getItem('loggedBookappToken')
+  return raw
 }
 
 export const setToken = (newToken: string) => {
-  localStorage.setItem('loggedBookappUser', newToken)
+  localStorage.setItem('loggedBookappToken', newToken)
+
 }
 
 export const getAuthConfig = () => {

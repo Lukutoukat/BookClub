@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { NewCycle } from '@/components/NewCycle'
-
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 const NewCyclePage = () => {
   const { bookclubId } = useParams<{ bookclubId : string }>()
 
@@ -8,6 +8,7 @@ const NewCyclePage = () => {
 
   return (
     <>
+      <UserLoginDisplay />
       <NewCycle bookclubId={bookclubId} />
     </>
   )

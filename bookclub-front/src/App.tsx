@@ -13,6 +13,8 @@ import { PageMenu } from './components/PageMenu'
 import { PageLayout } from './components/PageLayout'
 import { isLoggedIn } from './services/auth'
 
+//useEffect!!! :)
+
 const App = () => {
   if (!isLoggedIn()) {
     return(
