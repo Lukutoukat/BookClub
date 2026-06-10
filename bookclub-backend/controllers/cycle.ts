@@ -80,75 +80,47 @@ cycleRouter.put('/:id', userExtractor, async (req: Request<{ id: string }, unkno
   const { id } = req.params
   const updateData: CycleRequest = req.body
 
-  // Change this to middleware
-  const token = getTokenFrom(req)
-  if (!token) {
-    return res.status(401).json({
-      error: 'missin token'
-    })
-  }
+  if (req.user) {
+    try {
+      const cycle = await prisma.cycle.findUnique({
+        where: { id }
+      })
 
-  const decodedToken = jwt.verify(
-    token,
-    process.env.SECRET as string
-  ) as { id: string }
-
-  if (!decodedToken.id) {
-    return res.status(401).json({
-      error: 'token invalid'
-    })
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      id: decodedToken.id
-    }
-  })
-
-  if (!user) {
-    return res.status(400).json({
-      error: 'userId missing or not valid'
-    })
-  }
-  // Change above
-
-  try {
-    const cycle = await prisma.cycle.findUnique({
-      where: { id }
-    })
-
-    if (!cycle) {
-      return res.status(404).json({ error: 'Cycle not found' })
-    }
-
-    const result = await prisma.bookClubMembers.findFirst({
-      where: {
-        bookclub_id: cycle.bookclub_id,
-        user_id: user.id
-      },
-      select: { user_role: true },
-    })
-
-    if (!result) {
-      return res.status(400).json({ error: 'User is not member of book club!' })
-    }
-
-    if (result.user_role !== 0) {
-      return res.status(403).json({ error: 'User is not admin of book club!' })
-    }
-
-    const updated = await prisma.cycle.update({
-      where: { id },
-      data: {
-        ...(updateData.proposalEnd !== undefined && { proposalEnd: updateData.proposalEnd }),
-        ...(updateData.votingEnd !== undefined && { votingEnd: updateData.votingEnd }),
+      if (!cycle) {
+        return res.status(404).json({ error: 'Cycle not found' })
       }
-    })
 
-    res.json(updated)
-  } catch (error) {
-    console.error('PUT /api/cycles/:id error:', error)
-    res.status(500).json({ error: 'database error' })
+      const result = await prisma.bookClubMembers.findFirst({
+        where: {
+          bookclub_id: cycle.bookclub_id,
+          user_id: req.user.id
+        },
+        select: { user_role: true },
+      })
+
+      if (!result) {
+        return res.status(400).json({ error: 'User is not member of book club!' })
+      }
+
+      if (result.user_role !== 0) {
+        return res.status(403).json({ error: 'User is not admin of book club!' })
+      }
+
+      const updated = await prisma.cycle.update({
+        where: { id },
+        data: {
+          ...(updateData.proposalEnd !== undefined && { proposalEnd: updateData.proposalEnd }),
+          ...(updateData.votingEnd !== undefined && { votingEnd: updateData.votingEnd }),
+        }
+      })
+
+      res.json(updated)
+    } catch (error) {
+      console.error('PUT /api/cycles/:id error:', error)
+      res.status(500).json({ error: 'database error' })
+    }
+  } else { 
+    res.status(401).json({ error: 'user not found'})
   }
   return
 })
