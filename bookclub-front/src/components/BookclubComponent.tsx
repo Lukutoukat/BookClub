@@ -38,7 +38,7 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
   }, [bookclubId])
 
   if (loading) return null
-  if (!bookclub) return <div>Bookclub not found</div>
+  if (!bookclub) return <div>Book club not found</div>
 
 
   // const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
