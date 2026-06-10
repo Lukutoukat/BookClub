@@ -3,23 +3,18 @@ import { prisma } from '../db.ts'
 
 import jwt, { type JwtPayload} from 'jsonwebtoken'
 
-interface User {
-  id?: string,
-  email: string,
-  name: string,
-  password?: string,
-  password_hash?: string
-}
-
-interface TokenRequest extends Request {
-  token?: string | undefined,
-  user?: User | null
-}
+// interface User {
+//   id?: string,
+//   email: string,
+//   name: string,
+//   password?: string,
+//   password_hash?: string
+// }
 
 interface TokenPayload extends JwtPayload {
   id: string
 }
-const userExtractor = async (req: TokenRequest, _res: Response, next: NextFunction) => {
+const userExtractor = async (req: Request, _res: Response, next: NextFunction) => {
   if (!req.token) {
     throw new Error('token missing')
   }
@@ -27,11 +22,16 @@ const userExtractor = async (req: TokenRequest, _res: Response, next: NextFuncti
     throw new Error('variable missing')
   }
   const decodedToken = jwt.verify(req.token, process.env.SECRET) as TokenPayload
-  req.user = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: decodedToken.id
     }
   })
+  if (!user) {
+    req.user = undefined
+  } else {
+    req.user = user
+  }
   next()
 }
 
