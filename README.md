@@ -3,7 +3,7 @@
 # BookClubApp
 
 ### Introduction
-<img align="left" width="" height="150" src="./bookclub-front/src/assets/logo.png">
+<img align="right" width="" height="150" src="./bookclub-front/src/assets/logo.png">
 BookClubApp is developed for all readers, who are looking for a way to manage their book clubs. BookClubApp makes it possible for book clubs to save, suggest and vote books. Users can create their own clubs or join existing ones with an invite code, that the admin of the club can share. The idea of the application is to make managing book clubs easier, so that people are more encouraged to make reading a hobby they can enjoy together with others.
 <br>
 <br>
