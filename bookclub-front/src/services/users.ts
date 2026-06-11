@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { getAuthConfig } from './auth'
 const baseUrl = '/api/users'
 
 export interface User {
@@ -12,7 +12,8 @@ export interface User {
 export type CreateUser = Omit<User, 'id'>
 
 const getAll = async () => {
-  const response = await axios.get<User[]>(baseUrl)
+  const response = await axios.get<User[]>(baseUrl, getAuthConfig())
+  console.log('response serviceissä', response)
   return response.data
 }
 
