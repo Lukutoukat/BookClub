@@ -198,6 +198,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   const isVotingPhase = show === "votedBooks"
   const isReadOnly = show === "over"
   const [votes, setVotes] = useState<VoteFields[]>([])
+  const [refreshOnVote, setRefreshOnVote] = useState(false)
 
   const votesByProposalId = votes.reduce((acc, vote) => {
     if (vote.proposal_id) acc[vote.proposal_id] = vote
@@ -238,7 +239,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
 
   useEffect(() => {
     void loadBooks()
-  }, [])
+  }, [refreshOnVote])
 
   useEffect(() => {
     if (isShowingBookForm && bookFormRef.current) {
@@ -265,6 +266,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
           proposal_id: proposalId,
           weight
         })
+        setRefreshOnVote(!refreshOnVote)
       }
     } catch {
       setErrorMessage('Failed to submit the vote.')
