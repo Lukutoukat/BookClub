@@ -1,7 +1,7 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
 import bcrypt from 'bcrypt'
-
+import userExtractor from '../middleware/userExtractor.ts'
 const userRouter = express.Router()
 
 interface User {
@@ -62,7 +62,7 @@ userRouter.post('/', async (req: Request<unknown, unknown, User>, res: Response)
   }
 })
 
-userRouter.get('/', async (_req: Request, res: Response) => {
+userRouter.get('/', userExtractor, async (_req: Request, res: Response) => {
   try {
     const users = await prisma.user.findMany()
 
