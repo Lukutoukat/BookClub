@@ -121,7 +121,7 @@ bookRouter.post(
         data: {
           book_id: createdBook.id,
           user_id: createdBook.user_id,
-          cycle_id: cycle_id as string,
+          cycle_id: cycle_id,
         },
       })
 
