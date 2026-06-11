@@ -39,11 +39,9 @@ proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, 
 })
 
 proposeRouter.post('/:id', async (req: Request, res: Response) => {
-  const cycleId = req.params.id
+  const cycleId = req.params.id as string
 
-  if (Array.isArray(cycleId)) {
-    return res.status(400).json({ error: 'Invalid cycle id' })
-  }
+  
 
   try {
     const proposedBooks = await prisma.bookProposed.findMany({
