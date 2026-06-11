@@ -11,7 +11,7 @@ export const bookClubGoCycleSetting = ({ bookclubId }: Props) => {
   return (
     <Card className="card-base">
       <SectionHeader
-        title="Manage book club"
+        title="Manage your book club"
       />
       <div className='pl-30'>
         <Button asChild>

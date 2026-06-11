@@ -82,7 +82,9 @@ describe('/api/books', () => {
 
             ;(prisma.book.findMany as jest.Mock).mockResolvedValue(mockBooks)
 
-            const response = await request(app).get('/api/books')
+            const response = await request(app)
+                .get('/api/books')
+                .set(authHeaders())
 
             expect(response.status).toBe(200)
             expect(response.body).toEqual(mockBooks)
@@ -92,7 +94,10 @@ describe('/api/books', () => {
         it('returns 500 if get fails', async () => {
             ;(prisma.book.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-            const response = await request(app).get('/api/books')
+            const response = await request(app)
+                .get('/api/books')
+                .set(authHeaders())
+
 
             expect(response.status).toBe(500)
             expect(response.body).toEqual({error: 'database error'})

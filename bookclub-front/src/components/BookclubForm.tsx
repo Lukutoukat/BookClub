@@ -63,7 +63,7 @@ const BookclubForm = () => {
       <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
         <div className="sm:col-span-2">
           <Field>
-            <FieldLabel htmlFor="name">Name your bookclub</FieldLabel>
+            <FieldLabel htmlFor="name">Name your book club</FieldLabel>
             <FieldContent>
               <Input
                 id="name"

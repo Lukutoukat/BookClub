@@ -28,7 +28,7 @@ describe("BookForm", () => {
     expect(screen.getByText(/genre/i)).toBeInTheDocument();
 
     expect(
-      screen.getByRole("button", { name: /add book/i }),
+      screen.getByRole("button", { name: /Add/i }),
     ).toBeInTheDocument();
   });
 
@@ -90,7 +90,7 @@ describe("BookForm", () => {
       "Must-read book",
     );
 
-    const button = screen.getByRole("button", { name: /add book/i });
+    const button = screen.getByRole("button", { name: /Add/i });
     await user.click(button);
 
     expect(vi.mocked(bookService.create)).toHaveBeenCalledTimes(1);
@@ -132,7 +132,7 @@ describe("BookForm", () => {
       "Programming",
     );
 
-    await user.click(screen.getByRole("button", { name: /add book/i }));
+    await user.click(screen.getByRole("button", { name: /Add/i }));
 
     expect(titleInput).toHaveValue("");
   });
@@ -162,7 +162,7 @@ describe("BookForm", () => {
       "Programming",
     );
 
-    const button = screen.getByRole("button", { name: /add book/i });
+    const button = screen.getByRole("button", { name: /Add/i });
 
     await user.click(button);
 
@@ -186,7 +186,7 @@ describe("BookForm", () => {
       );
       await user.type(screen.getByPlaceholderText("1859"), "2008");
 
-      const button = screen.getByRole("button", { name: /add book/i });
+      const button = screen.getByRole("button", { name: /Add/i });
       await user.click(button);
 
       expect(screen.getByText(/Invalid ISBN/i)).toBeInTheDocument();
@@ -209,7 +209,7 @@ describe("BookForm", () => {
       );
       await user.type(screen.getByPlaceholderText("1859"), "2008");
 
-      const button = screen.getByRole("button", { name: /add book/i });
+      const button = screen.getByRole("button", { name: /Add/i });
       await user.click(button);
 
       expect(screen.getByText(/Invalid ISBN/i)).toBeInTheDocument();
@@ -233,7 +233,7 @@ describe("BookForm", () => {
       );
       await user.type(screen.getByPlaceholderText("1859"), "2008");
 
-      const button = screen.getByRole("button", { name: /add book/i });
+      const button = screen.getByRole("button", { name: /Add/i });
       await user.click(button);
 
       expect(vi.mocked(bookService.create)).toHaveBeenCalledWith(
@@ -261,7 +261,7 @@ describe("BookForm", () => {
       );
       await user.type(screen.getByPlaceholderText("1859"), "2008");
 
-      const button = screen.getByRole("button", { name: /add book/i });
+      const button = screen.getByRole("button", { name: /Add/i });
       await user.click(button);
 
       expect(vi.mocked(bookService.create)).toHaveBeenCalledWith(
@@ -303,7 +303,7 @@ describe("BookForm", () => {
       );
       await user.type(screen.getByPlaceholderText("1859"), "2008");
 
-      const button = screen.getByRole("button", { name: /add book/i });
+      const button = screen.getByRole("button", { name: /Add/i });
       await user.click(button);
 
       await waitFor(() => {

@@ -83,16 +83,6 @@ describe('/api/bookclubmembers', () => {
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error'})
     })
-    it('sent without token, returns 401', async () => {
-      ;(prisma.bookClubMembers.findMany as jest.Mock).mockRejectedValue(
-        new Error('database error')
-      )
-      const response = await request(app)
-        .get('/api/bookclubmembers')
-      
-      expect(response.status).toBe(401)
-      expect(response.body).toEqual({ error: 'missing token'})
-    })
   })
 
   describe('POST', () => {

@@ -82,7 +82,7 @@ const RegistrationForm = () => {
   return (
       <Card className="card-base">
         <SectionHeader 
-        title="Create account" 
+        title="Create an account" 
         description="Create an account and begin your reading journey with friends."
         />
         
@@ -144,7 +144,7 @@ const RegistrationForm = () => {
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+              <FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
               <FieldContent>
                 <Input
                   id="confirmPassword"
@@ -171,7 +171,7 @@ const RegistrationForm = () => {
               Double-check the details before creating the account.
             </p>
             <Button type="submit" size="lg" className="w-full sm:w-auto">
-              Register user
+              Create a new account
             </Button>
           </div>
         </form>

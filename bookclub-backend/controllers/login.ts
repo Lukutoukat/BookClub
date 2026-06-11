@@ -49,7 +49,11 @@ loginRouter.post('/', async (req: Request, res: Response) => {
   if (!process.env.SECRET) {
     throw new Error('Error with authentication.')
   }
-  const token = jwt.sign(userForToken, process.env.SECRET)
+  const token = jwt.sign(
+      userForToken, 
+      process.env.SECRET,
+      { expiresIn: 2629800 }
+  )
 
   res
     .status(200)

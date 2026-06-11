@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../components/PageHeader'
-// import { Button } from './ui/button'
-// import bookclubService from '@/services/bookclubs'
+import { Button } from './ui/button'
+import bookclubService from '@/services/bookclubs'
 type Bookclub = {
   id: number
   name: string
@@ -16,7 +16,7 @@ type Props = {
 export const BookclubComponent = ({ bookclubId }: Props) => {
   const [bookclub, setBookclub] = useState<Bookclub | null>(null)
   const [loading, setLoading] = useState(true)
-  //const navigate = useNavigate()
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchBookclub = async () => {
       try {
@@ -38,20 +38,20 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
   }, [bookclubId])
 
   if (loading) return null
-  if (!bookclub) return <div>Bookclub not found</div>
+  if (!bookclub) return <div>Book club not found</div>
 
 
-  // const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
-  //   event.preventDefault()
-  //   if (window.confirm('Are you sure you want to delete your bookclub and all info related to it?')) {
-  //     try {
-  //       await bookclubService.remove(bookclub.id)
-  //       navigate('/home', { replace: true })
-  //     } catch(error) {
-  //       console.error('error during deletion', error)
-  //     }
-  //   }
-  // }
+  const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    if (window.confirm('Are you sure you want to delete your bookclub and all info related to it?')) {
+      try {
+        await bookclubService.remove(bookclub.id)
+        await navigate('/home', { replace: true })
+      } catch(error) {
+        console.error('error during deletion', error)
+      }
+    }
+  }
 
   return (
     <>
@@ -69,11 +69,11 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
         }
       }}
       />
-      {/* <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
+      <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
           <Button onClick={handleDeletion}>
             delete
           </Button>
-      </div> */}
+      </div>
       <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
     </>
   )

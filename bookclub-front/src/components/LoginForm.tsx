@@ -29,7 +29,7 @@ const LoginForm = ({
       <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
         <div className="grid gap-4 rounded-3xl border border-border/70 bg-muted/20 p-4 shadow-sm sm:gap-5 sm:p-6">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm text-foreground">
+            <Label htmlFor="username" className="text-sm text-foreground">
               Username
             </Label>
 
@@ -73,13 +73,13 @@ const LoginForm = ({
           ) : null}
         <div className="flex flex-col gap-3 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
           <Button type="submit" size="lg" className="w-full sm:w-auto">
-            Login
+            Log in
           </Button>
         </div>
       </form>
       <div className="flex flex-col gap-3 border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
         <Button type="button" onClick={() => navigate('/passwordreset')}>
-          forgot password?
+          Forgot password?
         </Button>
       </div>
     </>
