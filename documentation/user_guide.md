@@ -1,0 +1,1 @@
+In addition to adding books straight to the ongoing suggestion phase, users can save books for the future. This makes it easier fo users to keep track of their books, and makes it possible to suggest the same book in multiple clubs without having to write its information many times.
