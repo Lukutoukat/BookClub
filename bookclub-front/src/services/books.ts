@@ -13,6 +13,7 @@ export interface BookFields {
   comment?: string
   language?: string
   genre?: string
+  proposal_id?: string
 }
 
 export type Book = BookFields

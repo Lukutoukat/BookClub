@@ -39,23 +39,34 @@ proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, 
 })
 
 proposeRouter.post('/:id', async (req: Request, res: Response) => {
-  const cycleId: string = req.params.id as string
+  const cycleId = req.params.id
+
+  if (Array.isArray(cycleId)) {
+    return res.status(400).json({ error: 'Invalid cycle id' })
+  }
+
   try {
-    const books = await prisma.book.findMany({
-    where: {
-        BookProposed: {
-        some: {
-            cycle_id: cycleId
-        }
-        }
-    }
-    });
+    const proposedBooks = await prisma.bookProposed.findMany({
+      where: {
+        cycle_id: cycleId,
+      },
+      include: {
+        Book: true,
+      },
+    })
+
+    const books = proposedBooks
+      .filter((p) => p.Book)
+      .map((p) => ({
+        ...p.Book,
+        proposal_id: p.id,
+      }))
+
     res.json(books)
   } catch (error) {
     console.error('GET /api/books error:', error)
     res.status(500).json({ error: 'database error' })
   }
-  return
 })
 
 proposeRouter.post('/', userExtractor, async (req: Request<unknown, unknown, ProposeRequest>, res: Response) => {

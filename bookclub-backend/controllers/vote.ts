@@ -13,7 +13,7 @@ interface VoteRequest {
 
 voteRouter.get('/', async (_req: Request, res: Response) => {
   try {
-    const result = await prisma.bookClubMembers.findMany()
+    const result = await prisma.bookVoted.findMany()
     res.json(result)
   } catch (error) {
     console.error('GET /api/bookclubs error:', error)
@@ -38,9 +38,8 @@ voteRouter.post('/', userExtractor, async (req: Request<unknown, unknown, VoteRe
             res.status(400).json({ error: 'Proposal does not exist!' })
             return
         }
-        if (proposeResult.cycle_id !== newVote.proposal_id) {
-            res.status(400).json({ error: 'Proposal is not associated with the cycle!' })
-            return
+        if (!proposeResult.cycle_id) {
+            return res.status(400).json({ error: 'Proposal has no cycle_id' })
         }
 
         const cycleResult = await prisma.cycle.findUnique({
