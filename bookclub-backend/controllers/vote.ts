@@ -21,6 +21,78 @@ voteRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
+voteRouter.get('/:cycle_id', userExtractor, async (req: Request<{ cycle_id: string }>, res: Response) => {
+  const { cycle_id } = req.params
+
+  if (req.user) {
+    try {
+      const proposals = await prisma.bookProposed.findMany({
+        where: {
+          cycle_id: cycle_id
+        },
+        select: { id: true }
+      })
+
+      const proposalIds = proposals.map(p => p.id)
+
+
+      const result = await prisma.bookVoted.findMany({
+        where: {
+          user_id: req.user.id,
+          proposal_id: {
+            in: proposalIds
+          }
+        }
+      })
+
+      res.json(result)
+
+  } catch (error) {
+      console.error('GET /api/vote/:cycle_id error:', error)
+      res.status(500).json({ error: 'database error' })
+    }
+  }
+})
+
+voteRouter.put('/:id', userExtractor, async (req: Request<{ id: string }>, res: Response) => {
+  const { id } = req.params
+  const { weight } = req.body as { weight?: number }
+
+  if (req.user) {
+    try {
+      const vote = await prisma.bookVoted.findUnique({
+        where: { id }
+      })
+
+      if (!vote) {
+        return res.status(404).json({
+          error: 'vote not found'
+        })
+      }
+
+      if (vote.user_id !== req.user.id) {
+        return res.status(403).json({
+          error: 'not authorized to update this vote'
+        })
+      }
+
+      const result = await prisma.bookVoted.update({
+        where: { id },
+        data: {
+          weight
+        }
+      })
+
+      return res.json(result)
+
+    } catch (error) {
+      console.error('PUT /api/vote/:id error:', error)
+      res.status(500).json({ error: 'database error' })
+    }
+  }
+  return
+})
+
 voteRouter.post('/', userExtractor, async (req: Request<unknown, unknown, VoteRequest>, res: Response) => {
   const newVote: VoteRequest = req.body
   
@@ -105,10 +177,10 @@ voteRouter.post('/', userExtractor, async (req: Request<unknown, unknown, VoteRe
         })
         res.json(newVote)
     } catch (error) {
-        console.error('POST /api/bookclubs error:', error)
+        console.error('POST /api/vote error:', error)
         res.status(500).json({ error: 'database error' })
     }
-    }
+  }
   return
 })
 

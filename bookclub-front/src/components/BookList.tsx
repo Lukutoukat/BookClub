@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 
 import bookService, { type Book } from '@/services/books'
 import proposeService from '@/services/propose'
-import voteService from '@/services/vote'
+import voteService, { type VoteFields } from '@/services/vote'
 import { formatISBN } from '@/lib/isbnValidator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -24,10 +24,27 @@ interface BookListProps {
   cycleId?: string
 }
 
-const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase, onVote }: { book: Book; onDelete: (id: string) => Promise<void>; onEdit: () => void; isReadOnly: boolean; isVotingPhase: boolean; onVote: (bookId: string, weight: number) => Promise<void> }) => {
+const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase, onVote, existingVote }: {
+  book: Book
+  onDelete: (id: string) => Promise<void>
+  onEdit: () => void
+  isReadOnly: boolean
+  isVotingPhase: boolean
+  onVote: (bookId: string, weight: number, voteId: string | null) => Promise<void>
+  existingVote?: VoteFields
+}) => {
+
   const [isExpanded, setIsExpanded] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [weight, setWeight] = useState<number | null>(null)
+  const [voteId, setVoteId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (isVotingPhase && existingVote) {
+      setWeight(existingVote.weight ?? null)
+      setVoteId(existingVote.id)
+    }
+  }, [isVotingPhase, existingVote])
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -102,7 +119,7 @@ const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase, onVote }:
                     if (!book.id) return
                     if (!book.proposal_id) return
 
-                    await onVote(book.proposal_id, w)
+                    await onVote(book.proposal_id, w, voteId ?? null)
                   }
                 }
                 >
@@ -180,6 +197,12 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   const bookFormRef = useRef<HTMLDivElement>(null)
   const isVotingPhase = show === "votedBooks"
   const isReadOnly = show === "over"
+  const [votes, setVotes] = useState<VoteFields[]>([])
+
+  const votesByProposalId = votes.reduce((acc, vote) => {
+    if (vote.proposal_id) acc[vote.proposal_id] = vote
+    return acc
+  }, {} as Record<string, VoteFields>)
 
   const loadBooks = async () => {
     try {
@@ -190,7 +213,9 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
       }
       if(show === "votedBooks") {
         const loadedBooks = await proposeService.getProposedBooks(cycleId)
+        const loadedVotes = await voteService.getOwn(cycleId)
         setBooks(loadedBooks)
+        setVotes(loadedVotes)
       }
       if(show === "over") {
         const loadedBooks = await proposeService.getProposedBooks(cycleId)
@@ -231,12 +256,16 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
     }
   }
 
-  const submitVote = async (proposalId: string, weight: number) => {
+  const submitVote = async (proposalId: string, weight: number, voteId: string | null) => {
     try  {
-      await voteService.create({
-        proposal_id: proposalId,
-        weight
-      })
+      if (voteId) {
+        await voteService.update(voteId, { proposal_id: proposalId, weight })
+      } else {
+        await voteService.create({
+          proposal_id: proposalId,
+          weight
+        })
+      }
     } catch {
       setErrorMessage('Failed to submit the vote.')
     }
@@ -305,6 +334,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
               isReadOnly={isReadOnly}
               isVotingPhase={isVotingPhase}
               onVote={submitVote}
+              existingVote={book.proposal_id ? votesByProposalId[book.proposal_id] : undefined}
             />
           ))}
         </div>
