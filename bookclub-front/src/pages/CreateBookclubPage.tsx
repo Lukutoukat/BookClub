@@ -1,10 +1,11 @@
 import BookclubForm from '@/components/BookclubForm'
-
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import { PageHeader } from '../components/PageHeader'
 
 const CreateBookclubPage = () => {
     return (
         <>
+        <UserLoginDisplay />
         <PageHeader
             badgeText="Create"
             title="New book club"
