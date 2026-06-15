@@ -105,7 +105,7 @@ cycleRouter.put('/:id', userExtractor, async (req: Request<{ id: string }, unkno
       if (result.user_role !== 0) {
         return res.status(403).json({ error: 'User is not admin of book club!' })
       }
-
+      console.log('updatedata:', updateData)
       const updated = await prisma.cycle.update({
         where: { id },
         data: {

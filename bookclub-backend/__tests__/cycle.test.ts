@@ -10,7 +10,8 @@ jest.mock('../db.ts', () => ({
         },
         cycle: {
             create: jest.fn(),
-            findMany: jest.fn()
+            findMany: jest.fn(),
+            findUnique: jest.fn()
         },
         user: {
             findUnique: jest.fn(),
@@ -196,4 +197,37 @@ describe('/api/cycles', () => {
             expect(response.body).toEqual({ error: 'database error' })
         })
     })
+
+    // describe('PUT', () => {
+    //     it('changes the cycle phase', async () => {
+    //         const mockcycle = {
+    //             id: "1",
+    //             bookclub_id: "1",
+    //             createdAt: "2026-06-11T13:17:37.803Z",
+    //             proposalEnd: "2026-06-25T13:17:35.775Z",
+    //             votingEnd: "2026-07-09T13:17:35.776Z"
+    //         }
+    //         const editedMock = {
+    //             proposalEnd: "2026-06-25T13:17:35.775Z"
+    //         }
+    //         ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue(mockcycle)
+    //         ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+    //             user_role: 0,
+    //         })
+
+    //         const response = await request(app).put('/api/cycles/1')
+    //             .set(authHeaders())
+    //             .send(editedMock)
+
+    //         expect(response.status).toBe(200)
+    //         expect(response.body).toEqual(mockcycle)
+    //         expect(prisma.cycle.update).toHaveBeenCalledTimes(1)
+    //         expect(prisma.cycle.update).toHaveBeenCalledWith({
+    //             where: { id: "1" },
+    //             data: {
+    //                 proposalEnd: "2026-06-25T13:17:35.775Z"
+    //             }
+    //         })
+    //     })
+    // })
 })
