@@ -136,7 +136,7 @@ describe('BooksPage', () => {
   describe('book deletion', () => {
     test('deletes book via service and removes from display when confirmation is accepted', async () => {
       setupMocks({ books: mockBooks(2) })
-      vi.mocked(bookService.remove).mockResolvedValue({ status: 200 } as any)
+      vi.mocked(bookService.removeFromUser).mockResolvedValue({ status: 200 } as any)
       vi.spyOn(window, 'confirm').mockReturnValue(true)
       renderWithRouter(<BooksPage />)
 
@@ -150,14 +150,14 @@ describe('BooksPage', () => {
       await us.click(deleteButtons[0])
 
       await waitFor(() => {
-        expect(bookService.remove).toHaveBeenCalledWith(1)
+        expect(bookService.removeFromUser).toHaveBeenCalledWith(1)
         expect(screen.queryByText('Book 1')).toBeNull()
       })
     })
 
     test('calls service with correct isbn on delete', async () => {
       setupMocks({ books: mockBooks(1) })
-      vi.mocked(bookService.remove).mockResolvedValue({ status: 200 } as any)
+      vi.mocked(bookService.removeFromUser).mockResolvedValue({ status: 200 } as any)
 
       renderWithRouter(<BooksPage />)
 
@@ -168,7 +168,7 @@ describe('BooksPage', () => {
       const us = user.setup()
       await us.click(screen.getByTitle('Delete book'))
 
-      expect(bookService.remove).toHaveBeenCalledWith(1)
+      expect(bookService.removeFromUser).toHaveBeenCalledWith(1)
     })
   })
 })
