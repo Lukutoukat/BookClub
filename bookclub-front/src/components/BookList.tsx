@@ -3,7 +3,7 @@ import { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 're
 import bookService, { type Book } from '@/services/books'
 import proposeService from '@/services/propose'
 import voteService, { type VoteFields } from '@/services/vote'
-import resultService, {type BookResult } from '@/services/results'
+import resultService from '@/services/results'
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
 import BookForm from './BookForm'
