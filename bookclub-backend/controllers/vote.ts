@@ -1,6 +1,5 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
-import jwt from 'jsonwebtoken'
 import userExtractor from '../middleware/userExtractor.ts'
 
 const voteRouter = express.Router()
@@ -12,20 +11,9 @@ interface VoteRequest {
   weight?: number,
 }
 
-//Change this
-
-const getTokenFrom = (request: Request<unknown, unknown, VoteRequest>): string | null => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
-
-
 voteRouter.get('/', async (_req: Request, res: Response) => {
   try {
-    const result = await prisma.bookClubMembers.findMany()
+    const result = await prisma.bookVoted.findMany()
     res.json(result)
   } catch (error) {
     console.error('GET /api/bookclubs error:', error)
@@ -33,122 +21,165 @@ voteRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
-voteRouter.post('/', userExtractor, async (req: Request<unknown, unknown, VoteRequest>, res: Response) => {
-  const newVote: VoteRequest = req.body
-  // Change this to middleware
+voteRouter.get('/:cycle_id', userExtractor, async (req: Request<{ cycle_id: string }>, res: Response) => {
+  const { cycle_id } = req.params
 
-    const token = getTokenFrom(req)
-      if (!token) {
-        return res.status(401).json({
-          error: 'missin token'
+  if (req.user) {
+    try {
+      const proposals = await prisma.bookProposed.findMany({
+        where: {
+          cycle_id: cycle_id
+        },
+        select: { id: true }
+      })
+
+      const proposalIds = proposals.map(p => p.id)
+
+
+      const result = await prisma.bookVoted.findMany({
+        where: {
+          user_id: req.user.id,
+          proposal_id: {
+            in: proposalIds
+          }
+        }
+      })
+
+      res.json(result)
+
+  } catch (error) {
+      console.error('GET /api/vote/:cycle_id error:', error)
+      res.status(500).json({ error: 'database error' })
+    }
+  }
+})
+
+voteRouter.put('/:id', userExtractor, async (req: Request<{ id: string }>, res: Response) => {
+  const { id } = req.params
+  const { weight } = req.body as { weight?: number }
+
+  if (req.user) {
+    try {
+      const vote = await prisma.bookVoted.findUnique({
+        where: { id }
+      })
+
+      if (!vote) {
+        return res.status(404).json({
+          error: 'vote not found'
         })
       }
-  
-    const decodedToken = jwt.verify(
-      token,
-      process.env.SECRET as string
-    ) as { id: string }
-  
-    if (!decodedToken.id) {
-      return res.status(401).json({
-        error: 'token invalid'
-      })
-    }
-  
-    const user = await prisma.user.findUnique({
-      where: {
-        id: decodedToken.id
+
+      if (vote.user_id !== req.user.id) {
+        return res.status(403).json({
+          error: 'not authorized to update this vote'
+        })
       }
-    })
-  
-    if (!user) {
-      return res.status(400).json({
-        error: 'userId missing or not valid'
+
+      const result = await prisma.bookVoted.update({
+        where: { id },
+        data: {
+          weight
+        }
       })
-    }
-    // Change above
 
-  try {
-    const proposeResult = await prisma.bookProposed.findUnique({
-        where: {
-            id: newVote.proposal_id
-        },
-        select: { cycle_id: true, book_id: true },
-    })
-    if (!proposeResult) {
-        res.status(400).json({ error: 'Proposal does not exist!' })
-        return
-    }
-    if (proposeResult.cycle_id !== newVote.proposal_id) {
-        res.status(400).json({ error: 'Proposal is not associated with the cycle!' })
-        return
-    }
+      return res.json(result)
 
-    const cycleResult = await prisma.cycle.findUnique({
-        where: {
-            id: proposeResult.cycle_id
-        },
-        select: { bookclub_id: true },
-    })
-    if (!cycleResult) {
-        res.status(400).json({ error: 'Cycle does not exist!' })
-        return
+    } catch (error) {
+      console.error('PUT /api/vote/:id error:', error)
+      res.status(500).json({ error: 'database error' })
     }
-    if (proposeResult.book_id === null || proposeResult.book_id === undefined) {
-        res.status(400).json({ error: 'Proposal is not associated with a book!' })
-        return
-    }
-    const bookResult = await prisma.book.findUnique({
-        where: {
-            id: proposeResult.book_id
-        },
-        select: { id: true },
-    })
-    if (!bookResult) {
-        res.status(400).json({ error: 'Book does not exist!' })
-        return
-    }
+  }
+  return
+})
 
-    if (cycleResult.bookclub_id === null || cycleResult.bookclub_id === undefined) {
-        res.status(400).json({ error: 'Cycle is not associated with a book club!' })
-        return
-    }
-    
-    const bookClubResult = await prisma.bookClub.findUnique({
-        where: {
-            id: cycleResult.bookclub_id
-        },
-        select: { id: true },
-    })
-    if (!bookClubResult) {
-        res.status(400).json({ error: 'Book club does not exist!' })
-        return
-    }
+voteRouter.post('/', userExtractor, async (req: Request<unknown, unknown, VoteRequest>, res: Response) => {
+  const newVote: VoteRequest = req.body
+  
+  if (req.user) {
+    try {
+        const proposeResult = await prisma.bookProposed.findUnique({
+            where: {
+                id: newVote.proposal_id
+            },
+            select: { cycle_id: true, book_id: true },
+        })
+        if (!proposeResult) {
+            console.log('Vote body:', req.body)
+            console.log('proposal_id:', newVote.proposal_id)
+            res.status(400).json({ error: 'Proposal does not exist!' })
+            return
+        }
+        if (!proposeResult.cycle_id) {
+            return res.status(400).json({ error: 'Proposal has no cycle_id' })
+        }
+
+        const cycleResult = await prisma.cycle.findUnique({
+            where: {
+                id: proposeResult.cycle_id
+            },
+            select: { bookclub_id: true },
+        })
+        if (!cycleResult) {
+            res.status(400).json({ error: 'Cycle does not exist!' })
+            return
+        }
+        if (proposeResult.book_id === null || proposeResult.book_id === undefined) {
+            res.status(400).json({ error: 'Proposal is not associated with a book!' })
+            return
+        }
+        const bookResult = await prisma.book.findUnique({
+            where: {
+                id: proposeResult.book_id
+            },
+            select: { id: true },
+        })
+        if (!bookResult) {
+            res.status(400).json({ error: 'Book does not exist!' })
+            return
+        }
+
+        if (cycleResult.bookclub_id === null || cycleResult.bookclub_id === undefined) {
+            res.status(400).json({ error: 'Cycle is not associated with a book club!' })
+            return
+        }
+        
+        const bookClubResult = await prisma.bookClub.findUnique({
+            where: {
+                id: cycleResult.bookclub_id
+            },
+            select: { id: true },
+        })
+        if (!bookClubResult) {
+            res.status(400).json({ error: 'Book club does not exist!' })
+            return
+        }
 
 
-    const bookClubMembersResult = await prisma.bookClubMembers.findFirst({
-        where: {
-            bookclub_id: bookClubResult.id,
-            user_id: user.id
-        },
-        select: { id: true },
-    })
-    if (!bookClubMembersResult) {
-        res.status(400).json({ error: 'User is not member of book club!' })
-        return
+        const bookClubMembersResult = await prisma.bookClubMembers.findFirst({
+            where: {
+                bookclub_id: bookClubResult.id,
+                user_id: req.user.id
+            },
+            select: { id: true },
+        })
+        if (!bookClubMembersResult) {
+            res.status(400).json({ error: 'User is not member of book club!' })
+            return
+        }
+        
+        await prisma.bookVoted.create({
+        data: {
+            proposal_id: newVote.proposal_id,
+            user_id: req.user.id,
+            weight: newVote.weight,
+        }
+        })
+        res.json(newVote)
+    } catch (error) {
+        console.error('POST /api/vote error:', error)
+        res.status(500).json({ error: 'database error' })
     }
-    
-    await prisma.bookVoted.create({
-      data: {
-        proposal_id: newVote.proposal_id,
-        user_id: user.id,
-        weight: newVote.weight,
-      }
-    })
-    res.json(newVote)
-  } catch (error) {
-    console.error('POST /api/bookclubs error:', error)
-    res.status(500).json({ error: 'database error' })
   }
   return
 })

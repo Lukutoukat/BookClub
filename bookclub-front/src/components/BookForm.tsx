@@ -52,12 +52,13 @@ const MAX_COMMENT_LENGTH = 40000
 type BookFormProps = {
   title?: string
   description?: string
-  bookToEdit?: Book
+  bookToEdit?: Book | boolean
   buttonText?: string
   buttonAction?: () => void
   secondaryButtonText?: string
   secondaryButtonAction?: () => void
   onBookAdded?: () => Promise<void> | void
+  cycle_id: string
   className?: string
 }
 
@@ -70,6 +71,7 @@ const BookForm = ({
   secondaryButtonText,
   secondaryButtonAction,
   onBookAdded,
+  cycle_id,
   className,
 }: BookFormProps) => {
   const [newBook, setNewBook] = useState<BookFormState>(emptyBook)
@@ -77,7 +79,7 @@ const BookForm = ({
 
   // Initialize form with bookToEdit data when it's provided
   useEffect(() => {
-    if (bookToEdit) {
+    if (typeof bookToEdit !== "boolean" && bookToEdit !== undefined) {
       setNewBook({
         id: bookToEdit.id,
         isbn: bookToEdit.isbn ?? "",
@@ -228,20 +230,35 @@ const BookForm = ({
     }
 
     try {
-      if (bookToEdit) {
-        const bookToUpdateSubmit: BookFields = {
-          id: newBook.id ?? "",
-          isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
-          name: newBook.name,
-          author: newBook.author,
-          year: parseInt(newBook.year, 10),
-          pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
-          comment: newBook.comment || undefined,
-          language: newBook.language || undefined,
-          genre: newBook.genre || undefined,
+      if (bookToEdit !== undefined) {
+        if (typeof bookToEdit !== "boolean") {
+          const bookToUpdateSubmit: BookFields = {
+            id: newBook.id ?? "",
+            isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+            name: newBook.name,
+            author: newBook.author,
+            year: parseInt(newBook.year, 10),
+            pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+            comment: newBook.comment || undefined,
+            language: newBook.language || undefined,
+            genre: newBook.genre || undefined,
+          }
+          // Update existing book
+          await bookService.update(bookToEdit.id, bookToUpdateSubmit)
+        } else {
+          const bookToSubmit: CreateBook = {
+            isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+            name: newBook.name,
+            author: newBook.author,
+            year: parseInt(newBook.year, 10),
+            pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+            comment: newBook.comment || undefined,
+            language: newBook.language || undefined,
+            genre: newBook.genre || undefined,
+          }
+          // Create new book
+          await bookService.createForPropose(cycle_id, bookToSubmit)
         }
-        // Update existing book
-        await bookService.update(bookToEdit.id, bookToUpdateSubmit)
         setErrors([])
         if (onBookAdded) {
           await onBookAdded()

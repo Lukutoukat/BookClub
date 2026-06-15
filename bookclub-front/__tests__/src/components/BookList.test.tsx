@@ -137,13 +137,13 @@ describe('BookList', () => {
   describe('delete functionality', () => {
     test('calls onDelete with id when delete button clicked and window.confirm is accepted', async () => {
       vi.spyOn(window, 'confirm').mockReturnValue(true)
-      vi.mocked(bookService.remove).mockResolvedValue(undefined)
+      vi.mocked(bookService.removeFromUser).mockResolvedValue(undefined)
       renderComponent()
       const us = user.setup()
       await screen.findByText('Book 1') // wait for books to load
       await us.click(screen.getByTitle('Delete book'))
 
-      expect(vi.mocked(bookService.remove)).toHaveBeenCalledWith(1)
+      expect(vi.mocked(bookService.removeFromUser)).toHaveBeenCalledWith(1)
     })
 
     test('does not show delete button when onDelete is undefined', async () => {
