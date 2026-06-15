@@ -9,6 +9,7 @@ import {
 import bookService, { type Book } from "@/services/books"
 import proposeService from "@/services/propose"
 import voteService, { type VoteFields } from "@/services/vote"
+import resultService from "@/services/results"
 import { Card, CardContent } from "@/components/ui/card"
 import { SectionHeader } from "./SectionHeader"
 import BookForm from "./BookForm"
@@ -61,7 +62,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
           setBooks(loadedBooks)
         }
         if (show === "votedBooks") {
-          const loadedBooks = await proposeService.getProposedBooks(cycleId)
+          const loadedBooks = await resultService.getResults(cycleId)
           const loadedVotes = await voteService.getOwn(cycleId)
           setBooks(loadedBooks)
           setVotes(loadedVotes)

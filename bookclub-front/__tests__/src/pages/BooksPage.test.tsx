@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react"
 import user from "@testing-library/user-event"
 import { BrowserRouter } from "react-router-dom"
 import BooksPage from "@/pages/BooksPage"
+import BookList from "@/components/BookList"
 import { type Book } from "@/services/books"
 import bookService from "@/services/books"
 import { test, expect, describe, vi, beforeEach } from "vitest"
@@ -70,7 +71,7 @@ describe("BooksPage", () => {
       renderWithRouter(<BooksPage />)
 
       await waitFor(() => {
-        expect(screen.getByText("Add a book")).toBeDefined()
+        expect(screen.getByText("Save books")).toBeDefined()
         expect(screen.getByText("Books")).toBeDefined()
         expect(
           screen.getByText(
@@ -97,24 +98,24 @@ describe("BooksPage", () => {
     test("loads and displays multiple books with correct count", async () => {
       setupMocks({ books: mockBooks(3) })
 
-      renderWithRouter(<BooksPage />)
+      render(<BookList show="savedBooks" />)
 
       await waitFor(() => {
         expect(screen.getByText("Book 1")).toBeDefined()
         expect(screen.getByText("Book 2")).toBeDefined()
         expect(screen.getByText("Book 3")).toBeDefined()
-        expect(screen.getByText("Books: 3")).toBeDefined()
+        expect(screen.getByText(/Books:\s*3/)).toBeDefined()
       })
     })
 
     test('displays singular "book" for single book', async () => {
       setupMocks({ books: mockBooks(1) })
 
-      renderWithRouter(<BooksPage />)
+      render(<BookList show="savedBooks" />)
 
       await waitFor(() => {
         expect(screen.getByText("Book 1")).toBeDefined()
-        expect(screen.getByText("Books: 1")).toBeDefined()
+        expect(screen.getByText(/Books:\s*1/)).toBeDefined()
       })
     })
   })

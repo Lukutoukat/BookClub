@@ -64,50 +64,64 @@ const BookItem = ({
   return (
     <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90">
       <CardContent className="px-3 py-2 sm:px-4 sm:py-3 pl-4 sm:pl-5">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex flex-wrap items-center gap-2  w-full">
-            <h3 className="text-lg font-semibold text-foreground/90">
-              {book.name}
-            </h3>
-
-            <Badge variant="secondary" className="font-normal text-xs">
-              {book.genre}
-            </Badge>
-
-            {isReadOnly && isBookResult(book) && (
-              <Badge variant="default" className="font-semibold">
+        <div className="flex flex-row items-start gap-3 justify-between">
+          {isReadOnly && isBookResult(book) && (
+            <div className="flex flex-col items-center justify-center shrink-0 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg bg-primary/10 border border-primary/20 mr-3">
+              <span className="font-bold text-primary text-sm sm:text-lg md:text-2xl leading-none">
                 {book.score}
-              </Badge>
-            )}
+              </span>
+              <span className="text-[8px] sm:text-[9px] md:text-[10px] text-muted-foreground uppercase">
+                pts
+              </span>
+            </div>
+          )}
+          <div className="space-y-0.5 flex-1 cursor-pointer">
+            <div className="flex flex-wrap items-center gap-2  w-full">
+              <h3 className="text-lg font-semibold text-foreground/90">
+                {book.name}
+              </h3>
 
-            {!isReadOnly && !isVotingPhase && (
-              <Button
-                type="button"
-                variant="secondary"
-                size="xs"
-                className="gap-3 ml-auto shrink-0"
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation()
-                  onEdit()
-                }}
-              >
-                Edit
-              </Button>
-            )}
+              {book.genre && (
+                <Badge variant="secondary" className="font-normal text-xs">
+                  {book.genre}
+                </Badge>
+              )}
 
-            {!isReadOnly && !isVotingPhase && (
-              <ButtonDialog
-                buttonOnClick={handleDelete}
-                disabled={isDeleting}
-                buttonVariant="ghost"
-                buttonClassName="h-6 w-6 text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
-                buttonText=""
-                buttonTitle="Delete book"
-                alertDialogDescription="Deleting a book cannot be undone."
-              >
-                <Trash2 className="h-4 w-4" />
-              </ButtonDialog>
-            )}
+              {isReadOnly && isBookResult(book) && (
+                <Badge variant="default" className="font-semibold">
+                  {book.score}
+                </Badge>
+              )}
+
+              {!isReadOnly && !isVotingPhase && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="xs"
+                  className="gap-3 ml-auto shrink-0"
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    onEdit()
+                  }}
+                >
+                  Edit
+                </Button>
+              )}
+
+              {!isReadOnly && !isVotingPhase && (
+                <ButtonDialog
+                  buttonOnClick={handleDelete}
+                  disabled={isDeleting}
+                  buttonVariant="ghost"
+                  buttonClassName="h-6 w-6 text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
+                  buttonText=""
+                  buttonTitle="Delete book"
+                  alertDialogDescription="Deleting a book cannot be undone."
+                >
+                  <Trash2 className="h-4 w-4" />
+                </ButtonDialog>
+              )}
+            </div>
           </div>
         </div>
 
