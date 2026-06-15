@@ -19,7 +19,7 @@ interface BookListProps {
 }
 
 
-const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", show = "savedBooks", cycleId = "nocycle"}, ref) => {
+const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", show = "savedBooks", cycleId = "nocycle"}, ref, description) => {
   const [books, setBooks] = useState<Book[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -149,7 +149,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
     <div className="space-y-6">
       {isShowingBookForm ? (
         <div ref={bookFormRef}>
-          <BookForm title="Edit book" description="Edit the details of the book" bookToEdit={isShowingBookForm} onBookAdded={loadBooks} buttonText="Update" buttonAction={() => setIsShowingBookForm(null)} secondaryButtonText="Cancel" secondaryButtonAction={() => setIsShowingBookForm(null)} className="overflow-visible card-base"/>
+          <BookForm title="Edit book" description="Edit the details of the book" bookToEdit={isShowingBookForm} onBookAdded={loadBooks} buttonText="Update" buttonAction={() => setIsShowingBookForm(null)} secondaryButtonText="Cancel" secondaryButtonAction={() => setIsShowingBookForm(null)} className="overflow-visible card-base" cycle_id=""/>
         </div>
       ) 
       : <></>}
