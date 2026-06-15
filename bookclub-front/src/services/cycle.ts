@@ -58,11 +58,11 @@ const endLatestCyclePhase = (bookclubId: string) => {
       }
 
       if (phase == 'proposal' && cycle.proposalEnd && new Date(cycle.proposalEnd) > now) {
-        return axios.put<Cycle>(`${baseUrl}/${cycle.id}`, { proposalEnd: now }, getAuthConfig())
+        return axios.put<Cycle>(`${baseUrl}/${cycle.id}`, { proposalEnd: now }, getAuthConfig()).then(res => res.data)
       }
 
       if (phase == 'voting' && cycle.votingEnd && new Date(cycle.votingEnd) > now) {
-        return axios.put<Cycle>(`${baseUrl}/${cycle.id}`, { votingEnd: now }, getAuthConfig())
+        return axios.put<Cycle>(`${baseUrl}/${cycle.id}`, { votingEnd: now }, getAuthConfig()).then(res => res.data)
       }
 
       return cycle
