@@ -30,8 +30,8 @@ const update = (id: string, book: BookFields) => {
     return axios.put<Book>(`${baseUrl}/${id}`, book, getAuthConfig()).then((res) => res.data)
 }
 
-const remove = (id: string) => {
-    return axios.delete(`${baseUrl}/${id}`, getAuthConfig())
+const removeFromUser = (id: string) => {
+    return axios.put<Book>(`${baseUrl}/${id}/remove`, {}, getAuthConfig()).then((res) => res.data)
 }
 
-export default { getAll, create, update, remove }
+export default { getAll, create, update, removeFromUser }

@@ -177,7 +177,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
 
   const deleteBook = async (id: string) => {
     try {
-      if (show ==="savedBooks") await bookService.remove(id)
+      if (show ==="savedBooks") await bookService.removeFromUser(id)
       if (show === "proposedBooks") await proposeService.removeProposedBook(cycleId, id)
       setBooks((currentBooks) => currentBooks.filter((book) => book.id !== id))
     } catch {

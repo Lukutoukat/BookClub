@@ -111,18 +111,31 @@ bookRouter.put('/:id', userExtractor, async (req: Request, res: Response) => {
   return
 })
 
-bookRouter.delete('/:id', async (_req, res) => {
-  const id: string = _req.params.id
+bookRouter.put('/:id/remove', userExtractor, async (req, res) => {
+  const id: string = req.params.id as string
+
+  if (!req.user) {
+    return res.status(401).json({ error: 'user not found' })
+  }
 
   try {
-    await prisma.book.delete({
-      where: { id }
+    const book = await prisma.book.findUnique({ where: { id } })
+    if (!book) return res.status(404).json({ error: 'book not found'})
+    
+    if (book.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'not authorized to remove this book' })
+    }
+
+    const result = await prisma.book.update({
+      where: { id },
+      data: { user_id: null }
     })
-    res.status(204).end()
+    return res.json(result)
   } catch(error) {
-    console.error('DELETE /api/books error: ', error)
-    res.status(500).json({error: 'database error' })
+    console.error('PUT /api/books/:id/remove error: ', error)
+    res.status(500).json({ error: 'database error' })
   }
+  return
 })
 
 export default bookRouter
