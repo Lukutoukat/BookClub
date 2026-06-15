@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ButtonDialog } from "./ButtonDialog"
+import type { BookResult } from "@/services/results"
 
 const BookItem = ({
   book,
@@ -21,7 +22,7 @@ const BookItem = ({
   onVote,
   existingVote,
 }: {
-  book: Book
+  book: Book | BookResult
   onDelete: (id: string) => Promise<void>
   onEdit: () => void
   isReadOnly: boolean
@@ -37,6 +38,10 @@ const BookItem = ({
   const [isDeleting, setIsDeleting] = useState(false)
   const [weight, setWeight] = useState<number | null>(null)
   const [voteId, setVoteId] = useState<string | null>(null)
+
+  const isBookResult = (book: Book | BookResult): book is BookResult => {
+    return "score" in book
+  }
 
   useEffect(() => {
     if (isVotingPhase && existingVote) {
@@ -60,86 +65,34 @@ const BookItem = ({
     <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90">
       <CardContent className="px-3 py-2 sm:px-4 sm:py-3 pl-4 sm:pl-5">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-0.5 flex-1 cursor-pointer">
-            <div className="flex flex-wrap items-center gap-2  w-full">
-              <h3 className="text-lg font-semibold text-foreground/90">
-                {book.name}
-              </h3>
-              <Badge variant="secondary" className="font-normal text-xs">
-                {book.genre}
+          <div className="flex flex-wrap items-center gap-2  w-full">
+            <h3 className="text-lg font-semibold text-foreground/90">
+              {book.name}
+            </h3>
+
+            <Badge variant="secondary" className="font-normal text-xs">
+              {book.genre}
+            </Badge>
+
+            {isReadOnly && isBookResult(book) && (
+              <Badge variant="default" className="font-semibold">
+                {book.score}
               </Badge>
-              {!isReadOnly && !isVotingPhase && (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="xs"
-                  className="gap-3 ml-auto shrink-0"
-                  onClick={(e: React.MouseEvent) => {
-                    e.stopPropagation()
-                    onEdit()
-                  }}
-                >
-                  Edit
-                </Button>
-              )}
-            </div>
-            <div className="flex items-center text-sm text-muted-foreground gap-1.5">
-              <span className="font-medium text-foreground/70">
-                {book.author}
-              </span>
-              <span>&bull;</span>
-              <span>{book.year}</span>
-            </div>
-          </div>
+            )}
 
-          <div className="flex items-center gap-0.5 self-end sm:self-auto">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-6 px-1 text-muted-foreground hover:text-foreground"
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation()
-                setIsExpanded(!isExpanded)
-              }}
-            >
-              {isExpanded ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
-              <span className="text-xs font-medium hidden sm:inline">
-                {isExpanded ? "Less" : "More"}
-              </span>
-            </Button>
-
-            {isVotingPhase && (
-              <RadioGroup
-                value={weight?.toString() ?? ""}
-                onValueChange={async (val) => {
-                  const w = Number(val)
-                  setWeight(w)
-                  if (!book.id) return
-                  if (!book.proposal_id) return
-
-                  await onVote(book.proposal_id, w, voteId ?? null)
+            {!isReadOnly && !isVotingPhase && (
+              <Button
+                type="button"
+                variant="secondary"
+                size="xs"
+                className="gap-3 ml-auto shrink-0"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation()
+                  onEdit()
                 }}
               >
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="3" id={`want-${book.id}`} />
-                  <Label htmlFor={`want-${book.id}`}>Want to read</Label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="2" id={`could-${book.id}`} />
-                  <Label htmlFor={`could-${book.id}`}>Could read</Label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="0" id={`dont-${book.id}`} />
-                  <Label htmlFor={`dont-${book.id}`}>
-                    Don&apos;t want to read
-                  </Label>
-                </div>
-              </RadioGroup>
+                Edit
+              </Button>
             )}
 
             {!isReadOnly && !isVotingPhase && (
@@ -156,6 +109,64 @@ const BookItem = ({
               </ButtonDialog>
             )}
           </div>
+        </div>
+
+        <div className="flex items-center gap-0.5 self-end sm:self-auto">
+          <div className="flex items-center text-sm text-muted-foreground gap-1.5">
+            <span className="font-medium text-foreground/70">
+              {book.author}
+            </span>
+            <span>&bull;</span>
+            <span>{book.year}</span>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-6 p1-4 px-1 text-muted-foreground hover:text-foreground"
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation()
+              setIsExpanded(!isExpanded)
+            }}
+          >
+            {isExpanded ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+            <span className="text-xs font-medium hidden sm:inline">
+              {isExpanded ? "Less" : "More"}
+            </span>
+          </Button>
+
+          {isVotingPhase && (
+            <RadioGroup
+              value={weight?.toString() ?? ""}
+              onValueChange={async (val) => {
+                const w = Number(val)
+                setWeight(w)
+                if (!book.id) return
+                if (!book.proposal_id) return
+
+                await onVote(book.proposal_id, w, voteId ?? null)
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value="3" id={`want-${book.id}`} />
+                <Label htmlFor={`want-${book.id}`}>Want to read</Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value="2" id={`could-${book.id}`} />
+                <Label htmlFor={`could-${book.id}`}>Could read</Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value="0" id={`dont-${book.id}`} />
+                <Label htmlFor={`dont-${book.id}`}>
+                  Don&apos;t want to read
+                </Label>
+              </div>
+            </RadioGroup>
+          )}
         </div>
 
         {isExpanded && (

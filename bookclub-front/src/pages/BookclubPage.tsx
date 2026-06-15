@@ -73,6 +73,7 @@ const BookclubPage = () => {
             ref={bookListRef}
             show="proposedBooks"
             cycleId={currentCycle.id}
+            description="Suggested books: "
           />
         </>
       )}
@@ -83,6 +84,17 @@ const BookclubPage = () => {
           <BookList
             ref={bookListRef}
             show="votedBooks"
+            cycleId={currentCycle.id}
+          />
+        </>
+      )}
+
+      {/* RESULTS PHASE */}
+      {currentCycle?.phase === "over" && (
+        <>
+          <BookList
+            ref={bookListRef}
+            show="over"
             cycleId={currentCycle.id}
           />
         </>

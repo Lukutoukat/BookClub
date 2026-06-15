@@ -70,7 +70,7 @@ describe("BooksPage", () => {
       renderWithRouter(<BooksPage />)
 
       await waitFor(() => {
-        expect(screen.getByText("Your saved books")).toBeDefined()
+        expect(screen.getByText("Add a book")).toBeDefined()
         expect(screen.getByText("Books")).toBeDefined()
         expect(
           screen.getByText(

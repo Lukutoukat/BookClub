@@ -73,7 +73,7 @@ export const NewCycle = ({ bookclubId }: Props) => {
       description=""
       buttonText='Back'
       buttonOnClick={async () => {
-        navigate(`/club/${bookclubId}`)
+        await navigate(`/club/${bookclubId}`)
       }}
       />
       <RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange}/>

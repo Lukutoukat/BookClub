@@ -33,7 +33,7 @@ export const SuggestBook = ({
             <BookForm
               bookToEdit={isShowingBookForm}
               onBookAdded={onBookAdded}
-              buttonText="Propose"
+              buttonText="Suggest"
               buttonAction={() => setIsShowingBookForm(false)}
               secondaryButtonText="Cancel"
               secondaryButtonAction={() => setIsShowingBookForm(false)}
