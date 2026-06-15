@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 // import { useNavigate } from 'react-router-dom'
-import { PageHeader } from '../components/PageHeader'
+import { PageHeader } from "../components/PageHeader"
 // import { Button } from './ui/button'
 // import bookclubService from '@/services/bookclubs'
 type Bookclub = {
@@ -40,7 +40,6 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
   if (loading) return null
   if (!bookclub) return <div>Book club not found</div>
 
-
   // const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
   //   event.preventDefault()
   //   if (window.confirm('Are you sure you want to delete your bookclub and all info related to it?')) {
@@ -56,18 +55,16 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
   return (
     <>
       <PageHeader
-      badgeText="Club"
-      title={bookclub.name}
-      description="Suggest books and decide your next read together."
-      buttonText={bookclub.invite_code}
-      buttonOnClick={async () => {
-        try {
-          await navigator.clipboard.writeText(bookclub.invite_code)
-          alert('Invite code copied!')
-        } catch {
-          alert('Failed to copy invite code')
-        }
-      }}
+        badgeText="Club"
+        title={bookclub.name}
+        description="Suggest books and decide your next read together."
+        buttonText={bookclub.invite_code}
+        afterButtonClick="alert"
+        buttonOnClick={async () => {
+          try {
+            await navigator.clipboard.writeText(bookclub.invite_code)
+          } catch {}
+        }}
       />
       {/* <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
           <Button onClick={handleDeletion}>
