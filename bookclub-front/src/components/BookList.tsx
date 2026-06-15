@@ -16,10 +16,11 @@ interface BookListProps {
   emptyMessage?: string
   show?: string
   cycleId?: string
+  description?: string
 }
 
 
-const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", show = "savedBooks", cycleId = "nocycle"}, ref, description) => {
+const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", show = "savedBooks", cycleId = "nocycle", description = "Books: "}, ref) => {
   const [books, setBooks] = useState<Book[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -104,12 +105,11 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   }
 
   const bookCount = books.length
-  const description = `Books: ${bookCount}`
 
   if (isLoading) {
     return (
       <Card className="card-base">
-        <SectionHeader title={description} />
+        <SectionHeader title={`${description}: ${bookCount}`} />
         <CardContent className="card-content">
           <div className="text-sm text-muted-foreground text-center py-6">
             Loading books...
@@ -122,7 +122,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   if (errorMessage) {
     return (
       <Card className="card-base">
-        <SectionHeader title="Your saved books" description={description} />
+        <SectionHeader title="Your saved books" description={`${description} ${bookCount}`} />
         <CardContent className="card-content">
           <div className="p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
             {errorMessage}
@@ -135,7 +135,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
   if (books.length === 0) {
     return (
       <Card className="card-base">
-        <SectionHeader title={description} />
+        <SectionHeader title={`${description} ${bookCount}`} />
         <CardContent className="card-content">
           <div className="text-sm text-muted-foreground text-center py-6">
             {emptyMessage}
@@ -154,7 +154,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No
       ) 
       : <></>}
     <Card className="card-base">
-      <SectionHeader title={description} />
+      <SectionHeader title={`${description} ${bookCount}`} />
       <CardContent className="card-content">
         <div className="space-y-3">
           {books.map((book) => (
