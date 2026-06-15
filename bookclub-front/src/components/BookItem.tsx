@@ -54,7 +54,17 @@ const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase, onVote, e
   return (
       <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90">
         <CardContent className="px-3 py-2 sm:px-4 sm:py-3 pl-4 sm:pl-5">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-row items-start gap-3 justify-between">
+            {isReadOnly && isBookResult(book) && (
+              <div className="flex flex-col items-center justify-center shrink-0 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg bg-primary/10 border border-primary/20 mr-3">
+                <span className="font-bold text-primary text-sm sm:text-lg md:text-2xl leading-none">
+                  {book.score}
+                </span>
+                <span className="text-[8px] sm:text-[9px] md:text-[10px] text-muted-foreground uppercase">
+                  pts
+                </span>
+              </div>
+            )}
             <div className="space-y-0.5 flex-1 cursor-pointer">
               <div className="flex flex-wrap items-center gap-2  w-full">
 
@@ -62,13 +72,9 @@ const BookItem = ({ book, onDelete, onEdit, isReadOnly, isVotingPhase, onVote, e
                   {book.name}
                 </h3>
 
-                <Badge variant="secondary" className="font-normal text-xs">
-                  {book.genre}
-                </Badge>
-
-                {isReadOnly && isBookResult(book) && (
-                  <Badge variant="default" className="font-semibold">
-                    {book.score}
+                {book.genre && (
+                  <Badge variant="secondary" className="font-normal text-xs">
+                    {book.genre}
                   </Badge>
                 )}
 
