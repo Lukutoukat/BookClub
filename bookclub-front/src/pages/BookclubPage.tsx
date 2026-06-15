@@ -73,6 +73,7 @@ const BookclubPage = () => {
             ref={bookListRef}
             show="proposedBooks"
             cycleId={currentCycle.id}
+            description="Suggested books: "
           />
         </>
       )}
