@@ -21,11 +21,7 @@ interface BookListProps {
 }
 
 
-<<<<<<< HEAD
 const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", show = "savedBooks", cycleId = "nocycle", description = "Books: "}, ref) => {
-=======
-const BookList = forwardRef<BookListHandle, BookListProps>(({ emptyMessage = "No books yet.", show = "savedBooks", cycleId = "nocycle"}, ref) => {
->>>>>>> 636d8ff (Add backend and rendering for results phase)
   const [books, setBooks] = useState<Book[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
