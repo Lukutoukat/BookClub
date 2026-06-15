@@ -40,12 +40,37 @@ const getLatestCycle = (bookclubId: string) => {
       }
       return { ...cycle, phase}
     })
+}
 
+const endLatestCyclePhase = (bookclubId: string) => {
+	return axios.get<CycleWithStatus>(`${baseUrl}/latest/${bookclubId}`)
+    .then((res) => {
+      const cycle = res.data
+      const now = new Date()
 
+      // Determine current phase
+      let phase = 'proposal'
+      if (cycle.proposalEnd && new Date(cycle.proposalEnd) < now) {
+        phase = 'voting'
+      }
+      if (cycle.votingEnd && new Date(cycle.votingEnd) < now) {
+        phase = 'over'
+      }
+
+      if (phase == 'proposal' && cycle.proposalEnd && new Date(cycle.proposalEnd) > now) {
+        return axios.put<Cycle>(`${baseUrl}/${cycle.id}`, { proposalEnd: now }, getAuthConfig())
+      }
+
+      if (phase == 'voting' && cycle.votingEnd && new Date(cycle.votingEnd) > now) {
+        return axios.put<Cycle>(`${baseUrl}/${cycle.id}`, { votingEnd: now }, getAuthConfig())
+      }
+
+      return cycle
+    })
 }
 
 const create = (cycle: CreateCycle) => {
 	return axios.post<Cycle>(baseUrl, cycle, getAuthConfig()).then((res) => res.data)
 }
 
-export default { getAll, create, getLatestCycle }
+export default { getAll, create, getLatestCycle, endLatestCyclePhase }

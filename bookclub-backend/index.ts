@@ -10,6 +10,7 @@ import bookClubMembersRouter from './controllers/bookclubmembers.ts'
 import cycleRouter from './controllers/cycle.ts'
 import proposeRouter from './controllers/propose.ts'
 import voteRouter from './controllers/vote.ts'
+import resultRouter from './controllers/results.ts'
 
 import tokenExtractor from './middleware/tokenExtractor.ts'
 
@@ -24,6 +25,7 @@ app.use('/api/cycles', cycleRouter)
 app.use('/api/propose', proposeRouter)
 app.use('/api/vote', voteRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/results', resultRouter)
 
 app.get('/ping', (_req, res) => {
   res.send('pong')

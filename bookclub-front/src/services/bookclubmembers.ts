@@ -4,7 +4,7 @@ import { getAuthConfig } from './auth'
 const baseUrl = '/api/bookclubmembers'
 
 export interface BookclubMember {
-  id: number,
+  id: string,
   user_role: number,
   invite_code: string,
   bookclub_id: string,

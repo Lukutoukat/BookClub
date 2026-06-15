@@ -5,15 +5,15 @@ import userExtractor from '../middleware/userExtractor.ts'
 const bookRouter = express.Router()
 
 interface Book {
-  id?: string,
-  name: string,
-  author: string,
-  year: number,
-  isbn?: string,
-  pages?: number,
-  comment?: string,
-  language?: string,
-  genre?: string,
+  id?: string
+  name: string
+  author: string
+  year: number
+  isbn?: string
+  pages?: number
+  comment?: string
+  language?: string
+  genre?: string
   user_id?: string
 }
 
@@ -35,6 +35,33 @@ bookRouter.get('/', userExtractor, async (req: Request, res: Response) => {
   }
   return
 })
+
+bookRouter.get(
+  "/previousSuggestions",
+  userExtractor,
+  async (req: Request, res: Response) => {
+  if (req.user) {
+    try {
+      const books = await prisma.book.findMany({
+        where: {
+          BookProposed: {
+            some: {
+              user_id: req.user.id,
+            },
+          },
+        },
+      })
+      res.json(books)
+    } catch (error) {
+      console.error("GET /api/books error:", error)
+      res.status(500).json({ error: "database error" })
+    }
+  } else {
+    res.status(401).json({ error: 'user not found'})
+  }
+    return
+  },
+)
 
 bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
   const newBook: Book = req.body as Book
@@ -63,6 +90,53 @@ bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
   }
   return
 })
+
+type cycleIdParams = {
+  cycle_id: string
+}
+
+bookRouter.post(
+  "/:cycle_id",
+  userExtractor,
+  async (req: Request<cycleIdParams, unknown, Book>, res: Response) => {
+    const { cycle_id } = req.params
+    const newBook: Book = req.body
+    if (req.user) {
+    try {
+      const createdBook = await prisma.book.create({
+        data: {
+          isbn: newBook.isbn,
+          name: newBook.name,
+          author: newBook.author,
+          year: newBook.year,
+          pages: newBook.pages,
+          comment: newBook.comment,
+          language: newBook.language,
+          genre: newBook.genre,
+          user_id: req.user.id,
+        },
+      })
+
+      await prisma.bookProposed.create({
+        data: {
+          book_id: createdBook.id,
+          user_id: createdBook.user_id,
+          cycle_id: cycle_id,
+        },
+      })
+
+      return res.json(newBook)
+    } catch (error) {
+      console.error("POST /api/books error:", error)
+      return res.status(500).json({ error: "database error" })
+    }
+  } else {
+    res.status(401).json({ error: 'user not found'})
+  }
+  return
+  },
+)
+
 
 bookRouter.put('/:id', userExtractor, async (req: Request, res: Response) => {
   const updatedBook: Book = req.body as Book
