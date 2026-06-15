@@ -71,6 +71,10 @@ export const NewCycle = ({ bookclubId }: Props) => {
       badgeText="New Cycle"
       title={bookclub.name}
       description=""
+      buttonText='Back'
+      buttonOnClick={async () => {
+        await navigate(`/club/${bookclubId}`)
+      }}
       />
       <RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange}/>
       <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">

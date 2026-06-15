@@ -16,7 +16,7 @@ const renderWithRouter = (component: React.ReactElement) => {
   )
 }
 
-describe('RegistrationPage', () => {
+describe('LoginPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })

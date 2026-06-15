@@ -4,18 +4,18 @@ import request from 'supertest'
 import jwt from 'jsonwebtoken'
 
 jest.mock('../db.ts', () => ({
-  prisma: {
-    book: {
-      findMany: jest.fn(),
-      create: jest.fn(),
-      delete: jest.fn(),
-      findUnique: jest.fn(),
-      update: jest.fn()
-    },
+    prisma: {
+        book: {
+            findMany: jest.fn(),
+            create: jest.fn(),
+            delete: jest.fn(),
+            findUnique: jest.fn(),
+            update: jest.fn()
+        },
         user: {
             findUnique: jest.fn(),
         },
-  },
+    },
 }))
 
 import { app } from '../index.ts'
@@ -59,14 +59,14 @@ const authHeaders = () => {
 describe('/api/books', () => {
     beforeEach(() => {
         jest.clearAllMocks()
-        jest.spyOn(console, 'error').mockImplementation(() => {})
+        jest.spyOn(console, 'error').mockImplementation(() => { })
         process.env.SECRET = 'testsecret'
 
-        ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
-            id: '1',
-            email: 'matti@test.com',
-            name: 'matti',
-        })
+            ; (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+                id: '1',
+                email: 'matti@test.com',
+                name: 'matti',
+            })
     })
 
     afterEach(() => {
@@ -80,7 +80,7 @@ describe('/api/books', () => {
                 mockBook_2
             ]
 
-            ;(prisma.book.findMany as jest.Mock).mockResolvedValue(mockBooks)
+                ; (prisma.book.findMany as jest.Mock).mockResolvedValue(mockBooks)
 
             const response = await request(app)
                 .get('/api/books')
@@ -92,7 +92,7 @@ describe('/api/books', () => {
         })
 
         it('returns 500 if get fails', async () => {
-            ;(prisma.book.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
+            ; (prisma.book.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
             const response = await request(app)
                 .get('/api/books')
@@ -100,7 +100,7 @@ describe('/api/books', () => {
 
 
             expect(response.status).toBe(500)
-            expect(response.body).toEqual({error: 'database error'})
+            expect(response.body).toEqual({ error: 'database error' })
         })
     })
 
@@ -108,7 +108,7 @@ describe('/api/books', () => {
         it('creates a book', async () => {
             const newBook = mockBook_1
 
-            ;(prisma.book.create as jest.Mock).mockResolvedValue(newBook)
+                ; (prisma.book.create as jest.Mock).mockResolvedValue(newBook)
 
             const response = await request(app)
                 .post('/api/books')
@@ -137,7 +137,7 @@ describe('/api/books', () => {
             const newBook = {
                 isbn: '1234567890'
             }
-            ;(prisma.book.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
+                ; (prisma.book.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
             const response = await request(app)
                 .post('/api/books')
@@ -145,34 +145,41 @@ describe('/api/books', () => {
                 .send(newBook)
 
             expect(response.status).toBe(500)
-            expect(response.body).toEqual({error: 'database error'})
+            expect(response.body).toEqual({ error: 'database error' })
         })
     })
 
-    describe('DELETE', () => {
-        it('deletes a book', async () => {
-            ;(prisma.book.delete as jest.Mock).mockResolvedValue({})
+    describe('PUT', () => {
+        it('removes a book from user', async () => {
+            ; (prisma.book.findUnique as jest.Mock).mockResolvedValue(mockBook_1)
+            ; (prisma.book.update as jest.Mock).mockResolvedValue({ ...mockBook_1, user_id: null })
 
-            const response = await request(app).delete('/api/books/1')
+            const response = await request(app)
+                .put('/api/books/1/remove')
+                .set(authHeaders())
 
-            expect(response.status).toBe(204)
-            expect(response.body).toEqual({})
-            expect(prisma.book.delete).toHaveBeenCalledTimes(1)
-            expect(prisma.book.delete).toHaveBeenCalledWith({
-                where: {id:'1'},
+            expect(response.status).toBe(200)
+            expect(response.body).toEqual({ ...mockBook_1, user_id: null })
+            expect(prisma.book.update).toHaveBeenCalledTimes(1)
+            expect(prisma.book.update).toHaveBeenCalledWith({
+                where: { id: '1' },
+                data: { user_id: null },
             })
         })
 
-        it('returns 500 if delete fails', async () => {
-            ;(prisma.book.delete as jest.Mock).mockRejectedValue(new Error('Database failed'))
-            
-            const response = await request(app).delete('/api/books/1')
+        it('returns 500 if remove fails', async () => {
+            ; (prisma.book.findUnique as jest.Mock).mockResolvedValue(mockBook_1)
+            ; (prisma.book.update as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+            const response = await request(app)
+                .put('/api/books/1/remove')
+                .set(authHeaders())
 
             expect(response.status).toBe(500)
-            expect(response.body).toEqual({error: 'database error'})
+            expect(response.body).toEqual({ error: 'database error' })
         })
     })
-    
+
     describe('PUT', () => {
         it('edits a book', async () => {
             const editedBook = {
@@ -187,8 +194,8 @@ describe('/api/books', () => {
                 genre: "Fiction",
                 user_id: '1'
             }
-            ;(prisma.book.findUnique as jest.Mock).mockResolvedValue(mockBook_1)
-            ;(prisma.book.update as jest.Mock).mockResolvedValue(editedBook)
+                ; (prisma.book.findUnique as jest.Mock).mockResolvedValue(mockBook_1)
+                ; (prisma.book.update as jest.Mock).mockResolvedValue(editedBook)
 
             const response = await request(app)
                 .put('/api/books/1')
@@ -199,7 +206,7 @@ describe('/api/books', () => {
             expect(response.body).toEqual(editedBook)
             expect(prisma.book.update).toHaveBeenCalledTimes(1)
             expect(prisma.book.update).toHaveBeenCalledWith({
-                where: { id: "1"},
+                where: { id: "1" },
                 data: {
                     id: "1",
                     isbn: "1234567890",

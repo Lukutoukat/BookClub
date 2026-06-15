@@ -10,6 +10,7 @@ export const setToken = (newToken: string) => {
 }
 
 export const getAuthConfig = () => {
+  // return getuserstoken()
   const token = getToken()
 
   return {
@@ -24,5 +25,6 @@ export const clearToken = () => {
 }
 
 export const isLoggedIn = () => {
-    return Boolean(localStorage.getItem('loggedBookappUser'))
+  return Boolean(localStorage.getItem('loggedBookappUser'))
 }
+

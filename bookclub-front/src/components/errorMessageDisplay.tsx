@@ -21,7 +21,7 @@ return (
 <>
       <Alert variant="destructive" className="max-w-full">
       <AlertCircleIcon />
-      <AlertTitle>Book proposal failed</AlertTitle>
+      <AlertTitle> Error: </AlertTitle>
       <AlertDescription>
         {message}
       </AlertDescription>

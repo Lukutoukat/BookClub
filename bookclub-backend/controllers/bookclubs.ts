@@ -89,6 +89,7 @@ bookClubRouter.delete('/:id', async (req, res) => {
     res.status(400).json({ error: 'bookclub id is undefined' })
     return
   }
+  
   try {
     await prisma.bookClub.delete({
       where: { id }

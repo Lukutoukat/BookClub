@@ -17,12 +17,12 @@ const BooksPage = () => {
       <UserLoginDisplay />
       <PageHeader
         badgeText="Books"
-        title="Your saved books"
+        title="Save books"
         description="Save the books you want to read and suggest in the future."
       />
 
-      <BookForm onBookAdded={handleBookAdded} />
-      <BookList ref={bookListRef} emptyMessage="No books suggested yet. Be the first to add one!" />
+      <BookForm onBookAdded={handleBookAdded} cycle_id=''/>
+      <BookList ref={bookListRef} emptyMessage="No books suggested yet. Be the first to add one!" description="Your saved books: "/>
     </>
   )
 }
