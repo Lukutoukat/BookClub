@@ -89,6 +89,17 @@ const BookclubPage = () => {
         </>
       )}
 
+      {/* RESULTS PHASE */}
+      {currentCycle?.phase === "over" && (
+        <>
+          <BookList
+            ref={bookListRef}
+            show="over"
+            cycleId={currentCycle.id}
+          />
+        </>
+      )}
+
       {/* Admin settings */}
       {isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
     </>
