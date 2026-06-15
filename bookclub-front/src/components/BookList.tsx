@@ -215,7 +215,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
                   onVote={submitVote}
                   existingVote={
                     book.proposal_id
-                      ? votesByProposalId[book.proposal_id as string]
+                      ? votesByProposalId[book.proposal_id]
                       : undefined
                   }
                 />

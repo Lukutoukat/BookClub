@@ -75,11 +75,9 @@ export function ButtonDialog({
           ) : (
             <></>
           )}
-          {/*eslint-disable-next-line */}
-          <AlertDialogAction
-            title="continue"
-            onClick={buttonOnClick}
-            disabled={disabled}
+          {
+            // eslint-disable-next-line
+          } <AlertDialogAction title="continue" onClick={buttonOnClick} disabled={disabled}
           >
             {alertDialogContinueText}
           </AlertDialogAction>
