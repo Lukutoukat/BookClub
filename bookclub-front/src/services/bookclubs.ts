@@ -21,7 +21,7 @@ const getAll = () => {
   return axios.get<BookClub[]>(baseUrl).then((res) => res.data);
 };
 
-const get = (clubIds: string[]) => {
+const get = (clubIds: string[]): Promise<BookClub[]> => {
   return axios
     .get<BookClub[]>(baseUrl, {
       ...getAuthConfig(),

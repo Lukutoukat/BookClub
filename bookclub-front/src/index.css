@@ -255,7 +255,11 @@
   }
 
   .list-card {
-    @apply w-full border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90 cursor-pointer;
+    @apply w-full border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90 cursor-pointer py-50;
+  }
+
+  .major-component-padding {
+    @apply px-8 sm:px-12 md:px-16 lg:px-24 xl:px-32 2xl:px-40
   }
 }
 

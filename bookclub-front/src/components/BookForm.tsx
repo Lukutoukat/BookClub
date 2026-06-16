@@ -397,7 +397,7 @@ const BookForm = ({
                 />
               </FieldContent>
             </Field>
-            <Field className="sm:col-span-2">
+            <Field>
               <FieldLabel htmlFor="genre">Genre</FieldLabel>
               <FieldContent>
                 <Input

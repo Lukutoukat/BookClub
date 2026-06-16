@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addDays } from "date-fns";
-import { PageHeader } from "../components/PageHeader";
 import { Button } from "./ui/button";
 import { RangeCalendarComponent } from "./RangeCalendarComponent";
 import { type DateRange } from "react-day-picker";
@@ -66,15 +65,6 @@ export const NewCycle = ({ bookclubId }: Props) => {
   if (!bookclub) return <div>Bookclub not found</div>;
   return (
     <>
-      <PageHeader
-        badgeText="New Cycle"
-        title={bookclub.name}
-        description=""
-        buttonText="Back"
-        buttonOnClick={async () => {
-          await navigate(`/club/${bookclubId}`);
-        }}
-      />
       <RangeCalendarComponent
         dateRange={dateRange}
         setDateRange={setDateRange}
