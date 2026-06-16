@@ -1,15 +1,9 @@
 import { useRef } from "react";
 
-<<<<<<< HEAD
-import BookForm from "@/components/BookForm";
-import BookList, { type BookListHandle } from "@/components/BookList";
-import { PageHeader } from "@/components/PageHeader";
-=======
 import BookForm from '@/components/BookForm'
 import BookList, { type BookListHandle } from '@/components/BookList'
 import { PageHeader } from '@/components/PageHeader'
 import { UserLoginDisplay } from '@/components/UserLoginDisplay'
->>>>>>> main
 
 const BooksPage = () => {
   const bookListRef = useRef<BookListHandle>(null);

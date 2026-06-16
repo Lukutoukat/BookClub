@@ -11,6 +11,7 @@ import PasswordResetPage from "./pages/PasswordResetPage";
 import NewCyclePage from "./pages/NewCyclePage";
 import { PageMenu } from "./components/PageMenu";
 import { PageLayout } from "./components/PageLayout";
+import { UserLoginDisplay } from "./components/UserLoginDisplay";
 import { isLoggedIn } from "./services/auth";
 import { useEffect, useState } from "react";
 import userService from "./services/users";
@@ -25,7 +26,7 @@ const App = () => {
       void (async function () {
         try {
           const userExists = await userService.getAll();
-          if (userExists && isLoggedIn()) {
+          if (userExists.length > 0 && isLoggedIn()) {
             setLoginValid(true);
           }
           if (userExists.length === 0) {
@@ -62,6 +63,7 @@ const App = () => {
     <BrowserRouter>
       <PageMenu>
         <PageLayout>
+          <UserLoginDisplay />
           <Routes>
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/books" element={<BooksPage />} />

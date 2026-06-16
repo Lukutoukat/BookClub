@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-import { PageHeader } from "../components/PageHeader";
-import BookClubList from "@/components/BookClubList";
-import JoinBookClubForm from "@/components/JoinBookClubForm";
-import { useGetClubs } from "@/hooks/getClubs";
-=======
 import { PageHeader } from '../components/PageHeader'
 import BookClubList from '@/components/BookClubList'
 import JoinBookClubForm from '@/components/JoinBookClubForm'
 import { useGetClubs } from '@/hooks/getClubs'
 import { UserLoginDisplay } from '@/components/UserLoginDisplay'
->>>>>>> main
 
 const HomePage = () => {
   const { bookClubs, isLoading, errorMessage, listMutated } = useGetClubs();
