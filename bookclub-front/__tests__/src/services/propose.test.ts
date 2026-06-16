@@ -8,50 +8,51 @@ vi.mock('axios')
 const mockedAxios = axios as Mocked<typeof axios>
 
 const mockProposal = {
-	book_id: "book_1",
-	cycle_id: "cycle_1",
-	bookclub_id: "bookclub_1"
+  book_id: 'book_1',
+  cycle_id: 'cycle_1',
+  bookclub_id: 'bookclub_1'
 }
 
 test('getAll returns all proposals', async () => {
-	const mockProposals = [mockProposal]
+  const mockProposals = [mockProposal]
 
-	mockedAxios.get.mockResolvedValue({
-		data: mockProposals,
-	})
+  mockedAxios.get.mockResolvedValue({
+    data: mockProposals
+  })
 
-	const result = await propose.getAll()
+  const result = await propose.getAll()
 
-	expect(result).toEqual(mockProposals)
+  expect(result).toEqual(mockProposals)
 })
 
 test('getProposedBooks returns all proposals', async () => {
-	const mockProposals = [mockProposal]
+  const mockProposals = [mockProposal]
 
-	mockedAxios.post.mockResolvedValue({
-		data: mockProposals,
-	})
+  mockedAxios.post.mockResolvedValue({
+    data: mockProposals
+  })
 
-	await propose.getProposedBooks(mockProposal.cycle_id)
+  await propose.getProposedBooks(mockProposal.cycle_id)
 
-	expect(mockedAxios.post).toHaveBeenCalledWith(
-    `/api/propose/${mockProposal.cycle_id}`, {},
+  expect(mockedAxios.post).toHaveBeenCalledWith(
+    `/api/propose/${mockProposal.cycle_id}`,
+    {},
     expect.objectContaining({
       headers: expect.objectContaining({
-        Authorization: null,
-      }),
-    }),
+        Authorization: null
+      })
+    })
   )
 })
 
 test('create returns created proposal', async () => {
-	mockedAxios.post.mockResolvedValue({
-		data: mockProposal,
-	})
+  mockedAxios.post.mockResolvedValue({
+    data: mockProposal
+  })
 
-	const result = await propose.create(mockProposal)
+  const result = await propose.create(mockProposal)
 
-	expect(result).toEqual(mockProposal)
+  expect(result).toEqual(mockProposal)
 })
 
 test('removeProposedBooks deletes the correct proposal', async () => {
@@ -65,8 +66,8 @@ test('removeProposedBooks deletes the correct proposal', async () => {
     `/api/propose/${mockId}/${mockProposal.book_id}`,
     expect.objectContaining({
       headers: expect.objectContaining({
-        Authorization: null,
-      }),
-    }),
+        Authorization: null
+      })
+    })
   )
 })

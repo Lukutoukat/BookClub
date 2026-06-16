@@ -1,16 +1,16 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
-import { ButtonDialog } from "./ButtonDialog";
+import { Badge } from '@/components/ui/badge'
+import { Button } from './ui/button'
+import { Link } from 'react-router-dom'
+import { ButtonDialog } from './ButtonDialog'
 
 interface PageHeaderProps {
-  badgeText: string;
-  title: string;
-  description: string;
-  buttonText?: string;
-  buttonLink?: string;
-  buttonOnClick?: () => void;
-  afterButtonClick?: "nothing" | "alert" | "confirm";
+  badgeText: string
+  title: string
+  description: string
+  buttonText?: string
+  buttonLink?: string
+  buttonOnClick?: () => void
+  afterButtonClick?: 'nothing' | 'alert' | 'confirm'
 }
 
 /**
@@ -29,7 +29,7 @@ export const PageHeader = ({
   buttonText,
   buttonLink,
   buttonOnClick,
-  afterButtonClick = "nothing",
+  afterButtonClick = 'nothing'
 }: PageHeaderProps) => {
   return (
     <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -41,26 +41,20 @@ export const PageHeader = ({
           {badgeText}
         </Badge>
         <div className="space-y-1 sm:space-y-2">
-          <h1 className="font-heading text-3xl leading-none sm:text-5xl">
-            {title}
-          </h1>
+          <h1 className="font-heading text-3xl leading-none sm:text-5xl">{title}</h1>
           <p className="max-w-xl text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">
             {description}
           </p>
         </div>
       </div>
       {buttonText ? (
-        afterButtonClick === "nothing" ? (
+        afterButtonClick === 'nothing' ? (
           buttonLink ? (
             <Button asChild variant="outline" className="w-full sm:w-auto">
               <Link to={buttonLink}>{buttonText}</Link>
             </Button>
           ) : (
-            <Button
-              variant="outline"
-              className="w-full sm:w-auto"
-              onClick={buttonOnClick}
-            >
+            <Button variant="outline" className="w-full sm:w-auto" onClick={buttonOnClick}>
               {buttonText}
             </Button>
           )
@@ -76,5 +70,5 @@ export const PageHeader = ({
         )
       ) : null}
     </header>
-  );
-};
+  )
+}

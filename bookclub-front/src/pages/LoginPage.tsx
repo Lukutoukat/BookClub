@@ -1,29 +1,23 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-import LoginForm from "@/components/LoginForm";
-import { useLogin } from "@/hooks/useLogin";
+import LoginForm from '@/components/LoginForm'
+import { useLogin } from '@/hooks/useLogin'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { PageHeader } from "@/components/PageHeader";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { PageHeader } from '@/components/PageHeader'
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const { login, message } = useLogin();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const { login, message } = useLogin()
 
   const handleLogin = async (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    await login(username, password);
-    setUsername("");
-    setPassword("");
-  };
+    await login(username, password)
+    setUsername('')
+    setPassword('')
+  }
 
   return (
     <>
@@ -54,7 +48,7 @@ const LoginPage = () => {
         </CardContent>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

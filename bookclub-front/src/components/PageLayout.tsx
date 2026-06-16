@@ -1,5 +1,5 @@
-import { useEffect, type ReactNode } from "react";
-import { getInitialTheme, applyThemeToDOM } from "@/lib/theme";
+import { useEffect, type ReactNode } from 'react'
+import { getInitialTheme, applyThemeToDOM } from '@/lib/theme'
 
 /**
  * PageLayout is a reusable component that provides consistent style accross pages
@@ -7,19 +7,18 @@ import { getInitialTheme, applyThemeToDOM } from "@/lib/theme";
  *
  **/
 interface PageLayoutProps {
-  children: ReactNode;
-  size?: "sm" | "md" | "lg";
+  children: ReactNode
+  size?: 'sm' | 'md' | 'lg'
 }
 
-export const PageLayout = ({ children, size = "lg" }: PageLayoutProps) => {
+export const PageLayout = ({ children, size = 'lg' }: PageLayoutProps) => {
   // Initialize theme on mount
   useEffect(() => {
-    const initialTheme = getInitialTheme();
-    applyThemeToDOM(initialTheme);
-  }, []);
+    const initialTheme = getInitialTheme()
+    applyThemeToDOM(initialTheme)
+  }, [])
 
-  const maxWidthClass =
-    size === "sm" ? "max-w-2xl" : size === "md" ? "max-w-xl" : "max-w-xl";
+  const maxWidthClass = size === 'sm' ? 'max-w-2xl' : size === 'md' ? 'max-w-xl' : 'max-w-xl'
 
   return (
     <div
@@ -27,5 +26,5 @@ export const PageLayout = ({ children, size = "lg" }: PageLayoutProps) => {
     >
       {children}
     </div>
-  );
-};
+  )
+}

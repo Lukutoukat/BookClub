@@ -1,45 +1,45 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import axios from "axios";
-import BooksPage from "./pages/BooksPage";
-import RegistrationPage from "./pages/RegistrationPage";
-import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
-import CreateBookclubPage from "./pages/CreateBookclubPage";
-import SettingsPage from "./pages/SettingsPage";
-import BookclubPage from "./pages/BookclubPage";
-import PasswordResetPage from "./pages/PasswordResetPage";
-import NewCyclePage from "./pages/NewCyclePage";
-import { PageMenu } from "./components/PageMenu";
-import { PageLayout } from "./components/PageLayout";
-import { UserLoginDisplay } from "./components/UserLoginDisplay";
-import { isLoggedIn } from "./services/auth";
-import { useEffect, useState } from "react";
-import userService from "./services/users";
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import axios from 'axios'
+import BooksPage from './pages/BooksPage'
+import RegistrationPage from './pages/RegistrationPage'
+import LoginPage from './pages/LoginPage'
+import HomePage from './pages/HomePage'
+import CreateBookclubPage from './pages/CreateBookclubPage'
+import SettingsPage from './pages/SettingsPage'
+import BookclubPage from './pages/BookclubPage'
+import PasswordResetPage from './pages/PasswordResetPage'
+import NewCyclePage from './pages/NewCyclePage'
+import { PageMenu } from './components/PageMenu'
+import { PageLayout } from './components/PageLayout'
+import { isLoggedIn } from './services/auth'
+import { useEffect, useState } from 'react'
+import userService from './services/users'
+import { UserLoginDisplay } from './components/UserLoginDisplay'
 
 //useEffect!!! :)
 
 const App = () => {
-  const [loginValid, setLoginValid] = useState(true);
+  const [loginValid, setLoginValid] = useState(true)
 
   useEffect(
     () =>
       void (async function () {
         try {
-          const userExists = await userService.getAll();
+          const userExists = await userService.getAll()
           if (userExists.length > 0 && isLoggedIn()) {
-            setLoginValid(true);
+            setLoginValid(true)
           }
           if (userExists.length === 0) {
-            setLoginValid(false);
+            setLoginValid(false)
           }
         } catch (error) {
           if (axios.isAxiosError(error) && error.response?.status === 401) {
-            setLoginValid(false);
+            setLoginValid(false)
           }
         }
       })(),
-    [],
-  );
+    []
+  )
 
   if (!loginValid) {
     return (
@@ -56,7 +56,7 @@ const App = () => {
           </PageLayout>
         </main>
       </BrowserRouter>
-    );
+    )
   }
 
   return (
@@ -78,7 +78,7 @@ const App = () => {
         </PageLayout>
       </PageMenu>
     </BrowserRouter>
-  );
-};
+  )
+}
 
-export default App;
+export default App

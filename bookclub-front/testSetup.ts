@@ -1,8 +1,8 @@
-import { beforeEach, afterEach, vi } from "vitest";
-import { cleanup } from "@testing-library/react";
-import "@testing-library/jest-dom/vitest";
+import { beforeEach, afterEach, vi } from 'vitest'
+import { cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom/vitest'
 
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation((query) => ({
     matches: false,
@@ -12,46 +12,46 @@ Object.defineProperty(window, "matchMedia", {
     removeListener: vi.fn(),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
+    dispatchEvent: vi.fn()
+  }))
+})
 
-Object.defineProperty(Element.prototype, "scrollIntoView", {
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
   value: vi.fn(),
-  writable: true,
-});
+  writable: true
+})
 
 const localStorageMock = (() => {
-  let store: Record<string, string> = {};
+  let store: Record<string, string> = {}
   return {
     getItem: (key: string) => store[key] || null,
     setItem: (key: string, value: string) => {
-      store[key] = value.toString();
+      store[key] = value.toString()
     },
     removeItem: (key: string) => {
-      delete store[key];
+      delete store[key]
     },
     clear: () => {
-      store = {};
+      store = {}
     },
     get length() {
-      return Object.keys(store).length;
+      return Object.keys(store).length
     },
-    key: (i: number) => Object.keys(store)[i] || null,
-  };
-})();
+    key: (i: number) => Object.keys(store)[i] || null
+  }
+})()
 
-Object.defineProperty(globalThis, "localStorage", {
+Object.defineProperty(globalThis, 'localStorage', {
   value: localStorageMock,
-  writable: true,
-});
-if (typeof window !== "undefined") {
-  Object.defineProperty(window, "localStorage", {
+  writable: true
+})
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'localStorage', {
     value: localStorageMock,
-    writable: true,
-  });
+    writable: true
+  })
 }
 
 afterEach(() => {
-  cleanup();
-});
+  cleanup()
+})

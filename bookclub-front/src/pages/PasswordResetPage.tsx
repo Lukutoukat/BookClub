@@ -1,11 +1,5 @@
-import { PageHeader } from "@/components/PageHeader";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { PageHeader } from '@/components/PageHeader'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 const PasswordResetPage = () => {
   return (
     <>
@@ -25,7 +19,7 @@ const PasswordResetPage = () => {
         <CardContent className="pt-4 sm:pt-6"></CardContent>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default PasswordResetPage;
+export default PasswordResetPage

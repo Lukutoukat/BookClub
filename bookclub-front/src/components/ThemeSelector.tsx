@@ -1,30 +1,19 @@
-import { useState } from "react";
-import { Palette } from "lucide-react";
+import { useState } from 'react'
+import { Palette } from 'lucide-react'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-import { Button } from "@/components/ui/button";
-import {
-  getInitialTheme,
-  applyThemeToDOM,
-  saveTheme,
-  type Theme,
-} from "@/lib/theme";
+import { Button } from '@/components/ui/button'
+import { getInitialTheme, applyThemeToDOM, saveTheme, type Theme } from '@/lib/theme'
 
 const ThemeSelector = () => {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme());
+  const [theme, setTheme] = useState<Theme>(getInitialTheme())
 
   const applyTheme = (newTheme: Theme): void => {
-    setTheme(newTheme);
-    applyThemeToDOM(newTheme);
-    saveTheme(newTheme);
-  };
+    setTheme(newTheme)
+    applyThemeToDOM(newTheme)
+    saveTheme(newTheme)
+  }
 
   return (
     <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
@@ -41,15 +30,15 @@ const ThemeSelector = () => {
       <CardContent className="py-4 sm:py-6">
         <div className="flex gap-2">
           <Button
-            variant={theme === "light" ? "default" : "outline"}
-            onClick={() => applyTheme("light")}
+            variant={theme === 'light' ? 'default' : 'outline'}
+            onClick={() => applyTheme('light')}
             className="flex-1"
           >
             Light
           </Button>
           <Button
-            variant={theme === "dark" ? "default" : "outline"}
-            onClick={() => applyTheme("dark")}
+            variant={theme === 'dark' ? 'default' : 'outline'}
+            onClick={() => applyTheme('dark')}
             className="flex-1"
           >
             Dark
@@ -57,7 +46,7 @@ const ThemeSelector = () => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default ThemeSelector;
+export default ThemeSelector

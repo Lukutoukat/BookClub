@@ -8,19 +8,19 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
-  SidebarInset,
-} from "@/components/ui/sidebar";
-import { Link, useLocation } from "react-router-dom";
-import { type MenuItem } from "./PageMenu";
-import type { ReactNode } from "react";
+  SidebarInset
+} from '@/components/ui/sidebar'
+import { Link, useLocation } from 'react-router-dom'
+import { type MenuItem } from './PageMenu'
+import type { ReactNode } from 'react'
 
 interface AppSidebarProps {
-  menuItems: MenuItem[];
-  children?: ReactNode;
+  menuItems: MenuItem[]
+  children?: ReactNode
 }
 
 export function AppSidebar({ menuItems, children }: AppSidebarProps) {
-  const location = useLocation();
+  const location = useLocation()
 
   return (
     <SidebarProvider>
@@ -30,7 +30,7 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
           <SidebarGroup>
             <SidebarMenu>
               {menuItems.map((item) => {
-                const isActive = location.pathname === item.to;
+                const isActive = location.pathname === item.to
                 return (
                   <SidebarMenuItem key={item.to}>
                     <SidebarMenuButton asChild isActive={isActive}>
@@ -40,7 +40,7 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                );
+                )
               })}
             </SidebarMenu>
           </SidebarGroup>
@@ -49,5 +49,5 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
       </Sidebar>
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
-  );
+  )
 }
