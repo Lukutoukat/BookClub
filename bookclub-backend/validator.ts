@@ -4,31 +4,31 @@
  * @returns true if valid ISBN, false otherwise
  */
 export const isValidISBN = (isbn: string): boolean => {
-  const cleanISBN = isbn.replace(/[-\s]/g, "");
+	const cleanISBN = isbn.replace(/[-\s]/g, '');
 
-  // Must be only numbers, 10 or 13 digits
-  if (!/^\d{10}$|^\d{13}$/.test(cleanISBN)) {
-    return false;
-  }
+	// Must be only numbers, 10 or 13 digits
+	if (!/^\d{10}$|^\d{13}$/.test(cleanISBN)) {
+		return false;
+	}
 
-  if (cleanISBN.length === 10) {
-    let sum = 0;
-    for (let i = 0; i < 10; i++) {
-      sum += parseInt(cleanISBN[i], 10) * (10 - i);
-    }
-    return sum % 11 === 0;
-  }
+	if (cleanISBN.length === 10) {
+		let sum = 0;
+		for (let i = 0; i < 10; i++) {
+			sum += parseInt(cleanISBN[i], 10) * (10 - i);
+		}
+		return sum % 11 === 0;
+	}
 
-  if (cleanISBN.length === 13) {
-    let sum = 0;
-    for (let i = 0; i < 13; i++) {
-      const digit = parseInt(cleanISBN[i], 10);
-      sum += digit * (i % 2 === 0 ? 1 : 3);
-    }
-    return sum % 10 === 0;
-  }
+	if (cleanISBN.length === 13) {
+		let sum = 0;
+		for (let i = 0; i < 13; i++) {
+			const digit = parseInt(cleanISBN[i], 10);
+			sum += digit * (i % 2 === 0 ? 1 : 3);
+		}
+		return sum % 10 === 0;
+	}
 
-  return false;
+	return false;
 };
 
 /**
@@ -37,19 +37,19 @@ export const isValidISBN = (isbn: string): boolean => {
  * @returns Formatted ISBN with dashes
  */
 export const formatISBN = (isbn: string): string => {
-  const cleanISBN = isbn.replace(/[-\s]/g, "");
+	const cleanISBN = isbn.replace(/[-\s]/g, '');
 
-  if (cleanISBN.length === 10) {
-    // ISBN-10 format: X-XXX-XXXXX-X
-    return `${cleanISBN.slice(0, 1)}-${cleanISBN.slice(1, 4)}-${cleanISBN.slice(4, 9)}-${cleanISBN.slice(9)}`;
-  }
+	if (cleanISBN.length === 10) {
+		// ISBN-10 format: X-XXX-XXXXX-X
+		return `${cleanISBN.slice(0, 1)}-${cleanISBN.slice(1, 4)}-${cleanISBN.slice(4, 9)}-${cleanISBN.slice(9)}`;
+	}
 
-  if (cleanISBN.length === 13) {
-    // ISBN-13 format: XXX-X-XXX-XXXXX-X
-    return `${cleanISBN.slice(0, 3)}-${cleanISBN.slice(3, 4)}-${cleanISBN.slice(4, 7)}-${cleanISBN.slice(7, 12)}-${cleanISBN.slice(12)}`;
-  }
+	if (cleanISBN.length === 13) {
+		// ISBN-13 format: XXX-X-XXX-XXXXX-X
+		return `${cleanISBN.slice(0, 3)}-${cleanISBN.slice(3, 4)}-${cleanISBN.slice(4, 7)}-${cleanISBN.slice(7, 12)}-${cleanISBN.slice(12)}`;
+	}
 
-  return isbn;
+	return isbn;
 };
 
 /**
@@ -58,66 +58,58 @@ export const formatISBN = (isbn: string): string => {
  * @returns Clean ISBN string (numbers only)
  */
 export const cleanISBN = (isbn: string): string => {
-  return isbn.replace(/[-\s]/g, "");
+	return isbn.replace(/[-\s]/g, '');
 };
 
 export const validateBook = (book: {
-  isbn?: string;
-  name: string;
-  author: string;
-  year: number;
-  pages?: number;
-  language?: string;
-  genre?: string;
-  comment?: string;
+	isbn?: string;
+	name: string;
+	author: string;
+	year: number;
+	pages?: number;
+	language?: string;
+	genre?: string;
+	comment?: string;
 }): { valid: boolean; errors: string[] } => {
-  const errors: string[] = [];
+	const errors: string[] = [];
 
-  // Validate ISBN only if provided
-  if (book.isbn && !isValidISBN(book.isbn)) {
-    errors.push("Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).");
-  }
+	// Validate ISBN only if provided
+	if (book.isbn && !isValidISBN(book.isbn)) {
+		errors.push('Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).');
+	}
 
-  if (!book.name || book.name.trim() === "") {
-    errors.push("Book title is required.");
-  }
+	if (!book.name || book.name.trim() === '') {
+		errors.push('Book title is required.');
+	}
 
-  if (!book.author || book.author.trim() === "") {
-    errors.push("Author is required.");
-  }
+	if (!book.author || book.author.trim() === '') {
+		errors.push('Author is required.');
+	}
 
-  const yearNum = book.year;
-  if (!yearNum || isNaN(yearNum) || yearNum > new Date().getFullYear()) {
-    errors.push("Year must be a valid number.");
-  }
+	const yearNum = book.year;
+	if (!yearNum || isNaN(yearNum) || yearNum > new Date().getFullYear()) {
+		errors.push('Year must be a valid number.');
+	}
 
-  // Pages is optional, but if provided, it must be non-negative
-  if (book.pages !== undefined && book.pages !== null) {
-    if (isNaN(book.pages) || book.pages < 0) {
-      errors.push("Pages must be a non-negative number.");
-    }
-  }
+	// Pages is optional, but if provided, it must be non-negative
+	if (book.pages !== undefined && book.pages !== null) {
+		if (isNaN(book.pages) || book.pages < 0) {
+			errors.push('Pages must be a non-negative number.');
+		}
+	}
 
-  // Language is optional, but if provided, it must not be empty
-  if (
-    book.language !== undefined &&
-    book.language !== null &&
-    book.language.trim() === ""
-  ) {
-    errors.push("Language must not be empty if provided.");
-  }
+	// Language is optional, but if provided, it must not be empty
+	if (book.language !== undefined && book.language !== null && book.language.trim() === '') {
+		errors.push('Language must not be empty if provided.');
+	}
 
-  // Genre is optional, but if provided, it must not be empty
-  if (
-    book.genre !== undefined &&
-    book.genre !== null &&
-    book.genre.trim() === ""
-  ) {
-    errors.push("Genre must not be empty if provided.");
-  }
+	// Genre is optional, but if provided, it must not be empty
+	if (book.genre !== undefined && book.genre !== null && book.genre.trim() === '') {
+		errors.push('Genre must not be empty if provided.');
+	}
 
-  return {
-    valid: errors.length === 0,
-    errors,
-  };
+	return {
+		valid: errors.length === 0,
+		errors,
+	};
 };

@@ -1,6 +1,6 @@
-import { useParams } from "react-router-dom";
-import { NewCycle } from "@/components/NewCycle";
-import { EndPhase } from "@/components/EndPhase";
+import { useParams } from 'react-router-dom';
+import { NewCycle } from '@/components/NewCycle';
+import { EndPhase } from '@/components/EndPhase';
 
 const NewCyclePage = () => {
   const { bookclubId } = useParams<{ bookclubId: string }>();

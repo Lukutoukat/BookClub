@@ -1,4 +1,4 @@
-import { CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 interface SectionHeaderProps {
   title: string;
@@ -12,17 +12,11 @@ interface SectionHeaderProps {
  * @param description - optional description text displayed below the title
  * @returns
  */
-export const SectionHeader = ({
-  title,
-  description,
-  children,
-}: SectionHeaderProps) => {
+export const SectionHeader = ({ title, description, children }: SectionHeaderProps) => {
   return (
     <CardHeader className="card-header flex flex-row items-start justify-between gap-4">
       <div className="flex flex-col">
-        <CardTitle className="text-xl sm:text-2xl leading-tight">
-          {title}
-        </CardTitle>
+        <CardTitle className="text-xl sm:text-2xl leading-tight">{title}</CardTitle>
         {description && (
           <CardDescription className="text-xs sm:text-sm leading-snug text-muted-foreground">
             {description}

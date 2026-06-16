@@ -1,10 +1,10 @@
-import { PageHeader } from "@/components/PageHeader";
-import { BottomDescription } from "@/components/BottomDescription";
-import { useLogin } from "@/hooks/useLogin";
+import { PageHeader } from '@/components/PageHeader';
+import { BottomDescription } from '@/components/BottomDescription';
+import { useLogin } from '@/hooks/useLogin';
 
-import ClubSettings from "@/components/ClubSettings";
-import AccountSettings from "@/components/AccountSettings";
-import ThemeSelector from "@/components/ThemeSelector";
+import ClubSettings from '@/components/ClubSettings';
+import AccountSettings from '@/components/AccountSettings';
+import ThemeSelector from '@/components/ThemeSelector';
 
 const SettingsPage = () => {
   const { logout } = useLogin();

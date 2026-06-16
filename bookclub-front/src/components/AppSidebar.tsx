@@ -9,10 +9,10 @@ import {
   SidebarMenuButton,
   SidebarProvider,
   SidebarInset,
-} from "@/components/ui/sidebar";
-import { Link, useLocation } from "react-router-dom";
-import { type MenuItem } from "./PageMenu";
-import type { ReactNode } from "react";
+} from '@/components/ui/sidebar';
+import { Link, useLocation } from 'react-router-dom';
+import { type MenuItem } from './PageMenu';
+import type { ReactNode } from 'react';
 
 interface AppSidebarProps {
   menuItems: MenuItem[];

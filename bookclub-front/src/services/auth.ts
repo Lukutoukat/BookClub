@@ -1,9 +1,9 @@
 export const getToken = () => {
-  return localStorage.getItem("loggedBookappUser");
+  return localStorage.getItem('loggedBookappUser');
 };
 
 export const setToken = (newToken: string) => {
-  localStorage.setItem("loggedBookappUser", newToken);
+  localStorage.setItem('loggedBookappUser', newToken);
 };
 
 export const getAuthConfig = () => {
@@ -18,9 +18,9 @@ export const getAuthConfig = () => {
 };
 
 export const clearToken = () => {
-  localStorage.removeItem("loggedBookappUser");
+  localStorage.removeItem('loggedBookappUser');
 };
 
 export const isLoggedIn = () => {
-  return Boolean(localStorage.getItem("loggedBookappUser"));
+  return Boolean(localStorage.getItem('loggedBookappUser'));
 };

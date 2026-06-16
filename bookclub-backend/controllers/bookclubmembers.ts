@@ -1,82 +1,75 @@
-import express, { type Request, type Response } from "express";
-import { prisma } from "../db.ts";
-import userExtractor from "../middleware/userExtractor.ts";
+import express, { type Request, type Response } from 'express';
+import { prisma } from '../db.ts';
+import userExtractor from '../middleware/userExtractor.ts';
 const BookClubMembersRouter = express.Router();
 
 // numbers for user_roles are 0 and 1, 0 being the admin and 1 being normal member
 
 interface BookClubMembersRequest {
-  id: string;
-  user_id?: string;
-  user_role?: number;
-  bookclub_id?: string;
-  invite_code: string;
+	id: string;
+	user_id?: string;
+	user_role?: number;
+	bookclub_id?: string;
+	invite_code: string;
 }
 
-BookClubMembersRouter.get(
-  "/",
-  userExtractor,
-  async (req: Request, res: Response) => {
-    console.log("TOKEEEN AND USER");
-    if (!req.token) {
-      return res.status(401).json({
-        error: "missing token",
-      });
-    }
-    if (req.user) {
-      try {
-        const result = await prisma.bookClubMembers.findMany({
-          where: {
-            user_id: req.user.id,
-          },
-        });
-        res.json(result);
-      } catch (error) {
-        console.error("GET /api/bookclubs error:", error);
-        res.status(500).json({ error: "database error" });
-      }
-    } else {
-      res.status(401).json({ error: "user not found" });
-    }
-    return;
-  },
-);
+BookClubMembersRouter.get('/', userExtractor, async (req: Request, res: Response) => {
+	console.log('TOKEEEN AND USER');
+	if (!req.token) {
+		return res.status(401).json({
+			error: 'missing token',
+		});
+	}
+	if (req.user) {
+		try {
+			const result = await prisma.bookClubMembers.findMany({
+				where: {
+					user_id: req.user.id,
+				},
+			});
+			res.json(result);
+		} catch (error) {
+			console.error('GET /api/bookclubs error:', error);
+			res.status(500).json({ error: 'database error' });
+		}
+	} else {
+		res.status(401).json({ error: 'user not found' });
+	}
+	return;
+});
 
 BookClubMembersRouter.post(
-  "/",
-  userExtractor,
-  async (
-    req: Request<unknown, unknown, BookClubMembersRequest>,
-    res: Response,
-  ) => {
-    const newBookClub: BookClubMembersRequest = req.body;
+	'/',
+	userExtractor,
+	async (req: Request<unknown, unknown, BookClubMembersRequest>, res: Response) => {
+		const newBookClub: BookClubMembersRequest = req.body;
 
-    if (req.user) {
-      try {
-        const result = await prisma.bookClub.findUnique({
-          where: { invite_code: newBookClub.invite_code },
-        });
-        if (!result) {
-          res.status(400).json({ error: "Invalid invite code." });
-          return;
-        }
-        await prisma.bookClubMembers.create({
-          data: {
-            user_id: req.user.id,
-            user_role: 1,
-            bookclub_id: result.id,
-          },
-        });
-        res.json(newBookClub);
-      } catch (error) {
-        console.error("POST /api/bookclubs error:", error);
-        res.status(500).json({ error: "database error" });
-      }
-      return;
-    } else {
-      res.status(401).json({ error: "user not found" });
-    }
-  },
+		if (req.user) {
+			try {
+				const result = await prisma.bookClub.findUnique({
+					where: { invite_code: newBookClub.invite_code },
+				});
+				if (!result) {
+					res.status(400).json({ error: 'Invalid invite code.' });
+					return;
+				}
+				await prisma.bookClubMembers.create({
+					data: {
+						user_id: req.user.id,
+						user_role: 1,
+						bookclub_id: result.id,
+					},
+				});
+				res.json(newBookClub);
+			} catch (error) {
+				console.error('POST /api/bookclubs error:', error);
+				res.status(500).json({ error: 'database error' });
+			}
+			return;
+		} else {
+			res.status(401).json({ error: 'user not found' });
+		}
+	},
 );
 
 export default BookClubMembersRouter;

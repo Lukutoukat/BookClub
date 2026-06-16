@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { addDays } from "date-fns";
-import { PageHeader } from "../components/PageHeader";
-import { Button } from "./ui/button";
-import { RangeCalendarComponent } from "./RangeCalendarComponent";
-import { type DateRange } from "react-day-picker";
-import cycleService, { type CreateCycle } from "../services/cycle";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { addDays } from 'date-fns';
+import { PageHeader } from '../components/PageHeader';
+import { Button } from './ui/button';
+import { RangeCalendarComponent } from './RangeCalendarComponent';
+import { type DateRange } from 'react-day-picker';
+import cycleService, { type CreateCycle } from '../services/cycle';
 
 type Bookclub = {
   id: number;
@@ -57,7 +57,7 @@ export const NewCycle = ({ bookclubId }: Props) => {
         await cycleService.create(createdcycle);
         await navigate(`/club/${bookclubId}`);
       } catch (error) {
-        console.error("Failed to create cycle:", error);
+        console.error('Failed to create cycle:', error);
       }
     }
   };
@@ -75,10 +75,7 @@ export const NewCycle = ({ bookclubId }: Props) => {
           await navigate(`/club/${bookclubId}`);
         }}
       />
-      <RangeCalendarComponent
-        dateRange={dateRange}
-        setDateRange={setDateRange}
-      />
+      <RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange} />
       <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
         <Button onClick={handleCreate}>Create</Button>
       </div>

@@ -1,8 +1,8 @@
-import { beforeEach, afterEach, vi } from "vitest";
-import { cleanup } from "@testing-library/react";
-import "@testing-library/jest-dom/vitest";
+import { beforeEach, afterEach, vi } from 'vitest';
+import { cleanup } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation((query) => ({
     matches: false,
@@ -16,7 +16,7 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-Object.defineProperty(Element.prototype, "scrollIntoView", {
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
   value: vi.fn(),
   writable: true,
 });
@@ -41,12 +41,12 @@ const localStorageMock = (() => {
   };
 })();
 
-Object.defineProperty(globalThis, "localStorage", {
+Object.defineProperty(globalThis, 'localStorage', {
   value: localStorageMock,
   writable: true,
 });
-if (typeof window !== "undefined") {
-  Object.defineProperty(window, "localStorage", {
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'localStorage', {
     value: localStorageMock,
     writable: true,
   });

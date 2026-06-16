@@ -1,8 +1,8 @@
-import { useRef } from "react";
+import { useRef } from 'react';
 
-import BookForm from "@/components/BookForm";
-import BookList, { type BookListHandle } from "@/components/BookList";
-import { PageHeader } from "@/components/PageHeader";
+import BookForm from '@/components/BookForm';
+import BookList, { type BookListHandle } from '@/components/BookList';
+import { PageHeader } from '@/components/PageHeader';
 
 const BooksPage = () => {
   const bookListRef = useRef<BookListHandle>(null);
@@ -20,10 +20,7 @@ const BooksPage = () => {
       />
 
       <BookForm onBookAdded={handleBookAdded} cycle_id="" />
-      <BookList
-        ref={bookListRef}
-        emptyMessage="No books suggested yet. Be the first to add one!"
-      />
+      <BookList ref={bookListRef} emptyMessage="No books suggested yet. Be the first to add one!" />
     </>
   );
 };

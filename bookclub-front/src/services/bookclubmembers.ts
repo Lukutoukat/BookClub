@@ -1,7 +1,7 @@
-import axios from "axios";
-import { getAuthConfig } from "./auth";
+import axios from 'axios';
+import { getAuthConfig } from './auth';
 
-const baseUrl = "/api/bookclubmembers";
+const baseUrl = '/api/bookclubmembers';
 
 export interface BookclubMember {
   id: string;
@@ -10,7 +10,7 @@ export interface BookclubMember {
   bookclub_id: string;
 }
 
-export type AddBookClubMember = Omit<BookclubMember, "id" | "bookclub_id">;
+export type AddBookClubMember = Omit<BookclubMember, 'id' | 'bookclub_id'>;
 
 const create = (newBookClubMember: AddBookClubMember) => {
   return axios
@@ -19,9 +19,7 @@ const create = (newBookClubMember: AddBookClubMember) => {
 };
 
 const get = () => {
-  return axios
-    .get<BookclubMember[]>(baseUrl, getAuthConfig())
-    .then((res) => res.data);
+  return axios.get<BookclubMember[]>(baseUrl, getAuthConfig()).then((res) => res.data);
 };
 
 export default {

@@ -1,8 +1,8 @@
-import axios from "axios";
-import { getAuthConfig } from "@/services/auth";
-import { type Book } from "@/services/books";
+import axios from 'axios';
+import { getAuthConfig } from '@/services/auth';
+import { type Book } from '@/services/books';
 
-const baseUrl = "/api/propose";
+const baseUrl = '/api/propose';
 
 export interface ProposeFields {
   id: string;
@@ -11,18 +11,16 @@ export interface ProposeFields {
   bookclub_id?: string;
 }
 
-export type deletePropose = Omit<ProposeFields, "id" | "book_id" | "cycle_id">;
+export type deletePropose = Omit<ProposeFields, 'id' | 'book_id' | 'cycle_id'>;
 export type Propose = ProposeFields;
-export type CreatePropose = Omit<ProposeFields, "id">;
+export type CreatePropose = Omit<ProposeFields, 'id'>;
 
 const getAll = () => {
   return axios.get<Propose[]>(baseUrl).then((res) => res.data);
 };
 
 const getProposedBooks = (cycleId: string) => {
-  return axios
-    .post<Book[]>(`${baseUrl}/${cycleId}`, {}, getAuthConfig())
-    .then((res) => res.data);
+  return axios.post<Book[]>(`${baseUrl}/${cycleId}`, {}, getAuthConfig()).then((res) => res.data);
 };
 
 const removeProposedBook = (cycle_id: string, book_id: string) => {
@@ -32,9 +30,7 @@ const removeProposedBook = (cycle_id: string, book_id: string) => {
 };
 
 const create = (propose: CreatePropose) => {
-  return axios
-    .post<Propose>(baseUrl, propose, getAuthConfig())
-    .then((res) => res.data);
+  return axios.post<Propose>(baseUrl, propose, getAuthConfig()).then((res) => res.data);
 };
 
 export default { getAll, getProposedBooks, create, removeProposedBook };

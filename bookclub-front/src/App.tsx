@@ -1,19 +1,19 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import axios from "axios";
-import BooksPage from "./pages/BooksPage";
-import RegistrationPage from "./pages/RegistrationPage";
-import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
-import CreateBookclubPage from "./pages/CreateBookclubPage";
-import SettingsPage from "./pages/SettingsPage";
-import BookclubPage from "./pages/BookclubPage";
-import PasswordResetPage from "./pages/PasswordResetPage";
-import NewCyclePage from "./pages/NewCyclePage";
-import { PageMenu } from "./components/PageMenu";
-import { PageLayout } from "./components/PageLayout";
-import { isLoggedIn } from "./services/auth";
-import { useEffect, useState } from "react";
-import userService from "./services/users";
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import axios from 'axios';
+import BooksPage from './pages/BooksPage';
+import RegistrationPage from './pages/RegistrationPage';
+import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
+import CreateBookclubPage from './pages/CreateBookclubPage';
+import SettingsPage from './pages/SettingsPage';
+import BookclubPage from './pages/BookclubPage';
+import PasswordResetPage from './pages/PasswordResetPage';
+import NewCyclePage from './pages/NewCyclePage';
+import { PageMenu } from './components/PageMenu';
+import { PageLayout } from './components/PageLayout';
+import { isLoggedIn } from './services/auth';
+import { useEffect, useState } from 'react';
+import userService from './services/users';
 
 const App = () => {
   const [loginValid, setLoginValid] = useState(true);

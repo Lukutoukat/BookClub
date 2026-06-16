@@ -1,6 +1,6 @@
-import axios from "axios";
-import { getAuthConfig } from "./auth";
-const baseUrl = "/api/users";
+import axios from 'axios';
+import { getAuthConfig } from './auth';
+const baseUrl = '/api/users';
 
 export interface User {
   id: number;
@@ -9,11 +9,11 @@ export interface User {
   password: string;
 }
 
-export type CreateUser = Omit<User, "id">;
+export type CreateUser = Omit<User, 'id'>;
 
 const getAll = async () => {
   const response = await axios.get<User[]>(baseUrl, getAuthConfig());
-  console.log("response serviceissä", response);
+  console.log('response serviceissä', response);
   return response.data;
 };
 

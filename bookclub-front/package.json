@@ -10,6 +10,7 @@
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
+    "format": "prettier --write .",
     "build:ui": "rm -rf dist && cd ../bookclub-front && npm run build && cp -r dist ../bookclub-backend"
   },
   "dependencies": {

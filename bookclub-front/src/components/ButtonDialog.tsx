@@ -8,9 +8,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import type { ReactNode } from "react";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import type { ReactNode } from 'react';
 
 interface ButtonDialogProps {
   children?: ReactNode;
@@ -23,12 +23,12 @@ interface ButtonDialogProps {
   //eslint-disable-next-line
   buttonOnClick?: any;
   buttonVariant?:
-    | "default"
-    | "link"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "destructive"
+    | 'default'
+    | 'link'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'destructive'
     | null
     | undefined;
   disabled?: boolean;
@@ -37,25 +37,21 @@ interface ButtonDialogProps {
 
 export function ButtonDialog({
   children,
-  buttonText = "Click me",
+  buttonText = 'Click me',
   buttonTitle,
-  alertDialogText = "Are you absolutely sure?",
-  alertDialogDescription = "This action needs to be accepted by clicking continue.",
-  alertDialogCancelText = "Cancel",
-  alertDialogContinueText = "Continue",
+  alertDialogText = 'Are you absolutely sure?',
+  alertDialogDescription = 'This action needs to be accepted by clicking continue.',
+  alertDialogCancelText = 'Cancel',
+  alertDialogContinueText = 'Continue',
   buttonOnClick,
-  buttonVariant = "default",
+  buttonVariant = 'default',
   disabled,
   buttonClassName,
 }: ButtonDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          className={buttonClassName}
-          variant={buttonVariant}
-          title={buttonTitle}
-        >
+        <Button className={buttonClassName} variant={buttonVariant} title={buttonTitle}>
           {buttonText}
           {children ?? null}
         </Button>
@@ -63,15 +59,11 @@ export function ButtonDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{alertDialogText}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {alertDialogDescription}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{alertDialogDescription}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          {alertDialogCancelText !== "" ? (
-            <AlertDialogCancel title="cancel">
-              {alertDialogCancelText}
-            </AlertDialogCancel>
+          {alertDialogCancelText !== '' ? (
+            <AlertDialogCancel title="cancel">{alertDialogCancelText}</AlertDialogCancel>
           ) : (
             <></>
           )}

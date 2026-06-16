@@ -4,7 +4,7 @@
  * @returns true if valid ISBN, false otherwise
  */
 export const isValidISBN = (isbn: string): boolean => {
-  const cleanISBN = isbn.replace(/[-\s]/g, "");
+  const cleanISBN = isbn.replace(/[-\s]/g, '');
 
   // Must be only numbers, 10 or 13 digits
   if (!/^\d{10}$|^\d{13}$/.test(cleanISBN)) {
@@ -37,7 +37,7 @@ export const isValidISBN = (isbn: string): boolean => {
  * @returns Formatted ISBN with dashes
  */
 export const formatISBN = (isbn: string): string => {
-  const cleanISBN = isbn.replace(/[-\s]/g, "");
+  const cleanISBN = isbn.replace(/[-\s]/g, '');
 
   if (cleanISBN.length === 10) {
     // ISBN-10 format: X-XXX-XXXXX-X
@@ -58,5 +58,5 @@ export const formatISBN = (isbn: string): string => {
  * @returns Clean ISBN string (numbers only)
  */
 export const cleanISBN = (isbn: string): string => {
-  return isbn.replace(/[-\s]/g, "");
+  return isbn.replace(/[-\s]/g, '');
 };

@@ -1,6 +1,6 @@
-import axios from "axios";
-import { getAuthConfig } from "./auth";
-const baseUrl = "/api/bookclubs";
+import axios from 'axios';
+import { getAuthConfig } from './auth';
+const baseUrl = '/api/bookclubs';
 
 export interface BookClubFields {
   id: string;
@@ -9,12 +9,10 @@ export interface BookClubFields {
 }
 
 export type BookClub = BookClubFields;
-export type CreateBookClub = Omit<BookClubFields, "id">;
+export type CreateBookClub = Omit<BookClubFields, 'id'>;
 
 const create = async (newBookClub: CreateBookClub) => {
-  return await axios
-    .post<BookClub>(baseUrl, newBookClub, getAuthConfig())
-    .then((res) => res.data);
+  return await axios.post<BookClub>(baseUrl, newBookClub, getAuthConfig()).then((res) => res.data);
 };
 
 const getAll = () => {

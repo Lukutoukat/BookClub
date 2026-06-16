@@ -1,21 +1,10 @@
-import { useState } from "react";
-import { Palette } from "lucide-react";
+import { useState } from 'react';
+import { Palette } from 'lucide-react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { Button } from "@/components/ui/button";
-import {
-  getInitialTheme,
-  applyThemeToDOM,
-  saveTheme,
-  type Theme,
-} from "@/lib/theme";
+import { Button } from '@/components/ui/button';
+import { getInitialTheme, applyThemeToDOM, saveTheme, type Theme } from '@/lib/theme';
 
 const ThemeSelector = () => {
   const [theme, setTheme] = useState<Theme>(getInitialTheme());
@@ -41,15 +30,15 @@ const ThemeSelector = () => {
       <CardContent className="py-4 sm:py-6">
         <div className="flex gap-2">
           <Button
-            variant={theme === "light" ? "default" : "outline"}
-            onClick={() => applyTheme("light")}
+            variant={theme === 'light' ? 'default' : 'outline'}
+            onClick={() => applyTheme('light')}
             className="flex-1"
           >
             Light
           </Button>
           <Button
-            variant={theme === "dark" ? "default" : "outline"}
-            onClick={() => applyTheme("dark")}
+            variant={theme === 'dark' ? 'default' : 'outline'}
+            onClick={() => applyTheme('dark')}
             className="flex-1"
           >
             Dark

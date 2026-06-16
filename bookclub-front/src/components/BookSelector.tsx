@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -6,13 +6,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from '@/components/ui/command';
 
-import bookService, { type Book } from "@/services/books";
-import proposeService from "@/services/propose";
-import { useEffect, useRef, useState } from "react";
-import { getErrorMessage } from "@/lib/errorMessage";
-import ErrorMessageDisplay from "./errorMessageDisplay";
+import bookService, { type Book } from '@/services/books';
+import proposeService from '@/services/propose';
+import { useEffect, useRef, useState } from 'react';
+import { getErrorMessage } from '@/lib/errorMessage';
+import ErrorMessageDisplay from './errorMessageDisplay';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +22,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
 export interface BookListHandle {
   reload: () => Promise<void>;
@@ -42,8 +42,8 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 
   // Keep track of both the selected ID and the text in the input
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
-  const [inputValue, setInputValue] = useState("");
-  const [selectedDisplay, setSelectedDisplay] = useState<string>("savedBooks");
+  const [inputValue, setInputValue] = useState('');
+  const [selectedDisplay, setSelectedDisplay] = useState<string>('savedBooks');
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,13 +53,13 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
     try {
       removeErrorMessage();
       const loadedBooks =
-        selectedDisplay === "savedBooks"
+        selectedDisplay === 'savedBooks'
           ? await bookService.getAll()
           : await bookService.getPreviousSuggestions();
       setBooks(loadedBooks);
       console.log(`Loading book ${selectedDisplay}`);
     } catch {
-      setErrorMessage("Failed to load books.");
+      setErrorMessage('Failed to load books.');
     } finally {
       setIsLoading(false);
     }
@@ -80,10 +80,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
   // Handle clicks outside the component to close the dropdown
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setOpen(false);
 
         // If clicked away, revert the input text to the currently selected book (if any)
@@ -93,13 +90,13 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
             setInputValue(book.name);
           }
         } else {
-          setInputValue("");
+          setInputValue('');
         }
       }
     };
 
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [books, selectedBookId, inputValue]);
 
   const handleSelect = (bookId: string) => {
@@ -121,20 +118,20 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
         });
         if (onBookAdded) await onBookAdded();
       } catch (error) {
-        setErrorMessage(getErrorMessage(error, "Failed to propose book."));
+        setErrorMessage(getErrorMessage(error, 'Failed to propose book.'));
       }
     }
-    setInputValue("");
+    setInputValue('');
     setSelectedBookId(null);
   };
 
   const swapDisplay = () => {
-    if (selectedDisplay === "savedBooks") {
-      setSelectedDisplay("proposedBooks");
+    if (selectedDisplay === 'savedBooks') {
+      setSelectedDisplay('proposedBooks');
     } else {
-      setSelectedDisplay("savedBooks");
+      setSelectedDisplay('savedBooks');
     }
-    setInputValue("");
+    setInputValue('');
     setSelectedBookId(null);
   };
 
@@ -147,15 +144,13 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
             <AlertDialogDescription>
               Do you want to propose
               {selectedBookId
-                ? " " + books.find((b) => b.id === selectedBookId)?.name + "?"
-                : "Error"}
+                ? ' ' + books.find((b) => b.id === selectedBookId)?.name + '?'
+                : 'Error'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={submitSelectedBook}>
-              Continue
-            </AlertDialogAction>
+            <AlertDialogAction onClick={submitSelectedBook}>Continue</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -180,9 +175,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
             className="h-9 px-4 text-sm sm:h-8 sm:px-3 sm:text-xs shrink-0"
             onClick={swapDisplay}
           >
-            {selectedDisplay === "savedBooks"
-              ? "Show previous books"
-              : "Show saved proposed"}
+            {selectedDisplay === 'savedBooks' ? 'Show previous books' : 'Show saved proposed'}
           </Button>
         </div>
         {/* The Dropdown list (absolutely positioned below the input) */}
@@ -201,9 +194,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
                       onSelect={() => handleSelect(book.id)}
                     >
                       <div className="flex min-w-0 flex-col items-start gap-0.5">
-                        <span className="truncate font-medium">
-                          {book.name}
-                        </span>
+                        <span className="truncate font-medium">{book.name}</span>
                         {book.author && (
                           <span className="truncate text-xs text-muted-foreground">
                             {book.author}
@@ -218,10 +209,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
           </CommandList>
         )}
       </Command>
-      <ErrorMessageDisplay
-        message={errorMessage as string}
-        remove={removeErrorMessage}
-      />
+      <ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />
     </>
   );
 };

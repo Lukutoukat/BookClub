@@ -1,23 +1,14 @@
-import {
-  useState,
-  useEffect,
-  type ChangeEvent,
-  type SubmitEventHandler,
-} from "react";
+import { useState, useEffect, type ChangeEvent, type SubmitEventHandler } from 'react';
 
-import bookService, {
-  type CreateBook,
-  type Book,
-  type BookFields,
-} from "@/services/books";
-import { isValidISBN, cleanISBN } from "@/lib/isbnValidator";
+import bookService, { type CreateBook, type Book, type BookFields } from '@/services/books';
+import { isValidISBN, cleanISBN } from '@/lib/isbnValidator';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import { Field, FieldLabel, FieldContent } from "@/components/ui/field";
-import { SectionHeader } from "./SectionHeader";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
+import { Field, FieldLabel, FieldContent } from '@/components/ui/field';
+import { SectionHeader } from './SectionHeader';
 
 interface BookFormState {
   id?: string;
@@ -32,15 +23,15 @@ interface BookFormState {
 }
 
 const emptyBook: BookFormState = {
-  id: "",
-  isbn: "",
-  name: "",
-  author: "",
-  year: "",
-  pages: "",
-  comment: "",
-  language: "",
-  genre: "",
+  id: '',
+  isbn: '',
+  name: '',
+  author: '',
+  year: '',
+  pages: '',
+  comment: '',
+  language: '',
+  genre: '',
 };
 
 const MAX_TITLE_LENGTH = 255;
@@ -79,17 +70,17 @@ const BookForm = ({
 
   // Initialize form with bookToEdit data when it's provided
   useEffect(() => {
-    if (typeof bookToEdit !== "boolean" && bookToEdit !== undefined) {
+    if (typeof bookToEdit !== 'boolean' && bookToEdit !== undefined) {
       setNewBook({
         id: bookToEdit.id,
-        isbn: bookToEdit.isbn ?? "",
+        isbn: bookToEdit.isbn ?? '',
         name: bookToEdit.name,
         author: bookToEdit.author,
         year: bookToEdit.year.toString(),
-        pages: bookToEdit.pages ? bookToEdit.pages.toString() : "",
-        comment: bookToEdit.comment ?? "",
-        language: bookToEdit.language ?? "",
-        genre: bookToEdit.genre ?? "",
+        pages: bookToEdit.pages ? bookToEdit.pages.toString() : '',
+        comment: bookToEdit.comment ?? '',
+        language: bookToEdit.language ?? '',
+        genre: bookToEdit.genre ?? '',
       });
       setErrors([]);
     } else {
@@ -97,36 +88,34 @@ const BookForm = ({
     }
   }, [bookToEdit]);
 
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
 
-    if (name === "year") {
+    if (name === 'year') {
       if (!/^-?\d*$/.test(value)) {
         return;
       }
     }
 
-    if (name === "pages") {
+    if (name === 'pages') {
       if (!/^\d*$/.test(value)) {
         return;
       }
     }
 
-    if (name === "name" && value.length > MAX_TITLE_LENGTH) {
+    if (name === 'name' && value.length > MAX_TITLE_LENGTH) {
       return;
     }
-    if (name === "author" && value.length > MAX_AUTHOR_LENGTH) {
+    if (name === 'author' && value.length > MAX_AUTHOR_LENGTH) {
       return;
     }
-    if (name === "language" && value.length > MAX_LANGUAGE_LENGTH) {
+    if (name === 'language' && value.length > MAX_LANGUAGE_LENGTH) {
       return;
     }
-    if (name === "genre" && value.length > MAX_GENRE_LENGTH) {
+    if (name === 'genre' && value.length > MAX_GENRE_LENGTH) {
       return;
     }
-    if (name === "comment" && value.length > MAX_COMMENT_LENGTH) {
+    if (name === 'comment' && value.length > MAX_COMMENT_LENGTH) {
       return;
     }
 
@@ -144,74 +133,62 @@ const BookForm = ({
     const formErrors: string[] = [];
 
     // Validate name (required)
-    if (!newBook.name || newBook.name.trim() === "") {
-      formErrors.push("Book title is required.");
+    if (!newBook.name || newBook.name.trim() === '') {
+      formErrors.push('Book title is required.');
     }
 
     // Validate author (required)
-    if (!newBook.author || newBook.author.trim() === "") {
-      formErrors.push("Author is required.");
+    if (!newBook.author || newBook.author.trim() === '') {
+      formErrors.push('Author is required.');
     }
 
     // Validate year (required)
     const yearNum = parseInt(newBook.year, 10);
 
     if (yearNum > new Date().getFullYear()) {
-      formErrors.push("Year cannot be in the future.");
+      formErrors.push('Year cannot be in the future.');
     } else if (yearNum == 0) {
-      formErrors.push("The year zero does not exist.");
+      formErrors.push('The year zero does not exist.');
     } else if (!newBook.year || isNaN(yearNum)) {
-      formErrors.push("Year must be a valid number.");
+      formErrors.push('Year must be a valid number.');
     }
 
     // Validate pages only if provided
     if (newBook.pages) {
       const pagesNum = parseInt(newBook.pages, 10);
       if (isNaN(pagesNum) || pagesNum < 0) {
-        formErrors.push("Pages must be a non-negative number.");
+        formErrors.push('Pages must be a non-negative number.');
       }
     }
 
     // Validate ISBN only if provided
     if (newBook.isbn && !isValidISBN(newBook.isbn)) {
-      formErrors.push(
-        "Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).",
-      );
+      formErrors.push('Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).');
     }
 
     // Title length
     if (newBook.name.length > MAX_TITLE_LENGTH) {
-      formErrors.push(
-        `Title can contain at most ${MAX_TITLE_LENGTH} characters.`,
-      );
+      formErrors.push(`Title can contain at most ${MAX_TITLE_LENGTH} characters.`);
     }
 
     // Author length
     if (newBook.author.length > MAX_AUTHOR_LENGTH) {
-      formErrors.push(
-        `Author can contain at most ${MAX_AUTHOR_LENGTH} characters.`,
-      );
+      formErrors.push(`Author can contain at most ${MAX_AUTHOR_LENGTH} characters.`);
     }
 
     //Language length
     if (newBook.language.length > MAX_LANGUAGE_LENGTH) {
-      formErrors.push(
-        `Language can contain at most ${MAX_LANGUAGE_LENGTH} characters.`,
-      );
+      formErrors.push(`Language can contain at most ${MAX_LANGUAGE_LENGTH} characters.`);
     }
 
     //Genre length
     if (newBook.genre.length > MAX_GENRE_LENGTH) {
-      formErrors.push(
-        `Genre can contain at most ${MAX_GENRE_LENGTH} characters.`,
-      );
+      formErrors.push(`Genre can contain at most ${MAX_GENRE_LENGTH} characters.`);
     }
 
     // Comment length
     if (newBook.comment.length > MAX_COMMENT_LENGTH) {
-      formErrors.push(
-        `Comment can contain at most ${MAX_COMMENT_LENGTH} characters.`,
-      );
+      formErrors.push(`Comment can contain at most ${MAX_COMMENT_LENGTH} characters.`);
     }
 
     if (formErrors.length > 0) {
@@ -231,9 +208,9 @@ const BookForm = ({
 
     try {
       if (bookToEdit !== undefined) {
-        if (typeof bookToEdit !== "boolean") {
+        if (typeof bookToEdit !== 'boolean') {
           const bookToUpdateSubmit: BookFields = {
-            id: newBook.id ?? "",
+            id: newBook.id ?? '',
             isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
             name: newBook.name,
             author: newBook.author,
@@ -287,18 +264,15 @@ const BookForm = ({
       }
     } catch (error) {
       setErrors([
-        "Failed to save book. Please try again.\n" +
-          (error instanceof Error ? error.message : "Unknown error"),
+        'Failed to save book. Please try again.\n' +
+          (error instanceof Error ? error.message : 'Unknown error'),
       ]);
     }
   };
 
   return (
     <Card className={`card-base ${className}`}>
-      <SectionHeader
-        title={title ?? "Add a book"}
-        description={description ?? ""}
-      >
+      <SectionHeader title={title ?? 'Add a book'} description={description ?? ''}>
         {secondaryButtonAction && (
           <Button
             variant="secondary"
@@ -306,7 +280,7 @@ const BookForm = ({
             onClick={secondaryButtonAction}
             className="gap-3 ml-auto shrink-0"
           >
-            {secondaryButtonText ?? "Cancel"}
+            {secondaryButtonText ?? 'Cancel'}
           </Button>
         )}
       </SectionHeader>
@@ -451,7 +425,7 @@ const BookForm = ({
           )}
           <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
             <Button type="submit" size="lg" className="w-full sm:w-auto">
-              {buttonText ?? "Add"}
+              {buttonText ?? 'Add'}
             </Button>
           </div>
         </form>

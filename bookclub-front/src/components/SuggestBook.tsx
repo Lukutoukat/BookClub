@@ -1,9 +1,9 @@
-import { Button } from "./ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { SectionHeader } from "./SectionHeader";
-import BookSelector from "./BookSelector";
-import BookForm from "./BookForm";
-import { useState } from "react";
+import { Button } from './ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { SectionHeader } from './SectionHeader';
+import BookSelector from './BookSelector';
+import BookForm from './BookForm';
+import { useState } from 'react';
 
 type suggestBookProps = {
   onBookAdded?: () => Promise<void> | void;
@@ -11,11 +11,7 @@ type suggestBookProps = {
   cycle_id: string;
 };
 
-export const SuggestBook = ({
-  onBookAdded,
-  bookclubId,
-  cycle_id,
-}: suggestBookProps) => {
+export const SuggestBook = ({ onBookAdded, bookclubId, cycle_id }: suggestBookProps) => {
   const [isShowingBookForm, setIsShowingBookForm] = useState<boolean>(false);
 
   const onCreate = () => {

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import bookclubmembersService from "@/services/bookclubmembers";
-import bookClubService, { type BookClubFields } from "@/services/bookclubs";
+import bookclubmembersService from '@/services/bookclubmembers';
+import bookClubService, { type BookClubFields } from '@/services/bookclubs';
 
 export const useGetClubs = () => {
   const [list, setList] = useState<BookClubFields[]>([]);
@@ -21,7 +21,7 @@ export const useGetClubs = () => {
           const loadedClubs = await bookClubService.get(clubIds);
           setList([...loadedClubs]);
         } catch {
-          setErrorMessage("Failed to load bookclubs.");
+          setErrorMessage('Failed to load bookclubs.');
         } finally {
           setIsLoading(false);
         }

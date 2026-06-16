@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { Button } from "./ui/button";
-import { Link, useLocation } from "react-router-dom";
-import { type MenuItem } from "./PageMenu";
+import { useEffect } from 'react';
+import { Button } from './ui/button';
+import { Link, useLocation } from 'react-router-dom';
+import { type MenuItem } from './PageMenu';
 
 interface AppNavbarProps {
   menuItems: MenuItem[];
@@ -24,18 +24,18 @@ export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
       const needsPadding = scrollHeight > windowHeight;
 
       if (needsPadding) {
-        document.body.style.paddingBottom = "4rem";
+        document.body.style.paddingBottom = '4rem';
       } else {
-        document.body.style.paddingBottom = "0rem";
+        document.body.style.paddingBottom = '0rem';
       }
     };
 
     updatePadding();
-    window.addEventListener("resize", updatePadding);
+    window.addEventListener('resize', updatePadding);
 
     return () => {
-      window.removeEventListener("resize", updatePadding);
-      document.body.style.paddingBottom = "";
+      window.removeEventListener('resize', updatePadding);
+      document.body.style.paddingBottom = '';
     };
   }, []);
 
@@ -51,7 +51,7 @@ export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
               <Button
                 key={item.to}
                 asChild
-                variant={isActive ? "secondary" : "ghost"}
+                variant={isActive ? 'secondary' : 'ghost'}
                 className="flex h-15 w-18 flex-col items-center justify-center gap-1 px-2 py-1 text-[10px]"
               >
                 <Link to={item.to}>

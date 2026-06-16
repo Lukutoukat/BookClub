@@ -1,11 +1,6 @@
-import {
-  Alert,
-  AlertAction,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
-import { AlertCircleIcon } from "lucide-react";
-import { Button } from "./ui/button";
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircleIcon } from 'lucide-react';
+import { Button } from './ui/button';
 
 type errorMessageProps = {
   message: string;

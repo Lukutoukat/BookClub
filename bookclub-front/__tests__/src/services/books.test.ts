@@ -1,24 +1,24 @@
-import axios from "axios";
-import { test, expect, vi } from "vitest";
-import type { Mocked } from "vitest";
-import books from "../../../src/services/books";
+import axios from 'axios';
+import { test, expect, vi } from 'vitest';
+import type { Mocked } from 'vitest';
+import books from '../../../src/services/books';
 
-vi.mock("axios");
+vi.mock('axios');
 
 const mockedAxios = axios as Mocked<typeof axios>;
 
 const mockBook = {
-  isbn: "1234567890",
-  name: "Book 1",
-  author: "Author 1",
+  isbn: '1234567890',
+  name: 'Book 1',
+  author: 'Author 1',
   year: 1,
   pages: 100,
-  comment: "Comment 1",
-  language: "Language 1",
-  genre: "Genre 1",
+  comment: 'Comment 1',
+  language: 'Language 1',
+  genre: 'Genre 1',
 };
 
-test("getAll returns all books", async () => {
+test('getAll returns all books', async () => {
   const mockBooks = [mockBook];
 
   mockedAxios.get.mockResolvedValue({
@@ -30,7 +30,7 @@ test("getAll returns all books", async () => {
   expect(result).toEqual(mockBooks);
 });
 
-test("create returns created book", async () => {
+test('create returns created book', async () => {
   mockedAxios.post.mockResolvedValue({
     data: mockBook,
   });
@@ -38,7 +38,7 @@ test("create returns created book", async () => {
   const result = await books.create(mockBook);
 
   expect(mockedAxios.post).toHaveBeenCalledWith(
-    "/api/books",
+    '/api/books',
     mockBook,
     expect.objectContaining({
       headers: expect.objectContaining({
@@ -49,8 +49,8 @@ test("create returns created book", async () => {
   expect(result).toEqual(mockBook);
 });
 
-test("updates book correctly", async () => {
-  const mockBookWithId = { ...mockBook, id: "1" };
+test('updates book correctly', async () => {
+  const mockBookWithId = { ...mockBook, id: '1' };
 
   mockedAxios.put.mockResolvedValue({ data: mockBookWithId });
 
@@ -68,10 +68,10 @@ test("updates book correctly", async () => {
   expect(result).toEqual(mockBookWithId);
 });
 
-test("remove from user deletes the correct book", async () => {
+test('remove from user deletes the correct book', async () => {
   const mockBookWithId = {
     ...mockBook,
-    id: "1",
+    id: '1',
   };
 
   mockedAxios.put.mockResolvedValue({ data: mockBookWithId });

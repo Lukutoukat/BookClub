@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { PageHeader } from "../components/PageHeader";
-import bookclubService from "@/services/bookclubs";
-import { ButtonDialog } from "./ButtonDialog";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PageHeader } from '../components/PageHeader';
+import bookclubService from '@/services/bookclubs';
+import { ButtonDialog } from './ButtonDialog';
 type Bookclub = {
   id: number;
   name: string;
@@ -40,15 +40,13 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
   if (loading) return null;
   if (!bookclub) return <div>Book club not found</div>;
 
-  const handleDeletion = async (
-    event: React.SyntheticEvent<HTMLButtonElement>,
-  ) => {
+  const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     try {
       await bookclubService.remove(bookclub.id);
-      await navigate("/home", { replace: true });
+      await navigate('/home', { replace: true });
     } catch (error) {
-      console.error("error during deletion", error);
+      console.error('error during deletion', error);
     }
   };
 

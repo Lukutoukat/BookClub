@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { AxiosError } from "axios";
+import { useState } from 'react';
+import { AxiosError } from 'axios';
 
-import loginService from "@/services/login";
-import { setToken, clearToken } from "@/services/auth";
+import loginService from '@/services/login';
+import { setToken, clearToken } from '@/services/auth';
 
 export const useLogin = () => {
   const [message, setMessage] = useState<string | null>(null);
@@ -14,39 +14,39 @@ export const useLogin = () => {
         password,
       });
 
-      localStorage.setItem("loggedBookappUser", JSON.stringify(user));
+      localStorage.setItem('loggedBookappUser', JSON.stringify(user));
 
       setToken(user.token);
       setMessage(null);
 
-      window.location.href = "/home";
+      window.location.href = '/home';
       return true;
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
         if (
           err.response &&
-          typeof err.response.data === "object" &&
+          typeof err.response.data === 'object' &&
           err.response.data !== null &&
-          "error" in err.response.data
+          'error' in err.response.data
         ) {
           const backendMessage = (err.response.data as { error: string }).error;
 
           setMessage(backendMessage);
         } else {
-          setMessage("Wrong credentials");
+          setMessage('Wrong credentials');
         }
       } else {
-        setMessage("Wrong credentials");
+        setMessage('Wrong credentials');
       }
       return false;
     }
   };
 
   const logout = () => {
-    localStorage.removeItem("loggedBookappUser");
+    localStorage.removeItem('loggedBookappUser');
     clearToken();
     setMessage(null);
-    window.location.href = "/login";
+    window.location.href = '/login';
   };
 
   return { login, logout, message };

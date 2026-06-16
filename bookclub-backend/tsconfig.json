@@ -1,16 +1,16 @@
 {
-  "compilerOptions": {
-    "types": ["node", "express", "bcrypt", "jest"],
-    "target": "esnext",
-    "noEmit": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "nodenext",
-    "esModuleInterop": true,
-    "allowImportingTsExtensions": true,
-    "preserveWatchOutput": true
-  },
-  "include": ["**/**/*"]
+	"compilerOptions": {
+		"types": ["node", "express", "bcrypt", "jest"],
+		"target": "esnext",
+		"noEmit": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"module": "nodenext",
+		"esModuleInterop": true,
+		"allowImportingTsExtensions": true,
+		"preserveWatchOutput": true
+	},
+	"include": ["**/**/*"]
 }
