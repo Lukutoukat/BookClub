@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { render, screen } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import BookList from '@/components/BookList'
@@ -5,6 +6,21 @@ import bookService, { type Book } from '@/services/books'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 vi.mock('../../../src/services/books')
+=======
+import { render, screen } from "@testing-library/react"
+import user from "@testing-library/user-event"
+import BookList from "@/components/BookList"
+import bookService, { type Book } from "@/services/books"
+import { test, expect, describe, vi, beforeEach } from "vitest"
+import voteService from "@/services/vote"
+import resultService from "@/services/results"
+import proposeService from "@/services/results"
+
+vi.mock("../../../src/services/books")
+vi.mock("../../../src/services/vote")
+vi.mock("../../../src/services/results")
+vi.mock("../../../src/services/propose")
+>>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
 
 const mockBook = (overrides?: Partial<Book>): Book => ({
   id: 1,
@@ -19,11 +35,17 @@ const mockBook = (overrides?: Partial<Book>): Book => ({
   ...overrides
 })
 
+<<<<<<< HEAD
 describe('BookList', () => {
+=======
+
+describe("BookList", () => {
+>>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
+<<<<<<< HEAD
   const renderComponent = (overrides?: { books?: Book[]; emptyMessage?: string }) => {
     const booksToUse = overrides?.books ?? [mockBook()]
     vi.mocked(bookService.getAll).mockResolvedValue(booksToUse)
@@ -32,6 +54,32 @@ describe('BookList', () => {
       render(<BookList emptyMessage={emptyMessage} />)
     } else {
       render(<BookList />)
+=======
+  const renderComponent = (overrides?: {
+    books?: Book[];
+    emptyMessage?: string;
+		show?: string;
+		cycleId?: string;
+  }) => {
+    const booksToUse = overrides?.books ?? [mockBook()];
+		const show = overrides?.show ?? "savedBooks";
+		const cycleId = overrides?.cycleId;
+
+		if (show === "savedBooks") {
+    	vi.mocked(bookService.getAll).mockResolvedValue(booksToUse);
+		} else if (show === "proposedBooks" || show == "over") {
+			vi.mocked(proposeService.getProposedBooks).mockResolvedValue(booksToUse)
+		} else if (show === "votedBooks") {
+			vi.mocked(resultService.getResults).mockResolvedValue(booksToUse)
+			vi.mocked(voteService.getOwn).mockResolvedValue([])
+		}
+
+    const emptyMessage = overrides?.emptyMessage;
+    if (emptyMessage) {
+      render(<BookList emptyMessage={emptyMessage} show={show} cycleId={cycleId} />);
+    } else {
+      render(<BookList show={show} cycleId={cycleId} />);
+>>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
     }
   }
 
@@ -66,7 +114,47 @@ describe('BookList', () => {
     })
   })
 
+<<<<<<< HEAD
   describe('book expansion', () => {
+=======
+	describe("loading state", () => {
+		test("shows loading state initially", async () => {
+			vi.mocked(bookService.getAll).mockImplementation(
+				() => new Promise((resolve) => setTimeout(() => resolve([mockBook()]), 100))
+			)
+			render(<BookList />)
+			expect(screen.getByText("Loading books...")).toBeDefined()
+		})
+	})
+
+	describe("error handling", () => {
+		test("displays error message when loading fails", async () => {
+			vi.mocked(bookService.getAll).mockRejectedValue(new Error("Load failed"))
+			render(<BookList />)
+			const errorMessage = await screen.findByText("Failed to load books.")
+			expect(errorMessage).toBeDefined()
+		})
+
+		test("displays error message when deletion fails", async () => {
+			vi.mocked(bookService.getAll).mockResolvedValue([mockBook()])
+			vi.mocked(bookService.removeFromUser).mockRejectedValue(new Error("Deletion failed"))
+
+			render(<BookList />)
+			const us = user.setup()
+			
+			await screen.findByText("Book 1")
+			const deleteButtons = screen.getAllByTitle("Delete book")
+			await us.click(deleteButtons[0])
+			const continueButtons = screen.getAllByTitle("continue")
+			await us.click(continueButtons[0])
+
+			const errorMessage = await screen.findByText("Failed to delete book.")
+			expect(errorMessage).toBeDefined()
+		})
+	})
+
+  describe("book expansion", () => {
+>>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
     // Helper to find the expand/collapse button within a book item
     const getExpandButton = () => {
       const buttons = screen.getAllByRole('button')
@@ -120,6 +208,7 @@ describe('BookList', () => {
     })
   })
 
+<<<<<<< HEAD
   describe('delete functionality', () => {
     test('calls onDelete with id when delete button clicked and window.confirm is accepted', async () => {
       vi.spyOn(window, 'confirm').mockReturnValue(true)
@@ -131,6 +220,36 @@ describe('BookList', () => {
       await us.click(deleteButtons[0])
       const continueButtons = screen.getAllByTitle('continue')
       await us.click(continueButtons[0])
+=======
+  describe("voting", () => {
+    test("passes existing votes to BookItem when show='votedBooks'", async () => {
+      vi.mocked(resultService.getResults).mockResolvedValue([
+        { id: 1, name: "Book 1", author: "A", year: 2024, pages: 100, language: "EN", proposal_id: "p1" } as any
+      ])
+      vi.mocked(voteService.getOwn).mockResolvedValue([
+        { id: "v1", proposal_id: "p1", weight: 2 } as any
+      ])
+
+      render(<BookList show="votedBooks" cycleId="c1" />)
+
+      expect(await screen.findByText("Book 1")).toBeDefined()
+			expect(vi.mocked(resultService.getResults)).toHaveBeenCalledWith("c1")
+			expect(vi.mocked(voteService.getOwn)).toHaveBeenCalledWith("c1")
+    })
+  })
+
+  describe("delete functionality", () => {
+    test("calls onDelete with id when delete button clicked and window.confirm is accepted", async () => {
+      vi.spyOn(window, "confirm").mockReturnValue(true);
+      vi.mocked(bookService.removeFromUser).mockResolvedValue(undefined);
+      renderComponent();
+      const us = user.setup();
+      await screen.findByText("Book 1"); // wait for books to load
+      const deleteButtons = screen.getAllByTitle("Delete book");
+      await us.click(deleteButtons[0]);
+      const continueButtons = screen.getAllByTitle("continue");
+      await us.click(continueButtons[0]);
+>>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
 
       expect(vi.mocked(bookService.removeFromUser)).toHaveBeenCalledWith(1)
     })
