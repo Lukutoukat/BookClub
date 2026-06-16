@@ -34,7 +34,6 @@ test('getAll returns all cycles', async () => {
 })
 
 describe('getLatestCycle returns the latest cycle', () => {
-<<<<<<< HEAD
 	it('returns proposal phase when proposalEnd is in the future', async () => {
 		const mockCycleWithDates = {
 			...mockCycle,
@@ -45,14 +44,6 @@ describe('getLatestCycle returns the latest cycle', () => {
 		mockedAxios.get.mockResolvedValue({
 			data: mockCycleWithDates,
 		})
-=======
-  test('returns proposal phase when proposalEnd is in the future', async () => {
-    const mockCycleWithDates = {
-      ...mockCycle,
-      proposalEnd: '2026-01-20T00:00:00Z',
-      votingEnd: '2026-01-30T00:00:00Z'
-    }
->>>>>>> ce4992021f5d39cca26d143aad5957b193065567
 
     mockedAxios.get.mockResolvedValue({
       data: mockCycleWithDates
@@ -66,7 +57,6 @@ describe('getLatestCycle returns the latest cycle', () => {
     })
   })
 
-<<<<<<< HEAD
 	it('returns voting phase when proposalEnd is in the past and votingEnd is in the future', async () => {
 		const mockCycleWithDates = {
 			...mockCycle,
@@ -77,14 +67,6 @@ describe('getLatestCycle returns the latest cycle', () => {
 		mockedAxios.get.mockResolvedValue({
 			data: mockCycleWithDates,
 		})
-=======
-  test('returns voting phase when proposalEnd is in the past and votingEnd is in the future', async () => {
-    const mockCycleWithDates = {
-      ...mockCycle,
-      proposalEnd: '2026-01-01T00:00:00Z',
-      votingEnd: '2026-01-30T00:00:00Z'
-    }
->>>>>>> ce4992021f5d39cca26d143aad5957b193065567
 
     mockedAxios.get.mockResolvedValue({
       data: mockCycleWithDates
@@ -98,7 +80,6 @@ describe('getLatestCycle returns the latest cycle', () => {
     })
   })
 
-<<<<<<< HEAD
 	it('returns over phase when votingEnd is in the past', async () => {
 		const mockCycleWithDates = {
 			...mockCycle,
@@ -109,14 +90,6 @@ describe('getLatestCycle returns the latest cycle', () => {
 		mockedAxios.get.mockResolvedValue({
 			data: mockCycleWithDates,
 		})
-=======
-  test('returns over phase when votingEnd is in the past', async () => {
-    const mockCycleWithDates = {
-      ...mockCycle,
-      proposalEnd: '2026-01-01T00:00:00Z',
-      votingEnd: '2026-01-05T00:00:00Z'
-    }
->>>>>>> ce4992021f5d39cca26d143aad5957b193065567
 
     mockedAxios.get.mockResolvedValue({
       data: mockCycleWithDates
@@ -131,7 +104,6 @@ describe('getLatestCycle returns the latest cycle', () => {
   })
 })
 
-<<<<<<< HEAD
 describe("endLatestCyclePhase ends the latest cycle phase", () => {
 	it("ends proposal phase when proposalEnd is in the future", async () => {
 		const mockCycleWithDates = {
@@ -188,8 +160,6 @@ describe("endLatestCyclePhase ends the latest cycle phase", () => {
 
 })
 
-=======
->>>>>>> ce4992021f5d39cca26d143aad5957b193065567
 test('create returns created cycle', async () => {
   mockedAxios.post.mockResolvedValue({
     data: mockCycle
