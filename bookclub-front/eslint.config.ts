@@ -1,4 +1,5 @@
 import tseslint from 'typescript-eslint';
+import pluginJsxAlly from 'eslint-plugin-jsx-a11y';
 import pluginReact from 'eslint-plugin-react';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
@@ -60,4 +61,5 @@ export default defineConfig([
       ],
     },
   },
+  pluginJsxAlly.flatConfigs.strict,
 ]);
