@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react"
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react"
+import React, { useState, useEffect } from "react";
+import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 
-import { type Book } from "@/services/books"
-import { type VoteFields } from "@/services/vote"
-import { formatISBN } from "@/lib/isbnValidator"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ButtonDialog } from "./ButtonDialog"
-import type { BookResult } from "@/services/results"
+import { type Book } from "@/services/books";
+import { type VoteFields } from "@/services/vote";
+import { formatISBN } from "@/lib/isbnValidator";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ButtonDialog } from "./ButtonDialog";
+import type { BookResult } from "@/services/results";
 
 const BookItem = ({
   book,
@@ -22,44 +22,44 @@ const BookItem = ({
   onVote,
   existingVote,
 }: {
-  book: Book | BookResult
-  onDelete: (id: string) => Promise<void>
-  onEdit: () => void
-  isReadOnly: boolean
-  isVotingPhase: boolean
+  book: Book | BookResult;
+  onDelete: (id: string) => Promise<void>;
+  onEdit: () => void;
+  isReadOnly: boolean;
+  isVotingPhase: boolean;
   onVote: (
     bookId: string,
     weight: number,
     voteId: string | null,
-  ) => Promise<void>
-  existingVote?: VoteFields
+  ) => Promise<void>;
+  existingVote?: VoteFields;
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [weight, setWeight] = useState<number | null>(null)
-  const [voteId, setVoteId] = useState<string | null>(null)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [weight, setWeight] = useState<number | null>(null);
+  const [voteId, setVoteId] = useState<string | null>(null);
 
   const isBookResult = (book: Book | BookResult): book is BookResult => {
-    return "score" in book
-  }
+    return "score" in book;
+  };
 
   useEffect(() => {
     if (isVotingPhase && existingVote) {
-      setWeight(existingVote.weight ?? null)
-      setVoteId(existingVote.id)
+      setWeight(existingVote.weight ?? null);
+      setVoteId(existingVote.id);
     }
-  }, [isVotingPhase, existingVote])
+  }, [isVotingPhase, existingVote]);
 
   const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (!book.id) return
-    setIsDeleting(true)
+    e.stopPropagation();
+    if (!book.id) return;
+    setIsDeleting(true);
     try {
-      await onDelete(book.id)
+      await onDelete(book.id);
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   return (
     <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90">
@@ -100,8 +100,8 @@ const BookItem = ({
                   size="xs"
                   className="gap-3 ml-auto shrink-0"
                   onClick={(e: React.MouseEvent) => {
-                    e.stopPropagation()
-                    onEdit()
+                    e.stopPropagation();
+                    onEdit();
                   }}
                 >
                   Edit
@@ -139,8 +139,8 @@ const BookItem = ({
             size="sm"
             className="h-6 p1-4 px-1 text-muted-foreground hover:text-foreground"
             onClick={(e: React.MouseEvent) => {
-              e.stopPropagation()
-              setIsExpanded(!isExpanded)
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
             }}
           >
             {isExpanded ? (
@@ -157,12 +157,12 @@ const BookItem = ({
             <RadioGroup
               value={weight?.toString() ?? ""}
               onValueChange={async (val) => {
-                const w = Number(val)
-                setWeight(w)
-                if (!book.id) return
-                if (!book.proposal_id) return
+                const w = Number(val);
+                setWeight(w);
+                if (!book.id) return;
+                if (!book.proposal_id) return;
 
-                await onVote(book.proposal_id, w, voteId ?? null)
+                await onVote(book.proposal_id, w, voteId ?? null);
               }}
             >
               <div className="flex items-center gap-3">
@@ -225,7 +225,7 @@ const BookItem = ({
         )}
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default BookItem
+export default BookItem;

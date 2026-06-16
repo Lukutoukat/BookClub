@@ -1,27 +1,26 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { type BookClub } from '@/services/bookclubs'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { SectionHeader } from './SectionHeader'
+import { type BookClub } from "@/services/bookclubs";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { SectionHeader } from "./SectionHeader";
 
 export interface BookClubListHandle {
-  reload: () => Promise<void>
+  reload: () => Promise<void>;
 }
-
 
 type Props = {
-  bookClubs: BookClub[]
-  isLoading: boolean
-  errorMessage: string | null
-}
+  bookClubs: BookClub[];
+  isLoading: boolean;
+  errorMessage: string | null;
+};
 
 const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    void navigate(`/club/${bookClub.id}`)
-  }
+    void navigate(`/club/${bookClub.id}`);
+  };
 
   return (
     <Button
@@ -31,16 +30,18 @@ const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
     >
       <Card className="w-full border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90 cursor-pointer">
         <CardContent className="px-3 py-2 sm:px-4 sm:py-3 pl-4 sm:pl-5">
-          <h3 className="text-lg font-semibold text-foreground/90">{bookClub.name}</h3>
+          <h3 className="text-lg font-semibold text-foreground/90">
+            {bookClub.name}
+          </h3>
         </CardContent>
       </Card>
     </Button>
-  )
-}
+  );
+};
 
-const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
-  const clubCount = bookClubs.length
-  const description = `${clubCount} ${clubCount === 1 ? 'bookclub' : 'bookclubs'}`
+const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
+  const clubCount = bookClubs.length;
+  const description = `${clubCount} ${clubCount === 1 ? "bookclub" : "bookclubs"}`;
 
   if (isLoading) {
     return (
@@ -52,7 +53,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (errorMessage) {
@@ -65,7 +66,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (bookClubs.length === 0) {
@@ -78,7 +79,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -92,7 +93,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
         </div>
       </CardContent>
     </Card>
-  )
-})
+  );
+};
 
-export default BookClubList
+export default BookClubList;

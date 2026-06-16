@@ -4,25 +4,25 @@ import {
   forwardRef,
   useImperativeHandle,
   useRef,
-} from "react"
+} from "react";
 
-import bookService, { type Book } from "@/services/books"
-import proposeService from "@/services/propose"
-import voteService, { type VoteFields } from "@/services/vote"
-import resultService from "@/services/results"
-import { Card, CardContent } from "@/components/ui/card"
-import { SectionHeader } from "./SectionHeader"
-import BookForm from "./BookForm"
-import BookItem from "./BookItem"
+import bookService, { type Book } from "@/services/books";
+import proposeService from "@/services/propose";
+import voteService, { type VoteFields } from "@/services/vote";
+import resultService from "@/services/results";
+import { Card, CardContent } from "@/components/ui/card";
+import { SectionHeader } from "./SectionHeader";
+import BookForm from "./BookForm";
+import BookItem from "./BookItem";
 
 export interface BookListHandle {
-  reload: () => Promise<void>
+  reload: () => Promise<void>;
 }
 
 interface BookListProps {
-  emptyMessage?: string
-  show?: string
-  cycleId?: string
+  emptyMessage?: string;
+  show?: string;
+  cycleId?: string;
 }
 
 const BookList = forwardRef<BookListHandle, BookListProps>(
@@ -34,53 +34,53 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
     },
     ref,
   ) => {
-    const [books, setBooks] = useState<Book[]>([])
-    const [isLoading, setIsLoading] = useState(true)
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const [books, setBooks] = useState<Book[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isShowingBookForm, setIsShowingBookForm] = useState<Book | null>(
       null,
-    )
-    const bookFormRef = useRef<HTMLDivElement>(null)
-    const isVotingPhase = show === "votedBooks"
-    const isReadOnly = show === "over"
-    const [votes, setVotes] = useState<VoteFields[]>([])
-    const [refreshOnVote, setRefreshOnVote] = useState(false)
+    );
+    const bookFormRef = useRef<HTMLDivElement>(null);
+    const isVotingPhase = show === "votedBooks";
+    const isReadOnly = show === "over";
+    const [votes, setVotes] = useState<VoteFields[]>([]);
+    const [refreshOnVote, setRefreshOnVote] = useState(false);
 
     const votesByProposalId = votes.reduce(
       (acc, vote) => {
-        if (vote.proposal_id) acc[vote.proposal_id] = vote
-        return acc
+        if (vote.proposal_id) acc[vote.proposal_id] = vote;
+        return acc;
       },
       {} as Record<string, VoteFields>,
-    )
+    );
 
     const loadBooks = async () => {
       try {
-        setErrorMessage(null)
+        setErrorMessage(null);
         if (show === "proposedBooks") {
-          const loadedBooks = await proposeService.getProposedBooks(cycleId)
-          setBooks(loadedBooks)
+          const loadedBooks = await proposeService.getProposedBooks(cycleId);
+          setBooks(loadedBooks);
         }
         if (show === "votedBooks") {
-          const loadedBooks = await resultService.getResults(cycleId)
-          const loadedVotes = await voteService.getOwn(cycleId)
-          setBooks(loadedBooks)
-          setVotes(loadedVotes)
+          const loadedBooks = await resultService.getResults(cycleId);
+          const loadedVotes = await voteService.getOwn(cycleId);
+          setBooks(loadedBooks);
+          setVotes(loadedVotes);
         }
         if (show === "over") {
-          const loadedBooks = await proposeService.getProposedBooks(cycleId)
-          setBooks(loadedBooks)
+          const loadedBooks = await proposeService.getProposedBooks(cycleId);
+          setBooks(loadedBooks);
         }
         if (show === "savedBooks") {
-          const loadedBooks = await bookService.getAll()
-          setBooks(loadedBooks)
+          const loadedBooks = await bookService.getAll();
+          setBooks(loadedBooks);
         }
       } catch {
-        setErrorMessage("Failed to load books.")
+        setErrorMessage("Failed to load books.");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
     useImperativeHandle(
       ref,
@@ -88,30 +88,33 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
         reload: loadBooks,
       }),
       [],
-    )
+    );
 
     useEffect(() => {
-      void loadBooks()
-    }, [refreshOnVote])
+      void loadBooks();
+    }, [refreshOnVote]);
 
     useEffect(() => {
       if (isShowingBookForm && bookFormRef.current) {
         bookFormRef.current.scrollIntoView({
           behavior: "smooth",
           block: "start",
-        })
+        });
       }
-    }, [isShowingBookForm])
+    }, [isShowingBookForm]);
 
-  const deleteBook = async (id: string) => {
-    try {
-      if (show ==="savedBooks") await bookService.removeFromUser(id)
-      if (show === "proposedBooks") await proposeService.removeProposedBook(cycleId, id)
-      setBooks((currentBooks) => currentBooks.filter((book) => book.id !== id))
-    } catch {
-      setErrorMessage('Failed to delete book.')
-    }
-  }
+    const deleteBook = async (id: string) => {
+      try {
+        if (show === "savedBooks") await bookService.removeFromUser(id);
+        if (show === "proposedBooks")
+          await proposeService.removeProposedBook(cycleId, id);
+        setBooks((currentBooks) =>
+          currentBooks.filter((book) => book.id !== id),
+        );
+      } catch {
+        setErrorMessage("Failed to delete book.");
+      }
+    };
 
     const submitVote = async (
       proposalId: string,
@@ -120,21 +123,21 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
     ) => {
       try {
         if (voteId) {
-          await voteService.update(voteId, { proposal_id: proposalId, weight })
+          await voteService.update(voteId, { proposal_id: proposalId, weight });
         } else {
           await voteService.create({
             proposal_id: proposalId,
             weight,
-          })
-          setRefreshOnVote(!refreshOnVote)
+          });
+          setRefreshOnVote(!refreshOnVote);
         }
       } catch {
-        setErrorMessage("Failed to submit the vote.")
+        setErrorMessage("Failed to submit the vote.");
       }
-    }
+    };
 
-    const bookCount = books.length
-    const description = `Books: ${bookCount}`
+    const bookCount = books.length;
+    const description = `Books: ${bookCount}`;
 
     if (isLoading) {
       return (
@@ -146,7 +149,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
             </div>
           </CardContent>
         </Card>
-      )
+      );
     }
 
     if (errorMessage) {
@@ -159,7 +162,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
             </div>
           </CardContent>
         </Card>
-      )
+      );
     }
 
     if (books.length === 0) {
@@ -172,7 +175,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
             </div>
           </CardContent>
         </Card>
-      )
+      );
     }
 
     return (
@@ -221,10 +224,10 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
           </CardContent>
         </Card>
       </div>
-    )
+    );
   },
-)
+);
 
-BookList.displayName = "BookList"
+BookList.displayName = "BookList";
 
-export default BookList
+export default BookList;

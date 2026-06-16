@@ -1,34 +1,30 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import LoginForm from '@/components/LoginForm'
-import { useLogin } from '@/hooks/useLogin'
+import LoginForm from "@/components/LoginForm";
+import { useLogin } from "@/hooks/useLogin";
 
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import { PageHeader } from '@/components/PageHeader'
+  CardTitle,
+} from "@/components/ui/card";
+import { PageHeader } from "@/components/PageHeader";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const { login, message } = useLogin()
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, message } = useLogin();
 
-  const handleLogin = async (
-    event: React.SyntheticEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault()
+  const handleLogin = async (event: React.SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    await login(username, password)
-    setUsername('')
-    setPassword('')
-  }
+    await login(username, password);
+    setUsername("");
+    setPassword("");
+  };
 
-
-    
   return (
     <>
       <PageHeader
@@ -43,13 +39,11 @@ const LoginPage = () => {
         <CardHeader className="card-header">
           <CardTitle className="text-xl sm:text-2xl">Login</CardTitle>
 
-          <CardDescription className="text-sm sm:text-base">
-            
-          </CardDescription>
+          <CardDescription className="text-sm sm:text-base"></CardDescription>
         </CardHeader>
 
         <CardContent className="pt-4 sm:pt-6">
-          <LoginForm 
+          <LoginForm
             username={username}
             password={password}
             setUsername={setUsername}
@@ -60,7 +54,7 @@ const LoginPage = () => {
         </CardContent>
       </Card>
     </>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

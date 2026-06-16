@@ -1,5 +1,4 @@
-import logo from '@/assets/logo.png'
-
+import logo from "@/assets/logo.png";
 
 export const BottomDescription = () => {
   return (
@@ -10,5 +9,5 @@ export const BottomDescription = () => {
         className="block w-32 h-auto object-contain"
       />
     </div>
-  )
-}
+  );
+};

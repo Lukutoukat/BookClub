@@ -8,20 +8,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import type { ReactNode } from "react"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import type { ReactNode } from "react";
 
 interface ButtonDialogProps {
-  children?: ReactNode
-  buttonText?: string
-  buttonTitle?: string
-  alertDialogText?: string
-  alertDialogDescription?: string
-  alertDialogCancelText?: string
-  alertDialogContinueText?: string
+  children?: ReactNode;
+  buttonText?: string;
+  buttonTitle?: string;
+  alertDialogText?: string;
+  alertDialogDescription?: string;
+  alertDialogCancelText?: string;
+  alertDialogContinueText?: string;
   //eslint-disable-next-line
-  buttonOnClick?: any
+  buttonOnClick?: any;
   buttonVariant?:
     | "default"
     | "link"
@@ -30,9 +30,9 @@ interface ButtonDialogProps {
     | "ghost"
     | "destructive"
     | null
-    | undefined
-  disabled?: boolean
-  buttonClassName?: string
+    | undefined;
+  disabled?: boolean;
+  buttonClassName?: string;
 }
 
 export function ButtonDialog({
@@ -75,14 +75,15 @@ export function ButtonDialog({
           ) : (
             <></>
           )}
-          {
-            // eslint-disable-next-line
-          } <AlertDialogAction title="continue" onClick={buttonOnClick} disabled={disabled}
+          <AlertDialogAction
+            title="continue" // eslint-disable-next-line
+            onClick={buttonOnClick}
+            disabled={disabled}
           >
             {alertDialogContinueText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

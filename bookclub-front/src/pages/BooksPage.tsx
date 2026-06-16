@@ -1,15 +1,15 @@
-import { useRef } from "react"
+import { useRef } from "react";
 
-import BookForm from "@/components/BookForm"
-import BookList, { type BookListHandle } from "@/components/BookList"
-import { PageHeader } from "@/components/PageHeader"
+import BookForm from "@/components/BookForm";
+import BookList, { type BookListHandle } from "@/components/BookList";
+import { PageHeader } from "@/components/PageHeader";
 
 const BooksPage = () => {
-  const bookListRef = useRef<BookListHandle>(null)
+  const bookListRef = useRef<BookListHandle>(null);
 
   const handleBookAdded = async () => {
-    await bookListRef.current?.reload()
-  }
+    await bookListRef.current?.reload();
+  };
 
   return (
     <>
@@ -25,7 +25,7 @@ const BooksPage = () => {
         emptyMessage="No books suggested yet. Be the first to add one!"
       />
     </>
-  )
-}
+  );
+};
 
-export default BooksPage
+export default BooksPage;

@@ -1,17 +1,18 @@
-import axios from 'axios'
-import { getAuthConfig } from '@/services/auth'
-import { type Book } from '@/services/books'
+import axios from "axios";
+import { getAuthConfig } from "@/services/auth";
+import { type Book } from "@/services/books";
 
-
-const baseUrl = '/api/results'
+const baseUrl = "/api/results";
 
 export interface BookResult extends Book {
-  proposal_id: string
-  score: number
+  proposal_id: string;
+  score: number;
 }
 
 const getResults = (cycleId: string) => {
-    return axios.get<BookResult[]>(`${baseUrl}/${cycleId}`, getAuthConfig()).then((res) => res.data)
-}
+  return axios
+    .get<BookResult[]>(`${baseUrl}/${cycleId}`, getAuthConfig())
+    .then((res) => res.data);
+};
 
-export default { getResults}
+export default { getResults };

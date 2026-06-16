@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -6,13 +6,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 
-import bookService, { type Book } from "@/services/books"
-import proposeService from "@/services/propose"
-import { useEffect, useRef, useState } from "react"
-import { getErrorMessage } from "@/lib/errorMessage"
-import ErrorMessageDisplay from "./errorMessageDisplay"
+import bookService, { type Book } from "@/services/books";
+import proposeService from "@/services/propose";
+import { useEffect, useRef, useState } from "react";
+import { getErrorMessage } from "@/lib/errorMessage";
+import ErrorMessageDisplay from "./errorMessageDisplay";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,60 +22,60 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 export interface BookListHandle {
-  reload: () => Promise<void>
-  onBookAdded?: () => Promise<void> | void
+  reload: () => Promise<void>;
+  onBookAdded?: () => Promise<void> | void;
 }
 
 type bookSelectorProps = {
-  onBookAdded?: () => Promise<void> | void
-  bookclubId: string
-}
+  onBookAdded?: () => Promise<void> | void;
+  bookclubId: string;
+};
 
 const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
-  const [open, setOpen] = useState(false)
-  const [books, setBooks] = useState<Book[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [open, setOpen] = useState(false);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Keep track of both the selected ID and the text in the input
-  const [selectedBookId, setSelectedBookId] = useState<string | null>(null)
-  const [inputValue, setInputValue] = useState("")
-  const [selectedDisplay, setSelectedDisplay] = useState<string>("savedBooks")
-  const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState("");
+  const [selectedDisplay, setSelectedDisplay] = useState<string>("savedBooks");
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const loadBooks = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      removeErrorMessage()
+      removeErrorMessage();
       const loadedBooks =
         selectedDisplay === "savedBooks"
           ? await bookService.getAll()
-          : await bookService.getPreviousSuggestions()
-      setBooks(loadedBooks)
-      console.log(`Loading book ${selectedDisplay}`)
+          : await bookService.getPreviousSuggestions();
+      setBooks(loadedBooks);
+      console.log(`Loading book ${selectedDisplay}`);
     } catch {
-      setErrorMessage("Failed to load books.")
+      setErrorMessage("Failed to load books.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const removeErrorMessage = () => {
-    setErrorMessage(null)
-  }
+    setErrorMessage(null);
+  };
 
   useEffect(() => {
-    void loadBooks()
-  }, [])
+    void loadBooks();
+  }, []);
 
   useEffect(() => {
-    void loadBooks()
-  }, [selectedDisplay])
+    void loadBooks();
+  }, [selectedDisplay]);
 
   // Handle clicks outside the component to close the dropdown
   useEffect(() => {
@@ -84,33 +84,33 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
-        setOpen(false)
+        setOpen(false);
 
         // If clicked away, revert the input text to the currently selected book (if any)
         if (selectedBookId) {
-          const book = books.find((b) => b.id === selectedBookId)
+          const book = books.find((b) => b.id === selectedBookId);
           if (book && inputValue !== book.name) {
-            setInputValue(book.name)
+            setInputValue(book.name);
           }
         } else {
-          setInputValue("")
+          setInputValue("");
         }
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleOutsideClick)
-    return () => document.removeEventListener("mousedown", handleOutsideClick)
-  }, [books, selectedBookId, inputValue])
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [books, selectedBookId, inputValue]);
 
   const handleSelect = (bookId: string) => {
-    const book = books.find((b) => b.id === bookId)
+    const book = books.find((b) => b.id === bookId);
     if (book) {
-      setSelectedBookId(bookId)
-      setInputValue(book.name)
-      setShowConfirmation(true)
+      setSelectedBookId(bookId);
+      setInputValue(book.name);
+      setShowConfirmation(true);
     }
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const submitSelectedBook = async () => {
     if (selectedBookId) {
@@ -118,25 +118,25 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
         await proposeService.create({
           book_id: selectedBookId,
           bookclub_id: bookclubId,
-        })
-        if (onBookAdded) await onBookAdded()
+        });
+        if (onBookAdded) await onBookAdded();
       } catch (error) {
-        setErrorMessage(getErrorMessage(error, "Failed to propose book."))
+        setErrorMessage(getErrorMessage(error, "Failed to propose book."));
       }
     }
-    setInputValue("")
-    setSelectedBookId(null)
-  }
+    setInputValue("");
+    setSelectedBookId(null);
+  };
 
   const swapDisplay = () => {
     if (selectedDisplay === "savedBooks") {
-      setSelectedDisplay("proposedBooks")
+      setSelectedDisplay("proposedBooks");
     } else {
-      setSelectedDisplay("savedBooks")
+      setSelectedDisplay("savedBooks");
     }
-    setInputValue("")
-    setSelectedBookId(null)
-  }
+    setInputValue("");
+    setSelectedBookId(null);
+  };
 
   return (
     <>
@@ -171,8 +171,8 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
             placeholder="Search saved books..."
             value={inputValue}
             onValueChange={(search: string) => {
-                setInputValue(search)
-                if (!open) setOpen(true) // Open dropdown as user types
+              setInputValue(search);
+              if (!open) setOpen(true); // Open dropdown as user types
             }}
             onFocus={() => setOpen(true)}
           />
@@ -223,7 +223,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
         remove={removeErrorMessage}
       />
     </>
-  )
-}
+  );
+};
 
-export default BookSelector
+export default BookSelector;

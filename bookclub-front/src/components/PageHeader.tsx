@@ -1,16 +1,16 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "./ui/button"
-import { Link } from "react-router-dom"
-import { ButtonDialog } from "./ButtonDialog"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
+import { ButtonDialog } from "./ButtonDialog";
 
 interface PageHeaderProps {
-  badgeText: string
-  title: string
-  description: string
-  buttonText?: string
-  buttonLink?: string
-  buttonOnClick?: () => void
-  afterButtonClick?: "nothing" | "alert" | "confirm"
+  badgeText: string;
+  title: string;
+  description: string;
+  buttonText?: string;
+  buttonLink?: string;
+  buttonOnClick?: () => void;
+  afterButtonClick?: "nothing" | "alert" | "confirm";
 }
 
 /**
@@ -76,5 +76,5 @@ export const PageHeader = ({
         )
       ) : null}
     </header>
-  )
-}
+  );
+};

@@ -1,28 +1,26 @@
-import axios from 'axios'
-const baseUrl = '/api/login'
+import axios from "axios";
+const baseUrl = "/api/login";
 
 type LoginCredentials = {
-  username: string
-  password: string
-}
+  username: string;
+  password: string;
+};
 
 export type userWithToken = {
-  email: string
-  name: string
-  token: string
-}
+  email: string;
+  name: string;
+  token: string;
+};
 
 // type User = {
 //   username: string
 // }
 
-const login = async (
-  credentials: LoginCredentials
-): Promise<userWithToken> => {
-  const response = await axios.post<userWithToken>(baseUrl, credentials)
+const login = async (credentials: LoginCredentials): Promise<userWithToken> => {
+  const response = await axios.post<userWithToken>(baseUrl, credentials);
 
-  return response.data
-}
+  return response.data;
+};
 
 //const login = async (
 //  credentials: LoginCredentials
@@ -35,4 +33,4 @@ const login = async (
 //    name: 'Test User'
 //  }
 //}
-export default { login }
+export default { login };
