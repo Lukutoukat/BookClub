@@ -1,6 +1,7 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from './ui/button'
-import { Link } from 'react-router-dom'
+import { Badge } from "@/components/ui/badge"
+import { Button } from "./ui/button"
+import { Link } from "react-router-dom"
+import { ButtonDialog } from "./ButtonDialog"
 
 interface PageHeaderProps {
   badgeText: string
@@ -9,8 +10,8 @@ interface PageHeaderProps {
   buttonText?: string
   buttonLink?: string
   buttonOnClick?: () => void
+  afterButtonClick?: "nothing" | "alert" | "confirm"
 }
-
 
 /**
  * PageHeader is a reusable component for displaying page titles, descriptions and an action button consistently accross pages
@@ -19,7 +20,7 @@ interface PageHeaderProps {
  * @param description - a short description of the page's content or purpose
  * @param buttonText - text for the action button, if provided
  * @param buttonLink - link for the action button, if provided
- * @returns 
+ * @returns
  */
 export const PageHeader = ({
   badgeText,
@@ -27,7 +28,8 @@ export const PageHeader = ({
   description,
   buttonText,
   buttonLink,
-  buttonOnClick
+  buttonOnClick,
+  afterButtonClick = "nothing",
 }: PageHeaderProps) => {
   return (
     <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -48,20 +50,29 @@ export const PageHeader = ({
         </div>
       </div>
       {buttonText ? (
-        buttonLink ? (
-          <Button asChild variant="outline" className="w-full sm:w-auto">
-            <Link to={buttonLink}>
+        afterButtonClick === "nothing" ? (
+          buttonLink ? (
+            <Button asChild variant="outline" className="w-full sm:w-auto">
+              <Link to={buttonLink}>{buttonText}</Link>
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={buttonOnClick}
+            >
               {buttonText}
-            </Link>
-          </Button>
+            </Button>
+          )
         ) : (
-          <Button
-            variant="outline"
-            className="w-full sm:w-auto"
-            onClick={buttonOnClick}
-          >
-            {buttonText}
-          </Button>
+          <ButtonDialog
+            buttonOnClick={buttonOnClick}
+            buttonText={buttonText}
+            alertDialogCancelText=""
+            alertDialogText="Copied invite code!"
+            alertDialogDescription="The invite code is copied to the clipboard and can be pasted and shared to friends."
+            buttonVariant="outline"
+          />
         )
       ) : null}
     </header>
