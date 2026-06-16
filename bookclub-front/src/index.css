@@ -211,7 +211,7 @@
   }
 
   .card-content {
-    @apply px-4 pt-4 pb-2 sm:px-6 sm:pt-4 sm:pb-2;
+    @apply px-4 pt-0 pb-0 sm:px-6;
   }
 
   .card-form {
@@ -231,7 +231,7 @@
   }
 
   .section-description {
-    @apply text-xs sm:text-sm leading-snug text-muted-foreground;
+    @apply text-xs sm:text-sm leading-snug text-muted-foreground pt-1 sm:pt-2;
   }
 
   .form-grid {

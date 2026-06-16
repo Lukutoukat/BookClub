@@ -25,7 +25,7 @@ export const SuggestBook = ({
 
   return (
     <Card className="card-base">
-      <SectionHeader title="Suggest book" />
+      <SectionHeader title="Suggest book" description="Search saved books, switch to your previously suggested books, or create a new book to suggest!" />
       <CardContent>
         <BookSelector onBookAdded={onBookAdded} bookclubId={bookclubId} />
         <div className="mt-4">
@@ -42,7 +42,7 @@ export const SuggestBook = ({
             />
           ) : (
             <Button size="sm" onClick={onCreate}>
-              Create book
+              Create a new book
             </Button>
           )}
         </div>

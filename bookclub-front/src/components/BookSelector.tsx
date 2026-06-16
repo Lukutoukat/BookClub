@@ -121,7 +121,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
         });
         if (onBookAdded) await onBookAdded();
       } catch (error) {
-        setErrorMessage(getErrorMessage(error, "Failed to propose book."));
+        setErrorMessage(getErrorMessage(error, "Failed to suggest book."));
       }
     }
     setInputValue("");
@@ -145,7 +145,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              Do you want to propose
+              Do you want to suggest
               {selectedBookId
                 ? " " + books.find((b) => b.id === selectedBookId)?.name + "?"
                 : "Error"}
@@ -170,7 +170,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
           <CommandInput
             placeholder={
               selectedDisplay === "proposedBooks"
-                ? "Search proposed"
+                ? "Search suggested"
                 : "Search saved"
             }
             value={inputValue}
@@ -183,8 +183,9 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
           <Button
             className="px-1 text-xs md:text-sm shrink-0"
             onClick={swapDisplay}
+            variant="secondary"
           >
-            {selectedDisplay === "savedBooks" ? "Show previous" : "Show saved"}
+            Switch
           </Button>
         </div>
         {/* The Dropdown list (absolutely positioned below the input) */}
@@ -202,7 +203,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
                       value={`${book.name} ${book.author}`}
                       onSelect={() => handleSelect(book.id)}
                     >
-                      <div className="flex min-w-0 flex-col items-start gap-2">
+                      <div className="flex w-full flex-col items-start gap-1">
                         <span className="truncate font-medium">
                           {book.name}
                         </span>

@@ -201,7 +201,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
         <Card className="card-base">
           <SectionHeader title={description} />
           <CardContent className="card-content">
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               {books.map((book) => (
                 <BookItem
                   key={book.id}
