@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "26"
+
+      - name: Install frontend dependencies
+        working-directory: bookclub-front
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: bookclub-front
+        run: npm run build
