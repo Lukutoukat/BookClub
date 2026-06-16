@@ -304,7 +304,7 @@ const BookForm = ({
             variant="secondary"
             size="sm"
             onClick={secondaryButtonAction}
-            className="gap-3 ml-auto shrink-0"
+            className="gap-4 ml-auto shrink-0"
           >
             {secondaryButtonText ?? "Cancel"}
           </Button>
@@ -312,11 +312,11 @@ const BookForm = ({
       </SectionHeader>
       <CardContent className="card-content">
         <form onSubmit={handleSubmit} className="card-form">
-          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
+          <div className="form-grid">
             <Field>
               <FieldLabel htmlFor="name">
                 Title
-                <span className="text-destructive ml-1">*</span>
+                <span className="text-destructive ml-2">*</span>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -334,7 +334,7 @@ const BookForm = ({
             <Field>
               <FieldLabel htmlFor="author">
                 Author
-                <span className="text-destructive ml-1">*</span>
+                <span className="text-destructive ml-2">*</span>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -352,7 +352,7 @@ const BookForm = ({
             <Field>
               <FieldLabel htmlFor="year">
                 Year
-                <span className="text-destructive ml-1">*</span>
+                <span className="text-destructive ml-2">*</span>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -397,60 +397,57 @@ const BookForm = ({
                 />
               </FieldContent>
             </Field>
-            <div className="sm:col-span-2">
-              <Field>
-                <FieldLabel htmlFor="genre">Genre</FieldLabel>
-                <FieldContent>
-                  <Input
-                    id="genre"
-                    name="genre"
-                    type="text"
-                    maxLength={MAX_GENRE_LENGTH}
-                    value={newBook.genre}
-                    onChange={handleChange}
-                    placeholder="Historical fiction"
-                  />
-                </FieldContent>
-              </Field>
-            </div>
-            <div className="sm:col-span-2">
-              <Field>
-                <FieldLabel htmlFor="isbn">ISBN</FieldLabel>
-                <FieldContent>
-                  <Input
-                    id="isbn"
-                    name="isbn"
-                    type="text"
-                    value={newBook.isbn}
-                    onChange={handleChange}
-                    placeholder="9780141439600"
-                  />
-                </FieldContent>
-              </Field>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <FieldLabel htmlFor="comment">Comment</FieldLabel>
-            <Textarea
-              id="comment"
-              name="comment"
-              maxLength={MAX_COMMENT_LENGTH}
-              value={newBook.comment}
-              onChange={handleChange}
-              placeholder="Add a short note about why this book should be read."
-              className="min-h-14 text-sm sm:min-h-16"
-            />
+            <Field className="sm:col-span-2">
+              <FieldLabel htmlFor="genre">Genre</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="genre"
+                  name="genre"
+                  type="text"
+                  maxLength={MAX_GENRE_LENGTH}
+                  value={newBook.genre}
+                  onChange={handleChange}
+                  placeholder="Historical fiction"
+                />
+              </FieldContent>
+            </Field>
+            <Field className="sm:col-span-2">
+              <FieldLabel htmlFor="isbn">ISBN</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="isbn"
+                  name="isbn"
+                  type="text"
+                  value={newBook.isbn}
+                  onChange={handleChange}
+                  placeholder="9780141439600"
+                />
+              </FieldContent>
+            </Field>
+            <Field className="sm:col-span-2">
+              <FieldLabel htmlFor="comment">Comment</FieldLabel>
+              <FieldContent>
+                <Textarea
+                  id="comment"
+                  name="comment"
+                  maxLength={MAX_COMMENT_LENGTH}
+                  value={newBook.comment}
+                  onChange={handleChange}
+                  placeholder="Add a short note about why this book should be read."
+                  className="min-h-14 text-sm sm:min-h-16"
+                />
+              </FieldContent>
+            </Field>
           </div>
           {errors.length > 0 && (
-            <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
+            <div className="form-error">
               {errors.map((error, idx) => (
                 <div key={idx}>{error}</div>
               ))}
             </div>
           )}
-          <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
-            <Button type="submit" size="lg" className="w-full sm:w-auto">
+          <div className="card-actions">
+            <Button type="submit" size="lg" className="button-full-sm-auto">
               {buttonText ?? "Add"}
             </Button>
           </div>

@@ -1,9 +1,7 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -25,7 +23,6 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader />
         <SidebarContent>
           <SidebarGroup>
             <SidebarMenu>
@@ -45,7 +42,6 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter />
       </Sidebar>
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>

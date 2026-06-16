@@ -51,14 +51,14 @@ const BookclubForm = () => {
 
       <CardContent className="card-content">
         {errors.length > 0 && (
-          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm space-y-1">
+          <div className="form-error">
             {errors.map((error, idx) => (
               <div key={idx}>{error}</div>
             ))}
           </div>
         )}
         <form onSubmit={addBookclub} className="card-form">
-          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
+          <div className="form-grid">
             <div className="sm:col-span-2">
               <Field>
                 <FieldLabel htmlFor="name">Name your book club</FieldLabel>
@@ -77,11 +77,11 @@ const BookclubForm = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
+          <div className="card-actions">
             <p className="max-w-md text-xs text-muted-foreground">
               Double-check for spelling mistakes before creating a new bookclub.
             </p>
-            <Button type="submit" size="lg" className="w-full sm:w-auto">
+            <Button type="submit" size="lg" className="button-full-sm-auto">
               Create
             </Button>
           </div>

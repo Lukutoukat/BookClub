@@ -18,13 +18,11 @@ export const SectionHeader = ({
   children,
 }: SectionHeaderProps) => {
   return (
-    <CardHeader className="card-header flex flex-row items-start justify-between gap-4">
+    <CardHeader className="card-header section-header">
       <div className="flex flex-col">
-        <CardTitle className="text-xl sm:text-2xl leading-tight">
-          {title}
-        </CardTitle>
+        <CardTitle className="section-title">{title}</CardTitle>
         {description && (
-          <CardDescription className="text-xs sm:text-sm leading-snug text-muted-foreground">
+          <CardDescription className="section-description">
             {description}
           </CardDescription>
         )}

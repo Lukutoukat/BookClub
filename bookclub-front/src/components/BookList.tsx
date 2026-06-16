@@ -157,7 +157,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
         <Card className="card-base">
           <SectionHeader title="Your saved books" description={description} />
           <CardContent className="card-content">
-            <div className="p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
+            <div className="padding-2 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
               {errorMessage}
             </div>
           </CardContent>
@@ -201,7 +201,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
         <Card className="card-base">
           <SectionHeader title={description} />
           <CardContent className="card-content">
-            <div className="space-y-3">
+            <div className="space-y-2">
               {books.map((book) => (
                 <BookItem
                   key={book.id}

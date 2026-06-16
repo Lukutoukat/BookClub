@@ -79,10 +79,10 @@ export const NewCycle = ({ bookclubId }: Props) => {
         dateRange={dateRange}
         setDateRange={setDateRange}
       />
-      <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
+      <div className="card-actions">
         <Button onClick={handleCreate}>Create</Button>
       </div>
-      <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
+      <div className="grid gap-6 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
     </>
   );
 };

@@ -28,8 +28,8 @@ const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
       variant="ghost"
       className="w-full justify-start h-auto"
     >
-      <Card className="w-full border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90 cursor-pointer">
-        <CardContent className="px-3 py-2 sm:px-4 sm:py-3 pl-4 sm:pl-5">
+      <Card className="list-card">
+        <CardContent className="card-content">
           <h3 className="text-lg font-semibold text-foreground/90">
             {bookClub.name}
           </h3>
@@ -61,7 +61,7 @@ const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
       <Card className="card-base">
         <SectionHeader title="Your book clubs" description={description} />
         <CardContent className="card-content">
-          <div className="p-3 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
+          <div className="padding-2 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
             {errorMessage}
           </div>
         </CardContent>
@@ -86,7 +86,7 @@ const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
     <Card className="card-base">
       <SectionHeader title="Your book clubs" description={description} />
       <CardContent className="card-content">
-        <div className="space-y-3">
+        <div className="space-y-4">
           {bookClubs.map((club: BookClub) => (
             <BookClubItem key={club.id} bookClub={club} />
           ))}

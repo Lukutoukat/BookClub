@@ -66,14 +66,14 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
           } catch {}
         }}
       />
-      <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
+      <div className="card-actions">
         <ButtonDialog
           buttonText="Delete"
           buttonOnClick={handleDeletion}
           alertDialogDescription="Once the book club is deleted, it cannot be undone."
         />
       </div>
-      <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
+      <div className="grid gap-6 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
     </>
   );
 };

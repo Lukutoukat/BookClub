@@ -1,17 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SectionHeader } from "@/components/SectionHeader";
 import bookclubmembersService, {
   type AddBookClubMember,
 } from "@/services/bookclubmembers";
@@ -68,20 +63,18 @@ const ClubSettings = () => {
 
   return (
     <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
-      <CardHeader className="border-b border-border/60 py-4 sm:py-6">
-        <CardTitle className="text-xl sm:text-2xl">Clubs</CardTitle>
-        <CardDescription className="text-sm sm:text-base">
-          Join or create your own book club.
-        </CardDescription>
-      </CardHeader>
+      <SectionHeader
+        title="Clubs"
+        description="Join or create your own book club."
+      />
 
-      <CardContent className="space-y-3 pt-4 sm:space-y-4 sm:pt-6">
-        <div className="space-y-2">
+      <CardContent className="space-y-6 pt-4 sm:space-y-6 sm:pt-8">
+        <div className="space-y-4">
           <Label htmlFor="join-code">Join with code</Label>
           <p className="text-sm text-muted-foreground">
             Enter the invite code you received from your club.
           </p>
-          <form className="flex items-center gap-2" onSubmit={handleJoinSubmit}>
+          <form className="flex items-center gap-4" onSubmit={handleJoinSubmit}>
             <Input
               id="join-code"
               name="invite_code"
@@ -94,7 +87,7 @@ const ClubSettings = () => {
           </form>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           <Label>Create a new club</Label>
           <p className="text-sm text-muted-foreground">
             Set up a new club and invite others to join.
@@ -105,7 +98,7 @@ const ClubSettings = () => {
         </div>
 
         {message ? (
-          <p className="rounded-3xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-primary">
+          <p className="rounded-3xl border border-primary/20 bg-primary/5 px-4 py-4 text-sm text-primary">
             {message}
           </p>
         ) : null}

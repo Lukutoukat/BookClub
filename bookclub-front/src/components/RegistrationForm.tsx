@@ -88,7 +88,7 @@ const RegistrationForm = () => {
 
       <CardContent className="card-content">
         <form onSubmit={addUser} className="card-form">
-          <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
+          <div className="form-grid">
             <div className="sm:col-span-2">
               <Field>
                 <FieldLabel htmlFor="email">Email address</FieldLabel>
@@ -162,17 +162,13 @@ const RegistrationForm = () => {
             </Field>
           </div>
 
-          {message && (
-            <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded text-primary text-sm">
-              {message}
-            </div>
-          )}
+          {message && <div className="form-note">{message}</div>}
 
-          <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
+          <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
             <p className="max-w-md text-xs text-muted-foreground">
               Double-check the details before creating the account.
             </p>
-            <Button type="submit" size="lg" className="w-full sm:w-auto">
+            <Button type="submit" size="lg" className="button-full-sm-auto">
               Create a new account
             </Button>
           </div>

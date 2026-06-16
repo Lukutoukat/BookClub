@@ -177,7 +177,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
             onFocus={() => setOpen(true)}
           />
           <Button
-            className="h-9 px-4 text-sm sm:h-8 sm:px-3 sm:text-xs shrink-0"
+            className="h-9 px-4 text-sm sm:h-8 sm:px-4 sm:text-xs shrink-0"
             onClick={swapDisplay}
           >
             {selectedDisplay === "savedBooks"
@@ -200,7 +200,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
                       value={`${book.name} ${book.author}`}
                       onSelect={() => handleSelect(book.id)}
                     >
-                      <div className="flex min-w-0 flex-col items-start gap-0.5">
+                      <div className="flex min-w-0 flex-col items-start gap-2">
                         <span className="truncate font-medium">
                           {book.name}
                         </span>
