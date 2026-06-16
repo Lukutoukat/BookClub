@@ -51,9 +51,11 @@
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.7",
     "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
+    "prettier": "3.8.4",
     "typescript": "~6.0.2",
     "vite": "^8.0.12",
     "vitest": "^4.1.7"
