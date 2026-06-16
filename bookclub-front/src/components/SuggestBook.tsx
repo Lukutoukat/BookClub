@@ -25,11 +25,11 @@ export const SuggestBook = ({
 
   return (
     <Card className="card-base">
+      <SectionHeader title="Suggest book" />
       <CardContent>
-        <SectionHeader title="Suggest book" />
         <BookSelector onBookAdded={onBookAdded} bookclubId={bookclubId} />
-        {isShowingBookForm ? (
-          <div>
+        <div className="mt-4">
+          {isShowingBookForm ? (
             <BookForm
               bookToEdit={isShowingBookForm}
               onBookAdded={onBookAdded}
@@ -40,10 +40,12 @@ export const SuggestBook = ({
               className="overflow-visible card-base"
               cycle_id={cycle_id}
             />
-          </div>
-        ) : (
-          <Button onClick={onCreate}> Create book </Button>
-        )}
+          ) : (
+            <Button size="sm" onClick={onCreate}>
+              Create book
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
