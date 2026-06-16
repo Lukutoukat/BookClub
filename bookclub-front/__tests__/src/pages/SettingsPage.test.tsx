@@ -27,10 +27,6 @@ vi.mock('@/components/ThemeSelector', () => ({
   default: () => <div>Theme Selector Component</div>,
 }))
 
-vi.mock('@/components/BottomDescription', () => ({
-  BottomDescription: () => <div>Bottom Description Component</div>,
-}))
-
 describe('SettingsPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -44,7 +40,10 @@ describe('SettingsPage', () => {
       expect(screen.getByText('Club Settings Component')).toBeDefined()
       expect(screen.getByText('Account Settings Component')).toBeDefined()
       expect(screen.getByText('Theme Selector Component')).toBeDefined()
-      expect(screen.getByText('Bottom Description Component')).toBeDefined()
+
+      const img = screen.getByRole('img', { name: 'BookClub' })
+      expect(img).toBeTruthy()
+      expect(img.getAttribute('src')).not.toBeNull()
     })
 
     test('passes logout function to AccountSettings', async () => {
