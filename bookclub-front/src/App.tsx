@@ -1,41 +1,48 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import axios from 'axios'
-import BooksPage from './pages/BooksPage'
-import RegistrationPage from './pages/RegistrationPage'
-import LoginPage from './pages/LoginPage'
-import HomePage from './pages/HomePage'
-import CreateBookclubPage from './pages/CreateBookclubPage'
-import SettingsPage from './pages/SettingsPage'
-import BookclubPage from './pages/BookclubPage'
-import PasswordResetPage from './pages/PasswordResetPage'
-import NewCyclePage from './pages/NewCyclePage'
-import { PageMenu } from './components/PageMenu'
-import { PageLayout } from './components/PageLayout'
-import { isLoggedIn } from './services/auth'
-import { useEffect, useState } from 'react'
-import userService from './services/users'
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import axios from "axios";
+import BooksPage from "./pages/BooksPage";
+import RegistrationPage from "./pages/RegistrationPage";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import CreateBookclubPage from "./pages/CreateBookclubPage";
+import SettingsPage from "./pages/SettingsPage";
+import BookclubPage from "./pages/BookclubPage";
+import PasswordResetPage from "./pages/PasswordResetPage";
+import NewCyclePage from "./pages/NewCyclePage";
+import { PageMenu } from "./components/PageMenu";
+import { PageLayout } from "./components/PageLayout";
+import { UserLoginDisplay } from "./components/UserLoginDisplay";
+import { isLoggedIn } from "./services/auth";
+import { useEffect, useState } from "react";
+import userService from "./services/users";
+
+//useEffect!!! :)
 
 const App = () => {
-  const [loginValid, setLoginValid] = useState(true)
+  const [loginValid, setLoginValid] = useState(true);
 
-  useEffect(() => void (async function() {
-    try {
-      const userExists = await userService.getAll()
-      if (userExists && isLoggedIn()) {
-        setLoginValid(true)
-      }
-      if (userExists.length === 0) {
-        setLoginValid(false)
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401){
-        setLoginValid(false)
-      }
-    }
-  }()), [])
+  useEffect(
+    () =>
+      void (async function () {
+        try {
+          const userExists = await userService.getAll();
+          if (userExists.length > 0 && isLoggedIn()) {
+            setLoginValid(true);
+          }
+          if (userExists.length === 0) {
+            setLoginValid(false);
+          }
+        } catch (error) {
+          if (axios.isAxiosError(error) && error.response?.status === 401) {
+            setLoginValid(false);
+          }
+        }
+      })(),
+    [],
+  );
 
   if (!loginValid) {
-    return(
+    return (
       <BrowserRouter>
         <main>
           <PageLayout>
@@ -49,28 +56,29 @@ const App = () => {
           </PageLayout>
         </main>
       </BrowserRouter>
-    )
+    );
   }
 
   return (
     <BrowserRouter>
       <PageMenu>
         <PageLayout>
+          <UserLoginDisplay />
           <Routes>
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/books" element={<BooksPage />} />
             <Route path="/create" element={<CreateBookclubPage />} />
             <Route path="/registration" element={<RegistrationPage />} />
             <Route path="/club/:bookclubId" element={<BookclubPage />} />
-            <Route path="/newcycle/:bookclubId" element={<NewCyclePage />} /> 
+            <Route path="/newcycle/:bookclubId" element={<NewCyclePage />} />
             <Route path="/home" element={<HomePage />} />
-            <Route path="/settings" element={<SettingsPage />}/>
+            <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </PageLayout>
       </PageMenu>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default App
+export default App;

@@ -1,60 +1,60 @@
-import axios from 'axios'
-import { test, expect, vi } from 'vitest'
-import type { Mocked } from 'vitest'
-import books from '../../../src/services/books'
+import axios from "axios";
+import { test, expect, vi } from "vitest";
+import type { Mocked } from "vitest";
+import books from "../../../src/services/books";
 
-vi.mock('axios')
+vi.mock("axios");
 
-const mockedAxios = axios as Mocked<typeof axios>
+const mockedAxios = axios as Mocked<typeof axios>;
 
 const mockBook = {
-    isbn: "1234567890",
-    name: "Book 1",
-    author: "Author 1",
-    year: 1,
-    pages: 100,
-    comment: "Comment 1",
-    language: "Language 1",
-    genre: "Genre 1"
-  }
+  isbn: "1234567890",
+  name: "Book 1",
+  author: "Author 1",
+  year: 1,
+  pages: 100,
+  comment: "Comment 1",
+  language: "Language 1",
+  genre: "Genre 1",
+};
 
-test('getAll returns all books', async () => {
-    const mockBooks = [mockBook]
+test("getAll returns all books", async () => {
+  const mockBooks = [mockBook];
 
-    mockedAxios.get.mockResolvedValue({
-      data: mockBooks,
-    })
+  mockedAxios.get.mockResolvedValue({
+    data: mockBooks,
+  });
 
-    const result = await books.getAll()
+  const result = await books.getAll();
 
-    expect(result).toEqual(mockBooks)
-  })
+  expect(result).toEqual(mockBooks);
+});
 
-test('create returns created book', async () => {
+test("create returns created book", async () => {
   mockedAxios.post.mockResolvedValue({
     data: mockBook,
-  })
+  });
 
-  const result = await books.create(mockBook)
+  const result = await books.create(mockBook);
 
   expect(mockedAxios.post).toHaveBeenCalledWith(
-    '/api/books',
+    "/api/books",
     mockBook,
     expect.objectContaining({
       headers: expect.objectContaining({
         Authorization: null,
       }),
     }),
-  )
-  expect(result).toEqual(mockBook)
-})
+  );
+  expect(result).toEqual(mockBook);
+});
 
-test('updates book correctly', async () => {
-  const mockBookWithId = { ...mockBook, id: '1' }
+test("updates book correctly", async () => {
+  const mockBookWithId = { ...mockBook, id: "1" };
 
-  mockedAxios.put.mockResolvedValue({ data: mockBookWithId })
+  mockedAxios.put.mockResolvedValue({ data: mockBookWithId });
 
-  const result = await books.update(mockBookWithId.id, mockBookWithId)
+  const result = await books.update(mockBookWithId.id, mockBookWithId);
 
   expect(mockedAxios.put).toHaveBeenCalledWith(
     `/api/books/${mockBookWithId.id}`,
@@ -64,19 +64,19 @@ test('updates book correctly', async () => {
         Authorization: null,
       }),
     }),
-  )
-  expect(result).toEqual(mockBookWithId)
-})
+  );
+  expect(result).toEqual(mockBookWithId);
+});
 
-test('remove from user deletes the correct book', async () => {
+test("remove from user deletes the correct book", async () => {
   const mockBookWithId = {
     ...mockBook,
-    id: "1"
-  }
+    id: "1",
+  };
 
-  mockedAxios.put.mockResolvedValue({ data: mockBookWithId })
+  mockedAxios.put.mockResolvedValue({ data: mockBookWithId });
 
-  await books.removeFromUser(mockBookWithId.id)
+  await books.removeFromUser(mockBookWithId.id);
 
   expect(mockedAxios.put).toHaveBeenCalledWith(
     `/api/books/${mockBookWithId.id}/remove`,
@@ -86,5 +86,5 @@ test('remove from user deletes the correct book', async () => {
         Authorization: null,
       }),
     }),
-  )
-})
+  );
+});

@@ -1,61 +1,61 @@
-import { useEffect, useRef, useState } from "react"
-import { useParams } from "react-router-dom"
-import { BookclubComponent } from "@/components/BookclubComponent"
-import BookList, { type BookListHandle } from "@/components/BookList"
-import BookClubGoCycleSetting from "@/components/bookClubGoCycleSetting"
-import cycleService from "@/services/cycle"
-import { type CycleWithStatus } from "@/services/cycle"
-import { SuggestBook } from "@/components/SuggestBook"
-import bookclubmembersService from "@/services/bookclubmembers"
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { BookclubComponent } from "@/components/BookclubComponent";
+import BookList, { type BookListHandle } from "@/components/BookList";
+import BookClubGoCycleSetting from "@/components/bookClubGoCycleSetting";
+import cycleService from "@/services/cycle";
+import { type CycleWithStatus } from "@/services/cycle";
+import { SuggestBook } from "@/components/SuggestBook";
+import bookclubmembersService from "@/services/bookclubmembers";
 
 const BookclubPage = () => {
-  const { bookclubId } = useParams<{ bookclubId: string }>()
-  const bookListRef = useRef<BookListHandle>(null)
+  const { bookclubId } = useParams<{ bookclubId: string }>();
+  const bookListRef = useRef<BookListHandle>(null);
 
-  const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
-  const [loading, setLoading] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>();
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchCycle = async () => {
       try {
-        const cycle = await cycleService.getLatestCycle(bookclubId as string)
-        setCurrentCycle(cycle)
+        const cycle = await cycleService.getLatestCycle(bookclubId as string);
+        setCurrentCycle(cycle);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     const checkAdminStatus = async () => {
       try {
-        const memberships = await bookclubmembersService.get()
+        const memberships = await bookclubmembersService.get();
         const isAdminMember = memberships.some(
           (member) =>
             member.bookclub_id === bookclubId && member.user_role === 0,
-        )
-        setIsAdmin(isAdminMember)
+        );
+        setIsAdmin(isAdminMember);
       } catch (error) {
-        console.error("Failed to check admin status:", error)
-        setIsAdmin(false)
+        console.error("Failed to check admin status:", error);
+        setIsAdmin(false);
       }
-    }
+    };
 
     if (bookclubId) {
-      void fetchCycle()
-      void checkAdminStatus()
+      void fetchCycle();
+      void checkAdminStatus();
     }
-  }, [bookclubId])
+  }, [bookclubId]);
 
   const handleBookAdded = async () => {
-    await bookListRef.current?.reload()
-  }
+    await bookListRef.current?.reload();
+  };
 
-  if (loading) return null
+  if (loading) return null;
 
   // not in a book club
-  if (!bookclubId) return <div>Missing bookclub id</div>
+  if (!bookclubId) return <div>Missing bookclub id</div>;
 
   return (
     <>
@@ -73,7 +73,6 @@ const BookclubPage = () => {
             ref={bookListRef}
             show="proposedBooks"
             cycleId={currentCycle.id}
-            description="Suggested books: "
           />
         </>
       )}
@@ -92,18 +91,14 @@ const BookclubPage = () => {
       {/* RESULTS PHASE */}
       {currentCycle?.phase === "over" && (
         <>
-          <BookList
-            ref={bookListRef}
-            show="over"
-            cycleId={currentCycle.id}
-          />
+          <BookList ref={bookListRef} show="over" cycleId={currentCycle.id} />
         </>
       )}
 
       {/* Admin settings */}
       {isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
     </>
-  )
-}
+  );
+};
 
-export default BookclubPage
+export default BookclubPage;

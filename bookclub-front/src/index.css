@@ -7,13 +7,13 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.9880 0.0041 91.4455);
+  --background: oklch(0.988 0.0041 91.4455);
   --foreground: oklch(0.2103 0.0059 285.8852);
   --card: oklch(0.9913 0.0029 84.5588);
   --card-foreground: oklch(0.2103 0.0059 285.8852);
   --popover: oklch(0.9913 0.0029 84.5588);
   --popover-foreground: oklch(0.2103 0.0059 285.8852);
-  --primary: oklch(0.3959 0.0599 20.0920);
+  --primary: oklch(0.3959 0.0599 20.092);
   --primary-foreground: oklch(0.9885 0.0057 84.5659);
   --secondary: oklch(0.9232 0.0026 48.7171);
   --secondary-foreground: oklch(0.2103 0.0059 285.8852);
@@ -25,9 +25,9 @@
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.9232 0.0026 48.7171);
   --input: oklch(0.9232 0.0026 48.7171);
-  --ring: oklch(0.8687 0.0043 56.3660);
+  --ring: oklch(0.8687 0.0043 56.366);
   --chart-1: oklch(0.4137 0.1054 45.9038);
-  --chart-2: oklch(0.4030 0.0377 195.7577);
+  --chart-2: oklch(0.403 0.0377 195.7577);
   --chart-3: oklch(0.4732 0.1247 46.2007);
   --chart-4: oklch(0.2791 0.0742 45.6352);
   --chart-5: oklch(0.5517 0.0138 285.9385);
@@ -38,10 +38,15 @@
   --sidebar-accent: oklch(0.9585 0.0098 87.4715);
   --sidebar-accent-foreground: oklch(0.2046 0 0);
   --sidebar-border: oklch(0.9219 0 0);
-  --sidebar-ring: oklch(0.8687 0.0043 56.3660);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --sidebar-ring: oklch(0.8687 0.0043 56.366);
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   --radius: 0.45rem;
   --shadow-x: 0;
   --shadow-y: 1px;
@@ -51,11 +56,15 @@
   --shadow-color: oklch(0 0 0);
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
-  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
-  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-sm:
+    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md:
+    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+  --shadow-lg:
+    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+  --shadow-xl:
+    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
@@ -63,47 +72,47 @@
 
 .dark {
   --background: oklch(0.15 0.02 25);
-  
-  --foreground: oklch(0.90 0.015 40);
-  
+
+  --foreground: oklch(0.9 0.015 40);
+
   --card: oklch(0.19 0.02 25);
-  --card-foreground: oklch(0.90 0.015 40);
+  --card-foreground: oklch(0.9 0.015 40);
   --popover: oklch(0.19 0.02 25);
-  --popover-foreground: oklch(0.90 0.015 40);
-  
-  --primary: oklch(0.45 0.10 25);
+  --popover-foreground: oklch(0.9 0.015 40);
+
+  --primary: oklch(0.45 0.1 25);
   --primary-foreground: oklch(0.95 0.01 40);
-  
+
   --secondary: oklch(0.22 0.02 25);
-  --secondary-foreground: oklch(0.90 0.015 40);
-  
+  --secondary-foreground: oklch(0.9 0.015 40);
+
   --muted: oklch(0.22 0.02 25);
   --muted-foreground: oklch(0.72 0.02 40);
-  
+
   --accent: oklch(0.26 0.03 25);
-  --accent-foreground: oklch(0.90 0.015 40);
-  
-  --destructive: oklch(0.40 0.12 25);
+  --accent-foreground: oklch(0.9 0.015 40);
+
+  --destructive: oklch(0.4 0.12 25);
   --destructive-foreground: oklch(0.98 0 0);
-  
+
   --border: oklch(0.26 0.02 25);
   --input: oklch(0.26 0.02 25);
-  --ring: oklch(0.45 0.10 25);
-  
-  --chart-1: oklch(0.50 0.10 25);
-  --chart-2: oklch(0.40 0.05 250);
-  --chart-3: oklch(0.60 0.12 65);
+  --ring: oklch(0.45 0.1 25);
+
+  --chart-1: oklch(0.5 0.1 25);
+  --chart-2: oklch(0.4 0.05 250);
+  --chart-3: oklch(0.6 0.12 65);
   --chart-4: oklch(0.45 0.06 150);
   --chart-5: oklch(0.45 0.05 300);
 
   --sidebar: oklch(0.13 0.02 25);
-  --sidebar-foreground: oklch(0.90 0.015 40);
-  --sidebar-primary: oklch(0.45 0.10 25);
+  --sidebar-foreground: oklch(0.9 0.015 40);
+  --sidebar-primary: oklch(0.45 0.1 25);
   --sidebar-primary-foreground: oklch(0.95 0.01 40);
   --sidebar-accent: oklch(0.24 0.02 25);
-  --sidebar-accent-foreground: oklch(0.90 0.015 40);
+  --sidebar-accent-foreground: oklch(0.9 0.015 40);
   --sidebar-border: oklch(0.19 0.02 25);
-  --sidebar-ring: oklch(0.45 0.10 25);
+  --sidebar-ring: oklch(0.45 0.1 25);
 }
 
 @theme inline {
@@ -140,7 +149,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: 'Inter Variable', sans-serif;
+  --font-sans: "Inter Variable", sans-serif;
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
 
@@ -157,24 +166,23 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
-  --font-heading: 'Playfair Display Variable', serif;
+  --font-heading: "Playfair Display Variable", serif;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
     margin: 0;
-    }
+  }
   .dark body {
     @apply bg-background text-foreground;
     margin: 0;
   }
   main {
-    @apply flex flex-col items-center justify-start min-h-dvh px-4 py-4 sm:px-6 sm:py-8 lg:px-8
-    ;
+    @apply flex flex-col items-center justify-start min-h-dvh px-4 py-4 sm:px-6 sm:py-8 lg:px-8;
     background: radial-gradient(
       circle at top,
       rgba(255, 247, 240, 0.95),
