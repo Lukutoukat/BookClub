@@ -14,7 +14,15 @@ export const useLogin = () => {
         password,
       });
 
+<<<<<<< HEAD
       localStorage.setItem("loggedBookappUser", JSON.stringify(user));
+=======
+      localStorage.setItem(
+        'loggedBookappUser',
+        JSON.stringify(user)
+      )
+      console.log("login stored", localStorage.getItem('loggedBookappUser'))
+>>>>>>> main
 
       setToken(user.token);
       setMessage(null);

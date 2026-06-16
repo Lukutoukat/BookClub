@@ -15,6 +15,8 @@ import { isLoggedIn } from "./services/auth";
 import { useEffect, useState } from "react";
 import userService from "./services/users";
 
+//useEffect!!! :)
+
 const App = () => {
   const [loginValid, setLoginValid] = useState(true);
 

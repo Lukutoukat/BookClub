@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { PageHeader } from "@/components/PageHeader";
 import { BottomDescription } from "@/components/BottomDescription";
 import { useLogin } from "@/hooks/useLogin";
@@ -5,12 +6,22 @@ import { useLogin } from "@/hooks/useLogin";
 import ClubSettings from "@/components/ClubSettings";
 import AccountSettings from "@/components/AccountSettings";
 import ThemeSelector from "@/components/ThemeSelector";
+=======
+import { PageHeader } from '@/components/PageHeader'
+import { BottomDescription } from '@/components/BottomDescription'
+import { useLogin } from '@/hooks/useLogin'
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
+import ClubSettings from '@/components/ClubSettings'
+import AccountSettings from '@/components/AccountSettings'
+import ThemeSelector from '@/components/ThemeSelector'
+>>>>>>> main
 
 const SettingsPage = () => {
   const { logout } = useLogin();
 
   return (
     <>
+      <UserLoginDisplay />
       <PageHeader
         badgeText="Settings"
         title="Settings"
