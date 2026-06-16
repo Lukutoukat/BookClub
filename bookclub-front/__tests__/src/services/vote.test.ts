@@ -38,7 +38,7 @@ test('getOwn returns own votes', async () => {
 	expect(result).toEqual(mockVotes)
 })
 
-test("update returns updated books", async () => {
+test("update returns updated votes", async () => {
     const mockVote = {
       value: 1,
     }
