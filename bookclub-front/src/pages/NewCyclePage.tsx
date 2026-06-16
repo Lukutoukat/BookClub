@@ -4,9 +4,9 @@ import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import { EndPhase } from '@/components/EndPhase'
 
 const NewCyclePage = () => {
-  const { bookclubId } = useParams<{ bookclubId : string }>()
+  const { bookclubId } = useParams<{ bookclubId: string }>();
 
-  if (!bookclubId) return <div>Missing bookclub id</div>
+  if (!bookclubId) return <div>Missing bookclub id</div>;
 
   return (
     <>
@@ -14,7 +14,7 @@ const NewCyclePage = () => {
       <NewCycle bookclubId={bookclubId} />
       <EndPhase bookclubId={bookclubId} />
     </>
-  )
-}
+  );
+};
 
-export default NewCyclePage
+export default NewCyclePage;

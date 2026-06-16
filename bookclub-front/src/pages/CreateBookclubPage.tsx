@@ -16,4 +16,4 @@ const CreateBookclubPage = () => {
     )
 }
 
-export default CreateBookclubPage
+export default CreateBookclubPage;

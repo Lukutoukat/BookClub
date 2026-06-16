@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AxiosError } from "axios";
-import BookForm from '@/components/BookForm'
-import bookService from '@/services/books'
+import BookForm from "@/components/BookForm";
+import bookService from "@/services/books";
 export default BookForm;
 import "@testing-library/jest-dom/vitest";
 
@@ -27,9 +27,7 @@ describe("BookForm", () => {
     expect(screen.getByText(/language/i)).toBeInTheDocument();
     expect(screen.getByText(/genre/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByRole("button", { name: /Add/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Add/i })).toBeInTheDocument();
   });
 
   it("updates input values when user types", async () => {
@@ -67,7 +65,10 @@ describe("BookForm", () => {
 
     render(<BookForm />);
 
-    await user.type(screen.getByPlaceholderText("9780141439600"), "9780451524935");
+    await user.type(
+      screen.getByPlaceholderText("9780141439600"),
+      "9780451524935",
+    );
     await user.type(
       screen.getByPlaceholderText("A Tale of Two Cities"),
       "Clean Code",
@@ -117,7 +118,10 @@ describe("BookForm", () => {
 
     const titleInput = screen.getByPlaceholderText("A Tale of Two Cities");
 
-    await user.type(screen.getByPlaceholderText("9780141439600"), "9780596007126");
+    await user.type(
+      screen.getByPlaceholderText("9780141439600"),
+      "9780596007126",
+    );
     await user.type(titleInput, "Clean Code");
     await user.type(
       screen.getByPlaceholderText("Charles Dickens"),
@@ -143,7 +147,10 @@ describe("BookForm", () => {
 
     render(<BookForm />);
 
-    await user.type(screen.getByPlaceholderText("9780141439600"), "9781234567897");
+    await user.type(
+      screen.getByPlaceholderText("9780141439600"),
+      "9781234567897",
+    );
     await user.type(
       screen.getByPlaceholderText("A Tale of Two Cities"),
       "Clean Code",
@@ -198,7 +205,10 @@ describe("BookForm", () => {
 
       render(<BookForm />);
 
-      await user.type(screen.getByPlaceholderText("9780141439600"), "9780451524936");
+      await user.type(
+        screen.getByPlaceholderText("9780141439600"),
+        "9780451524936",
+      );
       await user.type(
         screen.getByPlaceholderText("A Tale of Two Cities"),
         "Clean Code",
@@ -222,7 +232,10 @@ describe("BookForm", () => {
 
       render(<BookForm />);
 
-      await user.type(screen.getByPlaceholderText("9780141439600"), "978-0-451-52493-5");
+      await user.type(
+        screen.getByPlaceholderText("9780141439600"),
+        "978-0-451-52493-5",
+      );
       await user.type(
         screen.getByPlaceholderText("A Tale of Two Cities"),
         "Clean Code",
@@ -250,7 +263,10 @@ describe("BookForm", () => {
       // 0-306-40615-2 is a valid ISBN-10
       render(<BookForm />);
 
-      await user.type(screen.getByPlaceholderText("9780141439600"), "0-306-40615-2");
+      await user.type(
+        screen.getByPlaceholderText("9780141439600"),
+        "0-306-40615-2",
+      );
       await user.type(
         screen.getByPlaceholderText("A Tale of Two Cities"),
         "Test Book",
@@ -284,15 +300,18 @@ describe("BookForm", () => {
           status: 500,
           statusText: "Internal Server Error",
           headers: {},
-          config: {} as any
-        } as any
+          config: {} as any,
+        } as any,
       );
       vi.mocked(bookService.create).mockRejectedValue(error);
       const user = userEvent.setup();
 
       render(<BookForm />);
 
-      await user.type(screen.getByPlaceholderText("9780141439600"), "9780451524935");
+      await user.type(
+        screen.getByPlaceholderText("9780141439600"),
+        "9780451524935",
+      );
       await user.type(
         screen.getByPlaceholderText("A Tale of Two Cities"),
         "Clean Code",

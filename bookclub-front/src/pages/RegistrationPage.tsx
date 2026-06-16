@@ -1,6 +1,6 @@
-import RegistrationForm from '@/components/RegistrationForm'
+import RegistrationForm from "@/components/RegistrationForm";
 
-import { PageHeader } from '@/components/PageHeader'
+import { PageHeader } from "@/components/PageHeader";
 
 const RegistrationPage = () => {
   return (
@@ -15,7 +15,7 @@ const RegistrationPage = () => {
 
       <RegistrationForm />
     </>
-  )
-}
+  );
+};
 
-export default RegistrationPage
+export default RegistrationPage;

@@ -7,7 +7,7 @@ import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
 
 const SettingsPage = () => {
-  const { logout } = useLogin()
+  const { logout } = useLogin();
 
   return (
     <>
@@ -25,9 +25,8 @@ const SettingsPage = () => {
       <ThemeSelector />
 
       <BottomDescription />
-  
     </>
-  )
-}
+  );
+};
 
-export default SettingsPage
+export default SettingsPage;

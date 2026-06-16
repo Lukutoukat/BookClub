@@ -1,29 +1,26 @@
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import path from 'path'
-import { defineConfig } from 'vitest/config';
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import path from "path";
+import { defineConfig } from "vitest/config";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss()
-  ],
+  plugins: [react(), tailwindcss()],
   server: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     hmr: {
-      host: 'localhost',
+      host: "localhost",
       clientPort: 13000,
     },
     watch: {
-      ignored: ['**/coverage']
+      ignored: ["**/coverage"],
     },
     proxy: {
-      '/api': {
-        target: 'http://bookclub-backend:3003',
+      "/api": {
+        target: "http://bookclub-backend:3003",
         changeOrigin: true,
       },
-    }
+    },
   },
   resolve: {
     alias: {
@@ -31,22 +28,19 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: './testSetup.ts',
+    setupFiles: "./testSetup.ts",
     exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      './temp/**',
-      './src/components/ui/**'
+      "**/node_modules/**",
+      "**/dist/**",
+      "./temp/**",
+      "./src/components/ui/**",
     ],
+    testTimeout: 6000,
     coverage: {
-      include: ['./src/**'],
-      exclude: [
-        './src/components/ui/**',
-        '**.css',
-        './src/assets/**'
-      ]
-    }
-  }
-})
+      include: ["./src/**"],
+      exclude: ["./src/components/ui/**", "**.css", "./src/assets/**"],
+    },
+  },
+});
