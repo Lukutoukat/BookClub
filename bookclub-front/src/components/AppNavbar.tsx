@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { type MenuItem } from "./PageMenu";
@@ -14,35 +14,44 @@ interface AppNavbarProps {
  */
 export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
   const location = useLocation();
+  const navRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const updatePadding = () => {
-      // We check how much space is left on the bottom of the page
+      const navHeight = navRef.current?.getBoundingClientRect().height ?? 0;
       const scrollHeight = document.documentElement.scrollHeight;
-      const windowHeight = window.innerHeight;
-      // We add padding to the bottom so the navbar doesnt overlay it
-      const needsPadding = scrollHeight > windowHeight;
+      const visibleHeight = window.innerHeight - navHeight;
+      const needsPadding = scrollHeight > visibleHeight;
 
-      if (needsPadding) {
-        document.body.style.paddingBottom = "4rem";
-      } else {
-        document.body.style.paddingBottom = "0rem";
-      }
+      document.body.style.paddingBottom = needsPadding ? `${navHeight}px` : "";
     };
 
     updatePadding();
     window.addEventListener("resize", updatePadding);
 
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(updatePadding)
+        : null;
+    if (observer) {
+      observer.observe(document.documentElement);
+      observer.observe(document.body);
+    }
+
     return () => {
       window.removeEventListener("resize", updatePadding);
+      observer?.disconnect();
       document.body.style.paddingBottom = "";
     };
-  }, []);
+  }, [location.pathname]);
 
   return (
     <>
       <main>{children}</main>
-      <div className="fixed inset-x-0 bottom-0 top-auto z-50 border-t bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div
+        ref={navRef}
+        className="fixed inset-x-0 bottom-0 top-auto z-50 border-t bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      >
         <nav className="mx-auto flex max-w-md items-center justify-around px-4">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.to;
