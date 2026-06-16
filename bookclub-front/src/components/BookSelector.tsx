@@ -168,7 +168,11 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
         {/* The Search Input replaces the Button entirely */}
         <div className="flex w-full min-w-0 items-center gap-2 [&_[data-slot=command-input-wrapper]]:flex-1 [&_[data-slot=command-input-wrapper]]:p-0">
           <CommandInput
-            placeholder="Search saved books..."
+            placeholder={
+              selectedDisplay === "proposedBooks"
+                ? "Search proposed"
+                : "Search saved"
+            }
             value={inputValue}
             onValueChange={(search: string) => {
               setInputValue(search);
@@ -177,12 +181,10 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
             onFocus={() => setOpen(true)}
           />
           <Button
-            className="h-9 px-4 text-sm sm:h-8 sm:px-4 sm:text-xs shrink-0"
+            className="px-1 text-xs md:text-sm shrink-0"
             onClick={swapDisplay}
           >
-            {selectedDisplay === "savedBooks"
-              ? "Show previous books"
-              : "Show saved proposed"}
+            {selectedDisplay === "savedBooks" ? "Show previous" : "Show saved"}
           </Button>
         </div>
         {/* The Dropdown list (absolutely positioned below the input) */}
