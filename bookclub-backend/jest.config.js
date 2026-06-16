@@ -1,33 +1,33 @@
 export default {
-  preset: "ts-jest",
-  testEnvironment: "node",
+  preset: 'ts-jest',
+  testEnvironment: 'node',
   globals: {
-    NODE_ENV: "test",
+    NODE_ENV: 'test'
   },
-  extensionsToTreatAsEsm: [".ts"],
+  extensionsToTreatAsEsm: ['.ts'],
   transform: {
-    "^.+\\.ts$": [
-      "ts-jest",
+    '^.+\\.ts$': [
+      'ts-jest',
       {
         useESM: true,
         tsconfig: {
-          module: "esnext",
-          target: "esnext",
-        },
-      },
-    ],
+          module: 'esnext',
+          target: 'esnext'
+        }
+      }
+    ]
   },
   moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1",
+    '^(\\.{1,2}/.*)\\.js$': '$1'
   },
-  roots: ["<rootDir>/__tests__"],
-  testMatch: ["**/__tests__/*.test.ts"],
-  moduleFileExtensions: ["ts", "js"],
+  roots: ['<rootDir>/__tests__'],
+  testMatch: ['**/__tests__/*.test.ts'],
+  moduleFileExtensions: ['ts', 'js'],
   collectCoverageFrom: [
-    "**/*.ts",
-    "!__tests__/**",
-    "!node_modules/**",
-    "!**/*.config.ts",
-    "!generated/**",
-  ],
-};
+    '**/*.ts',
+    '!__tests__/**',
+    '!node_modules/**',
+    '!**/*.config.ts',
+    '!generated/**'
+  ]
+}

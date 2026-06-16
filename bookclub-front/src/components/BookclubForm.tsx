@@ -1,50 +1,47 @@
-import { useState, type ChangeEvent, type SubmitEventHandler } from "react";
-import { useNavigate } from "react-router-dom";
-import bookclubService, { type CreateBookClub } from "@/services/bookclubs";
-import { SectionHeader } from "./SectionHeader";
+import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
+import { useNavigate } from 'react-router-dom'
+import bookclubService, { type CreateBookClub } from '@/services/bookclubs'
+import { SectionHeader } from './SectionHeader'
 // import bookclubmembersService from '@/services/bookclubmembers'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Field, FieldLabel, FieldContent } from "@/components/ui/field";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent } from '@/components/ui/card'
+import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
 const emptyBookclub: CreateBookClub = {
-  name: "",
-  owner_id: "0",
-};
+  name: '',
+  owner_id: '0'
+}
 
 const BookclubForm = () => {
-  const [newBookclub, setNewBookclub] = useState<CreateBookClub>(emptyBookclub);
-  const [errors, setErrors] = useState<string[]>([]);
-  const navigate = useNavigate();
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): void => {
-    const { name, value } = event.target;
+  const [newBookclub, setNewBookclub] = useState<CreateBookClub>(emptyBookclub)
+  const [errors, setErrors] = useState<string[]>([])
+  const navigate = useNavigate()
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    const { name, value } = event.target
     setNewBookclub((currentBookclub) => ({
       ...currentBookclub,
-      [name]: value,
-    }));
+      [name]: value
+    }))
     // Clear errors when user starts typing
     if (errors.length > 0) {
-      setErrors([]);
+      setErrors([])
     }
-  };
+  }
 
   const addBookclub: SubmitEventHandler<HTMLFormElement> = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const created = await bookclubService.create(newBookclub);
-      setNewBookclub(emptyBookclub);
-      setErrors([]);
-      void navigate(`/club/${created.id}`);
+      const created = await bookclubService.create(newBookclub)
+      setNewBookclub(emptyBookclub)
+      setErrors([])
+      void navigate(`/club/${created.id}`)
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error occurred";
-      setErrors([`Failed to create bookclub: ${errorMessage}`]);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      setErrors([`Failed to create bookclub: ${errorMessage}`])
     }
-  };
+  }
   return (
     <Card className="card-base">
       <SectionHeader title="Create a new bookclub" description="" />
@@ -88,7 +85,7 @@ const BookclubForm = () => {
         </form>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default BookclubForm;
+export default BookclubForm

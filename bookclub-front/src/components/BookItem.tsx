@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import React, { useState, useEffect } from 'react'
+import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 
-import { type Book } from "@/services/books";
-import { type VoteFields } from "@/services/vote";
-import { formatISBN } from "@/lib/isbnValidator";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ButtonDialog } from "./ButtonDialog";
-import type { BookResult } from "@/services/results";
+import { type Book } from '@/services/books'
+import { type VoteFields } from '@/services/vote'
+import { formatISBN } from '@/lib/isbnValidator'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { ButtonDialog } from './ButtonDialog'
+import type { BookResult } from '@/services/results'
 
 const BookItem = ({
   book,
@@ -20,46 +20,42 @@ const BookItem = ({
   isReadOnly,
   isVotingPhase,
   onVote,
-  existingVote,
+  existingVote
 }: {
-  book: Book | BookResult;
-  onDelete: (id: string) => Promise<void>;
-  onEdit: () => void;
-  isReadOnly: boolean;
-  isVotingPhase: boolean;
-  onVote: (
-    bookId: string,
-    weight: number,
-    voteId: string | null,
-  ) => Promise<void>;
-  existingVote?: VoteFields;
+  book: Book | BookResult
+  onDelete: (id: string) => Promise<void>
+  onEdit: () => void
+  isReadOnly: boolean
+  isVotingPhase: boolean
+  onVote: (bookId: string, weight: number, voteId: string | null) => Promise<void>
+  existingVote?: VoteFields
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [weight, setWeight] = useState<number | null>(null);
-  const [voteId, setVoteId] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [weight, setWeight] = useState<number | null>(null)
+  const [voteId, setVoteId] = useState<string | null>(null)
 
   const isBookResult = (book: Book | BookResult): book is BookResult => {
-    return "score" in book;
-  };
+    return 'score' in book
+  }
 
   useEffect(() => {
     if (isVotingPhase && existingVote) {
-      setWeight(existingVote.weight ?? null);
-      setVoteId(existingVote.id);
+      setWeight(existingVote.weight ?? null)
+      setVoteId(existingVote.id)
     }
-  }, [isVotingPhase, existingVote]);
+  }, [isVotingPhase, existingVote])
 
   const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!book.id) return;
-    setIsDeleting(true);
+    e.stopPropagation()
+    if (!book.id) return
+    setIsDeleting(true)
     try {
-      await onDelete(book.id);
+      await onDelete(book.id)
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
-  };
+  }
 
   return (
     <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90">
@@ -77,9 +73,7 @@ const BookItem = ({
           )}
           <div className="space-y-0.5 flex-1 cursor-pointer">
             <div className="flex flex-wrap items-center gap-2  w-full">
-              <h3 className="text-lg font-semibold text-foreground/90">
-                {book.name}
-              </h3>
+              <h3 className="text-lg font-semibold text-foreground/90">{book.name}</h3>
 
               {book.genre && (
                 <Badge variant="secondary" className="font-normal text-xs">
@@ -100,8 +94,8 @@ const BookItem = ({
                   size="xs"
                   className="gap-3 ml-auto shrink-0"
                   onClick={(e: React.MouseEvent) => {
-                    e.stopPropagation();
-                    onEdit();
+                    e.stopPropagation()
+                    onEdit()
                   }}
                 >
                   Edit
@@ -127,9 +121,7 @@ const BookItem = ({
 
         <div className="flex items-center gap-0.5 self-end sm:self-auto">
           <div className="flex items-center text-sm text-muted-foreground gap-1.5">
-            <span className="font-medium text-foreground/70">
-              {book.author}
-            </span>
+            <span className="font-medium text-foreground/70">{book.author}</span>
             <span>&bull;</span>
             <span>{book.year}</span>
           </div>
@@ -139,30 +131,26 @@ const BookItem = ({
             size="sm"
             className="h-6 p1-4 px-1 text-muted-foreground hover:text-foreground"
             onClick={(e: React.MouseEvent) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
+              e.stopPropagation()
+              setIsExpanded(!isExpanded)
             }}
           >
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
+            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             <span className="text-xs font-medium hidden sm:inline">
-              {isExpanded ? "Less" : "More"}
+              {isExpanded ? 'Less' : 'More'}
             </span>
           </Button>
 
           {isVotingPhase && (
             <RadioGroup
-              value={weight?.toString() ?? ""}
+              value={weight?.toString() ?? ''}
               onValueChange={async (val) => {
-                const w = Number(val);
-                setWeight(w);
-                if (!book.id) return;
-                if (!book.proposal_id) return;
+                const w = Number(val)
+                setWeight(w)
+                if (!book.id) return
+                if (!book.proposal_id) return
 
-                await onVote(book.proposal_id, w, voteId ?? null);
+                await onVote(book.proposal_id, w, voteId ?? null)
               }}
             >
               <div className="flex items-center gap-3">
@@ -175,9 +163,7 @@ const BookItem = ({
               </div>
               <div className="flex items-center gap-3">
                 <RadioGroupItem value="0" id={`dont-${book.id}`} />
-                <Label htmlFor={`dont-${book.id}`}>
-                  Don&apos;t want to read
-                </Label>
+                <Label htmlFor={`dont-${book.id}`}>Don&apos;t want to read</Label>
               </div>
             </RadioGroup>
           )}
@@ -204,9 +190,7 @@ const BookItem = ({
                   <p className="text-muted-foreground text-xs uppercase tracking-wider mb-0.5">
                     ISBN
                   </p>
-                  <p className="font-medium font-mono text-xs">
-                    {formatISBN(book.isbn)}
-                  </p>
+                  <p className="font-medium font-mono text-xs">{formatISBN(book.isbn)}</p>
                 </div>
               )}
             </div>
@@ -214,9 +198,7 @@ const BookItem = ({
             {book.comment && (
               <div className="bg-muted/30 rounded-lg p-2 border border-border/40">
                 <p className="text-sm leading-relaxed text-foreground/80">
-                  <span className="font-semibold text-foreground/90 mr-1">
-                    Notes:
-                  </span>
+                  <span className="font-semibold text-foreground/90 mr-1">Notes:</span>
                   {book.comment}
                 </p>
               </div>
@@ -225,7 +207,7 @@ const BookItem = ({
         )}
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default BookItem;
+export default BookItem
