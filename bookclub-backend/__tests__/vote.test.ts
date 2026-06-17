@@ -9,29 +9,29 @@ jest.mock('../db.ts', () => ({
       findMany: jest.fn(),
       findUnique: jest.fn(),
       create: jest.fn(),
-      update: jest.fn(),
+      update: jest.fn()
     },
     bookProposed: {
       findMany: jest.fn(),
-      findUnique: jest.fn(),
+      findUnique: jest.fn()
     },
     cycle: {
-      findUnique: jest.fn(),
+      findUnique: jest.fn()
     },
-		user: {
+    user: {
       findUnique: jest.fn()
     },
     book: {
-      findUnique: jest.fn(),
+      findUnique: jest.fn()
     },
     bookClub: {
-      findUnique: jest.fn(),
+      findUnique: jest.fn()
     },
     bookClubMembers: {
-      findFirst: jest.fn(),
-    },
-  },
-}));
+      findFirst: jest.fn()
+    }
+  }
+}))
 
 import { app } from '../index.ts'
 import { prisma } from '../db.ts'
@@ -48,84 +48,84 @@ const authHeaders = () => {
 
 describe('/api/vote', () => {
   beforeEach(() => {
-		jest.clearAllMocks()
-		jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.clearAllMocks()
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     process.env.SECRET = 'testsecret'
     ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
       id: '1',
       email: 'matti@test.com',
       name: 'matti'
     })
-	})
+  })
 
-	afterEach(() => {
-		jest.restoreAllMocks()
-	})
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
 
-	const mockVote = {
-		proposal_id: '1',
-		weight: 3
-	}
+  const mockVote = {
+    proposal_id: '1',
+    weight: 3
+  }
 
-	const mockProposal = {
+  const mockProposal = {
     id: '1',
     cycle_id: '1',
-    book_id: '1',
+    book_id: '1'
   }
 
   const mockCycle = {
     id: '1',
-    bookclub_id: '1',
+    bookclub_id: '1'
   }
 
   const mockBook = {
-    id: '1',
+    id: '1'
   }
 
   const mockBookClub = {
-    id: '1',
+    id: '1'
   }
 
   const mockBookClubMember = {
-    id: '1',
+    id: '1'
   }
 
-	describe('POST', () => {
-		it('returns votes', async() => {
-			;(prisma.bookProposed.findUnique as jest.Mock).mockResolvedValue(mockProposal)
-			;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue(mockCycle)
-			;(prisma.book.findUnique as jest.Mock).mockResolvedValue(mockBook)
-			;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClub)
+  describe('POST', () => {
+    it('returns votes', async () => {
+      ;(prisma.bookProposed.findUnique as jest.Mock).mockResolvedValue(mockProposal)
+      ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue(mockCycle)
+      ;(prisma.book.findUnique as jest.Mock).mockResolvedValue(mockBook)
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClub)
       ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(mockBookClubMember)
-			;(prisma.bookVoted.create as jest.Mock).mockResolvedValue({
+      ;(prisma.bookVoted.create as jest.Mock).mockResolvedValue({
         id: '1'
       })
 
-			const response = await request(app).post('/api/vote').set(authHeaders()).send(mockVote)
+      const response = await request(app).post('/api/vote').set(authHeaders()).send(mockVote)
 
-			expect(prisma.bookProposed.findUnique).toHaveBeenCalledTimes(1)
-			expect(prisma.cycle.findUnique).toHaveBeenCalledTimes(1)
+      expect(prisma.bookProposed.findUnique).toHaveBeenCalledTimes(1)
+      expect(prisma.cycle.findUnique).toHaveBeenCalledTimes(1)
       expect(prisma.book.findUnique).toHaveBeenCalledTimes(1)
-			expect(prisma.bookClub.findUnique).toHaveBeenCalledTimes(1)
+      expect(prisma.bookClub.findUnique).toHaveBeenCalledTimes(1)
       expect(prisma.bookClubMembers.findFirst).toHaveBeenCalledTimes(1)
       expect(prisma.bookVoted.create).toHaveBeenCalledTimes(1)
 
-			expect(response.status).toBe(200)
+      expect(response.status).toBe(200)
       expect(response.body).toEqual(mockVote)
-		})
+    })
 
-		it('returns 400 if proposal does not exist', async () => {
-			;(prisma.bookProposed.findUnique as jest.Mock).mockResolvedValue(null)
+    it('returns 400 if proposal does not exist', async () => {
+      ;(prisma.bookProposed.findUnique as jest.Mock).mockResolvedValue(null)
 
-			const response = await request(app).post('/api/vote').set(authHeaders()).send(mockVote)
+      const response = await request(app).post('/api/vote').set(authHeaders()).send(mockVote)
 
-			expect(response.status).toBe(400)
-			expect(response.body).toEqual({
-				error: 'Proposal does not exist!'
-			})
-		})
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        error: 'Proposal does not exist!'
+      })
+    })
 
-		 it('returns 400 if cycle does not exist', async () => {
+    it('returns 400 if cycle does not exist', async () => {
       ;(prisma.bookProposed.findUnique as jest.Mock).mockResolvedValue(mockProposal)
       ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue(null)
 
@@ -179,71 +179,68 @@ describe('/api/vote', () => {
       })
     })
 
-		it('returns 500 if database fails', async () => {
-			;(prisma.bookProposed.findUnique as jest.Mock).mockRejectedValue(new Error('Database failed'))
+    it('returns 500 if database fails', async () => {
+      ;(prisma.bookProposed.findUnique as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-			const response = await request(app).post('/api/vote').set(authHeaders()).send(mockVote)
+      const response = await request(app).post('/api/vote').set(authHeaders()).send(mockVote)
 
-			expect(response.status).toBe(500)
-			expect(response.body).toEqual({
-				error: 'database error'
-			})
-		})
-	})
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({
+        error: 'database error'
+      })
+    })
+  })
 
-	describe('GET', () => {
-		it('returns all votes', async () => {
-			;(prisma.bookVoted.findMany as jest.Mock).mockResolvedValue(mockVote)
+  describe('GET', () => {
+    it('returns all votes', async () => {
+      ;(prisma.bookVoted.findMany as jest.Mock).mockResolvedValue(mockVote)
 
-			const response = await request(app).get('/api/vote')
+      const response = await request(app).get('/api/vote')
 
-			expect(response.status).toBe(200)
-				expect(response.body).toEqual(
-					{
-						proposal_id: '1',
-						weight: 3,
-					}
-				)
-		})
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        proposal_id: '1',
+        weight: 3
+      })
+    })
 
-		it('returns 500 if get fails', async () => {
-			;(prisma.bookVoted.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
+    it('returns 500 if get fails', async () => {
+      ;(prisma.bookVoted.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-			const response = await request(app).get('/api/vote')
+      const response = await request(app).get('/api/vote')
 
-			expect(response.status).toBe(500)
-			expect(response.body).toEqual({ error: 'database error' })            
-		})
-	})
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+    })
+  })
 
-	describe('GET/:cycle_id', () => {
-		it('returns user votes for the cycle', async () => {
-			;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue([{ id: '1' }])
-			;(prisma.bookVoted.findMany as jest.Mock).mockResolvedValue([{ id: '1' }])
+  describe('GET/:cycle_id', () => {
+    it('returns user votes for the cycle', async () => {
+      ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue([{ id: '1' }])
+      ;(prisma.bookVoted.findMany as jest.Mock).mockResolvedValue([{ id: '1' }])
 
-			const response = await request(app).get('/api/vote/1').set(authHeaders())
+      const response = await request(app).get('/api/vote/1').set(authHeaders())
 
-			expect(response.status).toBe(200)
-			expect(response.body).toEqual([{ id: '1' }])
-		})
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual([{ id: '1' }])
+    })
 
-		it('returns 500 if get fails', async () => {
-			;(prisma.bookVoted.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
+    it('returns 500 if get fails', async () => {
+      ;(prisma.bookVoted.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-			const response = await request(app).get('/api/vote/1').set(authHeaders())
+      const response = await request(app).get('/api/vote/1').set(authHeaders())
 
-			expect(response.status).toBe(500)
-			expect(response.body).toEqual({ error: 'database error' })            
-		})
-	})
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+    })
+  })
 
-	describe('PUT/:id', () => {
-		it('updates a vote', async () => {
-			;(prisma.bookVoted.findUnique as jest.Mock).mockResolvedValue({
+  describe('PUT/:id', () => {
+    it('updates a vote', async () => {
+      ;(prisma.bookVoted.findUnique as jest.Mock).mockResolvedValue({
         id: '1',
         user_id: '1'
       })
-
       ;(prisma.bookVoted.update as jest.Mock).mockResolvedValue({
         id: '1',
         weight: 0
@@ -253,9 +250,9 @@ describe('/api/vote', () => {
 
       expect(response.status).toBe(200)
       expect(prisma.bookVoted.update).toHaveBeenCalledTimes(1)
-		})
+    })
 
-		it('returns 404 if vote not found', async () => {
+    it('returns 404 if vote not found', async () => {
       ;(prisma.bookVoted.findUnique as jest.Mock).mockResolvedValue(null)
 
       const response = await request(app).put('/api/vote/1').set(authHeaders()).send({ weight: 0 })
@@ -280,15 +277,13 @@ describe('/api/vote', () => {
       })
     })
 
-		it('returns 500 if update fails', async () => {
-			;(prisma.bookVoted.findUnique as jest.Mock).mockRejectedValue(
-        new Error('Database failed')
-      )
+    it('returns 500 if update fails', async () => {
+      ;(prisma.bookVoted.findUnique as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-			const response = await request(app).put('/api/vote/1').set(authHeaders()).send({ weight: 0 })
+      const response = await request(app).put('/api/vote/1').set(authHeaders()).send({ weight: 0 })
 
-			expect(response.status).toBe(500)
-			expect(response.body).toEqual({ error: 'database error' }) 
-		})
-	})
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+    })
+  })
 })
