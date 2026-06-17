@@ -46,16 +46,13 @@ function Calendar({
         ...formatters,
       }}
       classNames={{
-        // Let the root container expand fully
         root: cn("w-full", defaultClassNames.root),
         
-        // Added larger responsive padding/gap when two or more months are shown
         months: cn(
-          "relative flex flex-col gap-8 md:flex-row md:gap-12 lg:gap-16 w-full justify-between",
+          "relative flex flex-col gap-8 min-[768px]:flex-row min-[768px]:gap-12 lg:gap-16 w-full justify-between",
           defaultClassNames.months,
         ),
         
-        // Fluidly splits available space
         month: cn("flex w-full flex-1 flex-col gap-4", defaultClassNames.month),
         
         nav: cn(
@@ -89,7 +86,7 @@ function Calendar({
           defaultClassNames.dropdown,
         ),
         caption_label: cn(
-          "font-semibold select-none text-base md:text-lg",
+          "font-semibold select-none text-base min-[390px]:text-lg",
           captionLayout === "label"
             ? ""
             : "flex items-center gap-2 rounded-(--cell-radius) [&>svg]:size-4 [&>svg]:text-muted-foreground",
@@ -97,13 +94,11 @@ function Calendar({
         ),
         weekdays: cn("flex w-full justify-between", defaultClassNames.weekdays),
         
-        // Increased weekday font size (e.g. Mo, Tu, We) to be larger
         weekday: cn(
-          "flex-1 rounded-(--cell-radius) text-sm md:text-base font-medium text-muted-foreground select-none text-center",
+          "flex-1 rounded-(--cell-radius) text-xs min-[360px]:text-sm min-[768px]:text-base font-medium text-muted-foreground select-none text-center",
           defaultClassNames.weekday,
         ),
         
-        // Container fills width, no gap allows range selectors to touch seamlessly
         week: cn("mt-2 flex w-full justify-between", defaultClassNames.week),
         
         week_number_header: cn(
@@ -115,7 +110,6 @@ function Calendar({
           defaultClassNames.week_number,
         ),
         
-        // Cells actively stretch with flex-1 and maintain an aspect ratio
         day: cn(
           "group/day relative aspect-square h-full w-full flex-1 rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius)",
           props.showWeekNumber
@@ -228,8 +222,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        // Decreased number font size to text-xs md:text-sm and centered it inside a fully responsive aspect-square block
-        "relative isolate z-10 flex aspect-square h-full w-full min-w-(--cell-size) flex-col items-center justify-center gap-2 border-0 leading-none font-normal text-xs md:text-sm group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70",
+        "relative isolate z-10 flex aspect-square h-full w-full min-w-(--cell-size) flex-col items-center justify-center gap-2 border-0 leading-none font-normal text-xs min-[360px]:text-sm group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70",
         defaultClassNames.day,
         className,
       )}

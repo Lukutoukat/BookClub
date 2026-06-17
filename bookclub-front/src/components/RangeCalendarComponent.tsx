@@ -71,31 +71,33 @@ export const RangeCalendarComponent = ({
 
   return (
     <>
-      <Card className="card-base">
+      <Card className="card-base w-full max-w-full overflow-hidden">
         <SectionHeader
           title={"Select Dates"}
           description={
             "Select the end date the suggesting phase and the end date for voting phase."
           }
         />
-        <CardContent className="card-content">
-          <Calendar
-            className="self-center"
-            mode="range"
-            defaultMonth={new Date()}
-            selected={dateRange}
-            onSelect={handleDateSelect}
-            numberOfMonths={2}
-            disabled={(date) =>
-              date < new Date("1900-01-01") || date < new Date()
-            }
-          />
+        <CardContent className="card-content flex justify-center p-4 sm:p-6">
+          <div className="w-full flex justify-center overflow-visible">
+            <Calendar
+              className="mx-auto [&_.rdp-months]:!flex-row [&_.rdp-months]:!flex-wrap [&_.rdp-months]:justify-center [&_.rdp-months]:gap-4 [&_.rdp-months]:!space-x-0 [&_.rdp-months]:!space-y-0"
+              mode="range"
+              defaultMonth={new Date()}
+              selected={dateRange}
+              onSelect={handleDateSelect}
+              numberOfMonths={2}
+              disabled={(date) =>
+                date < new Date("1900-01-01") || date < new Date()
+              }
+            />
+          </div>
         </CardContent>
         <CardFooter className="border-t bg-card py-6">
           <FieldGroup className="flex flex-col gap-6 w-full">
             <Field>
               <FieldLabel htmlFor="time-from">Suggesting End Time</FieldLabel>
-              <div className="flex items-center gap-3 mt-2">
+              <div className="flex items-center gap-3 mt-2">  
                 <Clock2Icon className="text-muted-foreground w-5 h-5" />
                 <TimePicker
                   value={startTime}
