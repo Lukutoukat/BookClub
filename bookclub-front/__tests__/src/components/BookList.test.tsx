@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import { render, screen } from '@testing-library/react'
-import user from '@testing-library/user-event'
-import BookList from '@/components/BookList'
-import bookService, { type Book } from '@/services/books'
-import { test, expect, describe, vi, beforeEach } from 'vitest'
-
-vi.mock('../../../src/services/books')
-=======
 import { render, screen } from "@testing-library/react"
 import user from "@testing-library/user-event"
 import BookList from "@/components/BookList"
@@ -20,7 +11,6 @@ vi.mock("../../../src/services/books")
 vi.mock("../../../src/services/vote")
 vi.mock("../../../src/services/results")
 vi.mock("../../../src/services/propose")
->>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
 
 const mockBook = (overrides?: Partial<Book>): Book => ({
   id: 1,
@@ -35,26 +25,12 @@ const mockBook = (overrides?: Partial<Book>): Book => ({
   ...overrides
 })
 
-<<<<<<< HEAD
-describe('BookList', () => {
-=======
 
 describe("BookList", () => {
->>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-<<<<<<< HEAD
-  const renderComponent = (overrides?: { books?: Book[]; emptyMessage?: string }) => {
-    const booksToUse = overrides?.books ?? [mockBook()]
-    vi.mocked(bookService.getAll).mockResolvedValue(booksToUse)
-    const emptyMessage = overrides?.emptyMessage
-    if (emptyMessage) {
-      render(<BookList emptyMessage={emptyMessage} />)
-    } else {
-      render(<BookList />)
-=======
   const renderComponent = (overrides?: {
     books?: Book[];
     emptyMessage?: string;
@@ -79,7 +55,6 @@ describe("BookList", () => {
       render(<BookList emptyMessage={emptyMessage} show={show} cycleId={cycleId} />);
     } else {
       render(<BookList show={show} cycleId={cycleId} />);
->>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
     }
   }
 
@@ -114,9 +89,6 @@ describe("BookList", () => {
     })
   })
 
-<<<<<<< HEAD
-  describe('book expansion', () => {
-=======
 	describe("loading state", () => {
 		test("shows loading state initially", async () => {
 			vi.mocked(bookService.getAll).mockImplementation(
@@ -154,7 +126,6 @@ describe("BookList", () => {
 	})
 
   describe("book expansion", () => {
->>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
     // Helper to find the expand/collapse button within a book item
     const getExpandButton = () => {
       const buttons = screen.getAllByRole('button')
@@ -208,19 +179,6 @@ describe("BookList", () => {
     })
   })
 
-<<<<<<< HEAD
-  describe('delete functionality', () => {
-    test('calls onDelete with id when delete button clicked and window.confirm is accepted', async () => {
-      vi.spyOn(window, 'confirm').mockReturnValue(true)
-      vi.mocked(bookService.removeFromUser).mockResolvedValue(undefined)
-      renderComponent()
-      const us = user.setup()
-      await screen.findByText('Book 1') // wait for books to load
-      const deleteButtons = screen.getAllByTitle('Delete book')
-      await us.click(deleteButtons[0])
-      const continueButtons = screen.getAllByTitle('continue')
-      await us.click(continueButtons[0])
-=======
   describe("voting", () => {
     test("passes existing votes to BookItem when show='votedBooks'", async () => {
       vi.mocked(resultService.getResults).mockResolvedValue([
@@ -249,7 +207,6 @@ describe("BookList", () => {
       await us.click(deleteButtons[0]);
       const continueButtons = screen.getAllByTitle("continue");
       await us.click(continueButtons[0]);
->>>>>>> efd1757 (Add frontend tests for UserLoginDisplay and BookList)
 
       expect(vi.mocked(bookService.removeFromUser)).toHaveBeenCalledWith(1)
     })
