@@ -33,7 +33,7 @@ vi.mock('@/components/UserLoginDisplay', () => ({
   UserLoginDisplay: () => <div>User Display</div>
 }))
 
-describe('', () => {
+describe('routes', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
