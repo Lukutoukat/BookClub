@@ -31,7 +31,7 @@ const get = (clubIds: string[]) => {
     .then((res) => res.data)
 }
 
-const remove = (id: number) => {
+const remove = (id: string) => {
   return axios.delete(`${baseUrl}/${id}`, getAuthConfig())
 }
 export default {
