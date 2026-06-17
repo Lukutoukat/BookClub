@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { type MenuItem } from "./PageMenu";
@@ -15,15 +15,24 @@ interface AppNavbarProps {
 export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
   const location = useLocation();
   const navRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [paddingBottom, setPaddingBottom] = useState(0);
 
   useEffect(() => {
     const updatePadding = () => {
-      const navHeight = navRef.current?.getBoundingClientRect().height ?? 0;
-      const scrollHeight = document.documentElement.scrollHeight;
-      const visibleHeight = window.innerHeight - navHeight;
-      const needsPadding = scrollHeight > visibleHeight;
+      if (!contentRef.current || !navRef.current) return;
 
-      document.body.style.paddingBottom = needsPadding ? `${navHeight}px` : "";
+      const contentHeight = contentRef.current.offsetHeight;
+      const navHeight = navRef.current.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      
+      const bufferMargin = 24; 
+
+      if (contentHeight + bufferMargin + navHeight > viewportHeight) {
+        setPaddingBottom(navHeight + bufferMargin);
+      } else {
+        setPaddingBottom(0);
+      }
     };
 
     updatePadding();
@@ -33,21 +42,26 @@ export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
       typeof ResizeObserver !== "undefined"
         ? new ResizeObserver(updatePadding)
         : null;
+
     if (observer) {
-      observer.observe(document.documentElement);
-      observer.observe(document.body);
+      if (contentRef.current) observer.observe(contentRef.current);
+      if (navRef.current) observer.observe(navRef.current);
     }
 
     return () => {
       window.removeEventListener("resize", updatePadding);
       observer?.disconnect();
-      document.body.style.paddingBottom = "";
     };
   }, [location.pathname]);
 
   return (
     <>
-      <main>{children}</main>
+      <main style={{ paddingBottom: `${paddingBottom}px` }}>
+        <div ref={contentRef}>
+          {children}
+        </div>
+      </main>
+      
       <div
         ref={navRef}
         className="fixed inset-x-0 bottom-0 top-auto z-50 border-t bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60"
