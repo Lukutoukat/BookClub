@@ -1,11 +1,12 @@
-import { useParams } from 'react-router-dom'
-import { NewCycle } from '@/components/NewCycle'
-import { UserLoginDisplay } from '@/components/UserLoginDisplay'
-import { EndPhase } from '@/components/EndPhase'
-import { PageHeader } from '@/components/PageHeader';
+import { useParams } from "react-router-dom";
+import { NewCycle } from "@/components/NewCycle";
+import { UserLoginDisplay } from "@/components/UserLoginDisplay";
+import { EndPhase } from "@/components/EndPhase";
+import { PageHeader } from "@/components/PageHeader";
 import { useNavigate } from "react-router-dom";
-import bookClubService, { type BookClub } from '@/services/bookclubs'
-import React, { useState, useEffect } from 'react';
+import bookClubService, { type BookClub } from "@/services/bookclubs";
+import React, { useState, useEffect } from "react";
+import { Grid } from "@/components/Grid";
 
 const NewCyclePage = () => {
   const { bookclubId } = useParams<{ bookclubId: string }>();
@@ -16,39 +17,38 @@ const NewCyclePage = () => {
   useEffect(() => {
     if (!bookclubId) return;
 
-    let isMounted = true;
     setIsLoading(true);
 
-    bookClubService.get([bookclubId])
+    bookClubService
+      .get([bookclubId])
       .then((clubs) => {
-        if (isMounted) {
-          setLoadedClubs(clubs);
-          setIsLoading(false);
-        }
+        setLoadedClubs(clubs);
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching book clubs:", error);
-        if (isMounted) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
+        console.error("Failed to load book club:", error);
+        void navigate("/"); // Redirect to home page on error
       });
-
-  if (!bookclubId) return <div>Missing bookclub id</div>;
+  }, [bookclubId]);
+  
 
   return (
     <>
       <UserLoginDisplay />
       <PageHeader
         badgeText="New Cycle"
-        title={loadedClubs[0]?.name ?? "Bookclub"}
+        title={isLoading || loadedClubs.length === 0 ? "Loading..." : loadedClubs[0]?.name ?? "Bookclub"}
         description=""
         buttonText="Back"
         buttonOnClick={async () => {
-          await navigate(`/club/${bookclubId}`);
+          await navigate(`/club/${loadedClubs[0]?.id ?? ""}`);
         }}
       />
-      <NewCycle bookclubId={bookclubId} />
-      <EndPhase bookclubId={bookclubId} />
+      <Grid>
+        <NewCycle bookclubId={loadedClubs[0]?.id ?? ""} />
+        <EndPhase bookclubId={loadedClubs[0]?.id ?? ""} />
+      </Grid>
     </>
   );
 };

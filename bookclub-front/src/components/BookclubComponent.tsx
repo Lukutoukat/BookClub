@@ -73,7 +73,6 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
           alertDialogDescription="Once the book club is deleted, it cannot be undone."
         />
       </div>
-      <div className="grid gap-6 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
     </>
   );
 };

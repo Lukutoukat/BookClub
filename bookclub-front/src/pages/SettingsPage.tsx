@@ -5,6 +5,7 @@ import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
+import { Grid } from '@/components/Grid'
 
 const SettingsPage = () => {
   const { logout } = useLogin();
@@ -17,13 +18,15 @@ const SettingsPage = () => {
         title="Settings"
         description="Change your settings or create or join a book club."
       />
+      <Grid>
+        <ClubSettings />
 
-      <ClubSettings />
+        <AccountSettings handleLogOut={logout} />
 
-      <AccountSettings handleLogOut={logout} />
+        <ThemeSelector />
 
-      <ThemeSelector />
-
+      </Grid>
+       
       <BottomDescription />
     </>
   );

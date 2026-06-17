@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { Clock2Icon } from "lucide-react";
+import { type DateRange } from "react-day-picker";
 
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import { SectionHeader } from "./SectionHeader";
-
-import { type DateRange } from "react-day-picker";
+import { TimePicker } from "./TimePicker";
 
 type Props = {
   dateRange: DateRange | undefined;
   setDateRange: (range: DateRange | undefined) => void;
+  children: React.ReactNode;
 };
 
-export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
+export const RangeCalendarComponent = ({
+  dateRange,
+  setDateRange,
+  children,
+}: Props) => {
   const [startTime, setStartTime] = useState("12:00");
   const [endTime, setEndTime] = useState("12:00");
 
@@ -47,8 +47,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
     setDateRange(updatedRange);
   };
 
-  const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = e.target.value;
+  const handleStartTimeChange = (newTime: string) => {
     setStartTime(newTime);
 
     if (dateRange?.from) {
@@ -59,8 +58,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
     }
   };
 
-  const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = e.target.value;
+  const handleEndTimeChange = (newTime: string) => {
     setEndTime(newTime);
 
     if (dateRange?.to) {
@@ -73,15 +71,16 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
 
   return (
     <>
-      <Card size="sm" className="mx-auto w-fit card-base">
+      <Card className="card-base">
         <SectionHeader
           title={"Select Dates"}
           description={
-            "Select the end date the proposal phase and the end date for voting phase."
+            "Select the end date the suggesting phase and the end date for voting phase."
           }
-        ></SectionHeader>
-        <CardContent>
+        />
+        <CardContent className="card-content">
           <Calendar
+            className="self-center"
             mode="range"
             defaultMonth={new Date()}
             selected={dateRange}
@@ -92,44 +91,34 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
             }
           />
         </CardContent>
-        <CardFooter className="border-t bg-card">
-          <FieldGroup>
+        <CardFooter className="border-t bg-card py-6">
+          <FieldGroup className="flex flex-col gap-6 w-full">
             <Field>
-              <FieldLabel htmlFor="time-from">Proposal End Time</FieldLabel>
-              <InputGroup>
-                <InputGroupInput
-                  id="time-from"
-                  type="time"
-                  step="60"
+              <FieldLabel htmlFor="time-from">Suggesting End Time</FieldLabel>
+              <div className="flex items-center gap-3 mt-2">
+                <Clock2Icon className="text-muted-foreground w-5 h-5" />
+                <TimePicker
                   value={startTime}
                   onChange={handleStartTimeChange}
-                  disabled={!dateRange?.from} // Disabled if no start date is selected
-                  className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                  disabled={!dateRange?.from}
                 />
-                <InputGroupAddon>
-                  <Clock2Icon className="text-muted-foreground" />
-                </InputGroupAddon>
-              </InputGroup>
+              </div>
             </Field>
+
             <Field>
               <FieldLabel htmlFor="time-to">Voting End Time</FieldLabel>
-              <InputGroup>
-                <InputGroupInput
-                  id="time-to"
-                  type="time"
-                  step="60"
+              <div className="flex items-center gap-3 mt-2">
+                <Clock2Icon className="text-muted-foreground w-5 h-5" />
+                <TimePicker
                   value={endTime}
                   onChange={handleEndTimeChange}
-                  disabled={!dateRange?.to} // Disabled if no end date is selected yet
-                  className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                  disabled={!dateRange?.to}
                 />
-                <InputGroupAddon>
-                  <Clock2Icon className="text-muted-foreground" />
-                </InputGroupAddon>
-              </InputGroup>
+              </div>
             </Field>
           </FieldGroup>
         </CardFooter>
+        {children}
       </Card>
     </>
   );

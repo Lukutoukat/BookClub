@@ -77,8 +77,8 @@ const BookclubForm = () => {
             </div>
           </div>
 
-          <div className="card-actions">
-            <p className="max-w-md text-xs text-muted-foreground">
+          <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
+            <p className="text-xs text-muted-foreground">
               Double-check for spelling mistakes before creating a new bookclub.
             </p>
             <Button type="submit" size="lg" className="button-full-sm-auto">

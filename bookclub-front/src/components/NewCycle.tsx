@@ -65,14 +65,9 @@ export const NewCycle = ({ bookclubId }: Props) => {
   if (!bookclub) return <div>Bookclub not found</div>;
   return (
     <>
-      <RangeCalendarComponent
-        dateRange={dateRange}
-        setDateRange={setDateRange}
-      />
-      <div className="card-actions">
-        <Button onClick={handleCreate}>Create</Button>
-      </div>
-      <div className="grid gap-6 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
+      <RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange}>
+        <Button onClick={handleCreate} className="w-fit self-end mx-4">Create</Button>
+      </RangeCalendarComponent>
     </>
   );
 };
