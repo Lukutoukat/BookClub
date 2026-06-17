@@ -155,6 +155,7 @@ const BookItem = ({
 
           {isVotingPhase && (
             <RadioGroup
+            className="justify-end self-end"
               value={weight?.toString() ?? ""}
               onValueChange={async (val) => {
                 const w = Number(val);
