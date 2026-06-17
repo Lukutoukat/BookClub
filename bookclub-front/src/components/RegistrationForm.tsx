@@ -1,83 +1,79 @@
-import { useState } from "react";
-import { AxiosError } from "axios";
-import userService, { type CreateUser } from "@/services/users";
-import { SectionHeader } from "./SectionHeader";
+import { useState } from 'react'
+import { AxiosError } from 'axios'
+import userService, { type CreateUser } from '@/services/users'
+import { SectionHeader } from './SectionHeader'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Field, FieldLabel, FieldContent } from "@/components/ui/field";
-import { useNavigate } from "react-router-dom";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent } from '@/components/ui/card'
+import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
+import { useNavigate } from 'react-router-dom'
 
 const emptyUser: CreateUser = {
-  email: "",
-  name: "",
-  password: "",
-};
+  email: '',
+  name: '',
+  password: ''
+}
 
 const RegistrationForm = () => {
-  const [newUser, setNewUser] = useState<CreateUser>(emptyUser);
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [newUser, setNewUser] = useState<CreateUser>(emptyUser)
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [message, setMessage] = useState<string | null>(null)
+  const navigate = useNavigate()
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = event.target;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target
 
     setNewUser((currentUser) => ({
       ...currentUser,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
-  const handleConfirmPasswordChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setConfirmPassword(event.target.value);
-  };
+  const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(event.target.value)
+  }
 
   const isValidPassword = (password: string) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
-  };
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)
+  }
 
   const addUser = async (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
     if (newUser.password !== confirmPassword) {
-      setMessage("Passwords do not match!");
-      return;
+      setMessage('Passwords do not match!')
+      return
     }
 
     if (!isValidPassword(newUser.password)) {
       alert(
-        "Password must be at least 8 characters long and include uppercase, lowercase and a number.",
-      );
-      return;
+        'Password must be at least 8 characters long and include uppercase, lowercase and a number.'
+      )
+      return
     }
 
     try {
-      await userService.create(newUser);
-      setNewUser(emptyUser);
-      setConfirmPassword("");
-      setMessage("Registration saved.");
-      await navigate("/login");
+      await userService.create(newUser)
+      setNewUser(emptyUser)
+      setConfirmPassword('')
+      setMessage('Registration saved.')
+      await navigate('/login')
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data) {
-        const errorData = err.response.data as Record<string, unknown>;
-        if (errorData.error && typeof errorData.error === "string") {
-          setMessage(errorData.error);
+        const errorData = err.response.data as Record<string, unknown>
+        if (errorData.error && typeof errorData.error === 'string') {
+          setMessage(errorData.error)
         } else {
-          setMessage("Registration failed");
+          setMessage('Registration failed')
         }
       } else if (err instanceof AxiosError) {
-        setMessage("Registration failed");
+        setMessage('Registration failed')
       } else {
-        setMessage("Unexpected error occurred");
+        setMessage('Unexpected error occurred')
       }
     }
-  };
+  }
 
   return (
     <Card className="card-base">
@@ -144,9 +140,7 @@ const RegistrationForm = () => {
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="confirmPassword">
-                Confirm password
-              </FieldLabel>
+              <FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
               <FieldContent>
                 <Input
                   id="confirmPassword"
@@ -179,7 +173,7 @@ const RegistrationForm = () => {
         </form>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default RegistrationForm;
+export default RegistrationForm

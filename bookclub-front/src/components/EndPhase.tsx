@@ -1,31 +1,31 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import cycleService from "../services/cycle";
-import { useState } from "react";
-import ErrorMessageDisplay from "./errorMessageDisplay";
-import { getErrorMessage } from "@/lib/errorMessage";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import cycleService from '../services/cycle'
+import { useState } from 'react'
+import ErrorMessageDisplay from './errorMessageDisplay'
+import { getErrorMessage } from '@/lib/errorMessage'
 
-import { ButtonDialog } from "./ButtonDialog";
+import { ButtonDialog } from './ButtonDialog'
 
 type Props = {
-  bookclubId: string;
-};
+  bookclubId: string
+}
 
 export const EndPhase = ({ bookclubId }: Props) => {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const removeErrorMessage = () => {
-    setErrorMessage(null);
-  };
+    setErrorMessage(null)
+  }
 
   const handleEndPhase = async () => {
-    removeErrorMessage();
+    removeErrorMessage()
 
     try {
-      await cycleService.endLatestCyclePhase(bookclubId);
+      await cycleService.endLatestCyclePhase(bookclubId)
     } catch (error) {
-      setErrorMessage(getErrorMessage(error, "Failed to end phase."));
+      setErrorMessage(getErrorMessage(error, 'Failed to end phase.'))
     }
-  };
+  }
 
   return (
     <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
@@ -41,11 +41,8 @@ export const EndPhase = ({ bookclubId }: Props) => {
             buttonOnClick={handleEndPhase}
           />
         </div>
-        <ErrorMessageDisplay
-          message={errorMessage as string}
-          remove={removeErrorMessage}
-        />
+        <ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />
       </CardContent>
     </Card>
-  );
-};
+  )
+}

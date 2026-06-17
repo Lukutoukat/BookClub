@@ -1,194 +1,207 @@
 /// <reference types="jest" />
 
-import request from "supertest";
-import jwt from "jsonwebtoken";
+import request from 'supertest'
+import jwt from 'jsonwebtoken'
 
-jest.mock("../db.ts", () => ({
+jest.mock('../db.ts', () => ({
   prisma: {
     bookClub: {
       findMany: jest.fn(),
       create: jest.fn(),
       delete: jest.fn(),
+      findUnique: jest.fn()
     },
     user: {
-      findUnique: jest.fn(),
+      findUnique: jest.fn()
     },
     bookClubMembers: {
-      create: jest.fn(),
-    },
-  },
-}));
+      create: jest.fn()
+    }
+  }
+}))
 
-import { app } from "../index.ts";
-import { prisma } from "../db.ts";
+import { app } from '../index.ts'
+import { prisma } from '../db.ts'
 
 const mockBookClub_1 = {
-  id: "1",
-  name: "Read it and weep",
-  invite_code: "ABCDE",
+  id: '1',
+  name: 'Read it and weep',
+  invite_code: 'ABCDE',
   status: undefined,
-  owner_id: "1",
-};
+  owner_id: '1'
+}
 
 const mockBookClub_2 = {
-  id: "2",
-  name: "Bookclub 2",
-  invite_code: "FGHIJ",
+  id: '2',
+  name: 'Bookclub 2',
+  invite_code: 'FGHIJ',
   status: undefined,
-  owner_id: "2",
-};
+  owner_id: '2'
+}
 
 const mockUser_1 = {
-  user_id: "1",
+  user_id: '1',
   user_role: 0,
-  bookclub_id: "1",
-};
+  bookclub_id: '1'
+}
 
 const authHeaders = () => {
   if (!process.env.SECRET) {
-    process.env.SECRET = "testsecret";
+    process.env.SECRET = 'testsecret'
   }
 
   return {
-    Authorization: `Bearer ${jwt.sign({ id: 1 }, process.env.SECRET)}`,
-  };
-};
+    Authorization: `Bearer ${jwt.sign({ id: 1 }, process.env.SECRET)}`
+  }
+}
 
-describe("/api/bookclubs", () => {
+describe('/api/bookclubs', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.spyOn(console, "error").mockImplementation(() => {});
-    process.env.SECRET = "testsecret";
-    (prisma.user.findUnique as jest.Mock).mockResolvedValue({
-      id: "1",
-      email: "matti@test.com",
-      name: "matti",
-    });
-  });
+    jest.clearAllMocks()
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+    process.env.SECRET = 'testsecret'
+    ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
+      id: '1',
+      email: 'matti@test.com',
+      name: 'matti'
+    })
+  })
 
   afterEach(() => {
-    jest.restoreAllMocks();
-  });
+    jest.restoreAllMocks()
+  })
 
-  describe("GET", () => {
-    it("returns book clubs", async () => {
-      const mockBookClubs = [mockBookClub_1, mockBookClub_2];
+  describe('GET', () => {
+    it('returns book clubs', async () => {
+      const mockBookClubs = [mockBookClub_1, mockBookClub_2]
 
-      (prisma.bookClub.findMany as jest.Mock).mockResolvedValue(mockBookClubs);
+      ;(prisma.bookClub.findMany as jest.Mock).mockResolvedValue(mockBookClubs)
 
-      const response = await request(app).get("/api/bookclubs");
+      const response = await request(app).get('/api/bookclubs')
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(200)
       expect(response.body).toEqual([
         {
-          id: "1",
-          name: "Read it and weep",
-          invite_code: "ABCDE",
+          id: '1',
+          name: 'Read it and weep',
+          invite_code: 'ABCDE',
           status: undefined,
-          owner_id: "1",
+          owner_id: '1'
         },
         {
-          id: "2",
-          name: "Bookclub 2",
-          invite_code: "FGHIJ",
+          id: '2',
+          name: 'Bookclub 2',
+          invite_code: 'FGHIJ',
           status: undefined,
-          owner_id: "2",
-        },
-      ]);
+          owner_id: '2'
+        }
+      ])
 
-      expect(prisma.bookClub.findMany).toHaveBeenCalledTimes(1);
-    });
+      expect(prisma.bookClub.findMany).toHaveBeenCalledTimes(1)
+    })
 
-    it("returns 500 if get fails", async () => {
-      (prisma.bookClub.findMany as jest.Mock).mockRejectedValue(
-        new Error("Database failed"),
-      );
+    it('returns 500 if get fails', async () => {
+      ;(prisma.bookClub.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-      const response = await request(app).get("/api/bookclubs");
+      const response = await request(app).get('/api/bookclubs')
 
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({ error: "database error" });
-    });
-  });
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+    })
 
-  describe("POST", () => {
-    it("creates a book club", async () => {
+    it('returns a specific bookclub', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClub_1)
+
+      const response = await request(app).get('/api/bookclubs/1')
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        id: '1',
+        name: 'Read it and weep',
+        invite_code: 'ABCDE',
+        status: undefined,
+        owner_id: '1'
+      })
+    })
+    it('returns 500 if specific club not found', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+      const response = await request(app).get('/api/bookclubs/1')
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+    })
+  })
+
+  describe('POST', () => {
+    it('creates a book club', async () => {
       const newBookClub = {
-        name: "Read it and weep",
-        owner_id: "1",
-      };
+        name: 'Read it and weep',
+        owner_id: '1'
+      }
 
-      (prisma.bookClub.create as jest.Mock).mockResolvedValue(mockBookClub_1);
-      (prisma.bookClubMembers.create as jest.Mock).mockResolvedValue(
-        mockUser_1,
-      );
+      ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(mockBookClub_1)
+      ;(prisma.bookClubMembers.create as jest.Mock).mockResolvedValue(mockUser_1)
 
       const response = await request(app)
-        .post("/api/bookclubs")
+        .post('/api/bookclubs')
         .set(authHeaders())
-        .send(newBookClub);
-      expect(response.status).toBe(200);
+        .send(newBookClub)
+      expect(response.status).toBe(200)
 
-      expect(response.body.name).toBe("Read it and weep");
-      expect(response.body.status).toBe(undefined);
-      expect(response.body.owner_id).toBe("1");
+      expect(response.body.name).toBe('Read it and weep')
+      expect(response.body.status).toBe(undefined)
+      expect(response.body.owner_id).toBe('1')
 
-      expect(response.body.invite_code).toBeDefined();
-      expect(response.body.invite_code).toHaveLength(5);
+      expect(response.body.invite_code).toBeDefined()
+      expect(response.body.invite_code).toHaveLength(5)
 
-      expect(prisma.bookClub.create).toHaveBeenCalledTimes(1);
+      expect(prisma.bookClub.create).toHaveBeenCalledTimes(1)
 
       expect(prisma.bookClub.create).toHaveBeenCalledWith({
         data: {
-          name: "Read it and weep",
+          name: 'Read it and weep',
           status: undefined,
-          owner_id: "1",
-          invite_code: expect.any(String),
-        },
-      });
-    });
+          owner_id: '1',
+          invite_code: expect.any(String)
+        }
+      })
+    })
 
-    it("returns 500 if post fails", async () => {
-      (prisma.bookClub.create as jest.Mock).mockRejectedValue(
-        new Error("Database failed"),
-      );
+    it('returns 500 if post fails', async () => {
+      ;(prisma.bookClub.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-      const response = await request(app)
-        .post("/api/bookclubs")
-        .set(authHeaders())
-        .send({
-          name: "Wrong bookclub",
-        });
+      const response = await request(app).post('/api/bookclubs').set(authHeaders()).send({
+        name: 'Wrong bookclub'
+      })
 
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({ error: "database error" });
-    });
-  });
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+    })
+  })
 
-  describe("DELETE", () => {
-    it("deletes a bookclub", async () => {
-      (prisma.bookClub.delete as jest.Mock).mockResolvedValue({});
+  describe('DELETE', () => {
+    it('deletes a bookclub', async () => {
+      ;(prisma.bookClub.delete as jest.Mock).mockResolvedValue({})
 
-      const response = await request(app).delete("/api/bookclubs/1");
+      const response = await request(app).delete('/api/bookclubs/1')
 
-      expect(response.status).toBe(204);
-      expect(response.body).toEqual({});
-      expect(prisma.bookClub.delete).toHaveBeenCalledTimes(1);
+      expect(response.status).toBe(204)
+      expect(response.body).toEqual({})
+      expect(prisma.bookClub.delete).toHaveBeenCalledTimes(1)
       expect(prisma.bookClub.delete).toHaveBeenCalledWith({
-        where: { id: "1" },
-      });
-    });
+        where: { id: '1' }
+      })
+    })
 
-    it("returns 500 if delete fails", async () => {
-      (prisma.bookClub.delete as jest.Mock).mockRejectedValue(
-        new Error("Database failed"),
-      );
+    it('returns 500 if delete fails', async () => {
+      ;(prisma.bookClub.delete as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-      const response = await request(app).delete("/api/bookclubs/1");
-      expect(response.status).toBe(500);
+      const response = await request(app).delete('/api/bookclubs/1')
+      expect(response.status).toBe(500)
       expect(response.body).toEqual({
-        error: "database error in deleting bookclub",
-      });
-    });
-  });
-});
+        error: 'database error in deleting bookclub'
+      })
+    })
+  })
+})

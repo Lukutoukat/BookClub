@@ -1,13 +1,14 @@
 import { PageHeader } from '@/components/PageHeader'
 import { BottomDescription } from '@/components/BottomDescription'
 import { useLogin } from '@/hooks/useLogin'
-import { UserLoginDisplay } from '@/components/UserLoginDisplay'
+
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 
 const SettingsPage = () => {
-  const { logout } = useLogin();
+  const { logout } = useLogin()
 
   return (
     <>
@@ -26,7 +27,7 @@ const SettingsPage = () => {
 
       <BottomDescription />
     </>
-  );
-};
+  )
+}
 
-export default SettingsPage;
+export default SettingsPage

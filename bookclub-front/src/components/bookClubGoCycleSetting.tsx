@@ -1,11 +1,11 @@
-import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
-import { Card } from "@/components/ui/card";
-import { SectionHeader } from "./SectionHeader";
+import { Button } from './ui/button'
+import { Link } from 'react-router-dom'
+import { Card } from '@/components/ui/card'
+import { SectionHeader } from './SectionHeader'
 
 type Props = {
-  bookclubId: string;
-};
+  bookclubId: string
+}
 
 export const bookClubGoCycleSetting = ({ bookclubId }: Props) => {
   return (
@@ -16,11 +16,11 @@ export const bookClubGoCycleSetting = ({ bookclubId }: Props) => {
           <Link to={`/newcycle/${bookclubId}`}>Manage cycle</Link>
         </Button>
         <Button asChild>
-          <Link to="/bookclubsettings">Manage club</Link>
+          <Link to={`/bookclubsettings/${bookclubId}`}>Manage club</Link>
         </Button>
       </div>
     </Card>
-  );
-};
+  )
+}
 
-export default bookClubGoCycleSetting;
+export default bookClubGoCycleSetting

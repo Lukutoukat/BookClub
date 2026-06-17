@@ -1,19 +1,14 @@
-import {
-  Alert,
-  AlertAction,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
-import { AlertCircleIcon } from "lucide-react";
-import { Button } from "./ui/button";
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AlertCircleIcon } from 'lucide-react'
+import { Button } from './ui/button'
 
 type errorMessageProps = {
-  message: string;
-  remove: () => void;
-};
+  message: string
+  remove: () => void
+}
 const errorMessageDisplay = ({ message, remove }: errorMessageProps) => {
   if (!message) {
-    return null;
+    return null
   }
   return (
     <>
@@ -28,7 +23,7 @@ const errorMessageDisplay = ({ message, remove }: errorMessageProps) => {
         </AlertAction>
       </Alert>
     </>
-  );
-};
+  )
+}
 
-export default errorMessageDisplay;
+export default errorMessageDisplay
