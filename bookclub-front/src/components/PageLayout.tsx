@@ -17,5 +17,5 @@ export const PageLayout = ({ children}: PageLayoutProps) => {
   }, []);
 
 
-  return <div className="page-shell max-w-full sm:max-w-[85%]">{children}</div>;
+  return <div className="page-shell max-w-full 2xl:max-w-[85%]">{children}</div>;
 };

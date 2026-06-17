@@ -3,7 +3,6 @@ import { useRef } from "react";
 import BookForm from '@/components/BookForm'
 import BookList, { type BookListHandle } from '@/components/BookList'
 import { PageHeader } from '@/components/PageHeader'
-import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import { Grid } from "@/components/Grid";
 
 const BooksPage = () => {
@@ -15,7 +14,6 @@ const BooksPage = () => {
 
   return (
     <>
-      <UserLoginDisplay />
       <PageHeader
         badgeText="Books"
         title="Save books"

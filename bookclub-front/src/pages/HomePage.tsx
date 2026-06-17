@@ -2,7 +2,6 @@ import { PageHeader } from '../components/PageHeader'
 import BookClubList from '@/components/BookClubList'
 import JoinBookClubForm from '@/components/JoinBookClubForm'
 import { useGetClubs } from '@/hooks/getClubs'
-import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import { Grid } from '@/components/Grid'
 
 const HomePage = () => {
@@ -10,7 +9,6 @@ const HomePage = () => {
 
   return (
     <>
-      <UserLoginDisplay />
       <PageHeader
         badgeText="Home"
         title="Clubs, books and more"

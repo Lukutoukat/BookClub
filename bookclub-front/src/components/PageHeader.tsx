@@ -33,7 +33,7 @@ export const PageHeader = ({
 }: PageHeaderProps) => {
   return (
     <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div className="max-w-2xl space-y-2">
+      <div className="w-full space-y-2 max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
         <Badge
           variant="secondary"
           className="w-fit uppercase tracking-[0.2em] text-[0.7rem] sm:text-xs"
@@ -41,10 +41,10 @@ export const PageHeader = ({
           {badgeText}
         </Badge>
         <div className="space-y-2 sm:space-y-4">
-          <h1 className="font-heading text-3xl leading-none sm:text-5xl">
+          <h1 className="font-heading leading-none text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
             {title}
           </h1>
-          <p className="max-w-xl text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">
+          <p className="text-muted-foreground text-xs leading-relaxed sm:text-sm sm:leading-normal md:text-base md:leading-6 lg:text-lg max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
             {description}
           </p>
         </div>
