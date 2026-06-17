@@ -11,15 +11,15 @@ type Props = {
 
 export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
   const navigate = useNavigate()
-    const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
-      event.preventDefault()
-      try {
-        await bookclubService.remove(bookclubId)
-        await navigate('/home', { replace: true })
-      } catch (error) {
-        console.error('error during deletion', error)
-      }
+  const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    try {
+      await bookclubService.remove(bookclubId)
+      await navigate('/home', { replace: true })
+    } catch (error) {
+      console.error('error during deletion', error)
     }
+  }
 
   return (
     <>

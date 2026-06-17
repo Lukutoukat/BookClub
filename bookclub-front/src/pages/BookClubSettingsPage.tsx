@@ -9,7 +9,7 @@ const ClubSettingsPage = () => {
   return (
     <>
       <UserLoginDisplay />
-      <ClubSettingsDisplay bookclubId={bookclubId}/>
+      <ClubSettingsDisplay bookclubId={bookclubId} />
     </>
   )
 }

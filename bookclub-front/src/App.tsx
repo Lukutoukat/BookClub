@@ -75,7 +75,7 @@ const App = () => {
             <Route path="/home" element={<HomePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
-            <Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage/>}/>
+            <Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
           </Routes>
         </PageLayout>
       </PageMenu>

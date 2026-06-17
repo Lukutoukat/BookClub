@@ -13,16 +13,16 @@ vi.mock('react-router-dom', async () => {
   return {
     ...actual,
     useLocation: () => mockUseLocation(),
-    Link: ({ to, children }: any) => <a href={to}>{children}</a>,
+    Link: ({ to, children }: any) => <a href={to}>{children}</a>
   }
 })
 
 describe('AppNavbar renders correctly', () => {
   beforeEach(() => {
-		vi.clearAllMocks()
-	}) 
+    vi.clearAllMocks()
+  })
 
-	const menuItems: MenuItem[] = [
+  const menuItems: MenuItem[] = [
     {
       label: 'Home',
       to: '/home',
@@ -45,15 +45,14 @@ describe('AppNavbar renders correctly', () => {
     }
   ]
 
-	test('renders menu items', () => {
-		mockUseLocation.mockReturnValue({ pathname: '/home' })
+  test('renders menu items', () => {
+    mockUseLocation.mockReturnValue({ pathname: '/home' })
 
     render(<AppNavbar menuItems={menuItems} />)
 
-		expect(screen.getByText('Home')).toBeInTheDocument()
-		expect(screen.getByText('Books')).toBeInTheDocument()
-		expect(screen.getByText('Create')).toBeInTheDocument()
-		expect(screen.getByText('Settings')).toBeInTheDocument()
-	})
+    expect(screen.getByText('Home')).toBeInTheDocument()
+    expect(screen.getByText('Books')).toBeInTheDocument()
+    expect(screen.getByText('Create')).toBeInTheDocument()
+    expect(screen.getByText('Settings')).toBeInTheDocument()
+  })
 })
-

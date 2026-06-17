@@ -12,6 +12,9 @@ jest.mock('../db.ts', () => ({
       findUnique: jest.fn(),
       update: jest.fn()
     },
+    bookProposed: {
+      create: jest.fn()
+    },
     user: {
       findUnique: jest.fn()
     }
@@ -131,6 +134,78 @@ describe('/api/books', () => {
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
+    })
+  })
+
+  describe('POST/:cycle_id', () => {
+    it('creates a book and proposes it to the cycle', async () => {
+      const cycle_id = '1'
+
+      const newBook = {
+        isbn: '1234567890',
+        name: 'Book 1',
+        author: 'Author 1',
+        year: 2024,
+        pages: 100,
+        comment: 'Comment 1',
+        language: 'English',
+        genre: 'Fiction'
+      }
+
+      const createdBook = {
+        id: '1',
+        ...newBook,
+        user_id: '1'
+      }
+
+      ;(prisma.book.create as jest.Mock).mockResolvedValue(createdBook)
+      ;(prisma.bookProposed.create as jest.Mock).mockResolvedValue({ id: '1' })
+
+      const response = await request(app)
+        .post(`/api/books/${cycle_id}`)
+        .set(authHeaders())
+        .send(newBook)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual(newBook)
+
+      expect(prisma.book.create).toHaveBeenCalledTimes(1)
+      expect(prisma.book.create).toHaveBeenCalledWith({
+        data: {
+          isbn: '1234567890',
+          name: 'Book 1',
+          author: 'Author 1',
+          year: 2024,
+          pages: 100,
+          comment: 'Comment 1',
+          language: 'English',
+          genre: 'Fiction',
+          user_id: '1'
+        }
+      })
+
+      expect(prisma.bookProposed.create).toHaveBeenCalledTimes(1)
+      expect(prisma.bookProposed.create).toHaveBeenCalledWith({
+        data: {
+          book_id: '1',
+          user_id: '1',
+          cycle_id: '1'
+        }
+      })
+    })
+
+    it('returns 500 if database fails', async () => {
+      ;(prisma.book.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+      const response = await request(app).post('/api/books/1').set(authHeaders()).send({
+        isbn: '1234567890',
+        name: 'Book 1'
+      })
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+
+      expect(prisma.bookProposed.create).not.toHaveBeenCalled()
     })
   })
 

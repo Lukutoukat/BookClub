@@ -30,6 +30,26 @@ test('getAll returns all books', async () => {
   expect(result).toEqual(mockBooks)
 })
 
+test('getPreviousSuggestions returns previously suggested books', async () => {
+  const mockBooks = [mockBook]
+
+  mockedAxios.get.mockResolvedValue({
+    data: mockBooks
+  })
+
+  const result = await books.getPreviousSuggestions()
+
+  expect(mockedAxios.get).toHaveBeenCalledWith(
+    '/api/books/previousSuggestions',
+    expect.objectContaining({
+      headers: expect.objectContaining({
+        Authorization: null
+      })
+    })
+  )
+  expect(result).toEqual(mockBooks)
+})
+
 test('create returns created book', async () => {
   mockedAxios.post.mockResolvedValue({
     data: mockBook
@@ -39,6 +59,25 @@ test('create returns created book', async () => {
 
   expect(mockedAxios.post).toHaveBeenCalledWith(
     '/api/books',
+    mockBook,
+    expect.objectContaining({
+      headers: expect.objectContaining({
+        Authorization: null
+      })
+    })
+  )
+  expect(result).toEqual(mockBook)
+})
+
+test('createForPropose returns created book for a cycle', async () => {
+  mockedAxios.post.mockResolvedValue({
+    data: mockBook
+  })
+
+  const result = await books.createForPropose('cycle-1', mockBook)
+
+  expect(mockedAxios.post).toHaveBeenCalledWith(
+    '/api/books/cycle-1',
     mockBook,
     expect.objectContaining({
       headers: expect.objectContaining({

@@ -5,7 +5,7 @@
     "target": "es2020",
     "esModuleInterop": true,
     "lib": ["es2020"],
-    "types": ["jest", "node"],
+    "types": ["jest", "node"]
   },
   "include": ["**/__tests__/*.ts"]
 }

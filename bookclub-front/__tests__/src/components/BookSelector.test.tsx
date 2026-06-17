@@ -18,7 +18,7 @@ const mockBooks = [
 describe('BookSelector', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    
+
     vi.mocked(bookService.getAll).mockResolvedValue(mockBooks)
     vi.mocked(bookService.getPreviousSuggestions).mockResolvedValue(mockBooks)
     vi.mocked(proposeService.create).mockResolvedValue({
@@ -34,7 +34,7 @@ describe('BookSelector', () => {
 
   it('should call bookService.getAll() on initial load with savedBooks', async () => {
     render(<BookSelector bookclubId="club1" />)
-    
+
     await waitFor(() => {
       expect(bookService.getAll).toHaveBeenCalledTimes(1)
     })
@@ -42,10 +42,10 @@ describe('BookSelector', () => {
 
   it('should display books from getAll() in the dropdown', async () => {
     render(<BookSelector bookclubId="club1" />)
-    
+
     const input = screen.getByPlaceholderText('Search saved books...')
     await userEvent.click(input)
-    
+
     await waitFor(() => {
       expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
       expect(screen.getByText('1984')).toBeInTheDocument()
@@ -56,15 +56,15 @@ describe('BookSelector', () => {
   it('should call getPreviousSuggestions() when swapping to proposedBooks', async () => {
     const user = userEvent.setup()
     render(<BookSelector bookclubId="club1" />)
-    
+
     await waitFor(() => {
       expect(bookService.getAll).toHaveBeenCalledTimes(1)
     })
-    
+
     // Klikkaa "Show previous books" nappia
     const swapButton = screen.getByRole('button', { name: /Show previous books/i })
     await user.click(swapButton)
-    
+
     await waitFor(() => {
       expect(bookService.getPreviousSuggestions).toHaveBeenCalledTimes(1)
     })
@@ -73,21 +73,21 @@ describe('BookSelector', () => {
   it('should call getAll() again when swapping back to savedBooks', async () => {
     const user = userEvent.setup()
     render(<BookSelector bookclubId="club1" />)
-    
+
     await waitFor(() => {
       expect(bookService.getAll).toHaveBeenCalledTimes(1)
     })
 
     const swapButton = screen.getByRole('button', { name: /Show previous books/i })
     await user.click(swapButton)
-    
+
     await waitFor(() => {
       expect(bookService.getPreviousSuggestions).toHaveBeenCalledTimes(1)
     })
 
     const swapBackButton = screen.getByRole('button', { name: /Show saved proposed/i })
     await user.click(swapBackButton)
-    
+
     await waitFor(() => {
       expect(bookService.getAll).toHaveBeenCalledTimes(2)
     })
@@ -95,9 +95,9 @@ describe('BookSelector', () => {
 
   it('should display "Failed to load books." when getAll() fails', async () => {
     vi.mocked(bookService.getAll).mockRejectedValueOnce(new Error('Network error'))
-    
+
     render(<BookSelector bookclubId="club1" />)
-    
+
     await waitFor(() => {
       expect(screen.getByText('Failed to load books.')).toBeInTheDocument()
     })
@@ -105,9 +105,7 @@ describe('BookSelector', () => {
 
   it('should display error when getPreviousSuggestions() fails', async () => {
     const user = userEvent.setup()
-    vi.mocked(bookService.getPreviousSuggestions).mockRejectedValueOnce(
-      new Error('Network error')
-    )
+    vi.mocked(bookService.getPreviousSuggestions).mockRejectedValueOnce(new Error('Network error'))
     render(<BookSelector bookclubId="club1" />)
 
     const swapButton = screen.getByRole('button', { name: /Show previous books/i })
@@ -125,16 +123,16 @@ describe('BookSelector', () => {
   it('should open confirmation dialog when selecting a book', async () => {
     const user = userEvent.setup()
     render(<BookSelector bookclubId="club1" />)
-    
+
     const input = screen.getByPlaceholderText('Search saved books...')
     await userEvent.click(input)
-    
+
     await waitFor(() => {
       expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
     })
-    
+
     await user.click(screen.getByText('The Great Gatsby'))
-    
+
     await waitFor(() => {
       expect(screen.getByText('Are you sure?')).toBeInTheDocument()
       expect(screen.getByText(/Do you want to propose The Great Gatsby?/)).toBeInTheDocument()
@@ -145,23 +143,23 @@ describe('BookSelector', () => {
     const onBookAdded = vi.fn()
     const user = userEvent.setup()
     render(<BookSelector bookclubId="club1" onBookAdded={onBookAdded} />)
-    
+
     const input = screen.getByPlaceholderText('Search saved books...')
     await userEvent.click(input)
-    
+
     await waitFor(() => {
       expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
     })
-    
+
     await user.click(screen.getByText('The Great Gatsby'))
-    
+
     await waitFor(() => {
       expect(screen.getByText('Are you sure?')).toBeInTheDocument()
     })
-    
+
     const continueButton = screen.getByRole('button', { name: /Continue/i })
     await user.click(continueButton)
-    
+
     await waitFor(() => {
       expect(proposeService.create).toHaveBeenCalledWith({
         book_id: '1',
@@ -172,29 +170,27 @@ describe('BookSelector', () => {
   })
 
   it('should display error when proposeService.create() fails', async () => {
-    vi.mocked(proposeService.create).mockRejectedValueOnce(
-      new Error('Failed to propose book.')
-    )
-    
+    vi.mocked(proposeService.create).mockRejectedValueOnce(new Error('Failed to propose book.'))
+
     const user = userEvent.setup()
     render(<BookSelector bookclubId="club1" />)
-    
+
     const input = screen.getByPlaceholderText('Search saved books...')
     await userEvent.click(input)
-    
+
     await waitFor(() => {
       expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
     })
-    
+
     await user.click(screen.getByText('The Great Gatsby'))
-    
+
     await waitFor(() => {
       expect(screen.getByText('Are you sure?')).toBeInTheDocument()
     })
-    
+
     const continueButton = screen.getByRole('button', { name: /Continue/i })
     await user.click(continueButton)
-    
+
     await waitFor(() => {
       expect(screen.getByText('Failed to propose book.')).toBeInTheDocument()
     })
@@ -203,20 +199,20 @@ describe('BookSelector', () => {
   it('should clear input value when swapping display', async () => {
     const user = userEvent.setup()
     render(<BookSelector bookclubId="club1" />)
-    
+
     const input = screen.getByPlaceholderText('Search saved books...') as HTMLInputElement
     await userEvent.click(input)
-    
+
     await waitFor(() => {
       expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
     })
-    
+
     await user.type(input, 'Gatsby')
     expect(input.value).toBe('Gatsby')
-    
+
     const swapButton = screen.getByRole('button', { name: /Show previous books/i })
     await user.click(swapButton)
-    
+
     await waitFor(() => {
       expect(input.value).toBe('')
     })
@@ -225,23 +221,23 @@ describe('BookSelector', () => {
   it('should close confirmation dialog when clicking Cancel', async () => {
     const user = userEvent.setup()
     render(<BookSelector bookclubId="club1" />)
-    
+
     const input = screen.getByPlaceholderText('Search saved books...')
     await userEvent.click(input)
-    
+
     await waitFor(() => {
       expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
     })
-    
+
     await user.click(screen.getByText('The Great Gatsby'))
-    
+
     await waitFor(() => {
       expect(screen.getByText('Are you sure?')).toBeInTheDocument()
     })
-    
+
     const cancelButton = screen.getByRole('button', { name: /Cancel/i })
     await user.click(cancelButton)
-    
+
     await waitFor(() => {
       expect(screen.queryByText('Are you sure?')).not.toBeInTheDocument()
     })
@@ -251,14 +247,14 @@ describe('BookSelector', () => {
     vi.mocked(bookService.getAll).mockImplementationOnce(
       () => new Promise((resolve) => setTimeout(() => resolve(mockBooks), 100))
     )
-    
+
     render(<BookSelector bookclubId="club1" />)
-    
+
     const input = screen.getByPlaceholderText('Search saved books...')
     await userEvent.click(input)
-    
+
     expect(screen.getByText('Loading books...')).toBeInTheDocument()
-    
+
     await waitFor(() => {
       expect(screen.queryByText('Loading books...')).not.toBeInTheDocument()
     })
@@ -266,12 +262,12 @@ describe('BookSelector', () => {
 
   it('should show "No books found." when list is empty', async () => {
     vi.mocked(bookService.getAll).mockResolvedValueOnce([])
-    
+
     render(<BookSelector bookclubId="club1" />)
-    
+
     const input = screen.getByPlaceholderText('Search saved books...')
     await userEvent.click(input)
-    
+
     await waitFor(() => {
       expect(screen.getByText('No books found.')).toBeInTheDocument()
     })
