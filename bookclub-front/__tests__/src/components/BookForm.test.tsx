@@ -141,6 +141,106 @@ describe('BookForm', () => {
     expect(vi.mocked(bookService.create)).toHaveBeenCalled()
   })
 
+  it('calls bookService.createForPropose when bookToEdit is true', async () => {
+    vi.mocked(bookService.createForPropose).mockResolvedValue({} as any)
+    const onBookAdded = vi.fn()
+    const buttonAction = vi.fn()
+    const user = userEvent.setup()
+
+    render(
+      <BookForm
+        bookToEdit={true}
+        cycle_id="cycle-1"
+        onBookAdded={onBookAdded}
+        buttonAction={buttonAction}
+      />
+    )
+
+    await user.type(screen.getByPlaceholderText('9780141439600'), '9780451524935')
+    await user.type(screen.getByPlaceholderText('A Tale of Two Cities'), 'Clean Code')
+    await user.type(screen.getByPlaceholderText('Charles Dickens'), 'Robert C. Martin')
+    await user.type(screen.getByPlaceholderText('1859'), '2008')
+
+    await user.click(screen.getByRole('button', { name: /Add/i }))
+
+    expect(vi.mocked(bookService.createForPropose)).toHaveBeenCalledWith(
+      'cycle-1',
+      expect.objectContaining({
+        isbn: '9780451524935',
+        name: 'Clean Code',
+        author: 'Robert C. Martin',
+        year: 2008
+      })
+    )
+    expect(onBookAdded).toHaveBeenCalled()
+    expect(buttonAction).toHaveBeenCalled()
+  })
+
+  it('calls bookService.update when editing an existing book and preserves buttonAction', async () => {
+    const bookToEdit = {
+      id: '1',
+      isbn: '9780451524935',
+      name: 'Old title',
+      author: 'Old author',
+      year: 1999,
+      pages: 300,
+      comment: 'Old comment',
+      language: 'English',
+      genre: 'Fiction'
+    }
+    vi.mocked(bookService.update).mockResolvedValue({} as any)
+    const onBookAdded = vi.fn()
+    const buttonAction = vi.fn()
+    const user = userEvent.setup()
+
+    render(
+      <BookForm
+        bookToEdit={bookToEdit}
+        cycle_id="cycle-1"
+        onBookAdded={onBookAdded}
+        buttonAction={buttonAction}
+      />
+    )
+
+    expect(screen.getByPlaceholderText('A Tale of Two Cities')).toHaveValue('Old title')
+    expect(screen.getByPlaceholderText('Charles Dickens')).toHaveValue('Old author')
+    expect(screen.getByPlaceholderText('1859')).toHaveValue('1999')
+
+    await user.clear(screen.getByPlaceholderText('A Tale of Two Cities'))
+    await user.type(screen.getByPlaceholderText('A Tale of Two Cities'), 'New title')
+
+    await user.click(screen.getByRole('button', { name: /Add/i }))
+
+    expect(vi.mocked(bookService.update)).toHaveBeenCalledWith(
+      '1',
+      expect.objectContaining({
+        isbn: '9780451524935',
+        name: 'New title',
+        author: 'Old author',
+        year: 1999
+      })
+    )
+    expect(onBookAdded).toHaveBeenCalled()
+    expect(buttonAction).toHaveBeenCalled()
+  })
+
+  it('renders secondary button and triggers secondaryButtonAction', async () => {
+    const secondaryButtonAction = vi.fn()
+    const user = userEvent.setup()
+
+    render(
+      <BookForm
+        secondaryButtonText="Cancel"
+        secondaryButtonAction={secondaryButtonAction}
+        cycle_id="cycle-1"
+      />
+    )
+
+    await user.click(screen.getByRole('button', { name: /Cancel/i }))
+
+    expect(secondaryButtonAction).toHaveBeenCalled()
+  })
+
   describe('ISBN validation', () => {
     it('rejects invalid ISBN (too few digits)', async () => {
       const user = userEvent.setup()
