@@ -25,8 +25,8 @@ export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
       const contentHeight = contentRef.current.offsetHeight;
       const navHeight = navRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
-      
-      const bufferMargin = 24; 
+
+      const bufferMargin = 24;
 
       if (contentHeight + bufferMargin + navHeight > viewportHeight) {
         setPaddingBottom(navHeight + bufferMargin);
@@ -57,11 +57,9 @@ export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
   return (
     <>
       <main style={{ paddingBottom: `${paddingBottom}px` }}>
-        <div ref={contentRef}>
-          {children}
-        </div>
+        <div ref={contentRef}>{children}</div>
       </main>
-      
+
       <div
         ref={navRef}
         className="fixed inset-x-0 bottom-0 top-auto z-50 border-t bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60"
