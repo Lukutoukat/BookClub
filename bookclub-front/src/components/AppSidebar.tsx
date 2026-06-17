@@ -11,6 +11,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { type MenuItem } from "./PageMenu";
 import type { ReactNode } from "react";
+import { PageFooter } from "./PageFooter";
 
 interface AppSidebarProps {
   menuItems: MenuItem[];
@@ -43,7 +44,7 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset>{children}<PageFooter /></SidebarInset>
     </SidebarProvider>
   );
 }
