@@ -1,4 +1,4 @@
-// src/components/ui/time-picker.tsx
+import * as React from "react";
 import {
   Select,
   SelectContent,
@@ -8,55 +8,48 @@ import {
 } from "@/components/ui/select";
 
 export type TimePickerProps = {
-  value: string; // Format: "HH:MM"
+  value: string;
   onChange: (time: string) => void;
   disabled?: boolean;
+  step?: number; 
 };
 
-export function TimePicker({ value, onChange, disabled }: TimePickerProps) {
-  // Extract just the hour, as minutes will be locked
-  const [hours] = value.split(":");
-
-  const handleHourChange = (newHour: string) => {
-    // Hardcode minutes to "00" whenever the hour changes
-    onChange(`${newHour}:00`);
-  };
-
-  // Generate 24 hours (00-23)
-  const hoursList = Array.from({ length: 24 }, (_, i) =>
-    i.toString().padStart(2, "0")
-  );
+export function TimePicker({ 
+  value, 
+  onChange, 
+  disabled, 
+  step = 30
+}: TimePickerProps) {
+  
+  const timeOptions = React.useMemo(() => {
+    const options: string[] = [];
+    for (let i = 0; i < 24; i++) {
+      for (let j = 0; j < 60; j += step) {
+        const hour = i.toString().padStart(2, "0");
+        const minute = j.toString().padStart(2, "0");
+        options.push(`${hour}:${minute}`);
+      }
+    }
+    return options;
+  }, [step]);
 
   return (
-    <div className="flex items-center gap-2">
-      {/* Interactive Hours Dropdown */}
-      <Select
+    <div className="">
+      <Select 
+        value={value} 
+        onValueChange={onChange} 
         disabled={disabled}
-        value={hours}
-        onValueChange={handleHourChange}
       >
-        <SelectTrigger className="w-[70px]">
-          <SelectValue placeholder="HH" />
+        <SelectTrigger>
+          <SelectValue placeholder="HH:MM" />
         </SelectTrigger>
-        <SelectContent>
-          {hoursList.map((hour) => (
-            <SelectItem key={hour} value={hour}>
-              {hour}
+        
+        <SelectContent className="!max-h-128">
+          {timeOptions.map((time) => (
+            <SelectItem key={time} value={time}>
+              {time}
             </SelectItem>
           ))}
-        </SelectContent>
-      </Select>
-
-      <span className="text-muted-foreground font-bold">:</span>
-
-      {/* Disabled Minutes Dropdown (Not Selectable) */}
-      <Select disabled value="00">
-        <SelectTrigger className="w-[70px] opacity-50 cursor-not-allowed">
-          <SelectValue placeholder="MM" />
-        </SelectTrigger>
-        <SelectContent>
-          {/* Even though it's disabled, we provide the option so the UI renders correctly */}
-          <SelectItem value="00">00</SelectItem>
         </SelectContent>
       </Select>
     </div>

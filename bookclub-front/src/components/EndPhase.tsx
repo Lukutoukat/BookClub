@@ -3,6 +3,7 @@ import cycleService from "../services/cycle";
 import { useState } from "react";
 import ErrorMessageDisplay from "./errorMessageDisplay";
 import { getErrorMessage } from "@/lib/errorMessage";
+import { useNavigate } from "react-router-dom";
 
 import { ButtonDialog } from "./ButtonDialog";
 
@@ -12,6 +13,7 @@ type Props = {
 
 export const EndPhase = ({ bookclubId }: Props) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const removeErrorMessage = () => {
     setErrorMessage(null);
@@ -22,6 +24,7 @@ export const EndPhase = ({ bookclubId }: Props) => {
 
     try {
       await cycleService.endLatestCyclePhase(bookclubId);
+      await navigate("/club/" + bookclubId);
     } catch (error) {
       setErrorMessage(getErrorMessage(error, "Failed to end phase."));
     }
