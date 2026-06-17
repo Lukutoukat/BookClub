@@ -12,6 +12,7 @@ jest.mock("../db.ts", () => ({
       create: jest.fn(),
       findMany: jest.fn(),
       findUnique: jest.fn(),
+      findFirst: jest.fn()
     },
     user: {
       findUnique: jest.fn(),
@@ -190,7 +191,40 @@ describe("/api/cycles", () => {
 
       expect(response.status).toBe(500);
       expect(response.body).toEqual({ error: "database error" });
-    });
+    })
+
+    it('returns the latest cycle', async () => {
+        const mockcycle = {
+            id: "1",
+            bookclub_id: "1",
+            createdAt: "2026-06-11T13:17:37.803Z",
+            proposalEnd: "2026-06-25T13:17:35.775Z",
+            votingEnd: "2026-07-09T13:17:35.776Z"
+        }
+
+        ;(prisma.cycle.findFirst as jest.Mock).mockResolvedValue(mockcycle)
+
+        const response = await request(app).get('/api/cycles/latest/1')
+
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({
+            id: "1",
+            bookclub_id: "1",
+            createdAt: "2026-06-11T13:17:37.803Z",
+            proposalEnd: "2026-06-25T13:17:35.775Z",
+            votingEnd: "2026-07-09T13:17:35.776Z"
+        })
+        expect(prisma.cycle.findFirst).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns 500, if latest cycle not found', async () => {
+        ;(prisma.cycle.findFirst as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+        const response = await request(app).get('/api/cycles/latest/1')
+
+        expect(response.status).toBe(500)
+        expect(response.body).toEqual({ error: 'database error' })
+    })
   });
 
   // describe('PUT', () => {

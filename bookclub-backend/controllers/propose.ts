@@ -11,6 +11,24 @@ interface ProposeRequest {
   bookclub_id?: string;
 }
 
+export interface ProposeReturn {
+  Book: {
+        id: string
+        user_id: string | null
+        name: string | null
+        isbn: string | null
+        author: string | null
+        year: number | null
+        pages: number | null
+        comment: string | null
+        language: string | null
+        genre: string | null
+    } | null
+    id: string
+    book_id: string | null
+    cycle_id: string | null
+    user_id: string | null
+}
 proposeRouter.get("/", async (_req: Request, res: Response) => {
   try {
     const result = await prisma.bookProposed.findMany();
@@ -56,8 +74,8 @@ proposeRouter.post("/:id", async (req: Request, res: Response) => {
     });
 
     const books = proposedBooks
-      .filter((p) => p.Book)
-      .map((p) => ({
+      .filter((p: ProposeReturn) => p.Book)
+      .map((p: ProposeReturn) => ({
         ...p.Book,
         proposal_id: p.id,
       }));

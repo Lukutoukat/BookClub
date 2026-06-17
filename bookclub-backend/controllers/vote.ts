@@ -1,7 +1,7 @@
 import express, { type Request, type Response } from "express";
 import { prisma } from "../db.ts";
 import userExtractor from "../middleware/userExtractor.ts";
-
+// import { ProposeReturn } from "./propose.ts";
 const voteRouter = express.Router();
 
 interface VoteRequest {

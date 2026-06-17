@@ -9,6 +9,7 @@ jest.mock("../db.ts", () => ({
       findMany: jest.fn(),
       create: jest.fn(),
       delete: jest.fn(),
+      findUnique: jest.fn()
     },
     user: {
       findUnique: jest.fn(),
@@ -108,7 +109,31 @@ describe("/api/bookclubs", () => {
 
       expect(response.status).toBe(500);
       expect(response.body).toEqual({ error: "database error" });
-    });
+    })
+
+    it('returns a specific bookclub', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClub_1)
+
+      const response = await request(app).get('/api/bookclubs/1')
+      
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+          id: '1',
+          name: 'Read it and weep',
+          invite_code: 'ABCDE',
+          status: undefined,
+          owner_id: '1',
+      })
+    })
+    it('returns 500 if specific club not found', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+      const response = await request(app)
+          .get('/api/bookclubs/1')
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+    })
   });
 
   describe("POST", () => {
