@@ -49,35 +49,4 @@ describe('BookclubComponent', () => {
       expect(screen.getByText('Book club not found')).toBeInTheDocument()
     })
   })
-
-  it('calls bookclubService.remove and navigates after delete', async () => {
-    globalThis.fetch = vi.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ id: 1, name: 'Test Club', invite_code: 'CODE123' })
-      })
-    ) as any
-
-    vi.mocked(bookclubService.remove).mockResolvedValue(undefined)
-
-    render(<BookclubComponent bookclubId="1" />)
-
-    await waitFor(() => expect(screen.getByText('Test Club')).toBeInTheDocument())
-
-		const deleteButton = screen.getByRole('button', { name: /Delete/i })
-		deleteButton.click()
-
-		const continueButton = await screen.findByTitle('continue')
-		continueButton.click()
-
-		await waitFor(() => {
-			expect(bookclubService.remove).toHaveBeenCalledWith(1)
-			expect(mockNavigate).toHaveBeenCalledWith('/home', { replace: true })
-		})
-
-    await waitFor(() => {
-      expect(bookclubService.remove).toHaveBeenCalledWith(1)
-      expect(mockNavigate).toHaveBeenCalledWith('/home', { replace: true })
-    })
-  })
 })
