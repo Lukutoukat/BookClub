@@ -39,9 +39,7 @@ describe('routes', () => {
   })
 
   test('shows authenticated routes when login is valid', async () => {
-    vi.mocked(userService.getAll).mockResolvedValue([
-      { id: '1', username: 'test' }
-    ] as never)
+    vi.mocked(userService.getAll).mockResolvedValue([{ id: '1', username: 'test' }] as never)
 
     vi.mocked(auth.isLoggedIn).mockReturnValue(true)
 
@@ -80,7 +78,3 @@ describe('routes', () => {
     })
   })
 })
-
-
-
-

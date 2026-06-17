@@ -35,7 +35,7 @@ export default defineConfig({
     testTimeout: 6000,
     coverage: {
       include: ['./src/**'],
-      exclude: ['./src/main.tsx','./src/components/ui/**', '**.css', './src/assets/**']
+      exclude: ['./src/main.tsx', './src/components/ui/**', '**.css', './src/assets/**']
     }
   }
 })

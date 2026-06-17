@@ -10,7 +10,14 @@ vi.mock('@/components/BookSelector', () => ({
 
 vi.mock('@/components/BookForm', () => ({
   __esModule: true,
-  default: ({ buttonText, secondaryButtonText, cycle_id, onBookAdded, buttonAction, secondaryButtonAction }: any) => (
+  default: ({
+    buttonText,
+    secondaryButtonText,
+    cycle_id,
+    onBookAdded,
+    buttonAction,
+    secondaryButtonAction
+  }: any) => (
     <div data-testid="BookFormMock">
       <div>buttonText:{buttonText}</div>
       <div>secondaryButtonText:{secondaryButtonText}</div>

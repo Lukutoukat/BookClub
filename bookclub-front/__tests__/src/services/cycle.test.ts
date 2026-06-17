@@ -34,16 +34,16 @@ test('getAll returns all cycles', async () => {
 })
 
 describe('getLatestCycle returns the latest cycle', () => {
-	it('returns proposal phase when proposalEnd is in the future', async () => {
-		const mockCycleWithDates = {
-			...mockCycle,
-			proposalEnd: "2026-01-20T00:00:00Z",
-			votingEnd: "2026-01-30T00:00:00Z",
-		}
-		
-		mockedAxios.get.mockResolvedValue({
-			data: mockCycleWithDates,
-		})
+  it('returns proposal phase when proposalEnd is in the future', async () => {
+    const mockCycleWithDates = {
+      ...mockCycle,
+      proposalEnd: '2026-01-20T00:00:00Z',
+      votingEnd: '2026-01-30T00:00:00Z'
+    }
+
+    mockedAxios.get.mockResolvedValue({
+      data: mockCycleWithDates
+    })
 
     mockedAxios.get.mockResolvedValue({
       data: mockCycleWithDates
@@ -57,16 +57,16 @@ describe('getLatestCycle returns the latest cycle', () => {
     })
   })
 
-	it('returns voting phase when proposalEnd is in the past and votingEnd is in the future', async () => {
-		const mockCycleWithDates = {
-			...mockCycle,
-			proposalEnd: "2026-01-01T00:00:00Z",
-			votingEnd: "2026-01-30T00:00:00Z",
-		}
-		
-		mockedAxios.get.mockResolvedValue({
-			data: mockCycleWithDates,
-		})
+  it('returns voting phase when proposalEnd is in the past and votingEnd is in the future', async () => {
+    const mockCycleWithDates = {
+      ...mockCycle,
+      proposalEnd: '2026-01-01T00:00:00Z',
+      votingEnd: '2026-01-30T00:00:00Z'
+    }
+
+    mockedAxios.get.mockResolvedValue({
+      data: mockCycleWithDates
+    })
 
     mockedAxios.get.mockResolvedValue({
       data: mockCycleWithDates
@@ -80,16 +80,16 @@ describe('getLatestCycle returns the latest cycle', () => {
     })
   })
 
-	it('returns over phase when votingEnd is in the past', async () => {
-		const mockCycleWithDates = {
-			...mockCycle,
-			proposalEnd: "2026-01-01T00:00:00Z",
-			votingEnd: "2026-01-05T00:00:00Z",
-		}
-		
-		mockedAxios.get.mockResolvedValue({
-			data: mockCycleWithDates,
-		})
+  it('returns over phase when votingEnd is in the past', async () => {
+    const mockCycleWithDates = {
+      ...mockCycle,
+      proposalEnd: '2026-01-01T00:00:00Z',
+      votingEnd: '2026-01-05T00:00:00Z'
+    }
+
+    mockedAxios.get.mockResolvedValue({
+      data: mockCycleWithDates
+    })
 
     mockedAxios.get.mockResolvedValue({
       data: mockCycleWithDates
@@ -104,60 +104,58 @@ describe('getLatestCycle returns the latest cycle', () => {
   })
 })
 
-describe("endLatestCyclePhase ends the latest cycle phase", () => {
-	it("ends proposal phase when proposalEnd is in the future", async () => {
-		const mockCycleWithDates = {
-			...mockCycle,
-			proposalEnd: "2026-01-01T00:00:00Z",
-			votingEnd: "2026-01-30T00:00:00Z",
-		}
+describe('endLatestCyclePhase ends the latest cycle phase', () => {
+  it('ends proposal phase when proposalEnd is in the future', async () => {
+    const mockCycleWithDates = {
+      ...mockCycle,
+      proposalEnd: '2026-01-01T00:00:00Z',
+      votingEnd: '2026-01-30T00:00:00Z'
+    }
 
-		const updatedCycle = {
-			...mockCycle,
-			proposalEnd: "2026-01-10T00:00:00Z",
-		}
+    const updatedCycle = {
+      ...mockCycle,
+      proposalEnd: '2026-01-10T00:00:00Z'
+    }
 
-		mockedAxios.get.mockResolvedValue({
-			data: mockCycleWithDates,
-		})
+    mockedAxios.get.mockResolvedValue({
+      data: mockCycleWithDates
+    })
 
-		mockedAxios.put.mockResolvedValue({
-			data: updatedCycle,
-		})
+    mockedAxios.put.mockResolvedValue({
+      data: updatedCycle
+    })
 
-		const result = await cycle.endLatestCyclePhase(mockCycle.bookclub_id)
+    const result = await cycle.endLatestCyclePhase(mockCycle.bookclub_id)
 
-		expect(mockedAxios.put).toHaveBeenCalled()
-		expect(result).toEqual(updatedCycle)
+    expect(mockedAxios.put).toHaveBeenCalled()
+    expect(result).toEqual(updatedCycle)
+  })
 
-	})
+  it('ends voting phase when proposalEnd is in the past and votingEnd the future', async () => {
+    const mockCycleWithDates = {
+      ...mockCycle,
+      proposalEnd: '2026-01-01T00:00:00Z',
+      votingEnd: '2026-01-30T00:00:00Z'
+    }
 
-	it("ends voting phase when proposalEnd is in the past and votingEnd the future", async () => {
-		const mockCycleWithDates = {
-			...mockCycle,
-			proposalEnd: "2026-01-01T00:00:00Z",
-			votingEnd: "2026-01-30T00:00:00Z",
-		}
+    const updatedCycle = {
+      ...mockCycle,
+      votingEnd: '2026-01-10T00:00:00Z'
+    }
 
-		const updatedCycle = {
-			...mockCycle,
-			votingEnd: "2026-01-10T00:00:00Z",
-		}
+    mockedAxios.get.mockResolvedValue({
+      data: mockCycleWithDates
+    })
 
-		mockedAxios.get.mockResolvedValue({
-			data: mockCycleWithDates,
-		})
+    mockedAxios.put.mockResolvedValue({
+      data: updatedCycle
+    })
 
-		mockedAxios.put.mockResolvedValue({
-			data: updatedCycle,
-		})
+    const result = await cycle.endLatestCyclePhase(mockCycle.bookclub_id)
 
-		const result = await cycle.endLatestCyclePhase(mockCycle.bookclub_id)
-
-		expect(mockedAxios.put).toHaveBeenCalled()
-		expect(result).toEqual(updatedCycle)
-	})
-
+    expect(mockedAxios.put).toHaveBeenCalled()
+    expect(result).toEqual(updatedCycle)
+  })
 })
 
 test('create returns created cycle', async () => {
