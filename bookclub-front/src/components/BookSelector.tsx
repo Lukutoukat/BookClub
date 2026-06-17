@@ -71,10 +71,6 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 
   useEffect(() => {
     void loadBooks()
-  }, [])
-
-  useEffect(() => {
-    void loadBooks()
   }, [selectedDisplay])
 
   // Handle clicks outside the component to close the dropdown
@@ -165,7 +161,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
           <CommandInput
             placeholder="Search saved books..."
             value={inputValue}
-            onValueChange={(search: string) => {
+            onValueChange={(search: string) => {  
               setInputValue(search)
               if (!open) setOpen(true) // Open dropdown as user types
             }}

@@ -55,3 +55,15 @@ if (typeof window !== 'undefined') {
 afterEach(() => {
   cleanup()
 })
+
+
+class ResizeObserver {
+  observe = vi.fn()
+  unobserve = vi.fn()
+  disconnect = vi.fn()
+}
+
+Object.defineProperty(globalThis, "ResizeObserver", {
+  value: ResizeObserver,
+  writable: true
+})
