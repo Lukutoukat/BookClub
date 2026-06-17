@@ -2,6 +2,9 @@ import bookclubService from '../services/bookclubs'
 import { useNavigate } from 'react-router-dom'
 import { PageHeader } from './PageHeader'
 import { ButtonDialog } from './ButtonDialog'
+import { Card } from './ui/card'
+import { SectionHeader } from './SectionHeader'
+import { CardContent } from './ui/card'
 type Props = {
   bookclubId: string
 }
@@ -31,14 +34,17 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
         } catch {}
       }}
     />
-    <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
-      <ButtonDialog
-        buttonText="Delete club"
-        buttonOnClick={handleDeletion}
-        alertDialogDescription="Once the book club is deleted, it cannot be undone."
-      />
-    </div>
-    <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
+    <Card className="card-base">
+      <SectionHeader title="Delete club" description="If you want to delete your club and erase all information related to it, you can do that below." />
+      <CardContent className="card-content">
+          <ButtonDialog
+            buttonText="Delete club"
+            buttonOnClick={handleDeletion}
+            alertDialogDescription="Once the book club is deleted, it cannot be undone."
+            alertDialogContinueText = 'Delete permanently'
+          />
+      </CardContent>
+    </Card>
   </>
   )
 }
