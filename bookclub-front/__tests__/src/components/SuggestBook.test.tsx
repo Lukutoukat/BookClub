@@ -38,7 +38,7 @@ describe('SuggestBook', () => {
 		render(<SuggestBook onBookAdded={vi.fn()} bookclubId="club1" cycle_id="cycle1" />)
 
 		expect(screen.getByText('BookSelectorMock')).toBeInTheDocument()
-		expect(screen.getByRole('button', { name: /Create book/i })).toBeInTheDocument()
+		expect(screen.getByRole('button', { name: /Create a new book/i })).toBeInTheDocument()
 		expect(screen.queryByTestId('BookFormMock')).toBeNull()
 	})
 
@@ -46,7 +46,7 @@ describe('SuggestBook', () => {
 		const onBookAdded = vi.fn()
 		render(<SuggestBook onBookAdded={onBookAdded} bookclubId="club1" cycle_id="cycle1" />)
 
-		await userEvent.click(screen.getByRole('button', { name: /Create book/i }))
+		await userEvent.click(screen.getByRole('button', { name: /Create a new book/i }))
 
 		expect(screen.getByTestId('BookFormMock')).toBeInTheDocument()
 		expect(screen.getByText('buttonText:Suggest')).toBeInTheDocument()
@@ -60,12 +60,12 @@ describe('SuggestBook', () => {
 	it('closes BookForm when secondary button action is clicked', async () => {
 		render(<SuggestBook onBookAdded={vi.fn()} bookclubId="club1" cycle_id="cycle1" />)
 
-		await userEvent.click(screen.getByRole('button', { name: /Create book/i }))
+		await userEvent.click(screen.getByRole('button', { name: /Create a new book/i }))
 		expect(screen.getByTestId('BookFormMock')).toBeInTheDocument()
 
 		await userEvent.click(screen.getByText('secondaryButtonAction'))
 
-		expect(screen.getByRole('button', { name: /Create book/i })).toBeInTheDocument()
+		expect(screen.getByRole('button', { name: /Create a new book/i })).toBeInTheDocument()
 		expect(screen.queryByTestId('BookFormMock')).toBeNull()
 	})
 })
