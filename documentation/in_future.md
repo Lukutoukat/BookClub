@@ -4,7 +4,7 @@ Here is a list of some of the ideas we came up with during the project. Most of 
 
 ## Feature ideas for the future
 - User can change change their password
-- User can recover their password if they forgot it
+- User can recover their password from email if they forgot it
 - User can edit the name of their book club
 - User can delete their account
 - User can remove club members if they are the owner or admin
@@ -16,4 +16,4 @@ Here is a list of some of the ideas we came up with during the project. Most of 
 ## Improvement suggestions
 
 - Start using playwright to test the application
-- 
+- "More/ Less" button is hidden if the book has no additional information
