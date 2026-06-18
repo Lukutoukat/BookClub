@@ -51,7 +51,7 @@ const CycleItem = ({ cycle }: Props) => {
   }, [status, cycle.id])
 
   return (
-    <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90 my-2">
+    <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90">
       <CardContent className="px-3 py-4 sm:px-4 pl-4 sm:pl-5 flex flex-col gap-3">
         <Badge>{status}</Badge>
 

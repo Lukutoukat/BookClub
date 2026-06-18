@@ -40,9 +40,11 @@ const CycleHistoryList = ({ bookclubId }: Props) => {
     <Card className="card-base">
       <SectionHeader title={description} />
       <CardContent className="card-content">
-        {cycles.map((cycle) => (
-          <CycleItem key={cycle.id} cycle={cycle} />
-        ))}
+        <div className="space-y-3">
+          {cycles.map((cycle) => (
+            <CycleItem key={cycle.id} cycle={cycle} />
+          ))}
+        </div>
         <ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />
       </CardContent>
     </Card>
