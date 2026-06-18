@@ -62,7 +62,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 					setVotes(loadedVotes)
 				}
 				if (show === 'over') {
-					const loadedBooks = await proposeService.getProposedBooks(cycleId)
+					const loadedBooks = await resultService.getResults(cycleId)
 					setBooks(loadedBooks)
 				}
 				if (show === 'savedBooks') {
@@ -182,8 +182,22 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 				)}
 				<Card className="card-base">
 					<SectionHeader title={`${description} ${bookCount}`} />
+					{isVotingPhase && (
+						<div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
+							<p>
+								<span className="font-medium text-foreground">Want to read</span> = 3 points
+							</p>
+							<p>
+								<span className="font-medium text-foreground">Could read</span> = 2 points
+							</p>
+							<p>
+								<span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
+								points
+							</p>
+						</div>
+					)}
 					<CardContent className="card-content">
-						<div className="space-y-3 sm:space-y-4">
+						<div className="space-y-3">
 							{books.map((book) => (
 								<BookItem
 									key={book.id}

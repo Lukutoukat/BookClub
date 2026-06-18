@@ -69,7 +69,13 @@ const BookclubPage = () => {
 							bookclubId={bookclubId}
 							cycle_id={currentCycle.id}
 						/>
-						<BookList ref={bookListRef} show="proposedBooks" cycleId={currentCycle.id} />
+						<BookList
+							ref={bookListRef}
+							show="proposedBooks"
+							cycleId={currentCycle.id}
+							description="Suggested books: "
+							emptyMessage="No books suggested yet. Be the first to add one!"
+						/>
 					</>
 				)}
 

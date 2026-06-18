@@ -21,10 +21,7 @@ const BooksPage = () => {
 			/>
 			<Grid>
 				<BookForm onBookAdded={handleBookAdded} cycle_id="" />
-				<BookList
-					ref={bookListRef}
-					emptyMessage="No books suggested yet. Be the first to add one!"
-				/>
+				<BookList ref={bookListRef} emptyMessage="No books yet." description="Your saved books: " />
 			</Grid>
 		</>
 	)
