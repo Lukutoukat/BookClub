@@ -1,33 +1,32 @@
 import { PageHeader } from '@/components/PageHeader'
 import { BottomDescription } from '@/components/BottomDescription'
 import { useLogin } from '@/hooks/useLogin'
-
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
-import { UserLoginDisplay } from '@/components/UserLoginDisplay'
+import { Grid } from '@/components/Grid'
 
 const SettingsPage = () => {
-  const { logout } = useLogin()
+	const { logout } = useLogin()
 
-  return (
-    <>
-      <UserLoginDisplay />
-      <PageHeader
-        badgeText="Settings"
-        title="Settings"
-        description="Change your settings or create or join a book club."
-      />
+	return (
+		<>
+			<PageHeader
+				badgeText="Settings"
+				title="Settings"
+				description="Change your settings or create or join a book club."
+			/>
+			<Grid>
+				<ClubSettings />
 
-      <ClubSettings />
+				<AccountSettings handleLogOut={logout} />
 
-      <AccountSettings handleLogOut={logout} />
+				<ThemeSelector />
+			</Grid>
 
-      <ThemeSelector />
-
-      <BottomDescription />
-    </>
-  )
+			<BottomDescription />
+		</>
+	)
 }
 
 export default SettingsPage

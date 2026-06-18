@@ -1,26 +1,26 @@
 export const getToken = () => {
-  return localStorage.getItem('loggedBookappUser')
+	return localStorage.getItem('loggedBookappUser')
 }
 
 export const setToken = (newToken: string) => {
-  localStorage.setItem('loggedBookappUser', newToken)
+	localStorage.setItem('loggedBookappUser', newToken)
 }
 
 export const getAuthConfig = () => {
-  // return getuserstoken()
-  const token = getToken()
+	// return getuserstoken()
+	const token = getToken()
 
-  return {
-    headers: {
-      Authorization: token ? `Bearer ${token}` : null
-    }
-  }
+	return {
+		headers: {
+			Authorization: token ? `Bearer ${token}` : null
+		}
+	}
 }
 
 export const clearToken = () => {
-  localStorage.removeItem('loggedBookappUser')
+	localStorage.removeItem('loggedBookappUser')
 }
 
 export const isLoggedIn = () => {
-  return Boolean(localStorage.getItem('loggedBookappUser'))
+	return Boolean(localStorage.getItem('loggedBookappUser'))
 }
