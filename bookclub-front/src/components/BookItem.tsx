@@ -71,7 +71,7 @@ const BookItem = ({
               </span>
             </div>
           )}
-          
+
           <div className="space-y-0.5 flex-1 cursor-pointer">
             <div className="flex flex-wrap items-center gap-2  w-full">
               <h3 className="text-lg font-semibold text-foreground/90">{book.name}</h3>
@@ -113,9 +113,7 @@ const BookItem = ({
             </div>
 
             <div className="flex items-center text-sm text-muted-foreground gap-1.5">
-              <span className="font-medium text-foreground/70">
-                {book.author}
-              </span>
+              <span className="font-medium text-foreground/70">{book.author}</span>
               <span>&bull;</span>
               <span>{book.year}</span>
             </div>
@@ -137,7 +135,7 @@ const BookItem = ({
                   <ChevronDown className="h-4 w-4" />
                 )}
                 <span className="text-xs font-medium hidden sm:inline">
-                  {isExpanded ? "Less" : "More"}
+                  {isExpanded ? 'Less' : 'More'}
                 </span>
               </Button>
             </div>
