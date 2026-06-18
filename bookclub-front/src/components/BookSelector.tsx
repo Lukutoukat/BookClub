@@ -71,10 +71,6 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 
   useEffect(() => {
     void loadBooks()
-  }, [])
-
-  useEffect(() => {
-    void loadBooks()
   }, [selectedDisplay])
 
   // Handle clicks outside the component to close the dropdown

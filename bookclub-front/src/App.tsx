@@ -15,6 +15,7 @@ import { isLoggedIn } from './services/auth'
 import { useEffect, useState } from 'react'
 import userService from './services/users'
 import { UserLoginDisplay } from './components/UserLoginDisplay'
+import ClubSettingsPage from './pages/BookClubSettingsPage'
 
 //useEffect!!! :)
 
@@ -74,6 +75,7 @@ const App = () => {
             <Route path="/home" element={<HomePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
+            <Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
           </Routes>
         </PageLayout>
       </PageMenu>

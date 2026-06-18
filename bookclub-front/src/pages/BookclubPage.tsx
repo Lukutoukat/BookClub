@@ -76,7 +76,12 @@ const BookclubPage = () => {
       {/* VOTING PHASE */}
       {currentCycle?.phase === 'voting' && (
         <>
-          <BookList ref={bookListRef} show="votedBooks" cycleId={currentCycle.id} />
+          <BookList
+            ref={bookListRef}
+            show="votedBooks"
+            cycleId={currentCycle.id}
+            description="Suggested books: "
+          />
         </>
       )}
 

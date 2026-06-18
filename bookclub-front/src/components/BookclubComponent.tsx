@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../components/PageHeader'
-import bookclubService from '@/services/bookclubs'
-import { ButtonDialog } from './ButtonDialog'
 type Bookclub = {
   id: number
   name: string
@@ -16,7 +13,6 @@ type Props = {
 export const BookclubComponent = ({ bookclubId }: Props) => {
   const [bookclub, setBookclub] = useState<Bookclub | null>(null)
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
   useEffect(() => {
     const fetchBookclub = async () => {
       try {
@@ -40,16 +36,6 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
   if (loading) return null
   if (!bookclub) return <div>Book club not found</div>
 
-  const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    try {
-      await bookclubService.remove(bookclub.id)
-      await navigate('/home', { replace: true })
-    } catch (error) {
-      console.error('error during deletion', error)
-    }
-  }
-
   return (
     <>
       <PageHeader
@@ -64,14 +50,6 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
           } catch {}
         }}
       />
-      <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
-        <ButtonDialog
-          buttonText="Delete"
-          buttonOnClick={handleDeletion}
-          alertDialogDescription="Once the book club is deleted, it cannot be undone."
-        />
-      </div>
-      <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
     </>
   )
 }

@@ -22,7 +22,11 @@ const BooksPage = () => {
       />
 
       <BookForm onBookAdded={handleBookAdded} cycle_id="" />
-      <BookList ref={bookListRef} emptyMessage="No books suggested yet. Be the first to add one!" />
+      <BookList
+        ref={bookListRef}
+        emptyMessage="No books suggested yet. Be the first to add one!"
+        description="Your saved books: "
+      />
     </>
   )
 }

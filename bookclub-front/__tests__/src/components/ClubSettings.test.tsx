@@ -6,8 +6,18 @@ import { AxiosError } from 'axios'
 
 import ClubSettings from '@/components/ClubSettings'
 import bookclubmembersService from '@/services/bookclubmembers'
+import ClubSettingsDisplay from '@/components/ClubSettingsDisplay'
+import bookclubService from '@/services/bookclubs'
 
 vi.mock('@/services/bookclubmembers')
+vi.mock('@/services/bookclubs')
+
+const mockNavigate = vi.fn()
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom')
+  return { ...actual, useNavigate: () => mockNavigate }
+})
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(<BrowserRouter>{component}</BrowserRouter>)
@@ -94,6 +104,23 @@ describe('ClubSettings', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Registration failed')).toBeDefined()
+    })
+  })
+
+  it('calls bookclubService.remove and navigates after delete', async () => {
+    vi.mocked(bookclubService.remove).mockResolvedValue(undefined)
+
+    renderWithRouter(<ClubSettingsDisplay bookclubId="1" />)
+
+    const deleteButton = screen.getByRole('button', { name: /Delete club/i })
+    deleteButton.click()
+
+    const continueButton = await screen.findByTitle('continue')
+    continueButton.click()
+
+    await waitFor(() => {
+      expect(bookclubService.remove).toHaveBeenCalledWith('1')
+      expect(mockNavigate).toHaveBeenCalledWith('/home', { replace: true })
     })
   })
 
