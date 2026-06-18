@@ -62,7 +62,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
           setVotes(loadedVotes)
         }
         if (show === 'over') {
-          const loadedBooks = await proposeService.getProposedBooks(cycleId)
+          const loadedBooks = await resultService.getResults(cycleId)
           setBooks(loadedBooks)
         }
         if (show === 'savedBooks') {
