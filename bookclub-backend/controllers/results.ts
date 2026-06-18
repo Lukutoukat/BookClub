@@ -64,4 +64,66 @@ resultRouter.get(
   }
 )
 
+resultRouter.get(
+  '/:cycle_id/winner',
+  userExtractor,
+  async (req: Request<{ cycle_id: string }>, res: Response) => {
+    const { cycle_id } = req.params
+
+    if (!req.user) {
+      return res.status(401).json({ error: 'unauthorized' })
+    }
+
+    try {
+      const proposals = await prisma.bookProposed.findMany({
+        where: { cycle_id },
+        include: { Book: true }
+      })
+
+      if (proposals.length === 0) {
+        return res.json(null)
+      }
+
+      const proposalIds = proposals.map((p) => p.id)
+
+      const voteTotals = await prisma.bookVoted.groupBy({
+        by: ['proposal_id'],
+        where: {
+          proposal_id: { in: proposalIds }
+        },
+        _sum: {
+          weight: true
+        }
+      })
+
+      const scoreMap = voteTotals.reduce(
+        (acc, row) => {
+          if (row.proposal_id) {
+            acc[row.proposal_id] = row._sum.weight ?? 0
+          }
+          return acc
+        },
+        {} as Record<string, number>
+      )
+
+      const results = proposals
+        .filter((p) => p.Book)
+        .map((p) => ({
+          ...p.Book,
+          proposal_id: p.id,
+          score: scoreMap[p.id] ?? 0
+        }))
+
+      results.sort((a, b) => b.score - a.score)
+
+      const winner = results.length > 0 ? results[0] : null
+
+      return res.json(winner)
+    } catch (error) {
+      console.error('GET /api/results/:cycle_id/winner error:', error)
+      return res.status(500).json({ error: 'database error' })
+    }
+  }
+)
+
 export default resultRouter

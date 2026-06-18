@@ -7,6 +7,7 @@ import cycleService from '@/services/cycle'
 import { type CycleWithStatus } from '@/services/cycle'
 import { SuggestBook } from '@/components/SuggestBook'
 import bookclubmembersService from '@/services/bookclubmembers'
+import CycleHistoryList from '@/components/CycleHistoryList'
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -85,6 +86,8 @@ const BookclubPage = () => {
           <BookList ref={bookListRef} show="over" cycleId={currentCycle.id} />
         </>
       )}
+
+      <CycleHistoryList bookclubId={bookclubId} />
 
       {/* Admin settings */}
       {isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}

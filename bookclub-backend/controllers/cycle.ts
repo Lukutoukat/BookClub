@@ -21,6 +21,21 @@ cycleRouter.get('/', async (_req: Request, res: Response) => {
   }
 })
 
+cycleRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
+  const { id } = req.params
+  try {
+    const result = await prisma.cycle.findMany({
+      where: {
+        bookclub_id: id
+      }
+    })
+    res.json(result)
+  } catch (error) {
+    console.error('GET /api/cycles/:id error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
+})
+
 cycleRouter.get('/latest/:id', async (req: Request<{ id: string }>, res: Response) => {
   const { id } = req.params
   try {
