@@ -1,18 +1,19 @@
-import tseslint from 'typescript-eslint';
-import pluginReact from 'eslint-plugin-react';
-import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint'
+import pluginReact from 'eslint-plugin-react'
+import eslintConfigPrettier from 'eslint-config-prettier'
+import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**', '**/__tests__/**', 'jest.config.js'],
+    ignores: ['dist/**', 'node_modules/**', 'coverage/**', '**/__tests__/**', 'jest.config.js']
   },
   {
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.json'],
-      },
+        project: ['./tsconfig.json']
+      }
     },
-    settings: { react: { version: '19.0' } },
+    settings: { react: { version: '19.0' } }
   },
   tseslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
@@ -33,17 +34,15 @@ export default defineConfig([
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/restrict-plus-operands': 'off',
-      '@typescript-eslint/no-inferrable-types': ['error', { 'ignoreParameters': false }],
+      '@typescript-eslint/no-inferrable-types': ['error', { ignoreParameters: false }],
       '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-non-null-assertion': 'warn',
       '@typescript-eslint/prefer-nullish-coalescing': 'error',
       '@typescript-eslint/prefer-optional-chain': 'error',
       '@typescript-eslint/no-array-constructor': 'error',
       'no-console': 'warn',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { 'argsIgnorePattern': '^_' }
-      ],
-    },
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+    }
   },
-]);
+  eslintConfigPrettier
+])

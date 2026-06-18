@@ -9,14 +9,10 @@ import { test, expect, describe, vi, beforeEach } from 'vitest'
 vi.mock('@/services/login')
 
 const renderWithRouter = (component: React.ReactElement) => {
-  return render(
-    <BrowserRouter>
-      {component}
-    </BrowserRouter>
-  )
+  return render(<BrowserRouter>{component}</BrowserRouter>)
 }
 
-describe('RegistrationPage', () => {
+describe('LoginPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -26,7 +22,9 @@ describe('RegistrationPage', () => {
       renderWithRouter(<LoginPage />)
 
       expect(screen.getByText('Join the club')).toBeDefined()
-      expect(screen.getByText('Create your own book club and start reading with your friends.')).toBeDefined()
+      expect(
+        screen.getByText('Create your own book club and start reading with your friends.')
+      ).toBeDefined()
     })
 
     test('renders login badge and login link', () => {
@@ -60,7 +58,7 @@ describe('RegistrationPage', () => {
   describe('form submission', () => {
     test('calls login service with correct credentials and clears inputs on success', async () => {
       const loginSpy = vi.spyOn(LoginService, 'login').mockResolvedValue({ token: 'fake-token' })
-      
+
       user.setup()
       renderWithRouter(<LoginPage />)
 
@@ -70,7 +68,7 @@ describe('RegistrationPage', () => {
 
       await user.type(usernameInput, 'Antero')
       await user.type(passwordInput, 'Password123')
-      
+
       await user.click(submitButton)
 
       expect(loginSpy).toHaveBeenCalledTimes(1)

@@ -1,13 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,33 +19,32 @@ const ClubSettings = () => {
   const [message, setMessage] = useState<string | null>(null)
 
   const handleJoinSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
-      event.preventDefault()
-      if(inviteCode.invite_code.trim().length !== 5){
-        setMessage('Enter a 5-character code.')
-        return
+    event.preventDefault()
+    if (inviteCode.invite_code.trim().length !== 5) {
+      setMessage('Enter a 5-character code.')
+      return
+    }
+    try {
+      await bookclubmembersService.create({
+        invite_code: inviteCode.invite_code.trim().toUpperCase(),
+        user_role: 1
+      })
+    } catch (err: unknown) {
+      if (err instanceof AxiosError && err.response?.data) {
+        const errorData = err.response.data as Record<string, unknown>
+        if (errorData.error && typeof errorData.error === 'string') {
+          setMessage(errorData.error)
+        } else {
+          setMessage('Registration failed')
+        }
+      } else if (err instanceof AxiosError) {
+        setMessage('Registration failed')
+      } else {
+        setMessage('Unexpected error occurred')
       }
-      try {
-        await bookclubmembersService.create({
-          invite_code: inviteCode.invite_code.trim().toUpperCase(),
-          user_role: 1
-        })} catch (err: unknown) {
-              if (err instanceof AxiosError && err.response?.data) {
-                const errorData = err.response.data as Record<string, unknown>
-                if (errorData.error && typeof errorData.error === 'string') {
-                  setMessage(errorData.error)
-                } else {
-                  setMessage("Registration failed")
-                }
-              } else if (err instanceof AxiosError) {
-                setMessage("Registration failed")
-              } else {
-                setMessage("Unexpected error occurred")
-              }
-            }
-      }
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+    }
+  }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target
 
     setInviteCode((inviteCode) => ({
@@ -60,11 +53,8 @@ const ClubSettings = () => {
     }))
   }
 
-  
-
   return (
     <Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
-
       <CardHeader className="border-b border-border/60 py-4 sm:py-6">
         <CardTitle className="text-xl sm:text-2xl">Clubs</CardTitle>
         <CardDescription className="text-sm sm:text-base">
@@ -73,7 +63,6 @@ const ClubSettings = () => {
       </CardHeader>
 
       <CardContent className="space-y-3 pt-4 sm:space-y-4 sm:pt-6">
-
         <div className="space-y-2">
           <Label htmlFor="join-code">Join with code</Label>
           <p className="text-sm text-muted-foreground">

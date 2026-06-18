@@ -5,8 +5,7 @@ import { PageHeader } from '../components/PageHeader'
 import { Button } from './ui/button'
 import { RangeCalendarComponent } from './RangeCalendarComponent'
 import { type DateRange } from 'react-day-picker'
-import cycleService, {type CreateCycle} from '../services/cycle'
-
+import cycleService, { type CreateCycle } from '../services/cycle'
 
 type Bookclub = {
   id: number
@@ -23,7 +22,7 @@ export const NewCycle = ({ bookclubId }: Props) => {
   const [loading, setLoading] = useState(true)
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: addDays(new Date(new Date()), 14),
-    to: addDays(new Date(new Date), 28),
+    to: addDays(new Date(new Date()), 28)
   })
   const navigate = useNavigate()
 
@@ -52,7 +51,7 @@ export const NewCycle = ({ bookclubId }: Props) => {
       const createdcycle: CreateCycle = {
         bookclub_id: bookclubId,
         proposalEnd: dateRange.from,
-        votingEnd: dateRange.to,
+        votingEnd: dateRange.to
       }
       try {
         await cycleService.create(createdcycle)
@@ -65,22 +64,20 @@ export const NewCycle = ({ bookclubId }: Props) => {
 
   if (loading) return null
   if (!bookclub) return <div>Bookclub not found</div>
-  return (  
+  return (
     <>
       <PageHeader
-      badgeText="New Cycle"
-      title={bookclub.name}
-      description=""
-      buttonText='Back'
-      buttonOnClick={async () => {
-        await navigate(`/club/${bookclubId}`)
-      }}
+        badgeText="New Cycle"
+        title={bookclub.name}
+        description=""
+        buttonText="Back"
+        buttonOnClick={async () => {
+          await navigate(`/club/${bookclubId}`)
+        }}
       />
-      <RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange}/>
+      <RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange} />
       <div className="flex justify-end border-t border-border/60 pt-4 sm:pt-4">
-          <Button onClick={handleCreate}>
-            Create
-          </Button>
+        <Button onClick={handleCreate}>Create</Button>
       </div>
       <div className="grid gap-5 lg:grid-cols-[minmax(320px,420px)_minmax(0,1fr)] sm:gap-8" />
     </>

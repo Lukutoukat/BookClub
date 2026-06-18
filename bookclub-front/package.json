@@ -10,6 +10,7 @@
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "preview": "vite preview",
+    "format": "prettier --write .",
     "build:ui": "rm -rf dist && cd ../bookclub-front && npm run build && cp -r dist ../bookclub-backend"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.4.0",
+    "decode-deps": "^1.2.2",
     "eslint-plugin-react": "^7.37.5",
     "jiti": "^2.7.0",
     "lucide-react": "^1.16.0",
@@ -42,6 +44,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/axios": "^0.9.36",
     "@types/date-fns": "^2.5.3",
+    "@types/eslint-plugin-jsx-a11y": "^6.10.1",
     "@types/node": "^24.12.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -49,8 +52,11 @@
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.7",
     "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
+    "prettier": "3.8.4",
     "typescript": "~6.0.2",
     "vite": "^8.0.12",
     "vitest": "^4.1.7"

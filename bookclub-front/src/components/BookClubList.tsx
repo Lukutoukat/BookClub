@@ -9,7 +9,6 @@ export interface BookClubListHandle {
   reload: () => Promise<void>
 }
 
-
 type Props = {
   bookClubs: BookClub[]
   isLoading: boolean
@@ -24,11 +23,7 @@ const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
   }
 
   return (
-    <Button
-      onClick={handleClick}
-      variant="ghost"
-      className="w-full justify-start h-auto"
-    >
+    <Button onClick={handleClick} variant="ghost" className="w-full justify-start h-auto">
       <Card className="w-full border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90 cursor-pointer">
         <CardContent className="px-3 py-2 sm:px-4 sm:py-3 pl-4 sm:pl-5">
           <h3 className="text-lg font-semibold text-foreground/90">{bookClub.name}</h3>
@@ -38,7 +33,7 @@ const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
   )
 }
 
-const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
+const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
   const clubCount = bookClubs.length
   const description = `${clubCount} ${clubCount === 1 ? 'bookclub' : 'bookclubs'}`
 
@@ -47,9 +42,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
       <Card className="card-base">
         <SectionHeader title="Your book clubs" description={description} />
         <CardContent className="card-content">
-          <div className="text-sm text-muted-foreground text-center py-6">
-            Loading bookclubs...
-          </div>
+          <div className="text-sm text-muted-foreground text-center py-6">Loading bookclubs...</div>
         </CardContent>
       </Card>
     )
@@ -73,9 +66,7 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
       <Card className="card-base">
         <SectionHeader title="Your book clubs" description={description} />
         <CardContent className="card-content">
-          <div className="text-sm text-muted-foreground text-center py-6">
-            No bookclubs yet
-          </div>
+          <div className="text-sm text-muted-foreground text-center py-6">No bookclubs yet</div>
         </CardContent>
       </Card>
     )
@@ -93,6 +84,6 @@ const BookClubList =(({bookClubs, isLoading, errorMessage}: Props) => {
       </CardContent>
     </Card>
   )
-})
+}
 
 export default BookClubList

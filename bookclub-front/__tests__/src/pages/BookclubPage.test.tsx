@@ -11,67 +11,62 @@ vi.mock('@/services/bookclubmembers')
 const mockUseParams = vi.fn()
 
 vi.mock('react-router-dom', () => ({
-  useParams: () => mockUseParams(),
+  useParams: () => mockUseParams()
 }))
 
 vi.mock('@/components/BookclubComponent', () => ({
-  BookclubComponent: ({ bookclubId }: { bookclubId: string }) => (
-    <div>Bookclub</div>
-  ),
+  BookclubComponent: ({ bookclubId }: { bookclubId: string }) => <div>Bookclub</div>
 }))
 
 vi.mock('@/components/SuggestBook', () => ({
-  SuggestBook: () => <div>Suggest Book</div>,
+  SuggestBook: () => <div>Suggest Book</div>
 }))
 
 vi.mock('@/components/BookList', () => ({
-  default: () => (
-    <div>BookList</div>
-  ),
+  default: () => <div>BookList</div>
 }))
 
 describe('BookclubPage', () => {
-    beforeEach(() => {
-        vi.clearAllMocks()
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('renders proposal phase components', async () => {
+    mockUseParams.mockReturnValue({ bookclubId: 'A' })
+
+    vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
+      id: 1,
+      phase: 'proposal'
+    } as any)
+
+    vi.mocked(bookclubmembersService.get).mockResolvedValue([])
+
+    render(<BookclubPage />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Bookclub')).toBeDefined()
+      expect(screen.getByText('Suggest Book')).toBeDefined()
+      expect(screen.getByText('BookList')).toBeDefined()
+    })
+  })
+
+  it('renders voting phase components', async () => {
+    mockUseParams.mockReturnValue({ bookclubId: 'A' })
+
+    vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
+      id: 1,
+      phase: 'voting'
+    } as any)
+
+    vi.mocked(bookclubmembersService.get).mockResolvedValue([])
+
+    render(<BookclubPage />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Bookclub')).toBeDefined()
+      expect(screen.getByText('BookList')).toBeDefined()
     })
 
-    it('renders proposal phase components', async () => {
-        mockUseParams.mockReturnValue({ bookclubId: 'A' })
-
-        vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
-        id: 1,
-        phase: 'proposal',
-        } as any)
-
-        vi.mocked(bookclubmembersService.get).mockResolvedValue([])
-
-        render(<BookclubPage />)
-
-        await waitFor(() => {
-        expect(screen.getByText('Bookclub')).toBeDefined()
-        expect(screen.getByText('Suggest Book')).toBeDefined()
-        expect(screen.getByText('BookList')).toBeDefined()
-        })
-    })
-
-    it('renders voting phase components', async () => {
-        mockUseParams.mockReturnValue({ bookclubId: 'A' })
-
-        vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
-        id: 1,
-        phase: 'voting',
-        } as any)
-
-        vi.mocked(bookclubmembersService.get).mockResolvedValue([])
-
-        render(<BookclubPage />)
-
-        await waitFor(() => {
-        expect(screen.getByText('Bookclub')).toBeDefined()
-        expect(screen.getByText('BookList')).toBeDefined()
-        })
-
-        expect(screen.queryByText('Suggest Book')).toBeNull()
-        })
-
+    expect(screen.queryByText('Suggest Book')).toBeNull()
+  })
 })

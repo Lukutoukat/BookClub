@@ -10,19 +10,13 @@ type Props = {
 export const bookClubGoCycleSetting = ({ bookclubId }: Props) => {
   return (
     <Card className="card-base">
-      <SectionHeader
-        title="Manage your book club"
-      />
-      <div className='pl-30'>
+      <SectionHeader title="Manage your book club" />
+      <div className="pl-30">
         <Button asChild>
-          <Link to={`/newcycle/${bookclubId}`}>
-            Manage cycle
-          </Link>
+          <Link to={`/newcycle/${bookclubId}`}>Manage cycle</Link>
         </Button>
         <Button asChild>
-          <Link to="/bookclubsettings">
-            Manage club
-          </Link>
+          <Link to={`/bookclubsettings/${bookclubId}`}>Manage club</Link>
         </Button>
       </div>
     </Card>

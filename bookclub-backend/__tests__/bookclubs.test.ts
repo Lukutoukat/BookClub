@@ -8,15 +8,16 @@ jest.mock('../db.ts', () => ({
     bookClub: {
       findMany: jest.fn(),
       create: jest.fn(),
-      delete: jest.fn()
+      delete: jest.fn(),
+      findUnique: jest.fn()
     },
     user: {
-      findUnique: jest.fn(),
+      findUnique: jest.fn()
     },
     bookClubMembers: {
-      create: jest.fn(),
+      create: jest.fn()
     }
-  },
+  }
 }))
 
 import { app } from '../index.ts'
@@ -27,7 +28,7 @@ const mockBookClub_1 = {
   name: 'Read it and weep',
   invite_code: 'ABCDE',
   status: undefined,
-  owner_id: '1',
+  owner_id: '1'
 }
 
 const mockBookClub_2 = {
@@ -35,7 +36,7 @@ const mockBookClub_2 = {
   name: 'Bookclub 2',
   invite_code: 'FGHIJ',
   status: undefined,
-  owner_id: '2',
+  owner_id: '2'
 }
 
 const mockUser_1 = {
@@ -45,25 +46,24 @@ const mockUser_1 = {
 }
 
 const authHeaders = () => {
-    if (!process.env.SECRET) {
-        process.env.SECRET = 'testsecret'
-    }
+  if (!process.env.SECRET) {
+    process.env.SECRET = 'testsecret'
+  }
 
-    return {
-        Authorization: `Bearer ${jwt.sign({ id: 1 }, process.env.SECRET)}`
-    }
+  return {
+    Authorization: `Bearer ${jwt.sign({ id: 1 }, process.env.SECRET)}`
+  }
 }
 
 describe('/api/bookclubs', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.spyOn(console, 'error').mockImplementation(() => {})
-    process.env.SECRET = 'testsecret' 
-
+    process.env.SECRET = 'testsecret'
     ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
-        id: '1',
-        email: 'matti@test.com',
-        name: 'matti',
+      id: '1',
+      email: 'matti@test.com',
+      name: 'matti'
     })
   })
 
@@ -73,10 +73,7 @@ describe('/api/bookclubs', () => {
 
   describe('GET', () => {
     it('returns book clubs', async () => {
-      const mockBookClubs = [
-        mockBookClub_1,
-        mockBookClub_2,
-      ]
+      const mockBookClubs = [mockBookClub_1, mockBookClub_2]
 
       ;(prisma.bookClub.findMany as jest.Mock).mockResolvedValue(mockBookClubs)
 
@@ -89,14 +86,14 @@ describe('/api/bookclubs', () => {
           name: 'Read it and weep',
           invite_code: 'ABCDE',
           status: undefined,
-          owner_id: '1',
+          owner_id: '1'
         },
         {
           id: '2',
           name: 'Bookclub 2',
           invite_code: 'FGHIJ',
           status: undefined,
-          owner_id: '2',
+          owner_id: '2'
         }
       ])
 
@@ -104,11 +101,32 @@ describe('/api/bookclubs', () => {
     })
 
     it('returns 500 if get fails', async () => {
-      ;(prisma.bookClub.findMany as jest.Mock).mockRejectedValue(
-        new Error('Database failed')
-      )
+      ;(prisma.bookClub.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
       const response = await request(app).get('/api/bookclubs')
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error' })
+    })
+
+    it('returns a specific bookclub', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClub_1)
+
+      const response = await request(app).get('/api/bookclubs/1')
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        id: '1',
+        name: 'Read it and weep',
+        invite_code: 'ABCDE',
+        status: undefined,
+        owner_id: '1'
+      })
+    })
+    it('returns 500 if specific club not found', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+      const response = await request(app).get('/api/bookclubs/1')
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
@@ -119,17 +137,12 @@ describe('/api/bookclubs', () => {
     it('creates a book club', async () => {
       const newBookClub = {
         name: 'Read it and weep',
-        owner_id: '1',
+        owner_id: '1'
       }
 
-      ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(
-        mockBookClub_1
-      )
-      
-      ;(prisma.bookClubMembers.create as jest.Mock).mockResolvedValue(
-        mockUser_1
-      )
-      
+      ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(mockBookClub_1)
+      ;(prisma.bookClubMembers.create as jest.Mock).mockResolvedValue(mockUser_1)
+
       const response = await request(app)
         .post('/api/bookclubs')
         .set(authHeaders())
@@ -150,22 +163,17 @@ describe('/api/bookclubs', () => {
           name: 'Read it and weep',
           status: undefined,
           owner_id: '1',
-          invite_code: expect.any(String),
-        },
+          invite_code: expect.any(String)
+        }
       })
     })
 
     it('returns 500 if post fails', async () => {
-      ;(prisma.bookClub.create as jest.Mock).mockRejectedValue(
-        new Error('Database failed')
-      )
+      ;(prisma.bookClub.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-      const response = await request(app)
-        .post('/api/bookclubs')
-        .set(authHeaders())
-        .send({
-          name: 'Wrong bookclub',
-        })
+      const response = await request(app).post('/api/bookclubs').set(authHeaders()).send({
+        name: 'Wrong bookclub'
+      })
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
@@ -182,16 +190,18 @@ describe('/api/bookclubs', () => {
       expect(response.body).toEqual({})
       expect(prisma.bookClub.delete).toHaveBeenCalledTimes(1)
       expect(prisma.bookClub.delete).toHaveBeenCalledWith({
-        where: {id:'1'},
+        where: { id: '1' }
       })
     })
 
     it('returns 500 if delete fails', async () => {
       ;(prisma.bookClub.delete as jest.Mock).mockRejectedValue(new Error('Database failed'))
-      
+
       const response = await request(app).delete('/api/bookclubs/1')
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({error: 'database error in deleting bookclub'})
+      expect(response.body).toEqual({
+        error: 'database error in deleting bookclub'
+      })
     })
   })
 })

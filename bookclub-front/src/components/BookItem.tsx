@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react"
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react"
+import React, { useState, useEffect } from 'react'
+import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 
-import { type Book } from "@/services/books"
-import { type VoteFields } from "@/services/vote"
-import { formatISBN } from "@/lib/isbnValidator"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ButtonDialog } from "./ButtonDialog"
-import type { BookResult } from "@/services/results"
+import { type Book } from '@/services/books'
+import { type VoteFields } from '@/services/vote'
+import { formatISBN } from '@/lib/isbnValidator'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { ButtonDialog } from './ButtonDialog'
+import type { BookResult } from '@/services/results'
 
 const BookItem = ({
   book,
@@ -20,18 +20,14 @@ const BookItem = ({
   isReadOnly,
   isVotingPhase,
   onVote,
-  existingVote,
+  existingVote
 }: {
   book: Book | BookResult
   onDelete: (id: string) => Promise<void>
   onEdit: () => void
   isReadOnly: boolean
   isVotingPhase: boolean
-  onVote: (
-    bookId: string,
-    weight: number,
-    voteId: string | null,
-  ) => Promise<void>
+  onVote: (bookId: string, weight: number, voteId: string | null) => Promise<void>
   existingVote?: VoteFields
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -40,7 +36,7 @@ const BookItem = ({
   const [voteId, setVoteId] = useState<string | null>(null)
 
   const isBookResult = (book: Book | BookResult): book is BookResult => {
-    return "score" in book
+    return 'score' in book
   }
 
   useEffect(() => {
@@ -78,9 +74,7 @@ const BookItem = ({
           
           <div className="space-y-0.5 flex-1 cursor-pointer">
             <div className="flex flex-wrap items-center gap-2  w-full">
-              <h3 className="text-lg font-semibold text-foreground/90">
-                {book.name}
-              </h3>
+              <h3 className="text-lg font-semibold text-foreground/90">{book.name}</h3>
 
               {book.genre && (
                 <Badge variant="secondary" className="font-normal text-xs">
@@ -151,7 +145,7 @@ const BookItem = ({
 
           {isVotingPhase && (
             <RadioGroup
-              value={weight?.toString() ?? ""}
+              value={weight?.toString() ?? ''}
               onValueChange={async (val) => {
                 const w = Number(val)
                 setWeight(w)
@@ -171,9 +165,7 @@ const BookItem = ({
               </div>
               <div className="flex items-center gap-3">
                 <RadioGroupItem value="0" id={`dont-${book.id}`} />
-                <Label htmlFor={`dont-${book.id}`}>
-                  Don&apos;t want to read
-                </Label>
+                <Label htmlFor={`dont-${book.id}`}>Don&apos;t want to read</Label>
               </div>
             </RadioGroup>
           )}
@@ -200,9 +192,7 @@ const BookItem = ({
                   <p className="text-muted-foreground text-xs uppercase tracking-wider mb-0.5">
                     ISBN
                   </p>
-                  <p className="font-medium font-mono text-xs">
-                    {formatISBN(book.isbn)}
-                  </p>
+                  <p className="font-medium font-mono text-xs">{formatISBN(book.isbn)}</p>
                 </div>
               )}
             </div>
@@ -210,9 +200,7 @@ const BookItem = ({
             {book.comment && (
               <div className="bg-muted/30 rounded-lg p-2 border border-border/40">
                 <p className="text-sm leading-relaxed text-foreground/80">
-                  <span className="font-semibold text-foreground/90 mr-1">
-                    Notes:
-                  </span>
+                  <span className="font-semibold text-foreground/90 mr-1">Notes:</span>
                   {book.comment}
                 </p>
               </div>

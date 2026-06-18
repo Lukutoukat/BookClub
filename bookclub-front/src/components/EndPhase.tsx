@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import cycleService from "../services/cycle"
-import { useState } from "react"
-import ErrorMessageDisplay from "./errorMessageDisplay"
-import { getErrorMessage } from "@/lib/errorMessage"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import cycleService from '../services/cycle'
+import { useState } from 'react'
+import ErrorMessageDisplay from './errorMessageDisplay'
+import { getErrorMessage } from '@/lib/errorMessage'
 
-import { ButtonDialog } from "./ButtonDialog"
+import { ButtonDialog } from './ButtonDialog'
 
 type Props = {
   bookclubId: string
@@ -23,7 +23,7 @@ export const EndPhase = ({ bookclubId }: Props) => {
     try {
       await cycleService.endLatestCyclePhase(bookclubId)
     } catch (error) {
-      setErrorMessage(getErrorMessage(error, "Failed to end phase."))
+      setErrorMessage(getErrorMessage(error, 'Failed to end phase.'))
     }
   }
 
@@ -41,10 +41,7 @@ export const EndPhase = ({ bookclubId }: Props) => {
             buttonOnClick={handleEndPhase}
           />
         </div>
-        <ErrorMessageDisplay
-          message={errorMessage as string}
-          remove={removeErrorMessage}
-        />
+        <ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />
       </CardContent>
     </Card>
   )

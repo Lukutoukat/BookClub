@@ -1,13 +1,7 @@
 import { useState } from 'react'
 import { Palette } from 'lucide-react'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { Button } from '@/components/ui/button'
 import { getInitialTheme, applyThemeToDOM, saveTheme, type Theme } from '@/lib/theme'

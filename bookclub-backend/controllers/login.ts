@@ -8,15 +8,15 @@ const loginRouter = express.Router()
 dotenv.config()
 
 interface User {
-  id?: string,
-  email: string,
-  name: string,
-  password?: string,
+  id?: string
+  email: string
+  name: string
+  password?: string
   password_hash?: string
 }
 
 interface LogIn {
-  username?: string,
+  username?: string
   password?: string
 }
 
@@ -29,12 +29,11 @@ loginRouter.post('/', async (req: Request, res: Response) => {
   const user: User | null = await prisma.user.findUnique({
     where: {
       name: username
-    },
+    }
   })
 
-  const passwordCorrect: boolean = user === null
-    ? false
-    : await bcrypt.compare(password, user.password_hash!)
+  const passwordCorrect: boolean =
+    user === null ? false : await bcrypt.compare(password, user.password_hash!)
 
   if (!(user && passwordCorrect)) {
     return res.status(401).json({
@@ -49,12 +48,12 @@ loginRouter.post('/', async (req: Request, res: Response) => {
   if (!process.env.SECRET) {
     throw new Error('Error with authentication.')
   }
-  const token = jwt.sign(userForToken, process.env.SECRET)
+  const token = jwt.sign(userForToken, process.env.SECRET, {
+    expiresIn: 2629800
+  })
 
-  res
-    .status(200)
-    .send({ token, email: user.email, name: user.name})
-  return 
+  res.status(200).send({ token, email: user.email, name: user.name })
+  return
 })
 
 export default loginRouter

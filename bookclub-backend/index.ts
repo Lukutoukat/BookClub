@@ -32,18 +32,13 @@ app.get('/ping', (_req, res) => {
 })
 
 app.get('/{*splat}', (_req, res) => {
-  res.sendFile(
-    path.resolve('dist', 'index.html')
-  )
+  res.sendFile(path.resolve('dist', 'index.html'))
 })
-
-
 
 const PORT = 3003
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, "0.0.0.0", () => {
-  })
+  app.listen(PORT, '0.0.0.0', () => {})
 }
 
 export { app }

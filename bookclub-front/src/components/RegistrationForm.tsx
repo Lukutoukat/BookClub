@@ -3,8 +3,8 @@ import { AxiosError } from 'axios'
 import userService, { type CreateUser } from '@/services/users'
 import { SectionHeader } from './SectionHeader'
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { useNavigate } from 'react-router-dom'
@@ -21,9 +21,7 @@ const RegistrationForm = () => {
   const [message, setMessage] = useState<string | null>(null)
   const navigate = useNavigate()
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target
 
     setNewUser((currentUser) => ({
@@ -32,9 +30,7 @@ const RegistrationForm = () => {
     }))
   }
 
-  const handleConfirmPasswordChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(event.target.value)
   }
 
@@ -52,7 +48,7 @@ const RegistrationForm = () => {
 
     if (!isValidPassword(newUser.password)) {
       alert(
-        "Password must be at least 8 characters long and include uppercase, lowercase and a number."
+        'Password must be at least 8 characters long and include uppercase, lowercase and a number.'
       )
       return
     }
@@ -69,23 +65,23 @@ const RegistrationForm = () => {
         if (errorData.error && typeof errorData.error === 'string') {
           setMessage(errorData.error)
         } else {
-          setMessage("Registration failed")
+          setMessage('Registration failed')
         }
       } else if (err instanceof AxiosError) {
-        setMessage("Registration failed")
+        setMessage('Registration failed')
       } else {
-        setMessage("Unexpected error occurred")
+        setMessage('Unexpected error occurred')
       }
     }
   }
 
   return (
-      <Card className="card-base">
-        <SectionHeader 
-        title="Create an account" 
+    <Card className="card-base">
+      <SectionHeader
+        title="Create an account"
         description="Create an account and begin your reading journey with friends."
-        />
-        
+      />
+
       <CardContent className="card-content">
         <form onSubmit={addUser} className="card-form">
           <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2">
@@ -175,8 +171,8 @@ const RegistrationForm = () => {
             </Button>
           </div>
         </form>
-        </CardContent>
-      </Card>
+      </CardContent>
+    </Card>
   )
 }
 

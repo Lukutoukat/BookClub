@@ -16,9 +16,7 @@ export type userWithToken = {
 //   username: string
 // }
 
-const login = async (
-  credentials: LoginCredentials
-): Promise<userWithToken> => {
+const login = async (credentials: LoginCredentials): Promise<userWithToken> => {
   const response = await axios.post<userWithToken>(baseUrl, credentials)
 
   return response.data

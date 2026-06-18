@@ -1,6 +1,7 @@
 import { PageHeader } from '../components/PageHeader'
 import BookClubList from '@/components/BookClubList'
 import JoinBookClubForm from '@/components/JoinBookClubForm'
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import { useGetClubs } from '@/hooks/getClubs'
 
 const HomePage = () => {
@@ -8,14 +9,15 @@ const HomePage = () => {
 
   return (
     <>
+      <UserLoginDisplay />
       <PageHeader
         badgeText="Home"
         title="Clubs, books and more"
         description="Manage your book clubs, suggest new books and make decisions together."
       />
 
-      <BookClubList bookClubs={bookClubs} isLoading={isLoading} errorMessage={errorMessage}/>
-      <JoinBookClubForm listMutated={listMutated}/>
+      <BookClubList bookClubs={bookClubs} isLoading={isLoading} errorMessage={errorMessage} />
+      <JoinBookClubForm listMutated={listMutated} />
     </>
   )
 }

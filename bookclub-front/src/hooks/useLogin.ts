@@ -14,10 +14,8 @@ export const useLogin = () => {
         password
       })
 
-      localStorage.setItem(
-        'loggedBookappUser',
-        JSON.stringify(user)
-      )
+      localStorage.setItem('loggedBookappUser', JSON.stringify(user))
+      console.log('login stored', localStorage.getItem('loggedBookappUser'))
 
       setToken(user.token)
       setMessage(null)
@@ -32,9 +30,7 @@ export const useLogin = () => {
           err.response.data !== null &&
           'error' in err.response.data
         ) {
-          const backendMessage = (
-            err.response.data as { error: string }
-          ).error
+          const backendMessage = (err.response.data as { error: string }).error
 
           setMessage(backendMessage)
         } else {

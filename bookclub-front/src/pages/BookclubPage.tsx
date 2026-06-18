@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react"
-import { useParams } from "react-router-dom"
-import { BookclubComponent } from "@/components/BookclubComponent"
-import BookList, { type BookListHandle } from "@/components/BookList"
-import BookClubGoCycleSetting from "@/components/bookClubGoCycleSetting"
-import cycleService from "@/services/cycle"
-import { type CycleWithStatus } from "@/services/cycle"
-import { SuggestBook } from "@/components/SuggestBook"
-import bookclubmembersService from "@/services/bookclubmembers"
+import { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { BookclubComponent } from '@/components/BookclubComponent'
+import BookList, { type BookListHandle } from '@/components/BookList'
+import BookClubGoCycleSetting from '@/components/bookClubGoCycleSetting'
+import cycleService from '@/services/cycle'
+import { type CycleWithStatus } from '@/services/cycle'
+import { SuggestBook } from '@/components/SuggestBook'
+import bookclubmembersService from '@/services/bookclubmembers'
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -32,12 +32,11 @@ const BookclubPage = () => {
       try {
         const memberships = await bookclubmembersService.get()
         const isAdminMember = memberships.some(
-          (member) =>
-            member.bookclub_id === bookclubId && member.user_role === 0,
+          (member) => member.bookclub_id === bookclubId && member.user_role === 0
         )
         setIsAdmin(isAdminMember)
       } catch (error) {
-        console.error("Failed to check admin status:", error)
+        console.error('Failed to check admin status:', error)
         setIsAdmin(false)
       }
     }
@@ -62,41 +61,33 @@ const BookclubPage = () => {
       <BookclubComponent bookclubId={bookclubId} />
 
       {/* PROPOSAL PHASE */}
-      {currentCycle?.phase === "proposal" && (
+      {currentCycle?.phase === 'proposal' && (
         <>
           <SuggestBook
             onBookAdded={handleBookAdded}
             bookclubId={bookclubId}
             cycle_id={currentCycle.id}
           />
+          <BookList ref={bookListRef} show="proposedBooks" cycleId={currentCycle.id} />
+        </>
+      )}
+
+      {/* VOTING PHASE */}
+      {currentCycle?.phase === 'voting' && (
+        <>
           <BookList
             ref={bookListRef}
-            show="proposedBooks"
+            show="votedBooks"
             cycleId={currentCycle.id}
             description="Suggested books: "
           />
         </>
       )}
 
-      {/* VOTING PHASE */}
-      {currentCycle?.phase === "voting" && (
-        <>
-          <BookList
-            ref={bookListRef}
-            show="votedBooks"
-            cycleId={currentCycle.id}
-          />
-        </>
-      )}
-
       {/* RESULTS PHASE */}
-      {currentCycle?.phase === "over" && (
+      {currentCycle?.phase === 'over' && (
         <>
-          <BookList
-            ref={bookListRef}
-            show="over"
-            cycleId={currentCycle.id}
-          />
+          <BookList ref={bookListRef} show="over" cycleId={currentCycle.id} />
         </>
       )}
 

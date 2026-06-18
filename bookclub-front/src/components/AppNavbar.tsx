@@ -14,29 +14,29 @@ interface AppNavbarProps {
  */
 export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
   const location = useLocation()
-  
+
   useEffect(() => {
     const updatePadding = () => {
-        // We check how much space is left on the bottom of the page
-        const scrollHeight = document.documentElement.scrollHeight
-        const windowHeight = window.innerHeight
-        // We add padding to the bottom so the navbar doesnt overlay it
-        const needsPadding = scrollHeight > windowHeight
+      // We check how much space is left on the bottom of the page
+      const scrollHeight = document.documentElement.scrollHeight
+      const windowHeight = window.innerHeight
+      // We add padding to the bottom so the navbar doesnt overlay it
+      const needsPadding = scrollHeight > windowHeight
 
-        if (needsPadding) {
-            document.body.style.paddingBottom = '4rem'
-        } else {
-            document.body.style.paddingBottom = '0rem'
-        }
-        }
+      if (needsPadding) {
+        document.body.style.paddingBottom = '4rem'
+      } else {
+        document.body.style.paddingBottom = '0rem'
+      }
+    }
 
-        updatePadding()
-        window.addEventListener('resize', updatePadding)
+    updatePadding()
+    window.addEventListener('resize', updatePadding)
 
-        return () => {
-        window.removeEventListener('resize', updatePadding)
-        document.body.style.paddingBottom = ''
-        }
+    return () => {
+      window.removeEventListener('resize', updatePadding)
+      document.body.style.paddingBottom = ''
+    }
   }, [])
 
   return (

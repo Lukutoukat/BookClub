@@ -1,17 +1,13 @@
-import { useState } from "react"
-import { Clock2Icon } from "lucide-react"
+import { useState } from 'react'
+import { Clock2Icon } from 'lucide-react'
 
-import { Calendar } from "@/components/ui/calendar"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group"
+import { Calendar } from '@/components/ui/calendar'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { SectionHeader } from './SectionHeader'
 
-import { type DateRange } from "react-day-picker"
+import { type DateRange } from 'react-day-picker'
 
 type Props = {
   dateRange: DateRange | undefined
@@ -19,12 +15,12 @@ type Props = {
 }
 
 export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
-  const [startTime, setStartTime] = useState("12:00")
-  const [endTime, setEndTime] = useState("12:00")
+  const [startTime, setStartTime] = useState('12:00')
+  const [endTime, setEndTime] = useState('12:00')
 
   const applyTimeToDate = (date: Date, timeString: string): Date => {
     const newDate = new Date(date)
-    const [hours, minutes, seconds] = timeString.split(":").map(Number)
+    const [hours, minutes, seconds] = timeString.split(':').map(Number)
     newDate.setHours(hours || 0, minutes || 0, seconds || 0, 0)
     return newDate
   }
@@ -54,7 +50,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
     if (dateRange?.from) {
       setDateRange({
         ...dateRange,
-        from: applyTimeToDate(dateRange.from, newTime),
+        from: applyTimeToDate(dateRange.from, newTime)
       })
     }
   }
@@ -66,7 +62,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
     if (dateRange?.to) {
       setDateRange({
         ...dateRange,
-        to: applyTimeToDate(dateRange.to, newTime),
+        to: applyTimeToDate(dateRange.to, newTime)
       })
     }
   }
@@ -75,9 +71,9 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
     <>
       <Card size="sm" className="mx-auto w-fit card-base">
         <SectionHeader
-          title={"Select Dates"}
-          description={"Select the end date the proposal phase and the end date for voting phase."}>
-        </SectionHeader>
+          title={'Select Dates'}
+          description={'Select the end date the proposal phase and the end date for voting phase.'}
+        ></SectionHeader>
         <CardContent>
           <Calendar
             mode="range"
@@ -85,9 +81,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
             selected={dateRange}
             onSelect={handleDateSelect}
             numberOfMonths={2}
-            disabled={(date) =>
-              date < new Date("1900-01-01") || date < new Date()
-            }
+            disabled={(date) => date < new Date('1900-01-01') || date < new Date()}
           />
         </CardContent>
         <CardFooter className="border-t bg-card">

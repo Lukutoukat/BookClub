@@ -1,11 +1,5 @@
-import { PageHeader } from "@/components/PageHeader"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { PageHeader } from '@/components/PageHeader'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 const PasswordResetPage = () => {
   return (
     <>
@@ -22,9 +16,7 @@ const PasswordResetPage = () => {
           <CardTitle className="text-xl sm:text-2xl">Password reset</CardTitle>
           <CardDescription className="text-sm sm:text-base"></CardDescription>
         </CardHeader>
-        <CardContent className="pt-4 sm:pt-6">
-
-        </CardContent>
+        <CardContent className="pt-4 sm:pt-6"></CardContent>
       </Card>
     </>
   )

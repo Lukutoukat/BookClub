@@ -5,12 +5,14 @@ import { useLogin } from '@/hooks/useLogin'
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 
 const SettingsPage = () => {
   const { logout } = useLogin()
 
   return (
     <>
+      <UserLoginDisplay />
       <PageHeader
         badgeText="Settings"
         title="Settings"
@@ -24,7 +26,6 @@ const SettingsPage = () => {
       <ThemeSelector />
 
       <BottomDescription />
-  
     </>
   )
 }

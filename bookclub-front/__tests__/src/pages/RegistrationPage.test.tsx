@@ -8,11 +8,7 @@ import { test, expect, describe, vi, beforeEach } from 'vitest'
 vi.mock('../../../src/services/users')
 
 const renderWithRouter = (component: React.ReactElement) => {
-  return render(
-    <BrowserRouter>
-      {component}
-    </BrowserRouter>
-  )
+  return render(<BrowserRouter>{component}</BrowserRouter>)
 }
 
 describe('RegistrationPage', () => {

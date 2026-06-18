@@ -8,8 +8,8 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
-  SidebarInset,
-} from "@/components/ui/sidebar"
+  SidebarInset
+} from '@/components/ui/sidebar'
 import { Link, useLocation } from 'react-router-dom'
 import { type MenuItem } from './PageMenu'
 import type { ReactNode } from 'react'
@@ -24,35 +24,30 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
 
   return (
     <SidebarProvider>
-        <Sidebar>
+      <Sidebar>
         <SidebarHeader />
         <SidebarContent>
-            <SidebarGroup>
+          <SidebarGroup>
             <SidebarMenu>
-                {menuItems.map((item) => {
+              {menuItems.map((item) => {
                 const isActive = location.pathname === item.to
                 return (
-                    <SidebarMenuItem key={item.to}>
-                    <SidebarMenuButton
-                        asChild
-                        isActive={isActive}
-                    >
-                        <Link to={item.to} className="flex items-center gap-2">
+                  <SidebarMenuItem key={item.to}>
+                    <SidebarMenuButton asChild isActive={isActive}>
+                      <Link to={item.to} className="flex items-center gap-2">
                         {item.icon}
                         <span>{item.label}</span>
-                        </Link>
+                      </Link>
                     </SidebarMenuButton>
-                    </SidebarMenuItem>
+                  </SidebarMenuItem>
                 )
-                })}
+              })}
             </SidebarMenu>
-            </SidebarGroup>
+          </SidebarGroup>
         </SidebarContent>
         <SidebarFooter />
-        </Sidebar>
-        <SidebarInset>
-          {children}
-        </SidebarInset>
+      </Sidebar>
+      <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   )
 }

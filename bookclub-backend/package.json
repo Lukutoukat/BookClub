@@ -10,6 +10,7 @@
     "tsc": "tsc",
     "test": "jest",
     "coverage": "jest --coverage",
+    "format": "prettier --write .",
     "lint": "eslint .",
     "start": "node index.ts",
     "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
@@ -42,7 +43,9 @@
     "@types/tailwindcss": "^3.0.11",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
     "jest": "^30.4.2",
+    "prettier": "3.8.4",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"

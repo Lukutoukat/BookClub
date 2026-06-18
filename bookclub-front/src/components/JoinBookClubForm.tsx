@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
-
 const emptyJoinRequest: AddBookClubMember = {
   user_role: 1,
   invite_code: ''
@@ -19,13 +18,11 @@ type Props = {
   listMutated: () => void
 }
 
-const JoinBookClubForm = ({listMutated }: Props) => {
+const JoinBookClubForm = ({ listMutated }: Props) => {
   const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
   const [message, setMessage] = useState<string | null>(null)
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target
 
     setInviteCode((inviteCode) => ({
@@ -49,7 +46,7 @@ const JoinBookClubForm = ({listMutated }: Props) => {
         user_role: 1,
         invite_code: trimmedCode.toUpperCase()
       })
-      setInviteCode({...emptyJoinRequest})
+      setInviteCode({ ...emptyJoinRequest })
       listMutated()
     } catch (err: unknown) {
       if (err instanceof AxiosError && err.response?.data) {
@@ -69,10 +66,7 @@ const JoinBookClubForm = ({listMutated }: Props) => {
 
   return (
     <Card className="card-base">
-      <SectionHeader
-        title="Join a book club"
-        description=""
-      />
+      <SectionHeader title="Join a book club" description="" />
 
       <CardContent className="card-content">
         <form onSubmit={handleJoinSubmit} className="card-form">

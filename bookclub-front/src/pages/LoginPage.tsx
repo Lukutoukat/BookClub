@@ -3,13 +3,7 @@ import { useState } from 'react'
 import LoginForm from '@/components/LoginForm'
 import { useLogin } from '@/hooks/useLogin'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '@/components/PageHeader'
 
 const LoginPage = () => {
@@ -17,9 +11,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const { login, message } = useLogin()
 
-  const handleLogin = async (
-    event: React.SyntheticEvent<HTMLFormElement>
-  ) => {
+  const handleLogin = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     await login(username, password)
@@ -27,8 +19,6 @@ const LoginPage = () => {
     setPassword('')
   }
 
-
-    
   return (
     <>
       <PageHeader
@@ -43,13 +33,11 @@ const LoginPage = () => {
         <CardHeader className="card-header">
           <CardTitle className="text-xl sm:text-2xl">Login</CardTitle>
 
-          <CardDescription className="text-sm sm:text-base">
-            
-          </CardDescription>
+          <CardDescription className="text-sm sm:text-base"></CardDescription>
         </CardHeader>
 
         <CardContent className="pt-4 sm:pt-6">
-          <LoginForm 
+          <LoginForm
             username={username}
             password={password}
             setUsername={setUsername}
