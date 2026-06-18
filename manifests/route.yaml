@@ -6,8 +6,9 @@ metadata:
   labels:
     app: bookclub
     type: external
+    router: external
 spec:
-  host: bookclub-ohtuprojekti-staging.apps.okd-cs-test-0.k8s.cs.helsinki.fi
+  host: bookclub-ohtuprojekti-staging.ext.okd-cs-test-0.k8s.cs.helsinki.fi
   port:
     targetPort: 3003
   to:
