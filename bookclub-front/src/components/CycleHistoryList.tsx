@@ -41,10 +41,7 @@ const CycleHistoryList = ({ bookclubId }: Props) => {
       <SectionHeader title={description} />
       <CardContent className="card-content">
         {cycles.map((cycle) => (
-          <CycleItem
-            key={cycle.id}
-            cycle={cycle}
-          />
+          <CycleItem key={cycle.id} cycle={cycle} />
         ))}
         <ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />
       </CardContent>

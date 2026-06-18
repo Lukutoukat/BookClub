@@ -52,19 +52,23 @@ const CycleItem = ({ cycle }: Props) => {
 
   return (
     <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90 my-2">
-      <CardContent className="px-3 py-4 sm:px-4 pl-4 sm:pl-5 flex flex-col gap-3">        
-        <Badge>
-          {status}
-        </Badge>
+      <CardContent className="px-3 py-4 sm:px-4 pl-4 sm:pl-5 flex flex-col gap-3">
+        <Badge>{status}</Badge>
 
         <div className="space-y-1">
           <div className="flex flex-row items-center justify-between">
             <h3 className="font-medium text-sm text-muted-foreground">Suggest:</h3>
-            <p className="text-sm"> {formatDate(cycle.createdAt)} - {formatDate(cycle.proposalEnd)} </p>
+            <p className="text-sm">
+              {' '}
+              {formatDate(cycle.createdAt)} - {formatDate(cycle.proposalEnd)}{' '}
+            </p>
           </div>
           <div className="flex flex-row items-center justify-between">
             <h3 className="font-medium text-sm text-muted-foreground">Voting:</h3>
-            <p className="text-sm"> {formatDate(cycle.proposalEnd)} - {formatDate(cycle.votingEnd)} </p>
+            <p className="text-sm">
+              {' '}
+              {formatDate(cycle.proposalEnd)} - {formatDate(cycle.votingEnd)}{' '}
+            </p>
           </div>
         </div>
 
@@ -74,7 +78,9 @@ const CycleItem = ({ cycle }: Props) => {
             {winner ? (
               <p className="text-sm font-medium mt-0.5 text-primary">
                 {winner.name}
-                {winner.score !== undefined && <span className="text-xs text-muted-foreground ml-2">({winner.score} pts)</span>}
+                {winner.score !== undefined && (
+                  <span className="text-xs text-muted-foreground ml-2">({winner.score} pts)</span>
+                )}
               </p>
             ) : (
               <p className="text-sm italic text-muted-foreground mt-0.5">
