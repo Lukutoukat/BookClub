@@ -75,6 +75,7 @@ const BookItem = ({
               </span>
             </div>
           )}
+          
           <div className="space-y-0.5 flex-1 cursor-pointer">
             <div className="flex flex-wrap items-center gap-2  w-full">
               <h3 className="text-lg font-semibold text-foreground/90">
@@ -84,12 +85,6 @@ const BookItem = ({
               {book.genre && (
                 <Badge variant="secondary" className="font-normal text-xs">
                   {book.genre}
-                </Badge>
-              )}
-
-              {isReadOnly && isBookResult(book) && (
-                <Badge variant="default" className="font-semibold">
-                  {book.score}
                 </Badge>
               )}
 
@@ -122,36 +117,37 @@ const BookItem = ({
                 </ButtonDialog>
               )}
             </div>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-0.5 self-end sm:self-auto">
-          <div className="flex items-center text-sm text-muted-foreground gap-1.5">
-            <span className="font-medium text-foreground/70">
-              {book.author}
-            </span>
-            <span>&bull;</span>
-            <span>{book.year}</span>
+            <div className="flex items-center text-sm text-muted-foreground gap-1.5">
+              <span className="font-medium text-foreground/70">
+                {book.author}
+              </span>
+              <span>&bull;</span>
+              <span>{book.year}</span>
+            </div>
+
+            <div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-6 p1-4 px-1 text-muted-foreground hover:text-foreground"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation()
+                  setIsExpanded(!isExpanded)
+                }}
+              >
+                {isExpanded ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+                <span className="text-xs font-medium hidden sm:inline">
+                  {isExpanded ? "Less" : "More"}
+                </span>
+              </Button>
+            </div>
           </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-6 p1-4 px-1 text-muted-foreground hover:text-foreground"
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation()
-              setIsExpanded(!isExpanded)
-            }}
-          >
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-            <span className="text-xs font-medium hidden sm:inline">
-              {isExpanded ? "Less" : "More"}
-            </span>
-          </Button>
 
           {isVotingPhase && (
             <RadioGroup
