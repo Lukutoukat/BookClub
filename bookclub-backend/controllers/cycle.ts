@@ -27,6 +27,9 @@ cycleRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
     const result = await prisma.cycle.findMany({
       where: {
         bookclub_id: id
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
     res.json(result)
