@@ -184,18 +184,29 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
           <SectionHeader title={`${description} ${bookCount}`} />
           <CardContent className="card-content">
             <div className="space-y-3">
-              {books.map((book) => (
-                <BookItem
-                  key={book.id}
-                  book={book}
-                  onDelete={deleteBook}
-                  onEdit={() => setIsShowingBookForm(isShowingBookForm ? null : book)}
-                  isReadOnly={isReadOnly}
-                  isVotingPhase={isVotingPhase}
-                  onVote={submitVote}
-                  existingVote={book.proposal_id ? votesByProposalId[book.proposal_id] : undefined}
-                />
-              ))}
+              {books.map((book, index) => {
+                let podium: 'first' | 'second' | 'third' | null = null
+
+                if (show === 'over') {
+                  if (index === 0) podium = 'first'
+                  if (index === 1) podium = 'second'
+                  if (index === 2) podium = 'third'
+                }
+
+                return (
+                  <BookItem
+                    key={book.id}
+                    book={book}
+                    podium={podium}
+                    onDelete={deleteBook}
+                    onEdit={() => setIsShowingBookForm(isShowingBookForm ? null : book)}
+                    isReadOnly={isReadOnly}
+                    isVotingPhase={isVotingPhase}
+                    onVote={submitVote}
+                    existingVote={book.proposal_id ? votesByProposalId[book.proposal_id] : undefined}
+                  />
+                )
+              })}
             </div>
           </CardContent>
         </Card>

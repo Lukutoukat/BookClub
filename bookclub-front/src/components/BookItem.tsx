@@ -20,7 +20,8 @@ const BookItem = ({
   isReadOnly,
   isVotingPhase,
   onVote,
-  existingVote
+  existingVote,
+  podium
 }: {
   book: Book | BookResult
   onDelete: (id: string) => Promise<void>
@@ -29,6 +30,7 @@ const BookItem = ({
   isVotingPhase: boolean
   onVote: (bookId: string, weight: number, voteId: string | null) => Promise<void>
   existingVote?: VoteFields
+  podium?: 'first' | 'second' | 'third' | null
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -39,6 +41,14 @@ const BookItem = ({
     return 'score' in book
   }
 
+  const podiumClasses = {
+    first:
+      'border-yellow-400 bg-yellow-400/20 shadow-yellow-400/40 shadow-xl',
+    second:
+      'border-slate-300 bg-slate-300/20 shadow-slate-300/40 shadow-lg',
+    third:
+      'border-amber-500 bg-amber-500/20 shadow-amber-500/40 shadow-lg'
+  }
   useEffect(() => {
     if (isVotingPhase && existingVote) {
       setWeight(existingVote.weight ?? null)
@@ -58,7 +68,13 @@ const BookItem = ({
   }
 
   return (
-    <Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90">
+      <Card
+        className={`border-border/60 shadow-sm transition-all ${
+          podium
+            ? podiumClasses[podium]
+            : 'bg-background/80 hover:bg-background/90'
+        }`}
+      >
       <CardContent className="px-3 py-2 sm:px-4 sm:py-3 pl-4 sm:pl-5">
         <div className="flex flex-row items-start gap-3 justify-between">
           {isReadOnly && isBookResult(book) && (
