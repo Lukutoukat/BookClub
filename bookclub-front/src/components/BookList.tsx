@@ -184,9 +184,16 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
           <SectionHeader title={`${description} ${bookCount}`} />
           {isVotingPhase && (
             <div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
-              <p><span className="font-medium text-foreground">Want to read</span> = 3 points</p>
-              <p><span className="font-medium text-foreground">Could read</span> = 2 points</p>
-              <p><span className="font-medium text-foreground">Don&apos;t want to read</span> = 0 points</p>
+              <p>
+                <span className="font-medium text-foreground">Want to read</span> = 3 points
+              </p>
+              <p>
+                <span className="font-medium text-foreground">Could read</span> = 2 points
+              </p>
+              <p>
+                <span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
+                points
+              </p>
             </div>
           )}
           <CardContent className="card-content">
