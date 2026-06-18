@@ -197,6 +197,7 @@ describe('/api/propose', () => {
       expect(response.body).toEqual({ error: 'database error' })
     })
   })
+
   describe('GET', () => {
     it('returns proposed books', async () => {
       ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue(mockProposal)
@@ -238,7 +239,26 @@ describe('/api/propose', () => {
         }
       })
     })
+
+    it('returns 403 if user is not authorized to delete the proposal', async () => {
+      ;(prisma.bookProposed.findFirst as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app).delete('/api/propose/1/1').set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'not authorized to delete this proposal'
+      })
+
+      expect(prisma.bookProposed.findFirst).toHaveBeenCalledTimes(1)
+      expect(prisma.bookProposed.deleteMany).not.toHaveBeenCalled()
+    })
+
     it('returns 500 if deletion fails', async () => {
+      ;(prisma.bookProposed.findFirst as jest.Mock).mockResolvedValue({
+        id: '1',
+        user_id: '1'
+      })
       ;(prisma.bookProposed.deleteMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
       const response = await request(app).delete('/api/propose/1/1').set(authHeaders())
