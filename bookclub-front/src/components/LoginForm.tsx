@@ -70,11 +70,13 @@ const LoginForm = ({
           </Button>
         </div>
       </form>
+      {/*
       <div className="flex flex-col gap-3 border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
         <Button type="button" onClick={() => navigate('/passwordreset')}>
           Forgot password?
         </Button>
       </div>
+      */}
     </>
   )
 }
