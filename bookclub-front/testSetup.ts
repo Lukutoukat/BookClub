@@ -1,6 +1,20 @@
-import { beforeEach, afterEach, vi } from 'vitest'
+import { afterEach, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
+
+const { mockUseParams } = vi.hoisted(() => ({
+	mockUseParams: vi.fn()
+}))
+
+vi.mock('react-router-dom', async (importOriginal) => {
+	const actual = await importOriginal<typeof import('react-router-dom')>()
+	return {
+		...actual,
+		useParams: vi.fn(() => ({})),
+		useNavigate: () => vi.fn(),
+	}
+})
+
 
 Object.defineProperty(window, 'matchMedia', {
 	writable: true,
@@ -54,6 +68,7 @@ if (typeof window !== 'undefined') {
 
 afterEach(() => {
 	cleanup()
+	vi.clearAllMocks()
 })
 
 class ResizeObserver {

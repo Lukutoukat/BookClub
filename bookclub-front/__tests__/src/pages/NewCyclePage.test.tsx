@@ -4,10 +4,6 @@ import NewCyclePage from '@/pages/NewCyclePage'
 
 const mockUseParams = vi.fn()
 
-vi.mock('react-router-dom', () => ({
-	useParams: () => mockUseParams()
-}))
-
 vi.mock('@/components/NewCycle', () => ({
 	NewCycle: ({ bookclubId }: { bookclubId: string }) => <div>NewCycle</div>
 }))
