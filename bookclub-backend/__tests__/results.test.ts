@@ -117,5 +117,13 @@ describe('/api/results', () => {
         error: 'database error'
       })
     })
+
+    it('returns null, if list of proposed empty', async () => {
+      ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue({})
+      const response = await request(app).get('/api/results/1/winner')
+        .set(authHeaders())
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual(null)
+    })
   })
 })

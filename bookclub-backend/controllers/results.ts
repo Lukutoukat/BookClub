@@ -80,7 +80,7 @@ resultRouter.get(
         include: { Book: true }
       })
 
-      if (proposals.length === 0) {
+      if (proposals.length === undefined) {
         return res.json(null)
       }
 
