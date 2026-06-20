@@ -72,7 +72,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
       <Card size="sm" className="mx-auto w-fit card-base">
         <SectionHeader
           title={'Select Dates'}
-          description={'Select the end date the proposal phase and the end date for voting phase.'}
+          description={'Select the end dates for the proposal and voting phases.'}
         ></SectionHeader>
         <CardContent>
           <Calendar
