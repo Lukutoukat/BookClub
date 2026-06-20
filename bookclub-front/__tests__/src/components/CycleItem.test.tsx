@@ -6,8 +6,8 @@ import { type CycleFields } from '@/services/cycle'
 
 vi.mock('@/services/results', () => ({
   default: {
-    getWinner: vi.fn(),
-  },
+    getWinner: vi.fn()
+  }
 }))
 
 describe('CycleItem Component', () => {
@@ -15,7 +15,7 @@ describe('CycleItem Component', () => {
     id: 'cycle-123',
     createdAt: '2026-06-01T00:00:00.000Z',
     proposalEnd: '2026-06-10T00:00:00.000Z',
-    votingEnd: '2026-06-20T00:00:00.000Z',
+    votingEnd: '2026-06-20T00:00:00.000Z'
   }
 
   beforeEach(() => {
@@ -58,7 +58,7 @@ describe('CycleItem Component', () => {
 
     const winnerName = await screen.findByText(/The Light Fantastic/)
     expect(winnerName).toBeInTheDocument()
-    
+
     expect(ResultService.getWinner).toHaveBeenCalledWith('cycle-123')
     expect(screen.getByText('(5 pts)')).toBeInTheDocument()
   })
