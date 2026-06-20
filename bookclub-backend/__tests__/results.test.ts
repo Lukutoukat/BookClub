@@ -126,4 +126,42 @@ describe('/api/results', () => {
       expect(response.body).toEqual(null)
     })
   })
+
+  describe('GET /:cycle_id/winner', () => {
+    it('returns the proposal with the highest score as the winner', async () => {
+      ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue([
+        MockProposal_1,
+        MockProposal_2
+      ])
+
+      ;(prisma.bookVoted.groupBy as jest.Mock).mockResolvedValue([
+        {
+          proposal_id: '1',
+          _sum: { weight: 0 }
+        },
+        {
+          proposal_id: '2',
+          _sum: { weight: 3 }
+        }
+      ])
+
+      const response = await request(app)
+        .get('/api/results/1/winner')
+        .set(authHeaders())
+
+      expect(prisma.bookProposed.findMany).toHaveBeenCalledWith({
+        where: { cycle_id: '1' },
+        include: { Book: true }
+      })
+      expect(prisma.bookVoted.groupBy).toHaveBeenCalledTimes(1)
+      
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        id: '2',
+        title: 'Harry Potter',
+        proposal_id: '2',
+        score: 3
+      })
+    })
+  })
 })
