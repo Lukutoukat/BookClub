@@ -25,7 +25,9 @@ const CycleHistoryList = ({ bookclubId }: Props) => {
     try {
       const loadedCycles = await CycleService.getClubCycles(bookclubId)
       setCycles(loadedCycles)
+      setCycles(Array.isArray(loadedCycles) ? loadedCycles : [])
     } catch (error) {
+      setCycles([])
       setErrorMessage(getErrorMessage(error, 'Failed to fetch cycles.'))
     }
   }
