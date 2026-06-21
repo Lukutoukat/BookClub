@@ -7,7 +7,11 @@ import cycleService from '@/services/cycle'
 import { type CycleWithStatus } from '@/services/cycle'
 import { SuggestBook } from '@/components/SuggestBook'
 import bookclubmembersService from '@/services/bookclubmembers'
+<<<<<<< HEAD
 import { Grid } from '@/components/Grid'
+=======
+import CycleHistoryList from '@/components/CycleHistoryList'
+>>>>>>> develop
 
 const BookclubPage = () => {
 	const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -79,12 +83,32 @@ const BookclubPage = () => {
 					</>
 				)}
 
+<<<<<<< HEAD
 				{/* VOTING PHASE */}
 				{currentCycle?.phase === 'voting' && (
 					<>
 						<BookList ref={bookListRef} show="votedBooks" cycleId={currentCycle.id} />
 					</>
 				)}
+=======
+      {/* PROPOSAL PHASE */}
+      {currentCycle?.phase === 'proposal' && (
+        <>
+          <SuggestBook
+            onBookAdded={handleBookAdded}
+            bookclubId={bookclubId}
+            cycle_id={currentCycle.id}
+          />
+          <BookList
+            ref={bookListRef}
+            show="proposedBooks"
+            cycleId={currentCycle.id}
+            description="Suggested books: "
+            emptyMessage="No books suggested yet. Be the first to add one!"
+          />
+        </>
+      )}
+>>>>>>> develop
 
 				{/* RESULTS PHASE */}
 				{currentCycle?.phase === 'over' && (
@@ -93,11 +117,27 @@ const BookclubPage = () => {
 					</>
 				)}
 
+<<<<<<< HEAD
 				{/* Admin settings */}
 				{isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
 			</Grid>
 		</>
 	)
+=======
+      {/* RESULTS PHASE */}
+      {currentCycle?.phase === 'over' && (
+        <>
+          <BookList ref={bookListRef} show="over" cycleId={currentCycle.id} />
+        </>
+      )}
+
+      <CycleHistoryList bookclubId={bookclubId} />
+
+      {/* Admin settings */}
+      {isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
+    </>
+  )
+>>>>>>> develop
 }
 
 export default BookclubPage

@@ -12,6 +12,7 @@ const BooksPage = () => {
 		await bookListRef.current?.reload()
 	}
 
+<<<<<<< HEAD
 	return (
 		<>
 			<PageHeader
@@ -25,6 +26,21 @@ const BooksPage = () => {
 			</Grid>
 		</>
 	)
+=======
+  return (
+    <>
+      <UserLoginDisplay />
+      <PageHeader
+        badgeText="Books"
+        title="Save books"
+        description="Save the books you want to read and suggest in the future."
+      />
+
+      <BookForm onBookAdded={handleBookAdded} cycle_id="" />
+      <BookList ref={bookListRef} emptyMessage="No books yet." description="Your saved books: " />
+    </>
+  )
+>>>>>>> develop
 }
 
 export default BooksPage

@@ -4,10 +4,11 @@ import { getAuthConfig } from '@/services/auth'
 const baseUrl = '/api/cycles'
 
 export interface CycleFields {
-	id: string
-	bookclub_id?: string
-	proposalEnd?: Date
-	votingEnd?: Date
+  id: string
+  bookclub_id?: string
+  createdAt?: Date
+  proposalEnd?: Date
+  votingEnd?: Date
 }
 
 export interface CycleWithStatus {
@@ -23,6 +24,10 @@ export type CreateCycle = Omit<CycleFields, 'id'>
 
 const getAll = () => {
 	return axios.get<Cycle[]>(baseUrl).then((res) => res.data)
+}
+
+const getClubCycles = (bookclubId: string) => {
+  return axios.get<Cycle[]>(`${baseUrl}/${bookclubId}`).then((res) => res.data)
 }
 
 const getLatestCycle = (bookclubId: string) => {
@@ -75,4 +80,4 @@ const create = (cycle: CreateCycle) => {
 	return axios.post<Cycle>(baseUrl, cycle, getAuthConfig()).then((res) => res.data)
 }
 
-export default { getAll, create, getLatestCycle, endLatestCyclePhase }
+export default { getAll, create, getLatestCycle, endLatestCyclePhase, getClubCycles }
