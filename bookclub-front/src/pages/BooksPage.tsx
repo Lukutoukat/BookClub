@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import BookForm from '@/components/BookForm'
 import BookList, { type BookListHandle } from '@/components/BookList'
 import { PageHeader } from '@/components/PageHeader'
+import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import { Grid } from '@/components/Grid'
 
 const BooksPage = () => {
@@ -12,9 +13,9 @@ const BooksPage = () => {
 		await bookListRef.current?.reload()
 	}
 
-<<<<<<< HEAD
 	return (
 		<>
+      <UserLoginDisplay />
 			<PageHeader
 				badgeText="Books"
 				title="Save books"
@@ -26,21 +27,6 @@ const BooksPage = () => {
 			</Grid>
 		</>
 	)
-=======
-  return (
-    <>
-      <UserLoginDisplay />
-      <PageHeader
-        badgeText="Books"
-        title="Save books"
-        description="Save the books you want to read and suggest in the future."
-      />
-
-      <BookForm onBookAdded={handleBookAdded} cycle_id="" />
-      <BookList ref={bookListRef} emptyMessage="No books yet." description="Your saved books: " />
-    </>
-  )
->>>>>>> develop
 }
 
 export default BooksPage

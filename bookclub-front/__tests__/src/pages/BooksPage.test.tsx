@@ -117,17 +117,10 @@ describe('BooksPage', () => {
 
 			renderWithRouter(<BooksPage />)
 
-<<<<<<< HEAD
 			await waitFor(() => {
 				expect(screen.getByText('No books suggested yet. Be the first to add one!')).toBeDefined()
 			})
 		})
-=======
-      await waitFor(() => {
-        expect(screen.getByText('No books yet.')).toBeDefined()
-      })
-    })
->>>>>>> develop
 
 		test('displays error message when loading fails', async () => {
 			setupMocks({ error: true })
