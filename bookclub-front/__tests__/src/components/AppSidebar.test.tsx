@@ -18,7 +18,7 @@ vi.mock('react-router-dom', async () => {
 })
 
 vi.mock('@/hooks/use-mobile', () => ({
-  useIsMobile: () => false
+	useIsMobile: () => false
 }))
 
 describe('AppSidebar renders correctly', () => {
