@@ -43,7 +43,7 @@ describe('BookSelector', () => {
 	it('should display books from getAll() in the dropdown', async () => {
 		render(<BookSelector bookclubId="club1" />)
 
-		const input = screen.getByPlaceholderText('Search saved books...')
+		const input = screen.getByPlaceholderText('Search saved')
 		await userEvent.click(input)
 
 		await waitFor(() => {
@@ -62,7 +62,7 @@ describe('BookSelector', () => {
 		})
 
 		// Klikkaa "Show previous books" nappia
-		const swapButton = screen.getByRole('button', { name: /Show previous books/i })
+		const swapButton = screen.getByRole('button', { name: /Switch/i })
 		await user.click(swapButton)
 
 		await waitFor(() => {
@@ -78,14 +78,14 @@ describe('BookSelector', () => {
 			expect(bookService.getAll).toHaveBeenCalledTimes(1)
 		})
 
-		const swapButton = screen.getByRole('button', { name: /Show previous books/i })
+		const swapButton = screen.getByRole('button', { name: /Switch/i })
 		await user.click(swapButton)
 
 		await waitFor(() => {
 			expect(bookService.getPreviousSuggestions).toHaveBeenCalledTimes(1)
 		})
 
-		const swapBackButton = screen.getByRole('button', { name: /Show saved proposed/i })
+		const swapBackButton = screen.getByRole('button', { name: /Switch/i })
 		await user.click(swapBackButton)
 
 		await waitFor(() => {
@@ -108,7 +108,7 @@ describe('BookSelector', () => {
 		vi.mocked(bookService.getPreviousSuggestions).mockRejectedValueOnce(new Error('Network error'))
 		render(<BookSelector bookclubId="club1" />)
 
-		const swapButton = screen.getByRole('button', { name: /Show previous books/i })
+		const swapButton = screen.getByRole('button', { name: /Switch/i })
 		await user.click(swapButton)
 
 		await waitFor(() => {
@@ -124,7 +124,7 @@ describe('BookSelector', () => {
 		const user = userEvent.setup()
 		render(<BookSelector bookclubId="club1" />)
 
-		const input = screen.getByPlaceholderText('Search saved books...')
+		const input = screen.getByPlaceholderText('Search saved')
 		await userEvent.click(input)
 
 		await waitFor(() => {
@@ -135,7 +135,7 @@ describe('BookSelector', () => {
 
 		await waitFor(() => {
 			expect(screen.getByText('Are you sure?')).toBeInTheDocument()
-			expect(screen.getByText(/Do you want to propose The Great Gatsby?/)).toBeInTheDocument()
+			expect(screen.getByText(/Do you want to suggest The Great Gatsby?/)).toBeInTheDocument()
 		})
 	})
 
@@ -144,7 +144,7 @@ describe('BookSelector', () => {
 		const user = userEvent.setup()
 		render(<BookSelector bookclubId="club1" onBookAdded={onBookAdded} />)
 
-		const input = screen.getByPlaceholderText('Search saved books...')
+		const input = screen.getByPlaceholderText('Search saved')
 		await userEvent.click(input)
 
 		await waitFor(() => {
@@ -175,8 +175,8 @@ describe('BookSelector', () => {
 		const user = userEvent.setup()
 		render(<BookSelector bookclubId="club1" />)
 
-		const input = screen.getByPlaceholderText('Search saved books...')
-		await userEvent.click(input)
+		const input = screen.getByPlaceholderText('Search saved')
+		await user.click(input)
 
 		await waitFor(() => {
 			expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
@@ -200,8 +200,8 @@ describe('BookSelector', () => {
 		const user = userEvent.setup()
 		render(<BookSelector bookclubId="club1" />)
 
-		const input = screen.getByPlaceholderText('Search saved books...') as HTMLInputElement
-		await userEvent.click(input)
+		const input = screen.getByPlaceholderText('Search saved') as HTMLInputElement
+		await user.click(input)
 
 		await waitFor(() => {
 			expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
@@ -210,7 +210,7 @@ describe('BookSelector', () => {
 		await user.type(input, 'Gatsby')
 		expect(input.value).toBe('Gatsby')
 
-		const swapButton = screen.getByRole('button', { name: /Show previous books/i })
+		const swapButton = screen.getByRole('button', { name: /Switch/i })
 		await user.click(swapButton)
 
 		await waitFor(() => {
@@ -222,8 +222,8 @@ describe('BookSelector', () => {
 		const user = userEvent.setup()
 		render(<BookSelector bookclubId="club1" />)
 
-		const input = screen.getByPlaceholderText('Search saved books...')
-		await userEvent.click(input)
+		const input = screen.getByPlaceholderText('Search saved')
+		await user.click(input)
 
 		await waitFor(() => {
 			expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
@@ -250,7 +250,7 @@ describe('BookSelector', () => {
 
 		render(<BookSelector bookclubId="club1" />)
 
-		const input = screen.getByPlaceholderText('Search saved books...')
+		const input = screen.getByPlaceholderText('Search saved')
 		await userEvent.click(input)
 
 		expect(screen.getByText('Loading books...')).toBeInTheDocument()
@@ -265,7 +265,7 @@ describe('BookSelector', () => {
 
 		render(<BookSelector bookclubId="club1" />)
 
-		const input = screen.getByPlaceholderText('Search saved books...')
+		const input = screen.getByPlaceholderText('Search saved')
 		await userEvent.click(input)
 
 		await waitFor(() => {
