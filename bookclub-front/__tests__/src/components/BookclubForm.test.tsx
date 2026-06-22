@@ -48,7 +48,7 @@ describe('BookclubForm', () => {
 		await user.click(button)
 
 		await waitFor(() => {
-			expect(screen.getByText(/Failed to create bookclub/i)).toBeInTheDocument()
+			expect(screen.getByText(/Failed to create book club/i)).toBeInTheDocument()
 		})
 	})
 })
