@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../components/PageHeader'
-import bookclubService from '@/services/bookclubs'
-import { ButtonDialog } from './ButtonDialog'
 type Bookclub = {
 	id: string
 	name: string
@@ -16,7 +13,6 @@ type Props = {
 export const BookclubComponent = ({ bookclubId }: Props) => {
 	const [bookclub, setBookclub] = useState<Bookclub | null>(null)
 	const [loading, setLoading] = useState(true)
-	const navigate = useNavigate()
 	useEffect(() => {
 		const fetchBookclub = async () => {
 			try {
@@ -40,15 +36,6 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
 	if (loading) return null
 	if (!bookclub) return <div>Book club not found</div>
 
-	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
-		event.preventDefault()
-		try {
-			await bookclubService.remove(bookclub.id)
-			await navigate('/home', { replace: true })
-		} catch (error) {
-			console.error('error during deletion', error)
-		}
-	}
 
 	return (
 		<>
@@ -64,13 +51,6 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
 					} catch {}
 				}}
 			/>
-			<div className="card-actions">
-				<ButtonDialog
-					buttonText="Delete"
-					buttonOnClick={handleDeletion}
-					alertDialogDescription="Once the book club is deleted, it cannot be undone."
-				/>
-			</div>
 		</>
 	)
 }
