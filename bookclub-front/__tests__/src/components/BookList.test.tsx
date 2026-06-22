@@ -5,7 +5,7 @@ import bookService, { type Book } from '@/services/books'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 import voteService from '@/services/vote'
 import resultService from '@/services/results'
-import proposeService from '@/services/results'
+import proposeService from '@/services/propose'
 
 vi.mock('../../../src/services/books')
 vi.mock('../../../src/services/vote')
@@ -180,7 +180,7 @@ describe('BookList', () => {
 
 	describe('voting', () => {
 		test("passes existing votes to BookItem when show='votedBooks'", async () => {
-			vi.mocked(resultService.getResults).mockResolvedValue([
+			vi.mocked(proposeService.getProposedBooks).mockResolvedValue([
 				{
 					id: 1,
 					name: 'Book 1',
@@ -198,7 +198,7 @@ describe('BookList', () => {
 			render(<BookList show="votedBooks" cycleId="c1" />)
 
 			expect(await screen.findByText('Book 1')).toBeDefined()
-			expect(vi.mocked(resultService.getResults)).toHaveBeenCalledWith('c1')
+			expect(vi.mocked(proposeService.getProposedBooks)).toHaveBeenCalledWith('c1')
 			expect(vi.mocked(voteService.getOwn)).toHaveBeenCalledWith('c1')
 		})
 	})
