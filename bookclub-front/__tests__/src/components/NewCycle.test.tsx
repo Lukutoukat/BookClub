@@ -10,75 +10,58 @@ vi.mock('@/services/cycle')
 const mockNavigate = vi.fn()
 
 vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
+	const actual = await vi.importActual('react-router-dom')
 
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate
-  }
+	return {
+		...actual,
+		useNavigate: () => mockNavigate
+	}
 })
 
 const renderWithRouter = (component: React.ReactElement) => {
-  return render(<BrowserRouter>{component}</BrowserRouter>)
+	return render(<BrowserRouter>{component}</BrowserRouter>)
 }
 
 describe('NewCycle', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+	beforeEach(() => {
+		vi.clearAllMocks()
+	})
 
-  it('renders bookclub data', async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        id: '1',
-        name: 'My Bookclub',
-        invite_code: 'invite'
-      })
-    })
+	it('renders bookclub not found when API call fails', async () => {
+		globalThis.fetch = vi.fn().mockResolvedValue({
+			ok: false
+		})
 
-    renderWithRouter(<NewCycle bookclubId="1" />)
+		renderWithRouter(<NewCycle bookclubId="1" />)
 
-    await waitFor(() => {
-      expect(screen.getByText('My Bookclub')).toBeInTheDocument()
-    })
-  })
+		await waitFor(() => {
+			expect(screen.getByText('Bookclub not found')).toBeInTheDocument()
+		})
+	})
 
-  it('renders bookclub not found when API call fails', async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: false
-    })
+	it('creates cycle and navigates to bookclub page when user presses create', async () => {
+		globalThis.fetch = vi.fn().mockResolvedValue({
+			ok: true,
+			json: async () => ({
+				id: '1',
+				name: 'My Bookclub',
+				invite_code: 'invite'
+			})
+		})
 
-    renderWithRouter(<NewCycle bookclubId="1" />)
+		vi.mocked(cycleService.create).mockResolvedValue({} as any)
+		const user = userEvent.setup()
 
-    await waitFor(() => {
-      expect(screen.getByText('Bookclub not found')).toBeInTheDocument()
-    })
-  })
+		renderWithRouter(<NewCycle bookclubId="1" />)
 
-  it('creates cycle and navigates to bookclub page when user presses create', async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        id: '1',
-        name: 'My Bookclub',
-        invite_code: 'invite'
-      })
-    })
+		await waitFor(() => {
+			expect(screen.getByText('Create')).toBeDefined()
+		})
 
-    vi.mocked(cycleService.create).mockResolvedValue({} as any)
-    const user = userEvent.setup()
+		const button = screen.getByRole('button', { name: /Create/i })
+		await user.click(button)
 
-    renderWithRouter(<NewCycle bookclubId="1" />)
-
-    await waitFor(() => {
-      expect(screen.getByText('My Bookclub')).toBeDefined()
-    })
-
-    const button = screen.getByRole('button', { name: /Create/i })
-    await user.click(button)
-
-    expect(vi.mocked(cycleService.create)).toHaveBeenCalled()
-    expect(mockNavigate).toHaveBeenCalledWith('/club/1')
-  })
+		expect(vi.mocked(cycleService.create)).toHaveBeenCalled()
+		expect(mockNavigate).toHaveBeenCalledWith('/club/1')
+	})
 })
