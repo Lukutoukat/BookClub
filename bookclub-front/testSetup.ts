@@ -11,10 +11,9 @@ vi.mock('react-router-dom', async (importOriginal) => {
 	return {
 		...actual,
 		useParams: vi.fn(() => ({})),
-		useNavigate: () => vi.fn(),
+		useNavigate: () => vi.fn()
 	}
 })
-
 
 Object.defineProperty(window, 'matchMedia', {
 	writable: true,

@@ -4,11 +4,11 @@ import { getAuthConfig } from '@/services/auth'
 const baseUrl = '/api/cycles'
 
 export interface CycleFields {
-  id: string
-  bookclub_id?: string
-  createdAt?: Date
-  proposalEnd?: Date
-  votingEnd?: Date
+	id: string
+	bookclub_id?: string
+	createdAt?: Date
+	proposalEnd?: Date
+	votingEnd?: Date
 }
 
 export interface CycleWithStatus {
@@ -27,7 +27,7 @@ const getAll = () => {
 }
 
 const getClubCycles = (bookclubId: string) => {
-  return axios.get<Cycle[]>(`${baseUrl}/${bookclubId}`).then((res) => res.data)
+	return axios.get<Cycle[]>(`${baseUrl}/${bookclubId}`).then((res) => res.data)
 }
 
 const getLatestCycle = (bookclubId: string) => {

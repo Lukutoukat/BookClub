@@ -94,14 +94,13 @@ const BookclubPage = () => {
 					</>
 				)}
 
+				<CycleHistoryList bookclubId={bookclubId} />
 
-        <CycleHistoryList bookclubId={bookclubId} />
-
-        {/* Admin settings */}
-        {isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
-      </Grid>
-    </>
-  )
+				{/* Admin settings */}
+				{isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
+			</Grid>
+		</>
+	)
 }
 
 export default BookclubPage
