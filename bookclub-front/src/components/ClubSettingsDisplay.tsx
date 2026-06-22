@@ -34,15 +34,18 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 				}}
 			/>
 			<Card className="card-base">
-			<SectionHeader title="Club Settings" description="You can remove your book club and all information related to it below" />
-			<CardContent className="card-content">
-				<ButtonDialog
-					buttonText="Delete club"
-					buttonOnClick={handleDeletion}
-					alertDialogDescription="Once the book club is deleted, it cannot be undone."
-					alertDialogContinueText="Delete"
-					alertDialogText="Are you sure you want to delete this book club?"
+				<SectionHeader
+					title="Club Settings"
+					description="You can remove your book club and all information related to it below"
 				/>
+				<CardContent className="card-content">
+					<ButtonDialog
+						buttonText="Delete club"
+						buttonOnClick={handleDeletion}
+						alertDialogDescription="Once the book club is deleted, it cannot be undone."
+						alertDialogContinueText="Delete"
+						alertDialogText="Are you sure you want to delete this book club?"
+					/>
 				</CardContent>
 			</Card>
 		</>

@@ -36,7 +36,6 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
 	if (loading) return null
 	if (!bookclub) return <div>Book club not found</div>
 
-
 	return (
 		<>
 			<PageHeader

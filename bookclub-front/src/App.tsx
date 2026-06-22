@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react'
 import userService from './services/users'
 import ClubSettingsPage from './pages/BookClubSettingsPage'
 import { UserLoginDisplay } from './components/UserLoginDisplay'
+import { BottomDescription } from './components/BottomDescription'
 
 //useEffect!!! :)
 
@@ -54,6 +55,7 @@ const App = () => {
 							<Route path="*" element={<Navigate to="/login" replace />} />
 							<Route path="/passwordreset" element={<PasswordResetPage />} />
 						</Routes>
+						<BottomDescription />
 					</PageLayout>
 				</main>
 			</BrowserRouter>
@@ -77,6 +79,7 @@ const App = () => {
 						<Route path="*" element={<Navigate to="/home" replace />} />
 						<Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
 					</Routes>
+					<BottomDescription />
 				</PageLayout>
 			</PageMenu>
 		</BrowserRouter>
