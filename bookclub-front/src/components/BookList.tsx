@@ -161,7 +161,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 		}
 
 		return (
-			<div className="space-y-6">
+			<>
 				{isShowingBookForm ? (
 					<div ref={bookFormRef}>
 						<BookForm
@@ -178,42 +178,45 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 						/>
 					</div>
 				) : (
-					<></>
+					<>
+						<Card className="card-base grow">
+							<SectionHeader title={`${description} ${bookCount}`} />
+							{isVotingPhase && (
+								<div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
+									<p>
+										<span className="font-medium text-foreground">Want to read</span> = 3 points
+									</p>
+									<p>
+										<span className="font-medium text-foreground">Could read</span> = 2 points
+									</p>
+									<p>
+										<span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
+										points
+									</p>
+								</div>
+							)}
+							<CardContent className="card-content">
+								<div className="space-y-3">
+									{books.map((book) => (
+										<BookItem
+											key={book.id}
+											book={book}
+											onDelete={deleteBook}
+											onEdit={() => setIsShowingBookForm(isShowingBookForm ? null : book)}
+											isReadOnly={isReadOnly}
+											isVotingPhase={isVotingPhase}
+											onVote={submitVote}
+											existingVote={
+												book.proposal_id ? votesByProposalId[book.proposal_id] : undefined
+											}
+										/>
+									))}
+								</div>
+							</CardContent>
+						</Card>
+					</>
 				)}
-				<Card className="card-base">
-					<SectionHeader title={`${description} ${bookCount}`} />
-					{isVotingPhase && (
-						<div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
-							<p>
-								<span className="font-medium text-foreground">Want to read</span> = 3 points
-							</p>
-							<p>
-								<span className="font-medium text-foreground">Could read</span> = 2 points
-							</p>
-							<p>
-								<span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
-								points
-							</p>
-						</div>
-					)}
-					<CardContent className="card-content">
-						<div className="space-y-3">
-							{books.map((book) => (
-								<BookItem
-									key={book.id}
-									book={book}
-									onDelete={deleteBook}
-									onEdit={() => setIsShowingBookForm(isShowingBookForm ? null : book)}
-									isReadOnly={isReadOnly}
-									isVotingPhase={isVotingPhase}
-									onVote={submitVote}
-									existingVote={book.proposal_id ? votesByProposalId[book.proposal_id] : undefined}
-								/>
-							))}
-						</div>
-					</CardContent>
-				</Card>
-			</div>
+			</>
 		)
 	}
 )

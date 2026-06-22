@@ -120,8 +120,7 @@ describe('/api/results', () => {
 
     it('returns null, if list of proposed empty', async () => {
       ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue({})
-      const response = await request(app).get('/api/results/1/winner')
-        .set(authHeaders())
+      const response = await request(app).get('/api/results/1/winner').set(authHeaders())
       expect(response.status).toBe(200)
       expect(response.body).toEqual(null)
     })
@@ -133,7 +132,6 @@ describe('/api/results', () => {
         MockProposal_1,
         MockProposal_2
       ])
-
       ;(prisma.bookVoted.groupBy as jest.Mock).mockResolvedValue([
         {
           proposal_id: '1',
@@ -145,16 +143,14 @@ describe('/api/results', () => {
         }
       ])
 
-      const response = await request(app)
-        .get('/api/results/1/winner')
-        .set(authHeaders())
+      const response = await request(app).get('/api/results/1/winner').set(authHeaders())
 
       expect(prisma.bookProposed.findMany).toHaveBeenCalledWith({
         where: { cycle_id: '1' },
         include: { Book: true }
       })
       expect(prisma.bookVoted.groupBy).toHaveBeenCalledTimes(1)
-      
+
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         id: '2',
