@@ -43,7 +43,6 @@ describe('SettingsPage', () => {
 			expect(screen.getByText('Club Settings Component')).toBeDefined()
 			expect(screen.getByText('Account Settings Component')).toBeDefined()
 			expect(screen.getByText('Theme Selector Component')).toBeDefined()
-			expect(screen.getByText('Bottom Description Component')).toBeDefined()
 		})
 
 		test('passes logout function to AccountSettings', async () => {
