@@ -1,6 +1,6 @@
 import BookclubForm from '@/components/BookclubForm'
 import { PageHeader } from '../components/PageHeader'
-import { Grid } from '@/components/Grid'
+import { Column } from '@/components/Column'
 
 const CreateBookclubPage = () => {
 	return (
@@ -10,9 +10,9 @@ const CreateBookclubPage = () => {
 				title="New book club"
 				description="Create a new book club for you and your friends to enjoy reading together."
 			/>
-			<Grid>
+			<Column>
 				<BookclubForm />
-			</Grid>
+			</Column>
 		</>
 	)
 }

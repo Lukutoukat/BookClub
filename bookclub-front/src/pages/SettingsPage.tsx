@@ -4,7 +4,7 @@ import { useLogin } from '@/hooks/useLogin'
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
-import { Grid } from '@/components/Grid'
+import { Column } from '@/components/Column'
 
 const SettingsPage = () => {
 	const { logout } = useLogin()
@@ -16,13 +16,13 @@ const SettingsPage = () => {
 				title="Settings"
 				description="Change your settings or create or join a book club."
 			/>
-			<Grid>
+			<Column>
 				<ClubSettings />
 
 				<AccountSettings handleLogOut={logout} />
 
 				<ThemeSelector />
-			</Grid>
+			</Column>
 
 			<BottomDescription />
 		</>

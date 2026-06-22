@@ -1,7 +1,7 @@
 import RegistrationForm from '@/components/RegistrationForm'
 
 import { PageHeader } from '@/components/PageHeader'
-import { Grid } from '@/components/Grid'
+import { Column } from '@/components/Column'
 
 const RegistrationPage = () => {
 	return (
@@ -14,9 +14,9 @@ const RegistrationPage = () => {
 				buttonLink="/login"
 			/>
 
-			<Grid>
+			<Column>
 				<RegistrationForm />
-			</Grid>
+			</Column>
 		</>
 	)
 }

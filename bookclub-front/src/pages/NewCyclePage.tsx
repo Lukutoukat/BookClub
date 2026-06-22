@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { useNavigate } from 'react-router-dom'
 import bookClubService, { type BookClub } from '@/services/bookclubs'
 import { useState, useEffect } from 'react'
-import { Grid } from '@/components/Grid'
+import { Column } from '@/components/Column'
 
 const NewCyclePage = () => {
 	const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -49,10 +49,10 @@ const NewCyclePage = () => {
 					await navigate(`/club/${loadedClubs[0]?.id ?? ''}`)
 				}}
 			/>
-			<Grid>
+			<Column>
 				<NewCycle bookclubId={loadedClubs[0]?.id ?? ''} />
 				<EndPhase bookclubId={loadedClubs[0]?.id ?? ''} />
-			</Grid>
+			</Column>
 		</>
 	)
 }

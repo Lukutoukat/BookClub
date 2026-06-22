@@ -7,7 +7,7 @@ import cycleService from '@/services/cycle'
 import { type CycleWithStatus } from '@/services/cycle'
 import { SuggestBook } from '@/components/SuggestBook'
 import bookclubmembersService from '@/services/bookclubmembers'
-import { Grid } from '@/components/Grid'
+import { Column } from '@/components/Column'
 import CycleHistoryList from '@/components/CycleHistoryList'
 
 const BookclubPage = () => {
@@ -61,7 +61,7 @@ const BookclubPage = () => {
 	return (
 		<>
 			<BookclubComponent bookclubId={bookclubId} />
-			<Grid>
+			<Column>
 				{/* PROPOSAL PHASE */}
 				{currentCycle?.phase === 'proposal' && (
 					<>
@@ -98,7 +98,7 @@ const BookclubPage = () => {
 
 				{/* Admin settings */}
 				{isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
-			</Grid>
+			</Column>
 		</>
 	)
 }

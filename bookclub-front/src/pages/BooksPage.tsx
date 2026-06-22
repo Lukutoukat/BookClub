@@ -4,7 +4,7 @@ import BookForm from '@/components/BookForm'
 import BookList, { type BookListHandle } from '@/components/BookList'
 import { PageHeader } from '@/components/PageHeader'
 import { UserLoginDisplay } from '@/components/UserLoginDisplay'
-import { Grid } from '@/components/Grid'
+import { Column } from '@/components/Column'
 
 const BooksPage = () => {
 	const bookListRef = useRef<BookListHandle>(null)
@@ -21,10 +21,10 @@ const BooksPage = () => {
 				title="Save books"
 				description="Save the books you want to read and suggest in the future."
 			/>
-			<Grid>
+			<Column>
 				<BookForm onBookAdded={handleBookAdded} cycle_id="" />
 				<BookList ref={bookListRef} emptyMessage="No books yet." description="Your saved books: " />
-			</Grid>
+			</Column>
 		</>
 	)
 }
