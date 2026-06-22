@@ -5,6 +5,7 @@ import { useLogin } from '@/hooks/useLogin'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '@/components/PageHeader'
+import { Grid } from '@/components/Grid'
 
 const LoginPage = () => {
 	const [username, setUsername] = useState('')
@@ -28,25 +29,26 @@ const LoginPage = () => {
 				buttonText="Go to registration"
 				buttonLink="/registration"
 			/>
+			<Grid>
+				<Card className="card-base">
+					<CardHeader className="card-header">
+						<CardTitle className="text-xl sm:text-2xl">Login</CardTitle>
 
-			<Card className="card-base">
-				<CardHeader className="card-header">
-					<CardTitle className="text-xl sm:text-2xl">Login</CardTitle>
+						<CardDescription className="text-sm sm:text-base"></CardDescription>
+					</CardHeader>
 
-					<CardDescription className="text-sm sm:text-base"></CardDescription>
-				</CardHeader>
-
-				<CardContent className="pt-4 sm:pt-6">
-					<LoginForm
-						username={username}
-						password={password}
-						setUsername={setUsername}
-						setPassword={setPassword}
-						handleLogin={handleLogin}
-						message={message}
-					/>
-				</CardContent>
-			</Card>
+					<CardContent className="pt-4 sm:pt-6">
+						<LoginForm
+							username={username}
+							password={password}
+							setUsername={setUsername}
+							setPassword={setPassword}
+							handleLogin={handleLogin}
+							message={message}
+						/>
+					</CardContent>
+				</Card>
+			</Grid>
 		</>
 	)
 }
