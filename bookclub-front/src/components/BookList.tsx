@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
 import BookForm from './BookForm'
 import BookItem from './BookItem'
+import Notification from './Notification'
 
 export interface BookListHandle {
   reload: () => Promise<void>
@@ -39,6 +40,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
     const isReadOnly = show === 'over'
     const [votes, setVotes] = useState<VoteFields[]>([])
     const [refreshOnVote, setRefreshOnVote] = useState(false)
+    const [confirmation, setConfirmation] = useState<string | null>(null)
 
     const votesByProposalId = votes.reduce(
       (acc, vote) => {
@@ -83,6 +85,12 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
       }),
       []
     )
+    useEffect(() => {
+      if (!confirmation) return
+      const t = setTimeout(() => setConfirmation(null), 5000)
+      return () => clearTimeout(t)
+    }, [confirmation])
+
 
     useEffect(() => {
       void loadBooks()
@@ -102,6 +110,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
         if (show === 'savedBooks') await bookService.removeFromUser(id)
         if (show === 'proposedBooks') await proposeService.removeProposedBook(cycleId, id)
         setBooks((currentBooks) => currentBooks.filter((book) => book.id !== id))
+        setConfirmation('Book deleted succesfully!')
       } catch {
         setErrorMessage('Failed to delete book.')
       }
@@ -169,6 +178,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
               description="Edit the details of the book"
               bookToEdit={isShowingBookForm}
               onBookAdded={loadBooks}
+              onSuccess={(msg) => setConfirmation(msg)}
               buttonText="Update"
               buttonAction={() => setIsShowingBookForm(null)}
               secondaryButtonText="Cancel"
@@ -182,6 +192,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
         )}
         <Card className="card-base">
           <SectionHeader title={`${description} ${bookCount}`} />
+          <Notification message={confirmation} />
           {isVotingPhase && (
             <div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
               <p>

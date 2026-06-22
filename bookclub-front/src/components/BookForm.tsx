@@ -49,6 +49,7 @@ type BookFormProps = {
   secondaryButtonText?: string
   secondaryButtonAction?: () => void
   onBookAdded?: () => Promise<void> | void
+  onSuccess?: (message: string) => void
   cycle_id: string
   className?: string
 }
@@ -62,6 +63,7 @@ const BookForm = ({
   secondaryButtonText,
   secondaryButtonAction,
   onBookAdded,
+  onSuccess,
   cycle_id,
   className
 }: BookFormProps) => {
@@ -222,6 +224,7 @@ const BookForm = ({
           }
           // Update existing book
           await bookService.update(bookToEdit.id, bookToUpdateSubmit)
+          onSuccess?.('Book updated successfully!')
         } else {
           const bookToSubmit: CreateBook = {
             isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
@@ -256,6 +259,7 @@ const BookForm = ({
         }
         // Create new book
         await bookService.create(bookToSubmit)
+        onSuccess?.('Book created successfully!')
         setNewBook(emptyBook)
         setErrors([])
         if (onBookAdded) {
