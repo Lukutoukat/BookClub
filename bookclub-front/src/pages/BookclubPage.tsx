@@ -7,6 +7,7 @@ import cycleService from '@/services/cycle'
 import { type CycleWithStatus } from '@/services/cycle'
 import { SuggestBook } from '@/components/SuggestBook'
 import bookclubmembersService from '@/services/bookclubmembers'
+import CycleHistoryList from '@/components/CycleHistoryList'
 
 const BookclubPage = () => {
   const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -68,7 +69,13 @@ const BookclubPage = () => {
             bookclubId={bookclubId}
             cycle_id={currentCycle.id}
           />
-          <BookList ref={bookListRef} show="proposedBooks" cycleId={currentCycle.id} />
+          <BookList
+            ref={bookListRef}
+            show="proposedBooks"
+            cycleId={currentCycle.id}
+            description="Suggested books: "
+            emptyMessage="No books suggested yet. Be the first to add one!"
+          />
         </>
       )}
 
@@ -90,6 +97,8 @@ const BookclubPage = () => {
           <BookList ref={bookListRef} show="over" cycleId={currentCycle.id} />
         </>
       )}
+
+      <CycleHistoryList bookclubId={bookclubId} />
 
       {/* Admin settings */}
       {isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
