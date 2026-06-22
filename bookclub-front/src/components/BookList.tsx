@@ -26,7 +26,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 			emptyMessage = 'No books yet.',
 			show = 'savedBooks',
 			cycleId = 'nocycle',
-			description = 'Books: '
+			description = 'Books '
 		},
 		ref
 	) => {
@@ -179,7 +179,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 					</div>
 				) : (
 					<Card className="card-base grow">
-						<SectionHeader title={`${description} ${bookCount}`} />
+						<SectionHeader title={`${description} (${bookCount})`} />
 						{isVotingPhase && (
 							<div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
 								<p>
@@ -190,7 +190,11 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 								</p>
 								<p>
 									<span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
-									points
+									points 
+								</p>
+								<br></br>
+								<p>
+									<span>Votes are saved automatically. You can change your votes during the voting phase.</span>
 								</p>
 							</div>
 						)}

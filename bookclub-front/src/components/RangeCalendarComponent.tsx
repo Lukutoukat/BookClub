@@ -71,7 +71,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 				<SectionHeader
 					title={'Select Dates'}
 					description={
-						'Select the end date the suggesting phase and the end date for voting phase.'
+						'Select the end dates for the suggesting and voting phases.'
 					}
 				/>
 				<CardContent className="card-content flex justify-center p-4 sm:p-6">
