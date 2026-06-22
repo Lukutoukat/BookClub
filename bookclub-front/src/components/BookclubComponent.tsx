@@ -4,7 +4,7 @@ import { PageHeader } from '../components/PageHeader'
 import bookclubService from '@/services/bookclubs'
 import { ButtonDialog } from './ButtonDialog'
 type Bookclub = {
-	id: number
+	id: string
 	name: string
 	invite_code: string
 }
