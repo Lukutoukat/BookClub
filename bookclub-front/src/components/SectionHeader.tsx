@@ -1,9 +1,9 @@
 import { CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 
 interface SectionHeaderProps {
-  title: string
-  description?: string
-  children?: React.ReactNode
+	title: string
+	description?: string
+	children?: React.ReactNode
 }
 
 /**
@@ -13,17 +13,15 @@ interface SectionHeaderProps {
  * @returns
  */
 export const SectionHeader = ({ title, description, children }: SectionHeaderProps) => {
-  return (
-    <CardHeader className="card-header flex flex-row items-start justify-between gap-4">
-      <div className="flex flex-col">
-        <CardTitle className="text-xl sm:text-2xl leading-tight">{title}</CardTitle>
-        {description && (
-          <CardDescription className="text-xs sm:text-sm leading-snug text-muted-foreground">
-            {description}
-          </CardDescription>
-        )}
-      </div>
-      {children && <div className="shrink-0">{children}</div>}
-    </CardHeader>
-  )
+	return (
+		<CardHeader className="card-header section-header">
+			<div className="flex flex-col">
+				<CardTitle className="section-title">{title}</CardTitle>
+				{description && (
+					<CardDescription className="section-description">{description}</CardDescription>
+				)}
+			</div>
+			{children && <div className="shrink-0">{children}</div>}
+		</CardHeader>
+	)
 }

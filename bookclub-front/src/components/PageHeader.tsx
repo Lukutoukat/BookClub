@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom'
 import { ButtonDialog } from './ButtonDialog'
 
 interface PageHeaderProps {
-  badgeText: string
-  title: string
-  description: string
-  buttonText?: string
-  buttonLink?: string
-  buttonOnClick?: () => void
-  afterButtonClick?: 'nothing' | 'alert' | 'confirm'
+	badgeText: string
+	title: string
+	description: string
+	buttonText?: string
+	buttonLink?: string
+	buttonOnClick?: () => void
+	afterButtonClick?: 'nothing' | 'alert' | 'confirm'
 }
 
 /**
@@ -23,52 +23,54 @@ interface PageHeaderProps {
  * @returns
  */
 export const PageHeader = ({
-  badgeText,
-  title,
-  description,
-  buttonText,
-  buttonLink,
-  buttonOnClick,
-  afterButtonClick = 'nothing'
+	badgeText,
+	title,
+	description,
+	buttonText,
+	buttonLink,
+	buttonOnClick,
+	afterButtonClick = 'nothing'
 }: PageHeaderProps) => {
-  return (
-    <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div className="max-w-2xl space-y-2">
-        <Badge
-          variant="secondary"
-          className="w-fit uppercase tracking-[0.2em] text-[0.7rem] sm:text-xs"
-        >
-          {badgeText}
-        </Badge>
-        <div className="space-y-1 sm:space-y-2">
-          <h1 className="font-heading text-3xl leading-none sm:text-5xl">{title}</h1>
-          <p className="max-w-xl text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">
-            {description}
-          </p>
-        </div>
-      </div>
-      {buttonText ? (
-        afterButtonClick === 'nothing' ? (
-          buttonLink ? (
-            <Button asChild variant="outline" className="w-full sm:w-auto">
-              <Link to={buttonLink}>{buttonText}</Link>
-            </Button>
-          ) : (
-            <Button variant="outline" className="w-full sm:w-auto" onClick={buttonOnClick}>
-              {buttonText}
-            </Button>
-          )
-        ) : (
-          <ButtonDialog
-            buttonOnClick={buttonOnClick}
-            buttonText={buttonText}
-            alertDialogCancelText=""
-            alertDialogText="Copied invite code!"
-            alertDialogDescription="The invite code is copied to the clipboard and can be pasted and shared to friends."
-            buttonVariant="outline"
-          />
-        )
-      ) : null}
-    </header>
-  )
+	return (
+		<header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+			<div className="w-full space-y-2 max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+				<Badge
+					variant="secondary"
+					className="w-fit uppercase tracking-[0.2em] text-[0.7rem] sm:text-xs"
+				>
+					{badgeText}
+				</Badge>
+				<div className="space-y-2 sm:space-y-4">
+					<h1 className="font-heading leading-none text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+						{title}
+					</h1>
+					<p className="text-muted-foreground text-xs leading-relaxed sm:text-sm sm:leading-normal md:text-base md:leading-6 lg:text-lg max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+						{description}
+					</p>
+				</div>
+			</div>
+			{buttonText ? (
+				afterButtonClick === 'nothing' ? (
+					buttonLink ? (
+						<Button asChild variant="outline" className="w-full sm:w-auto">
+							<Link to={buttonLink}>{buttonText}</Link>
+						</Button>
+					) : (
+						<Button variant="outline" className="w-full sm:w-auto" onClick={buttonOnClick}>
+							{buttonText}
+						</Button>
+					)
+				) : (
+					<ButtonDialog
+						buttonOnClick={buttonOnClick}
+						buttonText={buttonText}
+						alertDialogCancelText=""
+						alertDialogText="Copied invite code!"
+						alertDialogDescription="The invite code is copied to the clipboard and can be pasted and shared to friends."
+						buttonVariant="outline"
+					/>
+				)
+			) : null}
+		</header>
+	)
 }
