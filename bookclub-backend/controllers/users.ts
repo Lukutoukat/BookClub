@@ -39,6 +39,14 @@ userRouter.post('/', async (req: Request<unknown, unknown, User>, res: Response)
       return
     }
 
+    const existingEmail = await prisma.user.findFirst({
+      where: { email: newUser.email }
+    })
+    if (existingEmail) {
+      res.status(400).json({ error: 'Email already exists' })
+      return
+    }
+
     const saltRounds = 10
     const password_hash = await bcrypt.hash(newUser.password, saltRounds)
 

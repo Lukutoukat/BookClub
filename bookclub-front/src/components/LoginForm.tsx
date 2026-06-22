@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useNavigate } from 'react-router-dom'
+//import { useNavigate } from 'react-router-dom'
 
 type LoginFormProps = {
   username: string
@@ -20,7 +20,7 @@ const LoginForm = ({
   handleLogin,
   message
 }: LoginFormProps) => {
-  const navigate = useNavigate()
+  //const navigate = useNavigate()
   return (
     <>
       <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
@@ -70,11 +70,13 @@ const LoginForm = ({
           </Button>
         </div>
       </form>
+      {/* There is no functionality for "Forgot password yet". The button leads to an empty page.
       <div className="flex flex-col gap-3 border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
         <Button type="button" onClick={() => navigate('/passwordreset')}>
           Forgot password?
         </Button>
       </div>
+      */}
     </>
   )
 }

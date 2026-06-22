@@ -13,4 +13,10 @@ const getResults = (cycleId: string) => {
   return axios.get<BookResult[]>(`${baseUrl}/${cycleId}`, getAuthConfig()).then((res) => res.data)
 }
 
-export default { getResults }
+const getWinner = (cycleId: string) => {
+  return axios
+    .get<BookResult>(`${baseUrl}/${cycleId}/winner`, getAuthConfig())
+    .then((res) => res.data)
+}
+
+export default { getResults, getWinner }
