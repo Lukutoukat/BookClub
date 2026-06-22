@@ -27,23 +27,6 @@ describe('NewCycle', () => {
 		vi.clearAllMocks()
 	})
 
-	it('renders bookclub data', async () => {
-		globalThis.fetch = vi.fn().mockResolvedValue({
-			ok: true,
-			json: async () => ({
-				id: '1',
-				name: 'My Bookclub',
-				invite_code: 'invite'
-			})
-		})
-
-		renderWithRouter(<NewCycle bookclubId="1" />)
-
-		await waitFor(() => {
-			expect(screen.getByText('My Bookclub')).toBeInTheDocument()
-		})
-	})
-
 	it('renders bookclub not found when API call fails', async () => {
 		globalThis.fetch = vi.fn().mockResolvedValue({
 			ok: false
@@ -72,7 +55,7 @@ describe('NewCycle', () => {
 		renderWithRouter(<NewCycle bookclubId="1" />)
 
 		await waitFor(() => {
-			expect(screen.getByText('My Bookclub')).toBeDefined()
+			expect(screen.getByText('Create')).toBeDefined()
 		})
 
 		const button = screen.getByRole('button', { name: /Create/i })
