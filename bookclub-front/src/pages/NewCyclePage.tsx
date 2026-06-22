@@ -4,7 +4,7 @@ import { EndPhase } from '@/components/EndPhase'
 import { PageHeader } from '@/components/PageHeader'
 import { useNavigate } from 'react-router-dom'
 import bookClubService, { type BookClub } from '@/services/bookclubs'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Grid } from '@/components/Grid'
 
 const NewCyclePage = () => {
@@ -14,7 +14,10 @@ const NewCyclePage = () => {
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (!bookclubId) return
+		if (!bookclubId) {
+			void navigate('/')
+			return
+		}
 
 		setIsLoading(true)
 
