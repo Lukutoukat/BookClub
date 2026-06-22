@@ -94,7 +94,7 @@ const BookItem = ({
 								</Badge>
 							)}
 
-							{!isReadOnly && !isVotingPhase && (
+							{!isReadOnly && !isVotingPhase && (book?.owned_by_user ?? true) && (
 								<Button
 									type="button"
 									variant="secondary"
@@ -109,7 +109,7 @@ const BookItem = ({
 								</Button>
 							)}
 
-							{!isReadOnly && !isVotingPhase && (
+							{!isReadOnly && !isVotingPhase && (book?.owned_by_user ?? true) && (
 								<ButtonDialog
 									buttonOnClick={handleDelete}
 									disabled={isDeleting}
