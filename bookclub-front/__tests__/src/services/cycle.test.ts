@@ -21,18 +21,6 @@ afterEach(() => {
 	vi.useRealTimers()
 })
 
-test('getAll returns all cycles', async () => {
-	const mockCycles = [mockCycle]
-
-	mockedAxios.get.mockResolvedValue({
-		data: mockCycles
-	})
-
-	const result = await cycle.getAll()
-
-	expect(result).toEqual(mockCycles)
-})
-
 describe('getLatestCycle returns the latest cycle', () => {
 	it('returns proposal phase when proposalEnd is in the future', async () => {
 		const mockCycleWithDates = {

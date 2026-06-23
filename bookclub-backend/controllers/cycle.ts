@@ -11,49 +11,76 @@ interface CycleRequest {
   votingEnd?: Date
 }
 
-cycleRouter.get('/', async (_req: Request, res: Response) => {
-  try {
-    const result = await prisma.cycle.findMany()
-    res.json(result)
-  } catch (error) {
-    console.error('GET /api/cycles error:', error)
-    res.status(500).json({ error: 'database error' })
-  }
-})
+cycleRouter.get('/:id', userExtractor, async (req: Request<{ id: string }>, res: Response) => {
+  const { id: bookclubId } = req.params
 
-cycleRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params
+  if (!req.user) {
+    return res.status(401).json({ error: 'user not found' })
+  }
+
   try {
-    const result = await prisma.cycle.findMany({
+    const membership = await prisma.bookClubMembers.findFirst({
       where: {
-        bookclub_id: id
+        bookclub_id: bookclubId,
+        user_id: req.user.id
+      }
+    })
+
+    if (!membership) {
+      return res.status(403).json({
+        error: 'User is not a member of this book club'
+      })
+    }
+
+    const cycles = await prisma.cycle.findMany({
+      where: {
+        bookclub_id: bookclubId
       },
       orderBy: {
         createdAt: 'desc'
       }
     })
-    res.json(result)
+
+    return res.json(cycles)
   } catch (error) {
     console.error('GET /api/cycles/:id error:', error)
-    res.status(500).json({ error: 'database error' })
+    return res.status(500).json({ error: 'database error' })
   }
 })
 
-cycleRouter.get('/latest/:id', async (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params
+cycleRouter.get('/latest/:id', userExtractor, async (req, res) => {
+  const { id: bookclubId } = req.params
+
+  if (!req.user) {
+    return res.status(401).json({ error: 'user not found' })
+  }
   try {
-    const result = await prisma.cycle.findFirst({
+    const membership = await prisma.bookClubMembers.findFirst({
       where: {
-        bookclub_id: id
+        bookclub_id: bookclubId as string,
+        user_id: req.user.id
+      }
+    })
+
+    if (!membership) {
+      return res.status(403).json({
+        error: 'User is not a member of this book club'
+      })
+    }
+
+    const cycle = await prisma.cycle.findFirst({
+      where: {
+        bookclub_id: bookclubId as string
       },
       orderBy: {
         createdAt: 'desc'
       }
     })
-    res.json(result)
-  } catch (error) {
-    console.error('GET /api/cycles/latest/:id error:', error)
-    res.status(500).json({ error: 'database error' })
+
+    return res.json(cycle)
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ error: 'database error' })
   }
 })
 

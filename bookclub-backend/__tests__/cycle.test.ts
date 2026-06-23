@@ -144,40 +144,9 @@ describe('/api/cycles', () => {
   })
 
   describe('GET', () => {
-    it('returns cycles', async () => {
-      const mockcycle = {
-        id: '1',
-        bookclub_id: '1',
-        createdAt: '2026-06-11T13:17:37.803Z',
-        proposalEnd: '2026-06-25T13:17:35.775Z',
-        votingEnd: '2026-07-09T13:17:35.776Z'
-      }
-
-      ;(prisma.cycle.findMany as jest.Mock).mockResolvedValue(mockcycle)
-
-      const response = await request(app).get('/api/cycles')
-
-      expect(response.status).toBe(200)
-      expect(response.body).toEqual({
-        id: '1',
-        bookclub_id: '1',
-        createdAt: '2026-06-11T13:17:37.803Z',
-        proposalEnd: '2026-06-25T13:17:35.775Z',
-        votingEnd: '2026-07-09T13:17:35.776Z'
-      })
-      expect(prisma.cycle.findMany).toHaveBeenCalledTimes(1)
-    })
-
-    it('returns 500 if get all fails', async () => {
-      ;(prisma.cycle.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
-
-      const response = await request(app).get('/api/cycles')
-
-      expect(response.status).toBe(500)
-      expect(response.body).toEqual({ error: 'database error' })
-    })
-
     it('returns the latest cycle', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({})
+
       const mockcycle = {
         id: '1',
         bookclub_id: '1',
@@ -188,7 +157,7 @@ describe('/api/cycles', () => {
 
       ;(prisma.cycle.findFirst as jest.Mock).mockResolvedValue(mockcycle)
 
-      const response = await request(app).get('/api/cycles/latest/1')
+      const response = await request(app).get('/api/cycles/latest/1').set(authHeaders())
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
@@ -204,7 +173,7 @@ describe('/api/cycles', () => {
     it('returns 500, if latest cycle not found', async () => {
       ;(prisma.cycle.findFirst as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-      const response = await request(app).get('/api/cycles/latest/1')
+      const response = await request(app).get('/api/cycles/latest/1').set(authHeaders())
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
