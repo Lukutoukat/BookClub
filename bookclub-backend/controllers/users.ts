@@ -1,7 +1,6 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
 import bcrypt from 'bcrypt'
-import userExtractor from '../middleware/userExtractor.ts'
 const userRouter = express.Router()
 
 interface User {
@@ -66,18 +65,6 @@ userRouter.post('/', async (req: Request<unknown, unknown, User>, res: Response)
     res.json(user)
   } catch (error) {
     console.error('POST /api/users error:', error)
-    res.status(500).json({ error: 'database error' })
-  }
-})
-
-userRouter.get('/', userExtractor, async (_req: Request, res: Response) => {
-  try {
-    const users = await prisma.user.findMany()
-
-    res.json(users)
-  } catch (error) {
-    console.error('GET /api/users error:', error)
-
     res.status(500).json({ error: 'database error' })
   }
 })
