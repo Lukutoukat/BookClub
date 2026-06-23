@@ -8,29 +8,29 @@ vi.mock('axios')
 const mockedAxios = axios as Mocked<typeof axios>
 
 const mockMember = {
-  user_role: 1,
-  invite_code: 'invite',
-  bookclub_id: 'bookclub_1'
+	user_role: 1,
+	invite_code: 'invite',
+	bookclub_id: 'bookclub_1'
 }
 
 test('create returns created bookclubmember', async () => {
-  mockedAxios.post.mockResolvedValue({
-    data: mockMember
-  })
+	mockedAxios.post.mockResolvedValue({
+		data: mockMember
+	})
 
-  const result = await bookclubmembers.create(mockMember)
+	const result = await bookclubmembers.create(mockMember)
 
-  expect(result).toEqual(mockMember)
+	expect(result).toEqual(mockMember)
 })
 
 test('get returns all bookclubmembers', async () => {
-  const mockMembers = [mockMember]
+	const mockMembers = [mockMember]
 
-  mockedAxios.get.mockResolvedValue({
-    data: mockMembers
-  })
+	mockedAxios.get.mockResolvedValue({
+		data: mockMembers
+	})
 
-  const result = await bookclubmembers.get()
+	const result = await bookclubmembers.get()
 
-  expect(result).toEqual(mockMembers)
+	expect(result).toEqual(mockMembers)
 })

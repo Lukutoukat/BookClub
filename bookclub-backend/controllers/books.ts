@@ -23,6 +23,9 @@ bookRouter.get('/', userExtractor, async (req: Request, res: Response) => {
       const result = await prisma.book.findMany({
         where: {
           user_id: req.user.id
+        },
+        orderBy: {
+          createdAt: 'desc'
         }
       })
       res.json(result)

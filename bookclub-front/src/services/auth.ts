@@ -7,14 +7,14 @@ export const setToken = (newToken: string) => {
 }
 
 export const getAuthConfig = () => {
-  // return getuserstoken()
-  const token = getToken()
+	// return getuserstoken()
+	const token = getToken()
 
-  return {
-    headers: {
-      Authorization: token ? `Bearer ${token}` : null
-    }
-  }
+	return {
+		headers: {
+			Authorization: token ? `Bearer ${token}` : null
+		}
+	}
 }
 
 export const clearToken = () => {

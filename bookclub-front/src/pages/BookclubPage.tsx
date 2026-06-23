@@ -7,103 +7,100 @@ import cycleService from '@/services/cycle'
 import { type CycleWithStatus } from '@/services/cycle'
 import { SuggestBook } from '@/components/SuggestBook'
 import bookclubmembersService from '@/services/bookclubmembers'
+import { Column } from '@/components/Column'
 import CycleHistoryList from '@/components/CycleHistoryList'
 
 const BookclubPage = () => {
-  const { bookclubId } = useParams<{ bookclubId: string }>()
-  const bookListRef = useRef<BookListHandle>(null)
+	const { bookclubId } = useParams<{ bookclubId: string }>()
+	const bookListRef = useRef<BookListHandle>(null)
 
-  const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
-  const [loading, setLoading] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
+	const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
+	const [loading, setLoading] = useState(true)
+	const [isAdmin, setIsAdmin] = useState(false)
 
-  useEffect(() => {
-    const fetchCycle = async () => {
-      try {
-        const cycle = await cycleService.getLatestCycle(bookclubId as string)
-        setCurrentCycle(cycle)
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setLoading(false)
-      }
-    }
+	useEffect(() => {
+		const fetchCycle = async () => {
+			try {
+				const cycle = await cycleService.getLatestCycle(bookclubId as string)
+				setCurrentCycle(cycle)
+			} catch (error) {
+				console.log(error)
+			} finally {
+				setLoading(false)
+			}
+		}
 
-    const checkAdminStatus = async () => {
-      try {
-        const memberships = await bookclubmembersService.get()
-        const isAdminMember = memberships.some(
-          (member) => member.bookclub_id === bookclubId && member.user_role === 0
-        )
-        setIsAdmin(isAdminMember)
-      } catch (error) {
-        console.error('Failed to check admin status:', error)
-        setIsAdmin(false)
-      }
-    }
+		const checkAdminStatus = async () => {
+			try {
+				const memberships = await bookclubmembersService.get()
+				const isAdminMember = memberships.some(
+					(member) => member.bookclub_id === bookclubId && member.user_role === 0
+				)
+				setIsAdmin(isAdminMember)
+			} catch (error) {
+				console.error('Failed to check admin status:', error)
+				setIsAdmin(false)
+			}
+		}
 
-    if (bookclubId) {
-      void fetchCycle()
-      void checkAdminStatus()
-    }
-  }, [bookclubId])
+		if (bookclubId) {
+			void fetchCycle()
+			void checkAdminStatus()
+		}
+	}, [bookclubId])
 
-  const handleBookAdded = async () => {
-    await bookListRef.current?.reload()
-  }
+	const handleBookAdded = async () => {
+		await bookListRef.current?.reload()
+	}
 
-  if (loading) return null
+	if (loading) return null
 
-  // not in a book club
-  if (!bookclubId) return <div>Missing bookclub id</div>
+	// not in a book club
+	if (!bookclubId) return <div>Missing bookclub id</div>
 
-  return (
-    <>
-      <BookclubComponent bookclubId={bookclubId} />
+	return (
+		<>
+			<BookclubComponent bookclubId={bookclubId} />
+			<Column>
+				{/* PROPOSAL PHASE */}
+				{currentCycle?.phase === 'proposal' && (
+					<>
+						<SuggestBook
+							onBookAdded={handleBookAdded}
+							bookclubId={bookclubId}
+							cycle_id={currentCycle.id}
+						/>
+						<BookList
+							ref={bookListRef}
+							show="proposedBooks"
+							cycleId={currentCycle.id}
+							description="Suggested books "
+							emptyMessage="No books suggested yet. Be the first to add one!"
+						/>
+					</>
+				)}
 
-      {/* PROPOSAL PHASE */}
-      {currentCycle?.phase === 'proposal' && (
-        <>
-          <SuggestBook
-            onBookAdded={handleBookAdded}
-            bookclubId={bookclubId}
-            cycle_id={currentCycle.id}
-          />
-          <BookList
-            ref={bookListRef}
-            show="proposedBooks"
-            cycleId={currentCycle.id}
-            description="Suggested books: "
-            emptyMessage="No books suggested yet. Be the first to add one!"
-          />
-        </>
-      )}
+				{/* VOTING PHASE */}
+				{currentCycle?.phase === 'voting' && (
+					<>
+						<BookList ref={bookListRef} show="votedBooks" cycleId={currentCycle.id} />
+					</>
+				)}
 
-      {/* VOTING PHASE */}
-      {currentCycle?.phase === 'voting' && (
-        <>
-          <BookList
-            ref={bookListRef}
-            show="votedBooks"
-            cycleId={currentCycle.id}
-            description="Suggested books: "
-          />
-        </>
-      )}
+				{/* RESULTS PHASE */}
+				{currentCycle?.phase === 'over' && (
+					<>
+						<BookList ref={bookListRef} show="over" cycleId={currentCycle.id} />
+					</>
+				)}
 
-      {/* RESULTS PHASE */}
-      {currentCycle?.phase === 'over' && (
-        <>
-          <BookList ref={bookListRef} show="over" cycleId={currentCycle.id} />
-        </>
-      )}
+				<CycleHistoryList bookclubId={bookclubId} />
 
-      <CycleHistoryList bookclubId={bookclubId} />
-
-      {/* Admin settings */}
-      {isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
-    </>
-  )
+				{/* Admin settings */}
+				{isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}
+			</Column>
+		</>
+	)
 }
 
 export default BookclubPage
