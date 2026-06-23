@@ -43,7 +43,7 @@ const getLatestCycle = (bookclubId: string) => {
 }
 
 const endLatestCyclePhase = (bookclubId: string) => {
-	return axios.get<CycleWithStatus>(`${baseUrl}/latest/${bookclubId}`).then((res) => {
+	return axios.get<CycleWithStatus>(`${baseUrl}/latest/${bookclubId}`, getAuthConfig()).then((res) => {
 		const cycle = res.data
 		const now = new Date()
 

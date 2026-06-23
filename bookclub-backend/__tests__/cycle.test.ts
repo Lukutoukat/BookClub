@@ -144,6 +144,64 @@ describe('/api/cycles', () => {
   })
 
   describe('GET', () => {
+    it('returns cycles for a bookclub', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+        user_id: '1'
+      })
+
+      const mockCycles = [
+        {
+          id: '1',
+          bookclub_id: '1',
+          createdAt: '2026-06-11T13:17:37.803Z'
+        },
+        {
+          id: '2',
+          bookclub_id: '1',
+          createdAt: '2026-06-10T13:17:37.803Z'
+        }
+      ]
+
+      ;(prisma.cycle.findMany as jest.Mock).mockResolvedValue(mockCycles)
+
+      const response = await request(app).get('/api/cycles/1').set(authHeaders())
+
+      expect(prisma.bookClubMembers.findFirst).toHaveBeenCalledTimes(1)
+      expect(prisma.bookClubMembers.findFirst).toHaveBeenCalledWith({
+        where: {
+          bookclub_id: '1',
+          user_id: '1'
+        }
+      })
+
+      expect(prisma.cycle.findMany).toHaveBeenCalledTimes(1)
+      expect(prisma.cycle.findMany).toHaveBeenCalledWith({
+        where: {
+          bookclub_id: '1'
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual(mockCycles)
+    })
+
+    it('returns 500 if database fails', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+        user_id: '1'
+      })
+      ;(prisma.cycle.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+      const response = await request(app).get('/api/cycles/1').set(authHeaders())
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({
+        error: 'database error'
+      })
+    })
+
     it('returns the latest cycle', async () => {
       ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({})
 
