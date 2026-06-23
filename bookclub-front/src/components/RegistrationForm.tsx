@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { useNavigate } from 'react-router-dom'
-import Notification from './successMessageDisplay'
+import SuccessMessageDisplay from './successMessageDisplay'
 
 const emptyUser: CreateUser = {
   email: '',
@@ -20,7 +20,7 @@ const RegistrationForm = () => {
   const [newUser, setNewUser] = useState<CreateUser>(emptyUser)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState<string | null>(null)
-  const [confirmation, setConfirmation] = useState<string | null>(null)
+  const [confirmation, setConfirmation] = useState<string | undefined>(undefined)
   const navigate = useNavigate()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -157,7 +157,7 @@ const RegistrationForm = () => {
               </FieldContent>
             </Field>
           </div>
-          <Notification message={confirmation}/>
+          <SuccessMessageDisplay message={confirmation} />
           {message && (
             <div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded text-primary text-sm">
               {message}

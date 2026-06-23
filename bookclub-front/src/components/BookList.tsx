@@ -208,7 +208,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
             </div>
           )}
           <CardContent className="card-content">
-          <SuccessMessageDisplay message={confirmation} remove={() => setConfirmation(undefined)} />
+          <SuccessMessageDisplay message={confirmation} />
             <div className="space-y-3">
               {books.map((book) => (
                 <BookItem
