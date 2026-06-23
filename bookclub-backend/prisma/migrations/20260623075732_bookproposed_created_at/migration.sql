@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "BookProposed" ADD COLUMN     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP;

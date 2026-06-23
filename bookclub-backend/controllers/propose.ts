@@ -66,6 +66,8 @@ proposeRouter.post('/:id', userExtractor, async (req: Request, res: Response) =>
         },
         include: {
           Book: true
+        }, orderBy: {
+          createdAt: 'desc'
         }
       })
 
