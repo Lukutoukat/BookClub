@@ -42,7 +42,9 @@ const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
 			<Card className="card-base">
 				<SectionHeader title="Your book clubs" description={description} />
 				<CardContent className="card-content">
-					<div className="text-sm text-muted-foreground text-center py-6">Loading book clubs...</div>
+					<div className="text-sm text-muted-foreground text-center py-6">
+						Loading book clubs...
+					</div>
 				</CardContent>
 			</Card>
 		)

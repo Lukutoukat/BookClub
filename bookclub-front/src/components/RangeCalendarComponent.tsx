@@ -70,9 +70,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 			<Card className="card-base w-full max-w-full overflow-hidden">
 				<SectionHeader
 					title={'Select Dates'}
-					description={
-						'Select the end dates for the suggesting and voting phases.'
-					}
+					description={'Select the end dates for the suggesting and voting phases.'}
 				/>
 				<CardContent className="card-content flex justify-center p-4 sm:p-6">
 					<div className="w-full flex justify-center overflow-visible">

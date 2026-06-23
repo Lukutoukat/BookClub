@@ -190,11 +190,14 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 								</p>
 								<p>
 									<span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
-									points 
+									points
 								</p>
 								<br></br>
 								<p>
-									<span>Votes are saved automatically. You can change your votes during the voting phase.</span>
+									<span>
+										Votes are saved automatically. You can change your votes during the voting
+										phase.
+									</span>
 								</p>
 							</div>
 						)}
