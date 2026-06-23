@@ -19,6 +19,7 @@ model Book {
   language     String?
   genre        String?
   user_id      String?
+  createdAt    DateTime?      @default(now())
   user         User?          @relation(fields: [user_id], references: [id])
   BookProposed BookProposed[]
   BookSaved    BookSaved[]
