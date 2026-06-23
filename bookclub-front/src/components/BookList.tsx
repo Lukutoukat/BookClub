@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
 import BookForm from './BookForm'
 import BookItem from './BookItem'
-import Notification from './Notification'
+import SuccessMessageDisplay from './successMessageDisplay'
 
 export interface BookListHandle {
   reload: () => Promise<void>
@@ -40,7 +40,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
     const isReadOnly = show === 'over'
     const [votes, setVotes] = useState<VoteFields[]>([])
     const [refreshOnVote, setRefreshOnVote] = useState(false)
-    const [confirmation, setConfirmation] = useState<string | null>(null)
+    const [confirmation, setConfirmation] = useState<string | undefined>(undefined)
 
     const votesByProposalId = votes.reduce(
       (acc, vote) => {
@@ -87,10 +87,9 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
     )
     useEffect(() => {
       if (!confirmation) return
-      const t = setTimeout(() => setConfirmation(null), 5000)
+      const t = setTimeout(() => setConfirmation(undefined), 5000)
       return () => clearTimeout(t)
     }, [confirmation])
-
 
     useEffect(() => {
       void loadBooks()
@@ -120,11 +119,13 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
       try {
         if (voteId) {
           await voteService.update(voteId, { proposal_id: proposalId, weight })
+		  setConfirmation('Vote updated succesfully!')
         } else {
           await voteService.create({
             proposal_id: proposalId,
             weight
           })
+          setConfirmation('Vote submitted succesfully!')
           setRefreshOnVote(!refreshOnVote)
         }
       } catch {
@@ -192,7 +193,6 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
         )}
         <Card className="card-base">
           <SectionHeader title={`${description} ${bookCount}`} />
-          <Notification message={confirmation} />
           {isVotingPhase && (
             <div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
               <p>
@@ -208,6 +208,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
             </div>
           )}
           <CardContent className="card-content">
+          <SuccessMessageDisplay message={confirmation} remove={() => setConfirmation(undefined)} />
             <div className="space-y-3">
               {books.map((book) => (
                 <BookItem

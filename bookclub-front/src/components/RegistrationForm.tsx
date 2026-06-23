@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { useNavigate } from 'react-router-dom'
-import Notification from './Notification'
+import Notification from './successMessageDisplay'
 
 const emptyUser: CreateUser = {
   email: '',
