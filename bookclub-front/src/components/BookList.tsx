@@ -152,7 +152,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 		if (books.length === 0) {
 			return (
 				<Card className="card-base">
-					<SectionHeader title={`${description} ${bookCount}`} />
+					<SectionHeader title={`${description} (${bookCount})`} />
 					<CardContent className="card-content">
 						<div className="text-sm text-muted-foreground text-center py-6">{emptyMessage}</div>
 					</CardContent>

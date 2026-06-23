@@ -74,7 +74,7 @@ const BookclubPage = () => {
 							ref={bookListRef}
 							show="proposedBooks"
 							cycleId={currentCycle.id}
-							description="Suggested books: "
+							description="Suggested books "
 							emptyMessage="No books suggested yet. Be the first to add one!"
 						/>
 					</>
