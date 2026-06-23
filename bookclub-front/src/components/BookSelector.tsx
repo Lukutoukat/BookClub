@@ -177,23 +177,26 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				</div>
 				{/* The Dropdown list (absolutely positioned below the input) */}
 				{open && (
-					<CommandList>
+					<CommandList className="mx-0 px-0 w-full">
 						{isLoading ? (
 							<CommandEmpty>Loading books...</CommandEmpty>
 						) : (
 							<>
 								<CommandEmpty>No books found.</CommandEmpty>
-								<CommandGroup>
+								<CommandGroup className="mx-0 px-0 w-full">
 									{books.map((book) => (
 										<CommandItem
 											key={book.id}
 											value={`${book.name} ${book.author}`}
 											onSelect={() => handleSelect(book.id)}
+                      className="px-0 pl-4 pr-0 mx-0 w-full"
 										>
-											<div className="flex w-full flex-col items-start gap-1">
-												<span className="truncate font-medium">{book.name}</span>
+											<div className="flex flex-1 flex-col w-full min-w-0 gap-0.5 px-0 mx-0">
+												<span className="line-clamp-2 whitespace-normal break-words font-medium text-sm leading-tight px-0 mx-0 w-full">
+													{book.name}
+												</span>
 												{book.author && (
-													<span className="truncate text-xs text-muted-foreground">
+													<span className="line-clamp-1 whitespace-normal text-xs text-muted-foreground leading-tight px-0 mx-0 w-full">
 														{book.author}
 													</span>
 												)}
