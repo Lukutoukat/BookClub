@@ -39,12 +39,12 @@ const BookclubForm = () => {
 			void navigate(`/club/${created.id}`)
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
-			setErrors([`Failed to create bookclub: ${errorMessage}`])
+			setErrors([`Failed to create book club: ${errorMessage}`])
 		}
 	}
 	return (
 		<Card className="card-base">
-			<SectionHeader title="Create a new bookclub" description="" />
+			<SectionHeader title="Create a new book club" description="" />
 
 			<CardContent className="card-content">
 				{errors.length > 0 && (
@@ -76,7 +76,7 @@ const BookclubForm = () => {
 
 					<div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
 						<p className="text-xs text-muted-foreground">
-							Double-check for spelling mistakes before creating a new bookclub.
+							Double-check for spelling mistakes before creating a new book club.
 						</p>
 						<Button type="submit" size="lg" className="button-full-sm-auto">
 							Create

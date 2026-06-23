@@ -32,7 +32,7 @@ export const PageHeader = ({
 	afterButtonClick = 'nothing'
 }: PageHeaderProps) => {
 	return (
-		<header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+		<header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8 2xl:mb-16">
 			<div className="w-full space-y-2 max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
 				<Badge
 					variant="secondary"

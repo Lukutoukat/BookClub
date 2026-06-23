@@ -113,7 +113,7 @@ const RegistrationForm = () => {
 										value={newUser.name}
 										onChange={handleChange}
 										autoComplete="name"
-										placeholder="Your name"
+										placeholder="Username"
 										required
 									/>
 								</FieldContent>

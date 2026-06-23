@@ -14,6 +14,7 @@ export interface BookFields {
 	language?: string
 	genre?: string
 	proposal_id?: string
+	owned_by_user?: boolean
 }
 
 export type Book = BookFields

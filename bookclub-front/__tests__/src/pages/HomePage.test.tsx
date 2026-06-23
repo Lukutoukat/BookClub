@@ -42,7 +42,7 @@ describe('HomePage Component Tree', () => {
 		})
 
 		const { rerender } = renderWithRouter(<HomePage />)
-		expect(screen.getByText('Loading bookclubs...')).toBeInTheDocument()
+		expect(screen.getByText('Loading book clubs...')).toBeInTheDocument()
 
 		// Flip hook state to a finished, empty response payload
 		vi.mocked(useGetClubs).mockReturnValue({
@@ -57,9 +57,9 @@ describe('HomePage Component Tree', () => {
 				<HomePage />
 			</BrowserRouter>
 		)
-		expect(screen.queryByText('Loading bookclubs...')).not.toBeInTheDocument()
-		expect(screen.getByText('No bookclubs yet')).toBeInTheDocument()
-		expect(screen.getByText('0 bookclubs')).toBeInTheDocument()
+		expect(screen.queryByText('Loading book clubs...')).not.toBeInTheDocument()
+		expect(screen.getByText('No book clubs yet')).toBeInTheDocument()
+		expect(screen.getByText('0 book clubs')).toBeInTheDocument()
 	})
 
 	// --- SUCCESSFUL RENDERING & NAVIGATION ---
@@ -80,7 +80,7 @@ describe('HomePage Component Tree', () => {
 		renderWithRouter(<HomePage />)
 
 		// Assert headers display calculated amounts
-		expect(screen.getByText('2 bookclubs')).toBeInTheDocument()
+		expect(screen.getByText('2 book clubs')).toBeInTheDocument()
 		expect(screen.getByText('Anteron kirjakerho')).toBeInTheDocument()
 
 		// Click on a specific book club card item and navigate correctly

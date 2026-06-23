@@ -35,14 +35,14 @@ const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
 
 const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
 	const clubCount = bookClubs.length
-	const description = `${clubCount} ${clubCount === 1 ? 'bookclub' : 'bookclubs'}`
+	const description = `${clubCount} ${clubCount === 1 ? 'book club' : 'book clubs'}`
 
 	if (isLoading) {
 		return (
 			<Card className="card-base">
 				<SectionHeader title="Your book clubs" description={description} />
 				<CardContent className="card-content">
-					<div className="text-sm text-muted-foreground text-center py-6">Loading bookclubs...</div>
+					<div className="text-sm text-muted-foreground text-center py-6">Loading book clubs...</div>
 				</CardContent>
 			</Card>
 		)
@@ -66,7 +66,7 @@ const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
 			<Card className="card-base">
 				<SectionHeader title="Your book clubs" description={description} />
 				<CardContent className="card-content">
-					<div className="text-sm text-muted-foreground text-center py-6">No bookclubs yet</div>
+					<div className="text-sm text-muted-foreground text-center py-6">No book clubs yet</div>
 				</CardContent>
 			</Card>
 		)

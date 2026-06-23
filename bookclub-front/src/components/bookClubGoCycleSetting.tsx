@@ -16,7 +16,7 @@ export const bookClubGoCycleSetting = ({ bookclubId }: Props) => {
 					<Link to={`/newcycle/${bookclubId}`}>Manage cycle</Link>
 				</Button>
 				<Button asChild className="flex-1 min-w-0">
-					<Link to="/bookclubsettings">Manage club</Link>
+					<Link to={`/bookclubsettings/${bookclubId}`}>Manage club</Link>
 				</Button>
 			</div>
 		</Card>

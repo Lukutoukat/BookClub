@@ -94,13 +94,7 @@ const BookItem = ({
 								</Badge>
 							)}
 
-							{isReadOnly && isBookResult(book) && (
-								<Badge variant="default" className="font-semibold">
-									{book.score}
-								</Badge>
-							)}
-
-							{!isReadOnly && !isVotingPhase && (
+							{!isReadOnly && !isVotingPhase && (book?.owned_by_user ?? true) && (
 								<Button
 									type="button"
 									variant="secondary"
@@ -115,7 +109,7 @@ const BookItem = ({
 								</Button>
 							)}
 
-							{!isReadOnly && !isVotingPhase && (
+							{!isReadOnly && !isVotingPhase && (book?.owned_by_user ?? true) && (
 								<ButtonDialog
 									buttonOnClick={handleDelete}
 									disabled={isDeleting}
@@ -129,7 +123,6 @@ const BookItem = ({
 								</ButtonDialog>
 							)}
 						</div>
-
 						<div className="flex items-center text-sm text-muted-foreground gap-2">
 							<span className="font-medium text-foreground/70">{book.author}</span>
 							<span>&bull;</span>
@@ -185,44 +178,44 @@ const BookItem = ({
 								</div>
 							</RadioGroup>
 						)}
-					</div>
 
-					{isExpanded && (
-						<div className="mt-2 animate-in fade-in slide-in-from-top-2 duration-300">
-							<Separator className="mb-2 opacity-50" />
-							<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 text-sm">
-								<div>
-									<p className="text-muted-foreground text-xs uppercase tracking-wider mb-2">
-										Language
-									</p>
-									<p className="font-medium text-sm">{book.language}</p>
-								</div>
-								<div>
-									<p className="text-muted-foreground text-xs uppercase tracking-wider mb-2">
-										Pages
-									</p>
-									<p className="font-medium text-sm">{book.pages}</p>
-								</div>
-								{book.isbn && (
-									<div className="col-span-2">
+						{isExpanded && (
+							<div className="mt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+								<Separator className="mb-2 opacity-50" />
+								<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 text-sm">
+									<div>
 										<p className="text-muted-foreground text-xs uppercase tracking-wider mb-2">
-											ISBN
+											Language
 										</p>
-										<p className="font-medium font-mono text-sm">{formatISBN(book.isbn)}</p>
+										<p className="font-medium text-sm">{book.language}</p>
+									</div>
+									<div>
+										<p className="text-muted-foreground text-xs uppercase tracking-wider mb-2">
+											Pages
+										</p>
+										<p className="font-medium text-sm">{book.pages}</p>
+									</div>
+									{book.isbn && (
+										<div className="col-span-2">
+											<p className="text-muted-foreground text-xs uppercase tracking-wider mb-2">
+												ISBN
+											</p>
+											<p className="font-medium font-mono text-sm">{formatISBN(book.isbn)}</p>
+										</div>
+									)}
+								</div>
+
+								{book.comment && (
+									<div className="bg-muted/30 rounded-lg p-4 border border-border/40">
+										<p className="text-sm leading-relaxed text-foreground/80">
+											<span className="font-semibold text-foreground/90 mr-2">Notes:</span>
+											{book.comment}
+										</p>
 									</div>
 								)}
 							</div>
-
-							{book.comment && (
-								<div className="bg-muted/30 rounded-lg p-4 border border-border/40">
-									<p className="text-sm leading-relaxed text-foreground/80">
-										<span className="font-semibold text-foreground/90 mr-2">Notes:</span>
-										{book.comment}
-									</p>
-								</div>
-							)}
-						</div>
-					)}
+						)}
+					</div>
 				</div>
 			</CardContent>
 		</Card>

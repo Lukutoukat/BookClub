@@ -36,7 +36,7 @@ const CycleHistoryList = ({ bookclubId }: Props) => {
 		void loadCycles()
 	}, [bookclubId])
 
-	const description = `Cycles: ${cycles.length}`
+	const description = `Cycles (${cycles.length})`
 
 	return (
 		<Card className="card-base">

@@ -37,7 +37,7 @@ describe('RegistrationForm', () => {
 			expect(screen.getByText('Password')).toBeDefined()
 			expect(screen.getByText('Confirm password')).toBeDefined()
 			expect(screen.getByPlaceholderText('you@example.com')).toBeDefined()
-			expect(screen.getByPlaceholderText('Your name')).toBeDefined()
+			expect(screen.getByPlaceholderText('Username')).toBeDefined()
 			expect(screen.getByPlaceholderText('Secure password')).toBeDefined()
 			expect(screen.getByPlaceholderText('Confirm your password')).toBeDefined()
 			expect(screen.getByText('Create a new account')).toBeDefined()
