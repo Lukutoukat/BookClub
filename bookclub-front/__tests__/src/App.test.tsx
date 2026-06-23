@@ -50,26 +50,8 @@ describe('routes', () => {
 		})
 	})
 
-	test('shows login routes when no users exist', async () => {
-		vi.mocked(userService.getAll).mockResolvedValue([])
-
-		render(<App />)
-
-		await waitFor(() => {
-			expect(screen.queryByText('User Display')).not.toBeInTheDocument()
-		})
-	})
-
-	test('shows login routes when API returns 401', async () => {
-		const error = {
-			response: {
-				status: 401
-			}
-		}
-
-		vi.spyOn(axios, 'isAxiosError').mockReturnValue(true)
-
-		vi.mocked(userService.getAll).mockRejectedValue(error)
+	test('shows login routes when isLoggedIn is false', async () => {
+		vi.mocked(auth.isLoggedIn).mockReturnValue(false)
 
 		render(<App />)
 

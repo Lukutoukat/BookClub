@@ -21,6 +21,7 @@ export const clearToken = () => {
 	localStorage.removeItem('loggedBookappUser')
 }
 
+// This needs to be remade with an api call to check for token validity, temporarily it just checks whether the token exists in localstorage
 export const isLoggedIn = () => {
 	return Boolean(localStorage.getItem('loggedBookappUser'))
 }
