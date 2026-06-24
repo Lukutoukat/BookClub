@@ -49,14 +49,14 @@ const SuccessMessageDisplay = ({ message }: successMessageProps) => {
         }
 			`}
     >
-      <Alert className="flex items-center justify-between gap-4 rounded-2xl border border-emerald-200/80 bg-emerald-50/90 p-4 shadow-lg backdrop-blur-md">
+      <Alert className="flex items-center justify-between gap-4 rounded-2xl border border-emerald-100 bg-emerald-600/70 dark:bg-emerald-800/70 p-4 shadow-lg backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
+          <CheckCircle2 className="h-5 w-5 text-emerald-100 dark:text-emerald-300 shrink-0" />
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <AlertTitle className="font-semibold text-emerald-700 m-0 pb-0 leading-none">
+            <AlertTitle className="font-semibold text-emerald-50 dark:text-emerald-300 m-0 pb-0 leading-none">
               Confirmation:
             </AlertTitle>
-            <AlertDescription className="text-emerald-600 leading-normal">
+            <AlertDescription className="text-emerald-50 dark:text-emerald-300 leading-normal">
               {localMessage}
             </AlertDescription>
           </div>
