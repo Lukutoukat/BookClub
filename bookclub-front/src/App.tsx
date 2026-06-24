@@ -62,29 +62,29 @@ const App = () => {
 		)
 	}
 
-  return (
-    <BrowserRouter>
-      <PageMenu>
-        <PageLayout>
-          <NotificationProvider>
-            <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
-              <Route path="/books" element={<BooksPage />} />
-              <Route path="/create" element={<CreateBookclubPage />} />
-              <Route path="/registration" element={<RegistrationPage />} />
-              <Route path="/club/:bookclubId" element={<BookclubPage />} />
-              <Route path="/newcycle/:bookclubId" element={<NewCyclePage />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="*" element={<Navigate to="/home" replace />} />
-              <Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
-            </Routes>
-			<BottomDescription />
-          </NotificationProvider>
-        </PageLayout>
-      </PageMenu>
-    </BrowserRouter>
-  )
+	return (
+		<BrowserRouter>
+			<PageMenu>
+				<PageLayout>
+					<NotificationProvider>
+						<Routes>
+							<Route path="/" element={<Navigate to="/home" replace />} />
+							<Route path="/books" element={<BooksPage />} />
+							<Route path="/create" element={<CreateBookclubPage />} />
+							<Route path="/registration" element={<RegistrationPage />} />
+							<Route path="/club/:bookclubId" element={<BookclubPage />} />
+							<Route path="/newcycle/:bookclubId" element={<NewCyclePage />} />
+							<Route path="/home" element={<HomePage />} />
+							<Route path="/settings" element={<SettingsPage />} />
+							<Route path="*" element={<Navigate to="/home" replace />} />
+							<Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
+						</Routes>
+						<BottomDescription />
+					</NotificationProvider>
+				</PageLayout>
+			</PageMenu>
+		</BrowserRouter>
+	)
 }
 
 export default App

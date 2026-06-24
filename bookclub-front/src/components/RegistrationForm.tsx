@@ -21,7 +21,7 @@ const RegistrationForm = () => {
 	const [confirmPassword, setConfirmPassword] = useState('')
 	const [message, setMessage] = useState<string | null>(null)
 	const navigate = useNavigate()
-  const { showSuccess } = useNotification()
+	const { showSuccess } = useNotification()
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = event.target

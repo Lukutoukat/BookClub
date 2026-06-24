@@ -4,19 +4,15 @@ import { BrowserRouter } from 'react-router-dom'
 import { NotificationProvider } from '../context/NotificationContext' // Adjust path
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <BrowserRouter>
-      <NotificationProvider>
-        {children}
-      </NotificationProvider>
-    </BrowserRouter>
-  )
+	return (
+		<BrowserRouter>
+			<NotificationProvider>{children}</NotificationProvider>
+		</BrowserRouter>
+	)
 }
 
-const customRender = (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) => render(ui, { wrapper: AllTheProviders, ...options })
+const customRender = (ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) =>
+	render(ui, { wrapper: AllTheProviders, ...options })
 
 export * from '@testing-library/react'
 
