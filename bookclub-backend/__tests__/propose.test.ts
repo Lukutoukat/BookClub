@@ -170,7 +170,8 @@ describe('/api/propose', () => {
         cycle_id: '1',
         book_id: '1',
         Book: {
-          id: '1'
+          id: '1',
+          user_id: '1'
         }
       }
 
@@ -179,24 +180,27 @@ describe('/api/propose', () => {
         id: '1'
       })
 
-      const response = await request(app).post('/api/propose/1')
+      const response = await request(app).post('/api/propose/1').set(authHeaders())
       console.log(response.body)
       expect(response.status).toBe(200)
       expect(response.body).toEqual([
         {
           id: '1',
-          proposal_id: '1'
+          owned_by_user: true,
+          proposal_id: '1',
+          user_id: '1'
         }
       ])
     })
     it('returns 500 if error in filtering books', async () => {
       ;(prisma.bookProposed.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
-      const response = await request(app).post('/api/propose/1')
+      const response = await request(app).post('/api/propose/1').set(authHeaders())
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
     })
   })
+
   describe('GET', () => {
     it('returns proposed books', async () => {
       ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue(mockProposal)
@@ -233,11 +237,31 @@ describe('/api/propose', () => {
       expect(prisma.bookProposed.deleteMany).toHaveBeenCalledWith({
         where: {
           book_id: '1',
-          cycle_id: '1'
+          cycle_id: '1',
+          user_id: '1'
         }
       })
     })
+
+    it('returns 403 if user is not authorized to delete the proposal', async () => {
+      ;(prisma.bookProposed.findFirst as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app).delete('/api/propose/1/1').set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'not authorized to delete this proposal'
+      })
+
+      expect(prisma.bookProposed.findFirst).toHaveBeenCalledTimes(1)
+      expect(prisma.bookProposed.deleteMany).not.toHaveBeenCalled()
+    })
+
     it('returns 500 if deletion fails', async () => {
+      ;(prisma.bookProposed.findFirst as jest.Mock).mockResolvedValue({
+        id: '1',
+        user_id: '1'
+      })
       ;(prisma.bookProposed.deleteMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
       const response = await request(app).delete('/api/propose/1/1').set(authHeaders())

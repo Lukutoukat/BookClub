@@ -5,53 +5,52 @@ import { test, expect, describe, vi, beforeEach } from 'vitest'
 const mockLogout = vi.fn()
 
 vi.mock('@/hooks/useLogin', () => ({
-  useLogin: () => ({
-    logout: mockLogout
-  })
+	useLogin: () => ({
+		logout: mockLogout
+	})
 }))
 
 vi.mock('@/components/ClubSettings', () => ({
-  default: () => <div>Club Settings Component</div>
+	default: () => <div>Club Settings Component</div>
 }))
 
 vi.mock('@/components/AccountSettings', () => ({
-  default: ({ handleLogOut }: any) => (
-    <div>
-      <span>Account Settings Component</span>
-      <button onClick={handleLogOut}>Logout</button>
-    </div>
-  )
+	default: ({ handleLogOut }: any) => (
+		<div>
+			<span>Account Settings Component</span>
+			<button onClick={handleLogOut}>Logout</button>
+		</div>
+	)
 }))
 
 vi.mock('@/components/ThemeSelector', () => ({
-  default: () => <div>Theme Selector Component</div>
+	default: () => <div>Theme Selector Component</div>
 }))
 
 vi.mock('@/components/BottomDescription', () => ({
-  BottomDescription: () => <div>Bottom Description Component</div>
+	BottomDescription: () => <div>Bottom Description Component</div>
 }))
 
 describe('SettingsPage', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+	beforeEach(() => {
+		vi.clearAllMocks()
+	})
 
-  describe('page structure and content', () => {
-    test('renders all settings sections', () => {
-      render(<SettingsPage />)
+	describe('page structure and content', () => {
+		test('renders all settings sections', () => {
+			render(<SettingsPage />)
 
-      expect(screen.getByText('Club Settings Component')).toBeDefined()
-      expect(screen.getByText('Account Settings Component')).toBeDefined()
-      expect(screen.getByText('Theme Selector Component')).toBeDefined()
-      expect(screen.getByText('Bottom Description Component')).toBeDefined()
-    })
+			expect(screen.getByText('Club Settings Component')).toBeDefined()
+			expect(screen.getByText('Account Settings Component')).toBeDefined()
+			expect(screen.getByText('Theme Selector Component')).toBeDefined()
+		})
 
-    test('passes logout function to AccountSettings', async () => {
-      render(<SettingsPage />)
+		test('passes logout function to AccountSettings', async () => {
+			render(<SettingsPage />)
 
-      screen.getByRole('button', { name: 'Logout' }).click()
+			screen.getByRole('button', { name: 'Logout' }).click()
 
-      expect(mockLogout).toHaveBeenCalledTimes(1)
-    })
-  })
+			expect(mockLogout).toHaveBeenCalledTimes(1)
+		})
+	})
 })

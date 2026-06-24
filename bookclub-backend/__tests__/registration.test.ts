@@ -48,6 +48,11 @@ describe('User Registration', () => {
       where: { name: 'antero' }
     })
 
+    // Verify Prisma.user.findFirst was called to check if email exists
+    expect(prisma.user.findFirst).toHaveBeenCalledWith({
+      where: { email: 'antero@example.com' }
+    })
+
     // Verify Prisma.user.create was called with hashed password (not plaintext!)
     expect(prisma.user.create).toHaveBeenCalledWith(
       expect.objectContaining({
