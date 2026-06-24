@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { useNavigate } from 'react-router-dom'
-import SuccessMessageDisplay from './successMessageDisplay'
+import { useNotification } from '@/context/NotificationContext'
 
 const emptyUser: CreateUser = {
 	email: '',
@@ -20,8 +20,8 @@ const RegistrationForm = () => {
 	const [newUser, setNewUser] = useState<CreateUser>(emptyUser)
 	const [confirmPassword, setConfirmPassword] = useState('')
 	const [message, setMessage] = useState<string | null>(null)
-	const [confirmation, setConfirmation] = useState<string | undefined>(undefined)
 	const navigate = useNavigate()
+  const { showSuccess } = useNotification()
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = event.target
@@ -59,7 +59,7 @@ const RegistrationForm = () => {
 			await userService.create(newUser)
 			setNewUser(emptyUser)
 			setConfirmPassword('')
-			setConfirmation('Registration saved.')
+			showSuccess('Registration saved.')
 			await navigate('/login')
 		} catch (err: unknown) {
 			if (err instanceof AxiosError && err.response?.data) {
@@ -157,7 +157,6 @@ const RegistrationForm = () => {
 							</FieldContent>
 						</Field>
 					</div>
-					<SuccessMessageDisplay message={confirmation} />
 					{message && (
 						<div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded text-primary text-sm">
 							{message}

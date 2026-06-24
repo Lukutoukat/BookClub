@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@/utils/test-utils'
 import user from '@testing-library/user-event'
 import RegistrationForm from '@/components/RegistrationForm'
 import userService from '@/services/users'
@@ -15,11 +15,7 @@ describe('RegistrationForm', () => {
 
 	describe('rendering', () => {
 		test('renders all form fields', () => {
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 			expect(screen.getByLabelText('Email address')).toBeDefined()
 			expect(screen.getByLabelText('Username')).toBeDefined()
 			expect(screen.getByLabelText('Password')).toBeDefined()
@@ -27,11 +23,7 @@ describe('RegistrationForm', () => {
 		})
 
 		test('renders labels, placeholders and button', () => {
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 			expect(screen.getByText('Email address')).toBeDefined()
 			expect(screen.getByText('Username')).toBeDefined()
 			expect(screen.getByText('Password')).toBeDefined()
@@ -44,22 +36,14 @@ describe('RegistrationForm', () => {
 		})
 
 		test('renders helper text', () => {
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 			expect(
 				screen.getByText('Double-check the details before creating the account.')
 			).toBeDefined()
 		})
 
 		test('renders form with empty initial values', () => {
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 			const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
 			const nameInput = screen.getByLabelText('Username') as HTMLInputElement
 			const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
@@ -74,22 +58,14 @@ describe('RegistrationForm', () => {
 
 	describe('input attributes', () => {
 		test('inputs have correct types', () => {
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 			expect((screen.getByLabelText('Email address') as HTMLInputElement).type).toBe('email')
 			expect((screen.getByLabelText('Password') as HTMLInputElement).type).toBe('password')
 			expect((screen.getByLabelText('Confirm password') as HTMLInputElement).type).toBe('password')
 		})
 
 		test('inputs have autocomplete attributes', () => {
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 			const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
 			const nameInput = screen.getByLabelText('Username') as HTMLInputElement
 			const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
@@ -102,22 +78,14 @@ describe('RegistrationForm', () => {
 		})
 
 		test('password field has minLength and pattern constraints', () => {
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 			const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
 			expect(passwordInput.minLength).toBe(8)
 			expect(passwordInput.pattern).toBe('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$')
 		})
 
 		test('password field has title attribute with validation guidance', () => {
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 			const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
 			expect(passwordInput.title).toContain('must be at least 8 characters long')
 			expect(passwordInput.title).toContain('uppercase')
@@ -131,11 +99,7 @@ describe('RegistrationForm', () => {
 			vi.mocked(userService.create).mockResolvedValue({} as any)
 
 			const userInstance = user.setup()
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 
 			await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
 			await userInstance.type(screen.getByLabelText('Username'), 'testuser')
@@ -153,11 +117,7 @@ describe('RegistrationForm', () => {
 			vi.mocked(userService.create).mockResolvedValue({} as any)
 
 			const userInstance = user.setup()
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 
 			await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
 			await userInstance.type(screen.getByLabelText('Username'), 'testuser')
@@ -173,11 +133,7 @@ describe('RegistrationForm', () => {
 
 		test('shows error when invalid password is provided', async () => {
 			const userInstance = user.setup()
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 
 			await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
 			await userInstance.type(screen.getByLabelText('Username'), 'testuser')
@@ -201,11 +157,7 @@ describe('RegistrationForm', () => {
 			vi.mocked(userService.create).mockRejectedValue(error)
 
 			const userInstance = user.setup()
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 
 			await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
 			await userInstance.type(screen.getByLabelText('Username'), 'testuser')
@@ -223,11 +175,7 @@ describe('RegistrationForm', () => {
 			vi.mocked(userService.create).mockResolvedValue({} as any)
 
 			const userInstance = user.setup()
-			render(
-				<BrowserRouter>
-					<RegistrationForm />
-				</BrowserRouter>
-			)
+			render(<RegistrationForm />)
 
 			const emailInput = screen.getByLabelText('Email address') as HTMLInputElement
 			const nameInput = screen.getByLabelText('Username') as HTMLInputElement
