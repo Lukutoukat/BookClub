@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@/utils/test-utils'
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { describe, expect, it, vi, beforeEach } from 'vitest'
@@ -19,17 +19,13 @@ vi.mock('react-router-dom', async () => {
 	return { ...actual, useNavigate: () => mockNavigate }
 })
 
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
-
 describe('ClubSettings', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
 	})
 
 	it('renders join club form and create club link', () => {
-		renderWithRouter(<ClubSettings />)
+		render(<ClubSettings />)
 
 		expect(screen.getByText('Clubs')).toBeDefined()
 		expect(screen.getByLabelText(/join with code/i)).toBeDefined()
@@ -42,7 +38,7 @@ describe('ClubSettings', () => {
 	it('shows validation message when invite code is not 5 characters', async () => {
 		const user = userEvent.setup()
 
-		renderWithRouter(<ClubSettings />)
+		render(<ClubSettings />)
 
 		await user.type(screen.getByLabelText(/join with code/i), 'abc')
 		await user.click(screen.getByRole('button', { name: /join/i }))
@@ -57,7 +53,7 @@ describe('ClubSettings', () => {
 
 		vi.mocked(bookclubmembersService.create).mockResolvedValue({} as any)
 
-		renderWithRouter(<ClubSettings />)
+		render(<ClubSettings />)
 
 		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
@@ -82,7 +78,7 @@ describe('ClubSettings', () => {
 
 		vi.mocked(bookclubmembersService.create).mockRejectedValue(error)
 
-		renderWithRouter(<ClubSettings />)
+		render(<ClubSettings />)
 
 		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
@@ -97,7 +93,7 @@ describe('ClubSettings', () => {
 
 		vi.mocked(bookclubmembersService.create).mockRejectedValue(new AxiosError('Request failed'))
 
-		renderWithRouter(<ClubSettings />)
+		render(<ClubSettings />)
 
 		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
@@ -110,7 +106,7 @@ describe('ClubSettings', () => {
 	it('calls bookclubService.remove and navigates after delete', async () => {
 		vi.mocked(bookclubService.remove).mockResolvedValue(undefined)
 
-		renderWithRouter(<ClubSettingsDisplay bookclubId="1" />)
+		render(<ClubSettingsDisplay bookclubId="1" />)
 
 		const deleteButton = screen.getByRole('button', { name: /Delete club/i })
 		deleteButton.click()
@@ -129,7 +125,7 @@ describe('ClubSettings', () => {
 
 		vi.mocked(bookclubmembersService.create).mockRejectedValue(new Error('Something went wrong'))
 
-		renderWithRouter(<ClubSettings />)
+		render(<ClubSettings />)
 
 		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))

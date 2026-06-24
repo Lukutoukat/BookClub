@@ -1,15 +1,10 @@
-import { render, screen } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
+import { render, screen } from '@/utils/test-utils'
 import { test, expect, describe } from 'vitest'
 import CreateBookclubPage from '@/pages/CreateBookclubPage'
 
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
-
 describe('CreateBookclubPage', () => {
 	test('renders page header content', () => {
-		renderWithRouter(<CreateBookclubPage />)
+		render(<CreateBookclubPage />)
 
 		expect(screen.getByText('New book club')).toBeDefined()
 		expect(
@@ -18,7 +13,7 @@ describe('CreateBookclubPage', () => {
 	})
 
 	test('renders bookclub form', () => {
-		renderWithRouter(<CreateBookclubPage />)
+		render(<CreateBookclubPage />)
 
 		expect(screen.getByRole('button', { name: 'Create' })).toBeDefined()
 
