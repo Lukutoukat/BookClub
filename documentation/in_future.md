@@ -26,3 +26,4 @@ Here is a list of some of the ideas we came up with during the project. Most of 
 - Remove or move the clubs component in the settings page to more sensible location
 - Optimize locations for go to login - and go to registration -buttons for all screens
 - Lengthen the expration time for authentication token if user visits the site during that time
+- Improve conditional rendering in App.tsx
