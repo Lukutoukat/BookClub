@@ -48,14 +48,16 @@ const App = () => {
 			<BrowserRouter>
 				<main>
 					<PageLayout>
-						<Routes>
-							<Route path="/login" element={<LoginPage />} />
-							<Route path="/registration" element={<RegistrationPage />} />
-							<Route path="/" element={<Navigate to="/login" replace />} />
-							<Route path="*" element={<Navigate to="/login" replace />} />
-							<Route path="/passwordreset" element={<PasswordResetPage />} />
-						</Routes>
-						<BottomDescription />
+						<NotificationProvider>
+							<Routes>
+								<Route path="/login" element={<LoginPage />} />
+								<Route path="/registration" element={<RegistrationPage />} />
+								<Route path="/" element={<Navigate to="/login" replace />} />
+								<Route path="*" element={<Navigate to="/login" replace />} />
+								<Route path="/passwordreset" element={<PasswordResetPage />} />
+							</Routes>
+							<BottomDescription />
+						</NotificationProvider>
 					</PageLayout>
 				</main>
 			</BrowserRouter>

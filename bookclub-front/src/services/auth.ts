@@ -7,7 +7,6 @@ export const setToken = (newToken: string) => {
 }
 
 export const getAuthConfig = () => {
-	// return getuserstoken()
 	const token = getToken()
 
 	return {
