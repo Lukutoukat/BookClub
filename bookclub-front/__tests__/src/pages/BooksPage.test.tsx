@@ -30,13 +30,6 @@ const mockBook = (overrides?: Partial<Book>): Book => ({
 	...overrides
 })
 
-<<<<<<< HEAD
-=======
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
->>>>>>> develop
-
 describe('BooksPage', () => {
 	const mockBooks = (count: number = 2): Book[] => {
 		const isbns = ['9780451524935', '9780596007126', '9781234567897']
@@ -66,11 +59,7 @@ describe('BooksPage', () => {
 		test('displays page title, description, and navigation', async () => {
 			setupMocks({ books: [] })
 
-<<<<<<< HEAD
-      render(<BooksPage />)
-=======
-			renderWithRouter(<BooksPage />)
->>>>>>> develop
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('Save books')).toBeDefined()
@@ -86,11 +75,7 @@ describe('BooksPage', () => {
 		test('shows loading state on mount', () => {
 			vi.mocked(bookService.getAll).mockImplementation(() => new Promise(() => {}))
 
-<<<<<<< HEAD
-      render(<BooksPage />)
-=======
-			renderWithRouter(<BooksPage />)
->>>>>>> develop
+			render(<BooksPage />)
 
 			expect(screen.getByText('Loading books...')).toBeDefined()
 		})
@@ -126,11 +111,7 @@ describe('BooksPage', () => {
 		test('displays empty state when no books', async () => {
 			setupMocks({ books: [] })
 
-<<<<<<< HEAD
-      render(<BooksPage />)
-=======
-			renderWithRouter(<BooksPage />)
->>>>>>> develop
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('No books yet.')).toBeDefined()
@@ -140,11 +121,7 @@ describe('BooksPage', () => {
 		test('displays error message when loading fails', async () => {
 			setupMocks({ error: true })
 
-<<<<<<< HEAD
-      render(<BooksPage />)
-=======
-			renderWithRouter(<BooksPage />)
->>>>>>> develop
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('Failed to load books.')).toBeDefined()
@@ -152,16 +129,6 @@ describe('BooksPage', () => {
 		})
 	})
 
-<<<<<<< HEAD
-  describe('book deletion', () => {
-    test('deletes book via service and removes from display when confirmation is accepted', async () => {
-      setupMocks({ books: mockBooks(2) })
-      vi.mocked(bookService.removeFromUser).mockResolvedValue({
-        status: 200
-      } as any)
-      vi.spyOn(window, 'confirm').mockReturnValue(true)
-      render(<BooksPage />)
-=======
 	describe('book deletion', () => {
 		test('deletes book via service and removes from display when confirmation is accepted', async () => {
 			setupMocks({ books: mockBooks(2) })
@@ -169,8 +136,7 @@ describe('BooksPage', () => {
 				status: 200
 			} as any)
 			vi.spyOn(window, 'confirm').mockReturnValue(true)
-			renderWithRouter(<BooksPage />)
->>>>>>> develop
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('Book 1')).toBeDefined()
@@ -195,11 +161,7 @@ describe('BooksPage', () => {
 				status: 200
 			} as any)
 
-<<<<<<< HEAD
-      render(<BooksPage />)
-=======
-			renderWithRouter(<BooksPage />)
->>>>>>> develop
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('Book 1')).toBeDefined()
