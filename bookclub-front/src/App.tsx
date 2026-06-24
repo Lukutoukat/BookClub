@@ -15,7 +15,6 @@ import { isLoggedIn } from './services/auth'
 import { useEffect, useState } from 'react'
 import userService from './services/users'
 import ClubSettingsPage from './pages/BookClubSettingsPage'
-import { UserLoginDisplay } from './components/UserLoginDisplay'
 import { BottomDescription } from './components/BottomDescription'
 
 //useEffect!!! :)
@@ -66,7 +65,6 @@ const App = () => {
 		<BrowserRouter>
 			<PageMenu>
 				<PageLayout>
-					<UserLoginDisplay />
 					<Routes>
 						<Route path="/" element={<Navigate to="/home" replace />} />
 						<Route path="/books" element={<BooksPage />} />

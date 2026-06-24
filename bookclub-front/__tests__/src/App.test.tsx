@@ -29,10 +29,6 @@ vi.mock('@/components/PageLayout', () => ({
 	PageLayout: ({ children }: { children: React.ReactNode }) => <>{children}</>
 }))
 
-vi.mock('@/components/UserLoginDisplay', () => ({
-	UserLoginDisplay: () => <div>User Display</div>
-}))
-
 describe('routes', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
@@ -46,8 +42,9 @@ describe('routes', () => {
 		render(<App />)
 
 		await waitFor(() => {
-			expect(screen.getByText('User Display')).toBeInTheDocument()
+			expect(screen.getByText('Home Page')).toBeInTheDocument()
 		})
+		expect(screen.queryByText('Login Page')).not.toBeInTheDocument()
 	})
 
 	test('shows login routes when no users exist', async () => {
@@ -56,8 +53,9 @@ describe('routes', () => {
 		render(<App />)
 
 		await waitFor(() => {
-			expect(screen.queryByText('User Display')).not.toBeInTheDocument()
+			expect(screen.getByText('Login Page')).toBeInTheDocument()
 		})
+		expect(screen.queryByText('Home Page')).not.toBeInTheDocument()
 	})
 
 	test('shows login routes when API returns 401', async () => {
@@ -74,7 +72,8 @@ describe('routes', () => {
 		render(<App />)
 
 		await waitFor(() => {
-			expect(screen.queryByText('User Display')).not.toBeInTheDocument()
+			expect(screen.getByText('Login Page')).toBeInTheDocument()
 		})
+		expect(screen.queryByText('Home Page')).not.toBeInTheDocument()
 	})
 })

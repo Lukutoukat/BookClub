@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
 import { ButtonDialog } from './ButtonDialog'
+import { UserLoginDisplay } from './UserLoginDisplay'
 
 interface PageHeaderProps {
 	badgeText: string
@@ -32,8 +33,12 @@ export const PageHeader = ({
 	afterButtonClick = 'nothing'
 }: PageHeaderProps) => {
 	return (
-		<header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8 2xl:mb-16">
+		<header className="flex relative flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8 2xl:mb-16">
 			<div className="w-full space-y-2 max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+				<div className="absolute top-0 right-0">
+					<UserLoginDisplay />
+				</div>
+
 				<Badge
 					variant="secondary"
 					className="w-fit uppercase tracking-[0.2em] text-[0.7rem] sm:text-xs"
