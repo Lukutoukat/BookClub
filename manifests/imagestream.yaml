@@ -12,7 +12,7 @@ spec:
     - name: staging
       from:
         kind: DockerImage
-        name: neakovalaine/bookclub:staging
+        name: lukutoukat/bookclub:staging
       importPolicy:
         scheduled: true
       referencePolicy:
