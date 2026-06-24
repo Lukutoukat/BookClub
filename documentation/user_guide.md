@@ -5,6 +5,8 @@ To be able to use the application easily and without confusion, here is a detail
 
 When opening the app for the first time, the user can see a login page with two fields: Username and Password. By logging in with a pre-registered credentials, user can access the home page and all the application's functionality. On the login page user can see a button on top of the login form, called go to registration. From there the user can access registration form. 
 
+<img width="" height="" src='../bookclub-front/src/assets/login.png'>
+
 ## Registration Page
 
 On the registration page the user can see a form. The form contains the following fields: Email address, username, password and confirm password. Both emain and username must be unique. Password has to be written twice to encourage users to remember their credentials and making it possible to make sure there are no spelling mistakes. By filling out the form, the user can create an account. Pressing create new account button user is redirected to the login page, but only if the user has been registered successfully. In case the registration does not work, user is notified of that with an error.
@@ -16,6 +18,8 @@ On the registration page the user can see a form. The form contains the followin
 On the home page the user can see all the clubs they have joined. In case the user is not a part of any club they won't see any clubs. In that case the user can fill out a join field at the bottom of the page with an invite code, and join a premade club. This invite code has been shared (hopefully) by the admin of the club. In case you have not recieved an invitation, contact the other book club memebers. 
 <br>
 Side/bottom bar is visible on either the left side of your screen or on the bottom, depending on your device's width. From there it is possible to move between pages. User can access home page, saved books page, club creation page and settings. 
+
+<img width="" height="" src='../bookclub-front/src/assets/home.png'>
 
 ## Book Club Page
 
