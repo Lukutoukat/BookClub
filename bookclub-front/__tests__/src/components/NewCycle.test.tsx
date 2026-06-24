@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@/utils/test-utils'
 import userEvent from '@testing-library/user-event'
 import { NewCycle } from '@/components/NewCycle'
 import cycleService from '@/services/cycle'
@@ -18,10 +18,6 @@ vi.mock('react-router-dom', async () => {
 	}
 })
 
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
-
 describe('NewCycle', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
@@ -32,7 +28,7 @@ describe('NewCycle', () => {
 			ok: false
 		})
 
-		renderWithRouter(<NewCycle bookclubId="1" />)
+		render(<NewCycle bookclubId="1" />)
 
 		await waitFor(() => {
 			expect(screen.getByText('Bookclub not found')).toBeInTheDocument()
@@ -52,7 +48,7 @@ describe('NewCycle', () => {
 		vi.mocked(cycleService.create).mockResolvedValue({} as any)
 		const user = userEvent.setup()
 
-		renderWithRouter(<NewCycle bookclubId="1" />)
+		render(<NewCycle bookclubId="1" />)
 
 		await waitFor(() => {
 			expect(screen.getByText('Create')).toBeDefined()

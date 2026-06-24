@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
 import BookForm from './BookForm'
 import BookItem from './BookItem'
+import { useNotification } from '@/context/NotificationContext'
 
 export interface BookListHandle {
 	reload: () => Promise<void>
@@ -26,7 +27,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 			emptyMessage = 'No books yet.',
 			show = 'savedBooks',
 			cycleId = 'nocycle',
-			description = 'Books '
+			description = 'Books: '
 		},
 		ref
 	) => {
@@ -39,6 +40,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 		const isReadOnly = show === 'over'
 		const [votes, setVotes] = useState<VoteFields[]>([])
 		const [refreshOnVote, setRefreshOnVote] = useState(false)
+		const { showSuccess } = useNotification()
 
 		const votesByProposalId = votes.reduce(
 			(acc, vote) => {
@@ -102,6 +104,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 				if (show === 'savedBooks') await bookService.removeFromUser(id)
 				if (show === 'proposedBooks') await proposeService.removeProposedBook(cycleId, id)
 				setBooks((currentBooks) => currentBooks.filter((book) => book.id !== id))
+				showSuccess('Book deleted successfully!')
 			} catch {
 				setErrorMessage('Failed to delete book.')
 			}

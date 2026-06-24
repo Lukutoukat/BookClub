@@ -1,15 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@/utils/test-utils'
 import userEvent from '@testing-library/user-event'
 import BookclubForm from '@/components/BookclubForm'
 import bookclubService from '@/services/bookclubs'
 import { BrowserRouter } from 'react-router-dom'
 
 vi.mock('@/services/bookclubs')
-
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
 
 describe('BookclubForm', () => {
 	beforeEach(() => {
@@ -20,7 +16,7 @@ describe('BookclubForm', () => {
 		vi.mocked(bookclubService.create).mockResolvedValue({} as any)
 		const user = userEvent.setup()
 
-		renderWithRouter(<BookclubForm />)
+		render(<BookclubForm />)
 
 		await user.type(screen.getByPlaceholderText('Read It And Weep'), 'My Bookclub')
 
@@ -40,7 +36,7 @@ describe('BookclubForm', () => {
 		vi.mocked(bookclubService.create).mockRejectedValue('Server error')
 		const user = userEvent.setup()
 
-		renderWithRouter(<BookclubForm />)
+		render(<BookclubForm />)
 
 		await user.type(screen.getByPlaceholderText('Read It And Weep'), 'My Bookclub')
 

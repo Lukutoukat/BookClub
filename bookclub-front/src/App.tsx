@@ -15,6 +15,7 @@ import { isLoggedIn } from './services/auth'
 import { useEffect, useState } from 'react'
 import userService from './services/users'
 import ClubSettingsPage from './pages/BookClubSettingsPage'
+import { NotificationProvider } from './context/NotificationContext'
 import { BottomDescription } from './components/BottomDescription'
 
 //useEffect!!! :)
@@ -65,19 +66,21 @@ const App = () => {
 		<BrowserRouter>
 			<PageMenu>
 				<PageLayout>
-					<Routes>
-						<Route path="/" element={<Navigate to="/home" replace />} />
-						<Route path="/books" element={<BooksPage />} />
-						<Route path="/create" element={<CreateBookclubPage />} />
-						<Route path="/registration" element={<RegistrationPage />} />
-						<Route path="/club/:bookclubId" element={<BookclubPage />} />
-						<Route path="/newcycle/:bookclubId" element={<NewCyclePage />} />
-						<Route path="/home" element={<HomePage />} />
-						<Route path="/settings" element={<SettingsPage />} />
-						<Route path="*" element={<Navigate to="/home" replace />} />
-						<Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
-					</Routes>
-					<BottomDescription />
+					<NotificationProvider>
+						<Routes>
+							<Route path="/" element={<Navigate to="/home" replace />} />
+							<Route path="/books" element={<BooksPage />} />
+							<Route path="/create" element={<CreateBookclubPage />} />
+							<Route path="/registration" element={<RegistrationPage />} />
+							<Route path="/club/:bookclubId" element={<BookclubPage />} />
+							<Route path="/newcycle/:bookclubId" element={<NewCyclePage />} />
+							<Route path="/home" element={<HomePage />} />
+							<Route path="/settings" element={<SettingsPage />} />
+							<Route path="*" element={<Navigate to="/home" replace />} />
+							<Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
+						</Routes>
+						<BottomDescription />
+					</NotificationProvider>
 				</PageLayout>
 			</PageMenu>
 		</BrowserRouter>

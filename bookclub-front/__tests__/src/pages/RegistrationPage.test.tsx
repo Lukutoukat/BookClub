@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@/utils/test-utils'
 import user from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import RegistrationPage from '@/pages/RegistrationPage'
@@ -7,10 +7,6 @@ import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 vi.mock('../../../src/services/users')
 
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
-
 describe('RegistrationPage', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
@@ -18,14 +14,14 @@ describe('RegistrationPage', () => {
 
 	describe('page structure and content', () => {
 		test('renders page title, heading, and description', () => {
-			renderWithRouter(<RegistrationPage />)
+			render(<RegistrationPage />)
 
 			expect(screen.getByText('Join the club')).toBeDefined()
 			expect(screen.getByText('Create an account')).toBeDefined()
 		})
 
 		test('renders registration badge and login link', () => {
-			renderWithRouter(<RegistrationPage />)
+			render(<RegistrationPage />)
 
 			const heading = screen.getByRole('heading', { name: 'Join the club' })
 			const header = heading.closest('header')
@@ -37,7 +33,7 @@ describe('RegistrationPage', () => {
 		})
 
 		test('renders registration form with all input fields and submit button', () => {
-			renderWithRouter(<RegistrationPage />)
+			render(<RegistrationPage />)
 
 			expect(screen.getByLabelText('Email address')).toBeDefined()
 			expect(screen.getByLabelText('Username')).toBeDefined()
@@ -47,7 +43,7 @@ describe('RegistrationPage', () => {
 		})
 
 		test('login link navigates to login page', () => {
-			renderWithRouter(<RegistrationPage />)
+			render(<RegistrationPage />)
 
 			const link = screen.getByRole('link', { name: 'Go to login' })
 			expect(link.getAttribute('href')).toBe('/login')
@@ -59,7 +55,7 @@ describe('RegistrationPage', () => {
 			vi.mocked(userService.create).mockResolvedValue({} as any)
 
 			const userInstance = user.setup()
-			renderWithRouter(<RegistrationPage />)
+			render(<RegistrationPage />)
 
 			await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
 			await userInstance.type(screen.getByLabelText('Username'), 'testuser')

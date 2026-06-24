@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { useNavigate } from 'react-router-dom'
+import { useNotification } from '@/context/NotificationContext'
 
 const emptyUser: CreateUser = {
 	email: '',
@@ -20,6 +21,7 @@ const RegistrationForm = () => {
 	const [confirmPassword, setConfirmPassword] = useState('')
 	const [message, setMessage] = useState<string | null>(null)
 	const navigate = useNavigate()
+	const { showSuccess } = useNotification()
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = event.target
@@ -57,7 +59,7 @@ const RegistrationForm = () => {
 			await userService.create(newUser)
 			setNewUser(emptyUser)
 			setConfirmPassword('')
-			setMessage('Registration saved.')
+			showSuccess('Registration saved.')
 			await navigate('/login')
 		} catch (err: unknown) {
 			if (err instanceof AxiosError && err.response?.data) {
@@ -155,8 +157,11 @@ const RegistrationForm = () => {
 							</FieldContent>
 						</Field>
 					</div>
-
-					{message && <div className="form-note">{message}</div>}
+					{message && (
+						<div className="mt-4 p-3 bg-primary/10 border border-primary/30 rounded text-primary text-sm">
+							{message}
+						</div>
+					)}
 
 					<div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
 						<p className="max-w-md text-xs text-muted-foreground">
