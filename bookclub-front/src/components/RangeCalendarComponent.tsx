@@ -1,128 +1,119 @@
 import { useState } from 'react'
 import { Clock2Icon } from 'lucide-react'
+import { type DateRange } from 'react-day-picker'
 
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { SectionHeader } from './SectionHeader'
-
-import { type DateRange } from 'react-day-picker'
+import { TimePicker } from './TimePicker'
 
 type Props = {
-  dateRange: DateRange | undefined
-  setDateRange: (range: DateRange | undefined) => void
+	dateRange: DateRange | undefined
+	setDateRange: (range: DateRange | undefined) => void
+	children: React.ReactNode
 }
 
-export const RangeCalendarComponent = ({ dateRange, setDateRange }: Props) => {
-  const [startTime, setStartTime] = useState('12:00')
-  const [endTime, setEndTime] = useState('12:00')
+export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Props) => {
+	const [startTime, setStartTime] = useState('12:00')
+	const [endTime, setEndTime] = useState('12:00')
 
-  const applyTimeToDate = (date: Date, timeString: string): Date => {
-    const newDate = new Date(date)
-    const [hours, minutes, seconds] = timeString.split(':').map(Number)
-    newDate.setHours(hours || 0, minutes || 0, seconds || 0, 0)
-    return newDate
-  }
+	const applyTimeToDate = (date: Date, timeString: string): Date => {
+		const newDate = new Date(date)
+		const [hours, minutes, seconds] = timeString.split(':').map(Number)
+		newDate.setHours(hours || 0, minutes || 0, seconds || 0, 0)
+		return newDate
+	}
 
-  const handleDateSelect = (newRange: DateRange | undefined) => {
-    if (!newRange) {
-      setDateRange(undefined)
-      return
-    }
+	const handleDateSelect = (newRange: DateRange | undefined) => {
+		if (!newRange) {
+			setDateRange(undefined)
+			return
+		}
 
-    const updatedRange: DateRange = { ...newRange }
+		const updatedRange: DateRange = { ...newRange }
 
-    if (updatedRange.from) {
-      updatedRange.from = applyTimeToDate(updatedRange.from, startTime)
-    }
-    if (updatedRange.to) {
-      updatedRange.to = applyTimeToDate(updatedRange.to, endTime)
-    }
+		if (updatedRange.from) {
+			updatedRange.from = applyTimeToDate(updatedRange.from, startTime)
+		}
+		if (updatedRange.to) {
+			updatedRange.to = applyTimeToDate(updatedRange.to, endTime)
+		}
 
-    setDateRange(updatedRange)
-  }
+		setDateRange(updatedRange)
+	}
 
-  const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = e.target.value
-    setStartTime(newTime)
+	const handleStartTimeChange = (newTime: string) => {
+		setStartTime(newTime)
 
-    if (dateRange?.from) {
-      setDateRange({
-        ...dateRange,
-        from: applyTimeToDate(dateRange.from, newTime)
-      })
-    }
-  }
+		if (dateRange?.from) {
+			setDateRange({
+				...dateRange,
+				from: applyTimeToDate(dateRange.from, newTime)
+			})
+		}
+	}
 
-  const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = e.target.value
-    setEndTime(newTime)
+	const handleEndTimeChange = (newTime: string) => {
+		setEndTime(newTime)
 
-    if (dateRange?.to) {
-      setDateRange({
-        ...dateRange,
-        to: applyTimeToDate(dateRange.to, newTime)
-      })
-    }
-  }
+		if (dateRange?.to) {
+			setDateRange({
+				...dateRange,
+				to: applyTimeToDate(dateRange.to, newTime)
+			})
+		}
+	}
 
-  return (
-    <>
-      <Card size="sm" className="mx-auto w-fit card-base">
-        <SectionHeader
-          title={'Select Dates'}
-          description={'Select the end dates for the proposal and voting phases.'}
-        ></SectionHeader>
-        <CardContent>
-          <Calendar
-            mode="range"
-            defaultMonth={new Date()}
-            selected={dateRange}
-            onSelect={handleDateSelect}
-            numberOfMonths={2}
-            disabled={(date) => date < new Date('1900-01-01') || date < new Date()}
-          />
-        </CardContent>
-        <CardFooter className="border-t bg-card">
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="time-from">Proposal End Time</FieldLabel>
-              <InputGroup>
-                <InputGroupInput
-                  id="time-from"
-                  type="time"
-                  step="60"
-                  value={startTime}
-                  onChange={handleStartTimeChange}
-                  disabled={!dateRange?.from} // Disabled if no start date is selected
-                  className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                />
-                <InputGroupAddon>
-                  <Clock2Icon className="text-muted-foreground" />
-                </InputGroupAddon>
-              </InputGroup>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="time-to">Voting End Time</FieldLabel>
-              <InputGroup>
-                <InputGroupInput
-                  id="time-to"
-                  type="time"
-                  step="60"
-                  value={endTime}
-                  onChange={handleEndTimeChange}
-                  disabled={!dateRange?.to} // Disabled if no end date is selected yet
-                  className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                />
-                <InputGroupAddon>
-                  <Clock2Icon className="text-muted-foreground" />
-                </InputGroupAddon>
-              </InputGroup>
-            </Field>
-          </FieldGroup>
-        </CardFooter>
-      </Card>
-    </>
-  )
+	return (
+		<>
+			<Card className="card-base w-full max-w-full overflow-hidden">
+				<SectionHeader
+					title={'Select Dates'}
+					description={'Select the end dates for the suggesting and voting phases.'}
+				/>
+				<CardContent className="card-content flex justify-center p-4 sm:p-6">
+					<div className="w-full flex justify-center overflow-visible">
+						<Calendar
+							className="mx-auto [&_.rdp-months]:!flex-row [&_.rdp-months]:!flex-wrap [&_.rdp-months]:justify-center [&_.rdp-months]:gap-4 [&_.rdp-months]:!space-x-0 [&_.rdp-months]:!space-y-0"
+							mode="range"
+							defaultMonth={new Date()}
+							selected={dateRange}
+							onSelect={handleDateSelect}
+							numberOfMonths={2}
+							disabled={(date) => date < new Date('1900-01-01') || date < new Date()}
+						/>
+					</div>
+				</CardContent>
+				<CardFooter className="border-t bg-card py-6">
+					<FieldGroup className="flex flex-col gap-6 w-full">
+						<Field>
+							<FieldLabel htmlFor="time-from">Suggesting End Time</FieldLabel>
+							<div className="flex items-center gap-3 mt-2">
+								<Clock2Icon className="text-muted-foreground w-5 h-5" />
+								<TimePicker
+									value={startTime}
+									onChange={handleStartTimeChange}
+									disabled={!dateRange?.from}
+								/>
+							</div>
+						</Field>
+
+						<Field>
+							<FieldLabel htmlFor="time-to">Voting End Time</FieldLabel>
+							<div className="flex items-center gap-3 mt-2">
+								<Clock2Icon className="text-muted-foreground w-5 h-5" />
+								<TimePicker
+									value={endTime}
+									onChange={handleEndTimeChange}
+									disabled={!dateRange?.to}
+								/>
+							</div>
+						</Field>
+					</FieldGroup>
+				</CardFooter>
+				{children}
+			</Card>
+		</>
+	)
 }

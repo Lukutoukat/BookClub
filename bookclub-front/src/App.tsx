@@ -14,59 +14,59 @@ import { PageLayout } from './components/PageLayout'
 import { isLoggedIn } from './services/auth'
 import { useEffect, useState } from 'react'
 import userService from './services/users'
-import { UserLoginDisplay } from './components/UserLoginDisplay'
 import ClubSettingsPage from './pages/BookClubSettingsPage'
 import { NotificationProvider } from './context/NotificationContext'
+import { BottomDescription } from './components/BottomDescription'
 
 //useEffect!!! :)
 
 const App = () => {
-  const [loginValid, setLoginValid] = useState(true)
+	const [loginValid, setLoginValid] = useState(true)
 
-  useEffect(
-    () =>
-      void (async function () {
-        try {
-          const userExists = await userService.getAll()
-          if (userExists.length > 0 && isLoggedIn()) {
-            setLoginValid(true)
-          }
-          if (userExists.length === 0) {
-            setLoginValid(false)
-          }
-        } catch (error) {
-          if (axios.isAxiosError(error) && error.response?.status === 401) {
-            setLoginValid(false)
-          }
-        }
-      })(),
-    []
-  )
+	useEffect(
+		() =>
+			void (async function () {
+				try {
+					const userExists = await userService.getAll()
+					if (userExists.length > 0 && isLoggedIn()) {
+						setLoginValid(true)
+					}
+					if (userExists.length === 0) {
+						setLoginValid(false)
+					}
+				} catch (error) {
+					if (axios.isAxiosError(error) && error.response?.status === 401) {
+						setLoginValid(false)
+					}
+				}
+			})(),
+		[]
+	)
 
-  if (!loginValid) {
-    return (
-      <BrowserRouter>
-        <main>
-          <PageLayout>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/registration" element={<RegistrationPage />} />
-              <Route path="/" element={<Navigate to="/login" replace />} />
-              <Route path="*" element={<Navigate to="/login" replace />} />
-              <Route path="/passwordreset" element={<PasswordResetPage />} />
-            </Routes>
-          </PageLayout>
-        </main>
-      </BrowserRouter>
-    )
-  }
+	if (!loginValid) {
+		return (
+			<BrowserRouter>
+				<main>
+					<PageLayout>
+						<Routes>
+							<Route path="/login" element={<LoginPage />} />
+							<Route path="/registration" element={<RegistrationPage />} />
+							<Route path="/" element={<Navigate to="/login" replace />} />
+							<Route path="*" element={<Navigate to="/login" replace />} />
+							<Route path="/passwordreset" element={<PasswordResetPage />} />
+						</Routes>
+						<BottomDescription />
+					</PageLayout>
+				</main>
+			</BrowserRouter>
+		)
+	}
 
   return (
     <BrowserRouter>
       <PageMenu>
         <PageLayout>
           <NotificationProvider>
-            <UserLoginDisplay />
             <Routes>
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="/books" element={<BooksPage />} />
@@ -79,6 +79,7 @@ const App = () => {
               <Route path="*" element={<Navigate to="/home" replace />} />
               <Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
             </Routes>
+			<BottomDescription />
           </NotificationProvider>
         </PageLayout>
       </PageMenu>

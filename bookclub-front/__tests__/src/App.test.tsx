@@ -9,72 +9,71 @@ vi.mock('@/services/users')
 vi.mock('@/services/auth')
 
 const renderAt = (route: string) => {
-  window.history.pushState({}, '', route)
-  return render(<App />)
+	window.history.pushState({}, '', route)
+	return render(<App />)
 }
 
 vi.mock('@/pages/LoginPage', () => ({
-  default: () => <div>Login Page</div>
+	default: () => <div>Login Page</div>
 }))
 
 vi.mock('@/pages/HomePage', () => ({
-  default: () => <div>Home Page</div>
+	default: () => <div>Home Page</div>
 }))
 
 vi.mock('@/components/PageMenu', () => ({
-  PageMenu: ({ children }: { children: React.ReactNode }) => <>{children}</>
+	PageMenu: ({ children }: { children: React.ReactNode }) => <>{children}</>
 }))
 
 vi.mock('@/components/PageLayout', () => ({
-  PageLayout: ({ children }: { children: React.ReactNode }) => <>{children}</>
-}))
-
-vi.mock('@/components/UserLoginDisplay', () => ({
-  UserLoginDisplay: () => <div>User Display</div>
+	PageLayout: ({ children }: { children: React.ReactNode }) => <>{children}</>
 }))
 
 describe('routes', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+	beforeEach(() => {
+		vi.clearAllMocks()
+	})
 
-  test('shows authenticated routes when login is valid', async () => {
-    vi.mocked(userService.getAll).mockResolvedValue([{ id: '1', username: 'test' }] as never)
+	test('shows authenticated routes when login is valid', async () => {
+		vi.mocked(userService.getAll).mockResolvedValue([{ id: '1', username: 'test' }] as never)
 
-    vi.mocked(auth.isLoggedIn).mockReturnValue(true)
+		vi.mocked(auth.isLoggedIn).mockReturnValue(true)
 
-    render(<App />)
+		render(<App />)
 
-    await waitFor(() => {
-      expect(screen.getByText('User Display')).toBeInTheDocument()
-    })
-  })
+		await waitFor(() => {
+			expect(screen.getByText('Home Page')).toBeInTheDocument()
+		})
+		expect(screen.queryByText('Login Page')).not.toBeInTheDocument()
+	})
 
-  test('shows login routes when no users exist', async () => {
-    vi.mocked(userService.getAll).mockResolvedValue([])
+	test('shows login routes when no users exist', async () => {
+		vi.mocked(userService.getAll).mockResolvedValue([])
 
-    render(<App />)
+		render(<App />)
 
-    await waitFor(() => {
-      expect(screen.queryByText('User Display')).not.toBeInTheDocument()
-    })
-  })
+		await waitFor(() => {
+			expect(screen.getByText('Login Page')).toBeInTheDocument()
+		})
+		expect(screen.queryByText('Home Page')).not.toBeInTheDocument()
+	})
 
-  test('shows login routes when API returns 401', async () => {
-    const error = {
-      response: {
-        status: 401
-      }
-    }
+	test('shows login routes when API returns 401', async () => {
+		const error = {
+			response: {
+				status: 401
+			}
+		}
 
-    vi.spyOn(axios, 'isAxiosError').mockReturnValue(true)
+		vi.spyOn(axios, 'isAxiosError').mockReturnValue(true)
 
-    vi.mocked(userService.getAll).mockRejectedValue(error)
+		vi.mocked(userService.getAll).mockRejectedValue(error)
 
-    render(<App />)
+		render(<App />)
 
-    await waitFor(() => {
-      expect(screen.queryByText('User Display')).not.toBeInTheDocument()
-    })
-  })
+		await waitFor(() => {
+			expect(screen.getByText('Login Page')).toBeInTheDocument()
+		})
+		expect(screen.queryByText('Home Page')).not.toBeInTheDocument()
+	})
 })

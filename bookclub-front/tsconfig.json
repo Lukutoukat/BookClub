@@ -1,19 +1,19 @@
 {
-  "compilerOptions": {
-    "types": ["vitest/globals"],
-    "target": "esnext",
-    "noEmit": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "nodenext",
-    "esModuleInterop": true,
-    "allowImportingTsExtensions": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
-  "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+	"compilerOptions": {
+		"types": ["vitest/globals"],
+		"target": "esnext",
+		"noEmit": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"module": "nodenext",
+		"esModuleInterop": true,
+		"allowImportingTsExtensions": true,
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	},
+	"files": [],
+	"references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

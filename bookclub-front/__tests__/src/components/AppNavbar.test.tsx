@@ -8,51 +8,51 @@ import '@testing-library/jest-dom/vitest'
 const mockUseLocation = vi.fn()
 
 vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom')
+	const actual = await vi.importActual<any>('react-router-dom')
 
-  return {
-    ...actual,
-    useLocation: () => mockUseLocation(),
-    Link: ({ to, children }: any) => <a href={to}>{children}</a>
-  }
+	return {
+		...actual,
+		useLocation: () => mockUseLocation(),
+		Link: ({ to, children }: any) => <a href={to}>{children}</a>
+	}
 })
 
 describe('AppNavbar renders correctly', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
+	beforeEach(() => {
+		vi.clearAllMocks()
+	})
 
-  const menuItems: MenuItem[] = [
-    {
-      label: 'Home',
-      to: '/home',
-      icon: <House className="h-5 w-5" />
-    },
-    {
-      label: 'Books',
-      to: '/books',
-      icon: <Bookmark className="h-5 w-5" />
-    },
-    {
-      label: 'Create',
-      to: '/create',
-      icon: <BookUser className="h-5 w-5" />
-    },
-    {
-      label: 'Settings',
-      to: '/settings',
-      icon: <Settings className="h-5 w-5" />
-    }
-  ]
+	const menuItems: MenuItem[] = [
+		{
+			label: 'Home',
+			to: '/home',
+			icon: <House className="h-5 w-5" />
+		},
+		{
+			label: 'Books',
+			to: '/books',
+			icon: <Bookmark className="h-5 w-5" />
+		},
+		{
+			label: 'Create',
+			to: '/create',
+			icon: <BookUser className="h-5 w-5" />
+		},
+		{
+			label: 'Settings',
+			to: '/settings',
+			icon: <Settings className="h-5 w-5" />
+		}
+	]
 
-  test('renders menu items', () => {
-    mockUseLocation.mockReturnValue({ pathname: '/home' })
+	test('renders menu items', () => {
+		mockUseLocation.mockReturnValue({ pathname: '/home' })
 
-    render(<AppNavbar menuItems={menuItems} />)
+		render(<AppNavbar menuItems={menuItems} />)
 
-    expect(screen.getByText('Home')).toBeInTheDocument()
-    expect(screen.getByText('Books')).toBeInTheDocument()
-    expect(screen.getByText('Create')).toBeInTheDocument()
-    expect(screen.getByText('Settings')).toBeInTheDocument()
-  })
+		expect(screen.getByText('Home')).toBeInTheDocument()
+		expect(screen.getByText('Books')).toBeInTheDocument()
+		expect(screen.getByText('Create')).toBeInTheDocument()
+		expect(screen.getByText('Settings')).toBeInTheDocument()
+	})
 })
