@@ -23,6 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog'
+import { useNotification } from '@/context/NotificationContext'
 
 export interface BookListHandle {
   reload: () => Promise<void>
@@ -45,6 +46,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
   const [inputValue, setInputValue] = useState('')
   const [selectedDisplay, setSelectedDisplay] = useState<string>('savedBooks')
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
+  const { showSuccess } = useNotification()
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -112,7 +114,9 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
           book_id: selectedBookId,
           bookclub_id: bookclubId
         })
-        if (onBookAdded) await onBookAdded()
+        if (onBookAdded) {await onBookAdded()
+          showSuccess('Book proposed successfully!')
+        }
       } catch (error) {
         setErrorMessage(getErrorMessage(error, 'Failed to propose book.'))
       }

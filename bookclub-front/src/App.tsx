@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react'
 import userService from './services/users'
 import { UserLoginDisplay } from './components/UserLoginDisplay'
 import ClubSettingsPage from './pages/BookClubSettingsPage'
+import { NotificationProvider } from './context/NotificationContext'
 
 //useEffect!!! :)
 
@@ -64,19 +65,21 @@ const App = () => {
     <BrowserRouter>
       <PageMenu>
         <PageLayout>
-          <UserLoginDisplay />
-          <Routes>
-            <Route path="/" element={<Navigate to="/home" replace />} />
-            <Route path="/books" element={<BooksPage />} />
-            <Route path="/create" element={<CreateBookclubPage />} />
-            <Route path="/registration" element={<RegistrationPage />} />
-            <Route path="/club/:bookclubId" element={<BookclubPage />} />
-            <Route path="/newcycle/:bookclubId" element={<NewCyclePage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<Navigate to="/home" replace />} />
-            <Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
-          </Routes>
+          <NotificationProvider>
+            <UserLoginDisplay />
+            <Routes>
+              <Route path="/" element={<Navigate to="/home" replace />} />
+              <Route path="/books" element={<BooksPage />} />
+              <Route path="/create" element={<CreateBookclubPage />} />
+              <Route path="/registration" element={<RegistrationPage />} />
+              <Route path="/club/:bookclubId" element={<BookclubPage />} />
+              <Route path="/newcycle/:bookclubId" element={<NewCyclePage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
+              <Route path="bookclubsettings/:bookclubId" element={<ClubSettingsPage />} />
+            </Routes>
+          </NotificationProvider>
         </PageLayout>
       </PageMenu>
     </BrowserRouter>
