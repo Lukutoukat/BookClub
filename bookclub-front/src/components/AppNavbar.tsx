@@ -54,8 +54,8 @@ export const AppNavbar = ({ menuItems, children }: AppNavbarProps) => {
 
 	return (
 		<>
-			<main style={{ paddingBottom: `${paddingBottom}px` }}>
-				<div ref={contentRef}>{children}</div>
+			<main className="w-full" style={{ paddingBottom: `${paddingBottom}px` }}>
+				<div className="w-full" ref={contentRef}>{children}</div>
 			</main>
 
 			<div
