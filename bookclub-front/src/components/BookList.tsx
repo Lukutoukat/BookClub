@@ -178,7 +178,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 						/>
 					</div>
 				) : (
-					<Card className="card-base grow">
+					<Card className="card-base grow relative z-10">
 						<SectionHeader title={`${description} (${bookCount})`} />
 						{isVotingPhase && (
 							<div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">

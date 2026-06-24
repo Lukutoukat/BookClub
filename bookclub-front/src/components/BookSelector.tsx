@@ -154,7 +154,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				ref={containerRef}
 				shouldFilter={true}
 				// Added [&_[cmdk-input-wrapper]]:border-none to remove standard shadcn bottom border
-				className="h-fit overflow-visible rounded-2xl border border-border/60 bg-background/80 shadow-sm [&_[cmdk-input-wrapper]]:border-none"
+				className="relative h-fit overflow-visible rounded-2xl border border-border/60 bg-background/80 shadow-sm [&_[cmdk-input-wrapper]]:border-none"
 			>
 				{/* The Search Input replaces the Button entirely */}
 				<div className="flex w-full min-w-0 items-center gap-2 [&_[data-slot=command-input-wrapper]]:flex-1 [&_[data-slot=command-input-wrapper]]:p-0">
@@ -177,7 +177,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				</div>
 				{/* The Dropdown list (absolutely positioned below the input) */}
 				{open && (
-					<CommandList className="mx-0 px-0 w-full">
+					<CommandList className="absolute top-full left-0 z-50 mt-1 w-full rounded-xl border border-border bg-background shadow-md mx-0 px-0">
 						{isLoading ? (
 							<CommandEmpty>Loading books...</CommandEmpty>
 						) : (
@@ -189,7 +189,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 											key={book.id}
 											value={`${book.name} ${book.author}`}
 											onSelect={() => handleSelect(book.id)}
-                      className="px-0 pl-4 pr-0 mx-0 w-full"
+											className="px-0 pl-4 pr-0 mx-0 w-full"
 										>
 											<div className="flex flex-1 flex-col w-full min-w-0 gap-0.5 px-0 mx-0">
 												<span className="line-clamp-2 whitespace-normal break-words font-medium text-sm leading-tight px-0 mx-0 w-full">

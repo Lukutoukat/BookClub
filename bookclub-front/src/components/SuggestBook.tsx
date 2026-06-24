@@ -20,7 +20,7 @@ export const SuggestBook = ({ onBookAdded, bookclubId, cycle_id }: suggestBookPr
 	}
 
 	return (
-		<Card className="card-base">
+		<Card className="card-base overflow-visible relative z-30">
 			<SectionHeader
 				title="Suggest book"
 				description="Search saved books, switch to your previously suggested books, or create a new book to suggest!"
