@@ -33,16 +33,20 @@ Admin can see a manage your book club area, where they can manage the club's cyc
 <br>
 When the club's suggestion phase is active, members of the club can suggest one book they would like to read next. They can suggest their saved books (guide below), suggest new ones, or resuggest a book they suggested in the previous cycle. Suggesting a new book is done by pressing create book, user can fillout a form and add all relevant information related to the book.
 <br>
+<img width="" height="" src='../bookclub-front/src/assets/clubpagesuggest.png'>
+<br>
 After the suggestion phase ends, members can see a voting phase. Here they can vote books. Want to read gives 3 points, could read 2 points and won't read 0 points. The votes save automatically and can be changed during the voting phase. Not voting will give 0 points. Admins can end the ongoing phases at any point. New cycle will not start automatically. The result page will be shown until a new cycle is started.
-
+<img width="" height="" src='../bookclub-front/src/assets/clubpagewin.png'>
 ## Books Page
 
 In addition to adding books straight to the ongoing suggestion phase, users can save books for the future. This makes it easier for users to keep track of their books, and makes it possible to suggest the same book in multiple clubs without having to write its information many times. Books page includes a form for adding a book and a list of the books you have saved. The required fields for an added book are title, author and year. User can edit and remove their saved books. They can toggle the visibility of information about the book from more/less. 
+<img width="" height="" src='../bookclub-front/src/assets/books.png'>
 
 ## Create Book Club Page
 
 The create book club page is fairly simple. It has a short input field where user can give the name of the book club they want to make. Upon pressing the create button, user will be directed to their club's page, where they can manage their club. 
-
+<img width="" height="" src='../bookclub-front/src/assets/create.png'>
 ## Settings Page
 
 The settings page has three components: clubs, account and theme. From the clubs component user can either join an existing book club with the invite code or access the create book club page. From the account component user can log out. From the theme component user can switch between light and dark theme.
+<img width="" height="" src='../bookclub-front/src/assets/settings.png'>
