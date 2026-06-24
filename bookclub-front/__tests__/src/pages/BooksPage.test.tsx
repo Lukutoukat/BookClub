@@ -91,7 +91,7 @@ describe('BooksPage', () => {
 				expect(screen.getByText('Book 1')).toBeDefined()
 				expect(screen.getByText('Book 2')).toBeDefined()
 				expect(screen.getByText('Book 3')).toBeDefined()
-				expect(screen.getByText('Books (3)')).toBeDefined()
+				expect(screen.getByText('Books: (3)')).toBeDefined()
 			})
 		})
 
@@ -102,7 +102,7 @@ describe('BooksPage', () => {
 
 			await waitFor(() => {
 				expect(screen.getByText('Book 1')).toBeDefined()
-				expect(screen.getByText('Books (1)')).toBeDefined()
+				expect(screen.getByText('Books: (1)')).toBeDefined()
 			})
 		})
 	})
