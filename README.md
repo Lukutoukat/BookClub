@@ -56,10 +56,8 @@ BookClubApp is developed for all readers, who are looking for a way to manage th
 	For local development put this in a `.env` file in bookclub-backend:
 
 	```
-	DATABASE_URL=postgresql://username:password@localhost:5432/clubdb
-	POSTGRES_HOST=localhost
-	POSTGRES_PASSWORD=password
-	REQUEST_ORIGIN=localhost:3003
+	DATABASE_URL="DATABASE_URL=postgresql://username:password@localhost:5432/clubdb"
+	SECRET=putsomekindapasswordhere
 	```
 
 4. **Run the Application with Docker**
