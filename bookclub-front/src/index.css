@@ -6,6 +6,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+	--breakpoint-3xl: 137rem;
+}
+
 :root {
 	--background: oklch(0.988 0.0041 91.4455);
 	--foreground: oklch(0.2103 0.0059 285.8852);
@@ -215,7 +219,7 @@
 	}
 
 	.page-shell {
-		@apply px-4 py-6 sm:px-6 lg:px-8 mx-auto flex w-full flex-col gap-6 sm:gap-8 max-w-full 2xl:max-w-[85%];
+		@apply flex-1 min-w-0 px-4 py-6 sm:px-6 lg:px-8 mx-auto flex w-full flex-col gap-6 sm:gap-8 max-w-full 2xl:max-w-[85%];
 	}
 
 	.section-header {

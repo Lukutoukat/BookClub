@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@/utils/test-utils'
 import user from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import BooksPage from '@/pages/BooksPage'
@@ -30,10 +30,6 @@ const mockBook = (overrides?: Partial<Book>): Book => ({
 	...overrides
 })
 
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
-
 describe('BooksPage', () => {
 	const mockBooks = (count: number = 2): Book[] => {
 		const isbns = ['9780451524935', '9780596007126', '9781234567897']
@@ -63,7 +59,7 @@ describe('BooksPage', () => {
 		test('displays page title, description, and navigation', async () => {
 			setupMocks({ books: [] })
 
-			renderWithRouter(<BooksPage />)
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('Save books')).toBeDefined()
@@ -79,7 +75,7 @@ describe('BooksPage', () => {
 		test('shows loading state on mount', () => {
 			vi.mocked(bookService.getAll).mockImplementation(() => new Promise(() => {}))
 
-			renderWithRouter(<BooksPage />)
+			render(<BooksPage />)
 
 			expect(screen.getByText('Loading books...')).toBeDefined()
 		})
@@ -95,7 +91,7 @@ describe('BooksPage', () => {
 				expect(screen.getByText('Book 1')).toBeDefined()
 				expect(screen.getByText('Book 2')).toBeDefined()
 				expect(screen.getByText('Book 3')).toBeDefined()
-				expect(screen.getByText('Books (3)')).toBeDefined()
+				expect(screen.getByText('Books: (3)')).toBeDefined()
 			})
 		})
 
@@ -106,7 +102,7 @@ describe('BooksPage', () => {
 
 			await waitFor(() => {
 				expect(screen.getByText('Book 1')).toBeDefined()
-				expect(screen.getByText('Books (1)')).toBeDefined()
+				expect(screen.getByText('Books: (1)')).toBeDefined()
 			})
 		})
 	})
@@ -115,7 +111,7 @@ describe('BooksPage', () => {
 		test('displays empty state when no books', async () => {
 			setupMocks({ books: [] })
 
-			renderWithRouter(<BooksPage />)
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('No books yet.')).toBeDefined()
@@ -125,7 +121,7 @@ describe('BooksPage', () => {
 		test('displays error message when loading fails', async () => {
 			setupMocks({ error: true })
 
-			renderWithRouter(<BooksPage />)
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('Failed to load books.')).toBeDefined()
@@ -140,7 +136,7 @@ describe('BooksPage', () => {
 				status: 200
 			} as any)
 			vi.spyOn(window, 'confirm').mockReturnValue(true)
-			renderWithRouter(<BooksPage />)
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('Book 1')).toBeDefined()
@@ -165,7 +161,7 @@ describe('BooksPage', () => {
 				status: 200
 			} as any)
 
-			renderWithRouter(<BooksPage />)
+			render(<BooksPage />)
 
 			await waitFor(() => {
 				expect(screen.getByText('Book 1')).toBeDefined()

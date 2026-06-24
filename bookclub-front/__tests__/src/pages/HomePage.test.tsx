@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@/utils/test-utils'
 import user from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { describe, test, expect, vi, beforeEach } from 'vitest'
@@ -20,10 +20,6 @@ vi.mock('react-router-dom', async () => {
 	}
 })
 
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
-
 describe('HomePage Component Tree', () => {
 	const mockListMutated = vi.fn()
 
@@ -41,7 +37,7 @@ describe('HomePage Component Tree', () => {
 			listMutated: mockListMutated
 		})
 
-		const { rerender } = renderWithRouter(<HomePage />)
+		const { rerender } = render(<HomePage />)
 		expect(screen.getByText('Loading book clubs...')).toBeInTheDocument()
 
 		// Flip hook state to a finished, empty response payload
@@ -51,12 +47,7 @@ describe('HomePage Component Tree', () => {
 			errorMessage: null,
 			listMutated: mockListMutated
 		})
-
-		rerender(
-			<BrowserRouter>
-				<HomePage />
-			</BrowserRouter>
-		)
+		rerender(<HomePage />)
 		expect(screen.queryByText('Loading book clubs...')).not.toBeInTheDocument()
 		expect(screen.getByText('No book clubs yet')).toBeInTheDocument()
 		expect(screen.getByText('0 book clubs')).toBeInTheDocument()
@@ -77,7 +68,7 @@ describe('HomePage Component Tree', () => {
 		})
 
 		user.setup()
-		renderWithRouter(<HomePage />)
+		render(<HomePage />)
 
 		// Assert headers display calculated amounts
 		expect(screen.getByText('2 book clubs')).toBeInTheDocument()
@@ -104,7 +95,7 @@ describe('HomePage Component Tree', () => {
 		const apiSpy = vi.spyOn(bookclubmembersService, 'create').mockResolvedValue({})
 
 		user.setup()
-		renderWithRouter(<HomePage />)
+		render(<HomePage />)
 
 		const inputField = screen.getByLabelText(/Invite code/i)
 		const submitButton = screen.getByRole('button', { name: /Join/i })

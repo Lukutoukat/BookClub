@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
 import BookForm from './BookForm'
 import BookItem from './BookItem'
+import { useNotification } from '@/context/NotificationContext'
 
 export interface BookListHandle {
 	reload: () => Promise<void>
@@ -26,7 +27,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 			emptyMessage = 'No books yet.',
 			show = 'savedBooks',
 			cycleId = 'nocycle',
-			description = 'Books '
+			description = 'Books: '
 		},
 		ref
 	) => {
@@ -39,6 +40,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 		const isReadOnly = show === 'over'
 		const [votes, setVotes] = useState<VoteFields[]>([])
 		const [refreshOnVote, setRefreshOnVote] = useState(false)
+		const { showSuccess } = useNotification()
 
 		const votesByProposalId = votes.reduce(
 			(acc, vote) => {
@@ -102,6 +104,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 				if (show === 'savedBooks') await bookService.removeFromUser(id)
 				if (show === 'proposedBooks') await proposeService.removeProposedBook(cycleId, id)
 				setBooks((currentBooks) => currentBooks.filter((book) => book.id !== id))
+				showSuccess('Book deleted successfully!')
 			} catch {
 				setErrorMessage('Failed to delete book.')
 			}
@@ -152,7 +155,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 		if (books.length === 0) {
 			return (
 				<Card className="card-base">
-					<SectionHeader title={`${description} ${bookCount}`} />
+					<SectionHeader title={`${description} (${bookCount})`} />
 					<CardContent className="card-content">
 						<div className="text-sm text-muted-foreground text-center py-6">{emptyMessage}</div>
 					</CardContent>
@@ -178,7 +181,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 						/>
 					</div>
 				) : (
-					<Card className="card-base grow">
+					<Card className="card-base grow relative z-10">
 						<SectionHeader title={`${description} (${bookCount})`} />
 						{isVotingPhase && (
 							<div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
@@ -190,11 +193,14 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 								</p>
 								<p>
 									<span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
-									points 
+									points
 								</p>
 								<br></br>
 								<p>
-									<span>Votes are saved automatically. You can change your votes during the voting phase.</span>
+									<span>
+										Votes are saved automatically. You can change your votes during the voting
+										phase.
+									</span>
 								</p>
 							</div>
 						)}

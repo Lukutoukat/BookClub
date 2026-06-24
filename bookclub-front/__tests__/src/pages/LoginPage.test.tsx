@@ -1,16 +1,11 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, within } from '@/utils/test-utils'
 import '@testing-library/jest-dom/vitest'
 import user from '@testing-library/user-event'
-import { BrowserRouter } from 'react-router-dom'
 import LoginPage from '@/pages/LoginPage'
 import LoginService from '@/services/login'
 import { test, expect, describe, vi, beforeEach } from 'vitest'
 
 vi.mock('@/services/login')
-
-const renderWithRouter = (component: React.ReactElement) => {
-	return render(<BrowserRouter>{component}</BrowserRouter>)
-}
 
 describe('LoginPage', () => {
 	beforeEach(() => {
@@ -19,7 +14,7 @@ describe('LoginPage', () => {
 
 	describe('page structure and content', () => {
 		test('renders page title, heading, and description', () => {
-			renderWithRouter(<LoginPage />)
+			render(<LoginPage />)
 
 			expect(screen.getByText('Join the club')).toBeDefined()
 			expect(
@@ -28,7 +23,7 @@ describe('LoginPage', () => {
 		})
 
 		test('renders login badge and login link', () => {
-			renderWithRouter(<LoginPage />)
+			render(<LoginPage />)
 
 			const heading = screen.getByRole('heading', { name: 'Join the club' })
 			const header = heading.closest('header')
@@ -40,7 +35,7 @@ describe('LoginPage', () => {
 		})
 
 		test('renders login form with all input fields and login button', () => {
-			renderWithRouter(<LoginPage />)
+			render(<LoginPage />)
 
 			expect(screen.getByLabelText('Username')).toBeDefined()
 			expect(screen.getByLabelText('Password')).toBeDefined()
@@ -48,7 +43,7 @@ describe('LoginPage', () => {
 		})
 
 		test('registration link navigates to registration page', () => {
-			renderWithRouter(<LoginPage />)
+			render(<LoginPage />)
 
 			const link = screen.getByRole('link', { name: 'Go to registration' })
 			expect(link.getAttribute('href')).toBe('/registration')
@@ -60,7 +55,7 @@ describe('LoginPage', () => {
 			const loginSpy = vi.spyOn(LoginService, 'login').mockResolvedValue({ token: 'fake-token' })
 
 			user.setup()
-			renderWithRouter(<LoginPage />)
+			render(<LoginPage />)
 
 			const usernameInput = screen.getByLabelText('Username')
 			const passwordInput = screen.getByLabelText('Password')

@@ -23,6 +23,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle
 } from '@/components/ui/alert-dialog'
+import { useNotification } from '@/context/NotificationContext'
 
 export interface BookListHandle {
 	reload: () => Promise<void>
@@ -45,6 +46,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 	const [inputValue, setInputValue] = useState('')
 	const [selectedDisplay, setSelectedDisplay] = useState<string>('savedBooks')
 	const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
+	const { showSuccess } = useNotification()
 
 	const containerRef = useRef<HTMLDivElement>(null)
 
@@ -112,9 +114,12 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 					book_id: selectedBookId,
 					bookclub_id: bookclubId
 				})
-				if (onBookAdded) await onBookAdded()
+				if (onBookAdded) {
+					await onBookAdded()
+					showSuccess('Book proposed successfully!')
+				}
 			} catch (error) {
-				setErrorMessage(getErrorMessage(error, 'Failed to suggest book.'))
+				setErrorMessage(getErrorMessage(error, 'Failed to propose book.'))
 			}
 		}
 		setInputValue('')
@@ -154,7 +159,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				ref={containerRef}
 				shouldFilter={true}
 				// Added [&_[cmdk-input-wrapper]]:border-none to remove standard shadcn bottom border
-				className="h-fit overflow-visible rounded-2xl border border-border/60 bg-background/80 shadow-sm [&_[cmdk-input-wrapper]]:border-none"
+				className="relative h-fit overflow-visible rounded-2xl border border-border/60 bg-background/80 shadow-sm [&_[cmdk-input-wrapper]]:border-none"
 			>
 				{/* The Search Input replaces the Button entirely */}
 				<div className="flex w-full min-w-0 items-center gap-2 [&_[data-slot=command-input-wrapper]]:flex-1 [&_[data-slot=command-input-wrapper]]:p-0">
@@ -177,23 +182,26 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				</div>
 				{/* The Dropdown list (absolutely positioned below the input) */}
 				{open && (
-					<CommandList>
+					<CommandList className="absolute top-full left-0 z-50 mt-1 w-full rounded-xl border border-border bg-background shadow-md mx-0 px-0">
 						{isLoading ? (
 							<CommandEmpty>Loading books...</CommandEmpty>
 						) : (
 							<>
 								<CommandEmpty>No books found.</CommandEmpty>
-								<CommandGroup>
+								<CommandGroup className="mx-0 px-0 w-full">
 									{books.map((book) => (
 										<CommandItem
 											key={book.id}
 											value={`${book.name} ${book.author}`}
 											onSelect={() => handleSelect(book.id)}
+											className="px-0 pl-4 pr-0 mx-0 w-full"
 										>
-											<div className="flex w-full flex-col items-start gap-1">
-												<span className="truncate font-medium">{book.name}</span>
+											<div className="flex flex-1 flex-col w-full min-w-0 gap-0.5 px-0 mx-0">
+												<span className="line-clamp-2 whitespace-normal break-words font-medium text-sm leading-tight px-0 mx-0 w-full">
+													{book.name}
+												</span>
 												{book.author && (
-													<span className="truncate text-xs text-muted-foreground">
+													<span className="line-clamp-1 whitespace-normal text-xs text-muted-foreground leading-tight px-0 mx-0 w-full">
 														{book.author}
 													</span>
 												)}

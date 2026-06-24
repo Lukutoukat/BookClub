@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { SectionHeader } from './SectionHeader'
+import { useNotification } from '@/context/NotificationContext'
 
 interface BookFormState {
 	id?: string
@@ -67,6 +68,7 @@ const BookForm = ({
 }: BookFormProps) => {
 	const [newBook, setNewBook] = useState<BookFormState>(emptyBook)
 	const [errors, setErrors] = useState<string[]>([])
+	const { showSuccess } = useNotification()
 
 	// Initialize form with bookToEdit data when it's provided
 	useEffect(() => {
@@ -222,6 +224,7 @@ const BookForm = ({
 					}
 					// Update existing book
 					await bookService.update(bookToEdit.id, bookToUpdateSubmit)
+					showSuccess('Book updated successfully!')
 				} else {
 					const bookToSubmit: CreateBook = {
 						isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
@@ -235,6 +238,7 @@ const BookForm = ({
 					}
 					// Create new book
 					await bookService.createForPropose(cycle_id, bookToSubmit)
+					showSuccess('Book created successfully!')
 				}
 				setErrors([])
 				if (onBookAdded) {
@@ -256,6 +260,7 @@ const BookForm = ({
 				}
 				// Create new book
 				await bookService.create(bookToSubmit)
+				showSuccess('Book created successfully!')
 				setNewBook(emptyBook)
 				setErrors([])
 				if (onBookAdded) {

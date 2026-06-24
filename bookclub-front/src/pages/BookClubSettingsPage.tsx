@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom'
-import { UserLoginDisplay } from '@/components/UserLoginDisplay'
 import ClubSettingsDisplay from '@/components/ClubSettingsDisplay'
 const ClubSettingsPage = () => {
 	const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -8,7 +7,6 @@ const ClubSettingsPage = () => {
 
 	return (
 		<>
-			<UserLoginDisplay />
 			<ClubSettingsDisplay bookclubId={bookclubId} />
 		</>
 	)

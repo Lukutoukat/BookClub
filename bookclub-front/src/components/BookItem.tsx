@@ -65,7 +65,6 @@ const BookItem = ({
 	}
 
 	return (
-		// className="list-card"
 		<Card
 			className={`border-border/60 shadow-sm transition-all ${
 				podium ? podiumClasses[podium] : 'bg-background/80 hover:bg-background/90'
@@ -84,103 +83,116 @@ const BookItem = ({
 						</div>
 					)}
 
-					<div className="space-y-0.5 flex-1 cursor-pointer">
-						<div className="flex flex-wrap items-center gap-2  w-full">
-							<h3 className="text-lg font-semibold text-foreground/90">{book.name}</h3>
+					<div className="grid w-full grid-cols-1 md:grid-cols-[1fr_auto] gap-4 flex-1 cursor-pointer relative">
+						<div className="flex flex-col gap-1 min-w-0">
+							<div className="flex flex-wrap items-center gap-2 w-full">
+								<h3 className="text-lg font-semibold text-foreground/90 break-words">
+									{book.name}
+								</h3>
 
-							{book.genre && (
-								<Badge variant="secondary" className="font-normal text-xs">
-									{book.genre}
-								</Badge>
-							)}
+								{book.genre && (
+									<Badge variant="secondary" className="font-normal text-xs shrink-0">
+										{book.genre}
+									</Badge>
+								)}
 
-							{!isReadOnly && !isVotingPhase && (book?.owned_by_user ?? true) && (
+								{!isReadOnly && !isVotingPhase && (book?.owned_by_user ?? true) && (
+									<Button
+										type="button"
+										variant="secondary"
+										size="xs"
+										className="gap-4 ml-auto shrink-0"
+										onClick={(e: React.MouseEvent) => {
+											e.stopPropagation()
+											onEdit()
+										}}
+									>
+										Edit
+									</Button>
+								)}
+
+								{!isReadOnly && !isVotingPhase && (book?.owned_by_user ?? true) && (
+									<ButtonDialog
+										buttonOnClick={handleDelete}
+										disabled={isDeleting}
+										buttonVariant="ghost"
+										buttonClassName="h-6 w-6 text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
+										buttonText=""
+										buttonTitle="Delete book"
+										alertDialogDescription="Deleting a book cannot be undone."
+									>
+										<Trash2 className="h-4 w-4" />
+									</ButtonDialog>
+								)}
+							</div>
+
+							<div className="flex items-center text-sm text-muted-foreground gap-2 mt-1">
+								<span className="font-medium text-foreground/70">{book.author}</span>
+								<span>&bull;</span>
+								<span>{book.year}</span>
+							</div>
+
+							<div className="mt-1">
 								<Button
 									type="button"
-									variant="secondary"
-									size="xs"
-									className="gap-4 ml-auto shrink-0"
+									variant="ghost"
+									size="sm"
+									className="h-6 px-2 text-muted-foreground hover:text-foreground"
 									onClick={(e: React.MouseEvent) => {
 										e.stopPropagation()
-										onEdit()
+										setIsExpanded(!isExpanded)
 									}}
 								>
-									Edit
+									{isExpanded ? (
+										<ChevronUp className="h-4 w-4" />
+									) : (
+										<ChevronDown className="h-4 w-4" />
+									)}
+									<span className="text-xs font-medium hidden sm:inline ml-1">
+										{isExpanded ? 'Less' : 'More'}
+									</span>
 								</Button>
-							)}
-
-							{!isReadOnly && !isVotingPhase && (book?.owned_by_user ?? true) && (
-								<ButtonDialog
-									buttonOnClick={handleDelete}
-									disabled={isDeleting}
-									buttonVariant="ghost"
-									buttonClassName="h-6 w-6 text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
-									buttonText=""
-									buttonTitle="Delete book"
-									alertDialogDescription="Deleting a book cannot be undone."
-								>
-									<Trash2 className="h-4 w-4" />
-								</ButtonDialog>
-							)}
-						</div>
-						<div className="flex items-center text-sm text-muted-foreground gap-2">
-							<span className="font-medium text-foreground/70">{book.author}</span>
-							<span>&bull;</span>
-							<span>{book.year}</span>
-						</div>
-
-						<div>
-							<Button
-								type="button"
-								variant="ghost"
-								size="sm"
-								className="h-6 px-2 text-muted-foreground hover:text-foreground"
-								onClick={(e: React.MouseEvent) => {
-									e.stopPropagation()
-									setIsExpanded(!isExpanded)
-								}}
-							>
-								{isExpanded ? (
-									<ChevronUp className="h-4 w-4" />
-								) : (
-									<ChevronDown className="h-4 w-4" />
-								)}
-								<span className="text-xs font-medium hidden sm:inline">
-									{isExpanded ? 'Less' : 'More'}
-								</span>
-							</Button>
+							</div>
 						</div>
 
 						{isVotingPhase && (
-							<RadioGroup
-								className="justify-end self-end"
-								value={weight?.toString() ?? ''}
-								onValueChange={async (val) => {
-									const w = Number(val)
-									setWeight(w)
-									if (!book.id) return
-									if (!book.proposal_id) return
+							<div className="flex items-start justify-end shrink-0">
+								<RadioGroup
+									className="flex flex-col gap-2"
+									value={weight?.toString() ?? ''}
+									onValueChange={async (val) => {
+										const w = Number(val)
+										setWeight(w)
+										if (!book.id) return
+										if (!book.proposal_id) return
 
-									await onVote(book.proposal_id, w, voteId ?? null)
-								}}
-							>
-								<div className="flex items-center gap-4">
-									<RadioGroupItem value="3" id={`want-${book.id}`} />
-									<Label htmlFor={`want-${book.id}`}>Want to read</Label>
-								</div>
-								<div className="flex items-center gap-4">
-									<RadioGroupItem value="2" id={`could-${book.id}`} />
-									<Label htmlFor={`could-${book.id}`}>Could read</Label>
-								</div>
-								<div className="flex items-center gap-4">
-									<RadioGroupItem value="0" id={`dont-${book.id}`} />
-									<Label htmlFor={`dont-${book.id}`}>Don&apos;t want to read</Label>
-								</div>
-							</RadioGroup>
+										await onVote(book.proposal_id, w, voteId ?? null)
+									}}
+								>
+									<div className="flex items-center gap-3">
+										<RadioGroupItem value="3" id={`want-${book.id}`} />
+										<Label htmlFor={`want-${book.id}`} className="text-sm">
+											Want to read
+										</Label>
+									</div>
+									<div className="flex items-center gap-3">
+										<RadioGroupItem value="2" id={`could-${book.id}`} />
+										<Label htmlFor={`could-${book.id}`} className="text-sm">
+											Could read
+										</Label>
+									</div>
+									<div className="flex items-center gap-3">
+										<RadioGroupItem value="0" id={`dont-${book.id}`} />
+										<Label htmlFor={`dont-${book.id}`} className="text-sm">
+											Don&apos;t want to read
+										</Label>
+									</div>
+								</RadioGroup>
+							</div>
 						)}
 
 						{isExpanded && (
-							<div className="mt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+							<div className="col-span-full mt-2 animate-in fade-in slide-in-from-top-2 duration-300">
 								<Separator className="mb-2 opacity-50" />
 								<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 text-sm">
 									<div>
