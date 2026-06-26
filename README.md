@@ -35,23 +35,36 @@ BookClubApp is developed for all readers, who are looking for a way to manage th
 	- [Node.js and npm](https://nodejs.org/)
 	- [Docker and Docker Compose](https://www.docker.com/)
 
-2. **Install Dependencies**
-
-	Backend:
+2. **Clone The Repository**
 
 	```bash
-	cd bookclub-backend
-	npm install
-	```
+	git clone git@github.com:Lukutoukat/BookClub.git
+ 	```
 
-	Frontend:
+3. **Install Dependencies**
+
+	Backend:
 
 	```bash
 	cd bookclub-front
 	npm install
 	```
 
-3. **Set Up Environment Variables**
+	Frontend:
+
+	```bash
+	cd ../bookclub-backend
+	npm install
+	```
+
+4. **Generate Prisma Client**
+
+	In bookclub-backend run:
+	```bash
+	npx prisma generate
+	```
+
+5. **Set Up Environment Variables**
 
 	For local development put this in a `.env` file in bookclub-backend:
 
@@ -60,7 +73,7 @@ BookClubApp is developed for all readers, who are looking for a way to manage th
 	SECRET=putsomekindapasswordhere
 	```
 
-4. **Run the Application with Docker**
+6. **Run the Application with Docker**
 
     ```bash
     docker compose up --build
