@@ -1,0 +1,18 @@
+# This workflow defines a job which restricts
+# merges into main from branches other than dev.
+name: Main Branch Protection
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ensure-main-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Ensure that only dev branch can be merged into main branch"
+        run: |
+          if [ "$GITHUB_HEAD_REF" != "dev" ]; then
+            echo "❌ Only PRs from 'dev' are allowed into 'main'."
+            exit 1
+          fi
