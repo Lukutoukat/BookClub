@@ -16,7 +16,7 @@ export interface BookclubMember {
 	}
 }
 
-export type AddBookClubMember = Omit<BookclubMember, 'id' | 'bookclub_id'>
+export type AddBookClubMember = Omit<BookclubMember, 'id' | 'bookclub_id' | 'user_id'>
 
 const create = (newBookClubMember: AddBookClubMember) => {
 	return axios
