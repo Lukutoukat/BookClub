@@ -6,7 +6,9 @@ jest.mock('../db.ts', () => ({
   prisma: {
     bookClubMembers: {
       findMany: jest.fn(),
-      create: jest.fn()
+      create: jest.fn(),
+      findFirst: jest.fn(),
+      deleteMany: jest.fn(),
     },
     user: {
       findUnique: jest.fn()
@@ -74,6 +76,55 @@ describe('/api/bookclubmembers', () => {
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
     })
+
+    it('/api/bookclubmembers/:id returns the club members of specified club', async () => {
+      const mockClubMembers = [
+        {
+          user_id: '1',
+          user_role: '1',
+          bookclub_id: '1',
+          User: {
+            id: '1',
+            name: 'pekka',
+            email: 'pekka@test.com',
+          }
+        }
+      ]
+
+      ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue(mockClubMembers)
+
+      const response = await request(app)
+        .get('/api/bookclubmembers/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual(mockClubMembers)
+      expect(prisma.bookClubMembers.findMany).toHaveBeenCalledWith({
+        where:{
+          bookclub_id: '1'
+        },
+        include: {
+          User: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            }
+          }
+        }
+      })
+    })
+
+    it('returns empty list for non-existant clubs', async () => {
+      ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue([])
+
+      const response = await request(app)
+        .get('/api/bookclubmembers/100')
+        .set(authHeaders())
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual([])
+    })
   })
 
   describe('POST', () => {
@@ -116,6 +167,93 @@ describe('/api/bookclubmembers', () => {
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
+    })
+  })
+
+  describe('DELETE', () => {
+    const mockAdmin = {
+      user_id: '1',
+      user_role: 0,
+      bookclub_id: '1',
+    }
+    const mockMember = {
+      user_id: '2',
+      user_role: 1,
+      bookclub_id: '1',
+    }
+
+    it('member is deleted from bookclub', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(mockAdmin)
+        .mockResolvedValueOnce(mockMember)
+      ;(prisma.bookClubMembers.deleteMany as jest.Mock).mockResolvedValue({ count: 1 })
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1/2')
+        .set(authHeaders())
+      
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        success: true,
+        message: 'member removed successfully',
+      })
+      expect(prisma.bookClubMembers.findFirst).toHaveBeenNthCalledWith(1, {
+        where: { user_id: '1', user_role: 0, bookclub_id: '1' }
+      })
+      expect(prisma.bookClubMembers.findFirst).toHaveBeenNthCalledWith(2, {
+        where: { user_id: '2', bookclub_id: '1' }
+      })
+      expect(prisma.bookClubMembers.deleteMany).toHaveBeenCalledWith({
+        where: { bookclub_id: '1', user_id: '2' }
+      })
+    })
+
+    it('returns 401 when logged user is not admin', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(null)
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1/2')
+        .set(authHeaders())
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({
+        error: 'logged user is not club admin'
+      })
+    })
+
+    it('returns 404 when user does not exist in club', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(mockAdmin)
+        .mockResolvedValueOnce(null)
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1/2')
+        .set(authHeaders())
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({
+        error: 'member not found'
+      })
+    })
+
+    it('returns 403 when member being deleted is an admin', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(mockAdmin)
+        .mockResolvedValueOnce({
+          user_id: '1',
+          user_role: 0,
+          bookclub_id: '1'
+        })
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'cannot delete an admin member'
+      })
     })
   })
 })
