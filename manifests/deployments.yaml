@@ -6,7 +6,7 @@ metadata:
     alpha.image.policy.openshift.io/resolve-names: "*"
     image.openshift.io/triggers: >-
       [{"from":{"kind":"ImageStreamTag","name":"bookclub:staging","namespace":"bookclub-ohtu-s2026"},"fieldPath":"spec.template.spec.containers[?(@.name==\"bookclub\")].image","pause":"false"}]
-  name: bookclub-staging
+  name: bookclub-staging-dep
 spec:
   replicas: 0
   selector:
@@ -26,7 +26,7 @@ spec:
             - containerPort: 3003
           envFrom:
             - configMapRef:
-                name: bookclub-staging-config
+                name: bookclub-staging-cfg
 
 ---
 
@@ -38,7 +38,7 @@ metadata:
     alpha.image.policy.openshift.io/resolve-names: "*"
     image.openshift.io/triggers: >-
       [{"from":{"kind":"ImageStreamTag","name":"bookclub:prod","namespace":"bookclub-ohtu-s2026"},"fieldPath":"spec.template.spec.containers[?(@.name==\"bookclub\")].image","pause":"false"}]
-  name: bookclub-prod
+  name: bookclub-prod-dep
 spec:
   replicas: 0
   selector:
@@ -58,4 +58,4 @@ spec:
             - containerPort: 3003
           envFrom:
             - configMapRef:
-                name: bookclub-prod-config
+                name: bookclub-prod-cfg

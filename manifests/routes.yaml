@@ -2,7 +2,7 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: bookclub-staging
+  name: bookclub-staging-route
   namespace: bookclub-ohtu-s2026
   labels:
     app: bookclub
@@ -14,7 +14,7 @@ spec:
     targetPort: 3003
   to:
     kind: Service
-    name: bookclub-staging
+    name: bookclub-staging-svc
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
@@ -26,19 +26,19 @@ spec:
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: bookclub-prod
+  name: bookclub-prod-route
   namespace: bookclub-ohtu-s2026
   labels:
     app: bookclub
     type: external
     router: external
 spec:
-  host: bookclub-ohtu-prod.ext.okd-cs-test-0.k8s.cs.helsinki.fi
+  host: bookclub-ohtu.ext.okd-cs-test-0.k8s.cs.helsinki.fi
   port:
     targetPort: 3003
   to:
     kind: Service
-    name: bookclub-prod
+    name: bookclub-prod-svc
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
