@@ -44,7 +44,7 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 						bookclubId={bookclubId}/>
 				</CardContent>
 				<SectionHeader
-					title="Club Settings"
+					title="Manage Club"
 					description="You can remove your book club and all information related to it below"
 				/>
 				<CardContent className="card-content">
