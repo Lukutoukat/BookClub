@@ -1,0 +1,61 @@
+# STAGING DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: "*"
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"bookclub:staging","namespace":"bookclub-ohtu-s2026"},"fieldPath":"spec.template.spec.containers[?(@.name==\"bookclub\")].image","pause":"false"}]
+  name: bookclub-staging
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: bookclub
+      env: staging
+  template:
+    metadata:
+      labels:
+        app: bookclub
+        env: staging
+    spec:
+      containers:
+        - name: bookclub
+          image: bookclub:staging
+          ports:
+            - containerPort: 3003
+          envFrom:
+            - configMapRef:
+                name: bookclub-staging-config
+
+---
+
+# PRODUCTION DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: "*"
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"bookclub:prod","namespace":"bookclub-ohtu-s2026"},"fieldPath":"spec.template.spec.containers[?(@.name==\"bookclub\")].image","pause":"false"}]
+  name: bookclub-prod
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: bookclub
+      env: prod
+  template:
+    metadata:
+      labels:
+        app: bookclub
+        env: prod
+    spec:
+      containers:
+        - name: bookclub
+          image: bookclub:prod
+          ports:
+            - containerPort: 3003
+          envFrom:
+            - configMapRef:
+                name: bookclub-prod-config

@@ -1,0 +1,45 @@
+# STAGING ROUTE
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: bookclub-staging
+  namespace: bookclub-ohtu-s2026
+  labels:
+    app: bookclub
+    type: external
+    router: external
+spec:
+  host: bookclub-ohtu-staging.ext.okd-cs-test-0.k8s.cs.helsinki.fi
+  port:
+    targetPort: 3003
+  to:
+    kind: Service
+    name: bookclub-staging
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+
+---
+
+# PRODUCTION ROUTE
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: bookclub-prod
+  namespace: bookclub-ohtu-s2026
+  labels:
+    app: bookclub
+    type: external
+    router: external
+spec:
+  host: bookclub-ohtu-prod.ext.okd-cs-test-0.k8s.cs.helsinki.fi
+  port:
+    targetPort: 3003
+  to:
+    kind: Service
+    name: bookclub-prod
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
