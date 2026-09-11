@@ -1,9 +1,9 @@
-name: Build and Push Docker Image
+name: Build and Push Staging Image
 
 on:
   push:
     branches:
-      - main
+      - dev
   workflow_dispatch:
 
 jobs:
