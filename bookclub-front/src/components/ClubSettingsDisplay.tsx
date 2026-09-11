@@ -4,6 +4,7 @@ import { PageHeader } from './PageHeader'
 import { ButtonDialog } from './ButtonDialog'
 import { Card, CardContent } from './ui/card'
 import { SectionHeader } from './SectionHeader'
+import { ClubMemberList } from './ClubMemberList'
 type Props = {
 	bookclubId: string
 }
@@ -34,8 +35,16 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 				}}
 			/>
 			<Card className="card-base">
+				<SectionHeader 
+					title="Manage Members"
+					description="You can manage individual members below"
+				/>
+				<CardContent>
+					<ClubMemberList 
+						bookclubId={bookclubId}/>
+				</CardContent>
 				<SectionHeader
-					title="Club Settings"
+					title="Manage Club"
 					description="You can remove your book club and all information related to it below"
 				/>
 				<CardContent className="card-content">
