@@ -234,6 +234,10 @@
 		@apply text-xs sm:text-sm leading-snug text-muted-foreground pt-1 sm:pt-2;
 	}
 
+	.member-list {
+		@apply flex flex-row flex-wrap items-center justify-between border-b-1 min-h-[50px]
+	}
+
 	.form-grid {
 		@apply mt-6 sm:mt-8 xl:mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 xl:gap-8;
 	}

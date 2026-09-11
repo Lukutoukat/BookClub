@@ -29,7 +29,7 @@ export const ClubMemberList = ({ bookclubId }: Props) => {
     return (
         <>
             {members.map((member) => (
-                <div key={member.id} className='flex flex-row flex-wrap items-center justify-between border-b-1 min-h-[50px]'>
+                <div key={member.id} className='member-list'>
                     <div>
                         {member.User?.name}
                     </div>
