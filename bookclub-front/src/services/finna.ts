@@ -14,11 +14,44 @@ export interface FinnaBook {
     year?: string
     languages?: string[]
     authors?: FinnaAuthors
+    physicalDescriptions?: string[]
+    genres?: string[]
 }
 
 export interface FinnaSearchResponse {
     resultCount: number
     records: FinnaBook[]
+}
+
+export const getPrimaryAuthor = (book: FinnaBook) => {
+    return Object.keys(book.authors?.primary ?? {})[0] ?? ''
+}
+
+export const getPageCount = (book: FinnaBook) => {
+    const description = book.physicalDescriptions?.[0] ?? ''
+    const match = description.match(/(\d+)\s+sivua/)
+    return match?.[1] ?? ''
+}
+
+const getBookGroupKey = (book: FinnaBook) => {
+    const title = book.title ?? ''
+    const author = getPrimaryAuthor(book)
+    return `${title}|${author}`
+}
+
+const groupBooks = (books: FinnaBook[]) : FinnaBook[][] => {
+    const groups = new Map<string, FinnaBook[]>()
+    for (const book of books) {
+        const key = getBookGroupKey(book)
+        const existingGroup = groups.get(key)
+
+        if (existingGroup) {
+            existingGroup.push(book)
+        } else {
+            groups.set(key, [book])
+        }
+    }
+    return Array.from(groups.values())
 }
 
 const searchHelmetBooks = (query: string) => {
@@ -33,10 +66,11 @@ const searchHelmetBooks = (query: string) => {
     params.append("field[]", "year")
     params.append("field[]", "languages")
     params.append("field[]", "authors")
-
-    return axios.get<FinnaSearchResponse>(baseURL, { params }).then((response) => response.data.records)
+    params.append("field[]", "physicalDescriptions")
+    params.append("field[]", "genres")
+    return axios.get<FinnaSearchResponse>(baseURL, { params }).then((response) => groupBooks(response.data.records ?? []))
 }
 
 export default {
-    searchHelmetBooks
+    searchHelmetBooks,
 }
