@@ -82,4 +82,29 @@ userRouter.get('/', userExtractor, async (_req: Request, res: Response) => {
   }
 })
 
+userRouter.delete('/', userExtractor, async (req: Request, res: Response) => {
+  try {
+
+    // Ensure request contains an extracted user
+    const user = req.user;
+    if (!user) {
+      res.status(403).json({})
+      return;
+    }
+
+    // Attempt to delete current user
+    const userDeletion = await prisma.user.delete({where: {id: user.id}})
+    if (!userDeletion) {
+      res.status(404).json({ error: 'User could not be found'})
+      return;
+    }
+
+    res.status(200).json({})
+  } catch (error) {
+    console.error('DELETE /api/users error:', error)
+
+    res.status(500).json({ error: 'A database error occurred' })
+  }
+})
+
 export default userRouter
