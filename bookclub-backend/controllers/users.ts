@@ -85,7 +85,7 @@ userRouter.get('/', userExtractor, async (_req: Request, res: Response) => {
 userRouter.delete('/', userExtractor, async (req: Request, res: Response) => {
   try {
 
-    // Ensure request contains an extracted user
+    // Ensure request contains an existing extracted user
     const user = req.user;
     if (!user) {
       res.status(403).json({})
@@ -95,7 +95,7 @@ userRouter.delete('/', userExtractor, async (req: Request, res: Response) => {
     // Attempt to delete current user
     const userDeletion = await prisma.user.delete({where: {id: user.id}})
     if (!userDeletion) {
-      res.status(404).json({ error: 'User could not be found'})
+      res.status(500).json({ error: 'User could not be deleted'})
       return;
     }
 
