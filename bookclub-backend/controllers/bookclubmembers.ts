@@ -42,7 +42,7 @@ BookClubMembersRouter.get('/:id', userExtractor, async (req: Request, res: Respo
   const bookclub_id = req.params.id as string
 
   if (!req.user) {
-    return res.status(401).json({ error: 'user not found' })
+    return res.status(401).json({ error: 'user not authenticated' })
   }
 
   try {
@@ -119,19 +119,19 @@ BookClubMembersRouter.delete('/:id/:user_id', userExtractor, async (req: Request
   const user_id = req.params.user_id as string
 
   if (!req.user) {
-    return res.status(401).json({ error: 'user not found' })
+    return res.status(401).json({ error: 'user not authenticated' })
   }
 
   try {
-    const loggedInMember = await prisma.bookClubMembers.findFirst({
+    const isAdmin = await prisma.bookClubMembers.findFirst({
       where: { user_id: req.user.id, user_role: 0, bookclub_id }
     })
     const targetMember = await prisma.bookClubMembers.findFirst({
       where: { user_id, bookclub_id }
     })
 
-    if (!loggedInMember) {
-      return res.status(401).json({ error: 'logged user is not club admin'})
+    if (!isAdmin) {
+      return res.status(403).json({ error: 'permission denied'})
     }
 
     if (!targetMember) {
