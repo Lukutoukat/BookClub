@@ -39,19 +39,35 @@ BookClubMembersRouter.get('/', userExtractor, async (req: Request, res: Response
 })
 
 BookClubMembersRouter.get('/:id', userExtractor, async (req: Request, res: Response) => {
+  const bookclub_id = req.params.id as string
+
   if (!req.user) {
     return res.status(401).json({ error: 'user not found' })
   }
 
   try {
+    const isClub = await prisma.bookClub.findFirst({
+      where: { id: bookclub_id }
+    })
+    const isAdmin = await prisma.bookClubMembers.findFirst({
+      where: { user_id: req.user.id, user_role: 0, bookclub_id }
+    })
+
+    if (!isClub) {
+      return res.status(404).json({ error: 'club not found' })
+    }
+
+    if (!isAdmin) {
+      return res.status(403).json({ error: 'permission denied' })
+    }
+
     const result = await prisma.bookClubMembers.findMany({
       where: { bookclub_id: req.params.id.toString() },
       include: {
         User: {
           select: {
             id: true,
-            name: true,
-            email: true
+            name: true
           }
         }
       }
