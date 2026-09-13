@@ -14,7 +14,8 @@ jest.mock('../db.ts', () => ({
       findUnique: jest.fn()
     },
     bookClub: {
-      findUnique: jest.fn()
+      findUnique: jest.fn(),
+      findFirst: jest.fn()
     }
   }
 }))
@@ -81,7 +82,7 @@ describe('/api/bookclubmembers', () => {
       const mockClubMembers = [
         {
           user_id: '1',
-          user_role: '1',
+          user_role: '0',
           bookclub_id: '1',
           User: {
             id: '1',
@@ -91,6 +92,8 @@ describe('/api/bookclubmembers', () => {
         }
       ]
 
+      ;(prisma.bookClub.findFirst as jest.Mock).mockResolvedValue({ id: '1' })
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({ id: '1' })
       ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue(mockClubMembers)
 
       const response = await request(app)
@@ -107,23 +110,22 @@ describe('/api/bookclubmembers', () => {
           User: {
             select: {
               id: true,
-              name: true,
-              email: true,
+              name: true
             }
           }
         }
       })
     })
 
-    it('returns empty list for non-existant clubs', async () => {
-      ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue([])
+    it('returns 404 for non-existant clubs', async () => {
+      ;(prisma.bookClub.findFirst as jest.Mock).mockResolvedValue(null)
 
       const response = await request(app)
         .get('/api/bookclubmembers/100')
         .set(authHeaders())
 
-      expect(response.status).toBe(200)
-      expect(response.body).toEqual([])
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({ error: 'club not found' })
     })
   })
 
@@ -208,7 +210,7 @@ describe('/api/bookclubmembers', () => {
       })
     })
 
-    it('returns 401 when logged user is not admin', async () => {
+    it('returns 403 when logged user is not admin', async () => {
       ;(prisma.bookClubMembers.findFirst as jest.Mock)
         .mockResolvedValueOnce(null)
 
@@ -216,9 +218,9 @@ describe('/api/bookclubmembers', () => {
         .delete('/api/bookclubmembers/1/2')
         .set(authHeaders())
 
-      expect(response.status).toBe(401)
+      expect(response.status).toBe(403)
       expect(response.body).toEqual({
-        error: 'logged user is not club admin'
+        error: 'permission denied'
       })
     })
 
