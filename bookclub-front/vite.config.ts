@@ -33,6 +33,7 @@ export default defineConfig({
 		setupFiles: './testSetup.ts',
 		exclude: ['**/node_modules/**', '**/dist/**', './temp/**', './src/components/ui/**'],
 		testTimeout: 6000,
+		pool: "vmThreads",
 		coverage: {
 			include: ['./src/**'],
 			exclude: ['./src/main.tsx', './src/components/ui/**', '**.css', './src/assets/**']
