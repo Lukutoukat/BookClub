@@ -26,15 +26,13 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
 
         try {
             const books = await finnaService.searchHelmetBooks(query)
-            console.log("Helmet books:", books)
-            console.log("Number of groups:", books.length)
             if (books.length === 0) {
                 setSearchError('No books found.')
                 return
             }
             setBookGroups(books)
 
-        } catch (error) {
+        } catch {
             setSearchError('Search failed.')
         }
     }

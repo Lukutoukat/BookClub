@@ -20,7 +20,7 @@ export interface FinnaBook {
 
 export interface FinnaSearchResponse {
     resultCount: number
-    records: FinnaBook[]
+    records?: FinnaBook[]
 }
 
 export const getPrimaryAuthor = (book: FinnaBook) => {

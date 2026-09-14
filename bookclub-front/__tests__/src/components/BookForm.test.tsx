@@ -6,10 +6,35 @@ import BookForm from '@/components/BookForm'
 import bookService from '@/services/books'
 export default BookForm
 import '@testing-library/jest-dom/vitest'
+import type { FinnaBook } from '@/services/finna'
 
 vi.mock('../../../src/services/books')
+vi.mock('@/components/HelmetBookSearch', () => ({
+	HelmetBookSearch: ({ onBookSelect }: { onBookSelect: (book: FinnaBook) => void }) => (
+		<button
+			type="button"
+			onClick={() => onBookSelect(mockFinnaBook)}
+		>
+			Select Helmet Book
+		</button>
+	)
+}))
 
 const addBookMock = vi.fn()
+const mockFinnaBook: FinnaBook = {
+	id: "book1",
+	title: "1984",
+	authors: {
+		primary: {
+			"George Orwell": {}
+		}
+	},
+	cleanIsbn: "9780451524935",
+	year: "2021",
+	languages: ["English"],
+	physicalDescriptions: ["328 sivua, 20 cm"],
+	genres: ["Tieteiskirjat", "Dystopiat"]
+}
 
 describe('BookForm', () => {
 	beforeEach(() => {
@@ -57,6 +82,22 @@ describe('BookForm', () => {
 		await user.type(comment, 'Great book for developers')
 
 		expect(comment).toHaveValue('Great book for developers')
+	})
+
+	it('prefills form fields when Helmet book is selected', async () => {
+		const user = userEvent.setup()
+
+		render(<BookForm />)
+
+		await user.click(screen.getByRole('button', { name: 'Select Helmet Book' }))
+
+		expect(screen.getByPlaceholderText('A Tale of Two Cities')).toHaveValue('1984')
+		expect(screen.getByPlaceholderText('Charles Dickens')).toHaveValue('George Orwell')
+		expect(screen.getByPlaceholderText('9780141439600')).toHaveValue('9780451524935')
+		expect(screen.getByPlaceholderText('1859')).toHaveValue('2021')
+		expect(screen.getByPlaceholderText('English')).toHaveValue('English')
+		expect(screen.getByPlaceholderText('Historical fiction')).toHaveValue('Tieteiskirjat')
+		expect(screen.getByPlaceholderText('544')).toHaveValue('328')
 	})
 
 	it('calls bookService.create with form data on submit', async () => {

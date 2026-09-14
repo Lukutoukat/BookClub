@@ -35,10 +35,38 @@ const mockBooks = [
         languages: ["English"],
         physicalDescriptions: ["500 sivua, 48 cm"],
         genres: ["Romaanit"]
+    },
+    {
+        id: "book3",
+        title: "1984",
+        authors: {
+            primary: {
+                "Matti Meikäläinen": {}
+            }
+        },
+        cleanIsbn: "9780451524001",
+        year: "2001",
+        languages: ["English"],
+        physicalDescriptions: ["600 sivua, 48 cm"],
+        genres: ["Romaanit"]
+    },
+    {
+        id: "book4",
+        title: "Puhdistus",
+        authors: {
+            primary: {
+                "Matti Meikäläinen": {}
+            }
+        },
+        cleanIsbn: "9780451524002",
+        year: "2002",
+        languages: ["English"],
+        physicalDescriptions: ["700 sivua, 48 cm"],
+        genres: ["Romaanit"]
     }
 ]
 
-test('getPageCount returns the correct page count from phiysicalDescriptions', () => {
+test('getPageCount returns the correct page count from physicalDescriptions', () => {
     const book: FinnaBook = {
         id: "testbook",
         physicalDescriptions: ["123 sivua, 30 cm"]
@@ -71,7 +99,7 @@ test('getPrimaryAuthor returns the primary author', () => {
     expect(result).toBe("testauthor")
 })
 
-test('getPriamryAuthor returns empty stirng when author is missing', () => {
+test('getPrimaryAuthor returns empty stirng when author is missing', () => {
     const book: FinnaBook = {
         id: "testbook"
     }
@@ -83,15 +111,17 @@ test('getPriamryAuthor returns empty stirng when author is missing', () => {
 test('searchHelmetBooks returns grouped books', async () => {
     mockedAxios.get.mockResolvedValue({
         data: {
-            resultCount: 2,
+            resultCount: 4,
             records: mockBooks
         }
     })
 
     const result = await finnaService.searchHelmetBooks("1984")
 
-    expect(result.length).toBe(1)
+    expect(result.length).toBe(3)
     expect(result[0].length).toBe(2)
+    expect(result[1].length).toBe(1)
+    expect(result[2].length).toBe(1)
 })
 
 test('searchHelmetBooks returns empty array when records are missing', async () => {
