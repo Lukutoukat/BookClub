@@ -19,7 +19,9 @@ const create = (newBookClubMember: AddBookClubMember) => {
 }
 
 const get = () => {
-	return axios.get<BookclubMember[]>(baseUrl, getAuthConfig()).then((res) => res.data)
+	return axios
+		.get<BookclubMember[]>(baseUrl, getAuthConfig())
+		.then((res) => res.data)
 }
 
 export default {
