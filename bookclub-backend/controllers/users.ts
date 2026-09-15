@@ -82,4 +82,53 @@ userRouter.get('/', userExtractor, async (_req: Request, res: Response) => {
   }
 })
 
+// Change password endpoint
+// Expects { currentPassword: string, newPassword: string } in the body
+userRouter.put(
+  '/password',
+  userExtractor,
+  async (
+    req: Request<unknown, unknown, { currentPassword?: string; newPassword?: string }>,
+    res: Response
+  ) => {
+    try {
+      const { currentPassword, newPassword } = req.body
+
+      const user = req.user as unknown as { id: string; password_hash: string } | undefined
+
+      if (!user || !user.id) {
+        return res.status(401).json({ error: 'user not authenticated' })
+      }
+
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ error: 'currentPassword and newPassword are required' })
+      }
+
+      const passwordCorrect = await bcrypt.compare(currentPassword, user.password_hash)
+      if (!passwordCorrect) {
+        return res.status(401).json({ error: 'current password is incorrect' })
+      }
+
+      if (!PASSWORD_REGEX.test(newPassword)) {
+        return res.status(400).json({
+          error: 'Password must be at least 8 characters long and contain uppercase, lowercase, and a number'
+        })
+      }
+
+      const saltRounds = 10
+      const password_hash = await bcrypt.hash(newPassword, saltRounds)
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { password_hash }
+      })
+
+      return res.status(204).end()
+    } catch (error) {
+      console.error('PUT /api/users/password error:', error)
+      return res.status(500).json({ error: 'database error' })
+    }
+  }
+)
+
 export default userRouter
