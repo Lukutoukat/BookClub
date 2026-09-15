@@ -10,6 +10,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { SectionHeader } from './SectionHeader'
 import { useNotification } from '@/context/NotificationContext'
+import { HelmetBookSearch } from './HelmetBookSearch'
+import { getPageCount, getPrimaryAuthor, type FinnaBook } from '@/services/finna'
 
 interface BookFormState {
 	id?: string
@@ -274,6 +276,19 @@ const BookForm = ({
 			])
 		}
 	}
+	const handleHelmetBookSelect = (book: FinnaBook) => {
+		setNewBook({
+			id: '',
+			isbn: book.cleanIsbn ?? '',
+			name: book.title ?? '',
+			author: getPrimaryAuthor(book),
+			year: book.year ?? '',
+			pages: getPageCount(book),
+			comment: '',
+			language: book.languages?.join(', ') ?? '',
+			genre: book.genres?.[0] ?? ''
+		})
+	}
 
 	return (
 		<Card className={`card-base ${className}`}>
@@ -290,6 +305,7 @@ const BookForm = ({
 				)}
 			</SectionHeader>
 			<CardContent className="card-content">
+				<HelmetBookSearch onBookSelect={handleHelmetBookSelect} />
 				<form onSubmit={handleSubmit} className="card-form">
 					<div className="form-grid">
 						<Field>
