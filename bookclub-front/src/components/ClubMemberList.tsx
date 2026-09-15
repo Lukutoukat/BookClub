@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { ButtonDialog } from "./ButtonDialog"
 import memberService, { type BookclubMember } from "../services/bookclubmembers"
+import { useNotification } from "@/context/NotificationContext"
 
 interface Props {
     bookclubId: string
@@ -8,6 +9,7 @@ interface Props {
 
 export const ClubMemberList = ({ bookclubId }: Props) => {
     const [members, setMembers] = useState<BookclubMember[]>([])
+    const { showSuccess } = useNotification()
 
     useEffect(() => {
         void memberService.getByClubId(bookclubId)
@@ -20,6 +22,7 @@ export const ClubMemberList = ({ bookclubId }: Props) => {
         try {
             await memberService.remove(bookclubId, user_id)
             setMembers(members.filter(member => member.user_id !== user_id))
+            showSuccess('Club member removed successfully.')
         } catch (error) {
             // TODO: handle error messaging through Notification system
             console.error('error during deletion', error)
