@@ -8,7 +8,7 @@ metadata:
       [{"from":{"kind":"ImageStreamTag","name":"bookclub:staging","namespace":"bookclub-ohtu-s2026"},"fieldPath":"spec.template.spec.containers[?(@.name==\"bookclub\")].image","pause":"false"}]
   name: bookclub-staging-dep
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: bookclub
@@ -40,7 +40,7 @@ metadata:
       [{"from":{"kind":"ImageStreamTag","name":"bookclub:prod","namespace":"bookclub-ohtu-s2026"},"fieldPath":"spec.template.spec.containers[?(@.name==\"bookclub\")].image","pause":"false"}]
   name: bookclub-prod-dep
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: bookclub
