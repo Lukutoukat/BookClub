@@ -75,7 +75,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                                             ? 'flex cursor-pointer items-center gap-2 rounded-md p-2 bg-muted'
                                             : 'flex cursor-pointer items-center gap-2 rounded-md p-2'
                                         }
-                                        key={book.id} 
+                                        key={book.id}
                                     >
                                         <input
                                             type="radio"
@@ -91,6 +91,13 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                                             {book.year} - {book.languages?.join(', ')}
                                             {pages !== '' && ` - ${pages} pages`} - {book.cleanIsbn}
                                         </span>
+																				<span className="text-blue-500">
+																					<a
+																						target="_blank"
+																						href={'https://helmet.finna.fi/Record/' + book.id}
+																						rel="noreferrer"
+																					>Helmet</a>
+																				</span>
                                     </label>
                                 )
                             })}

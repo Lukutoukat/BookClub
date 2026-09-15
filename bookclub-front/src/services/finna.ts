@@ -68,6 +68,7 @@ const searchHelmetBooks = (query: string) => {
     params.append("field[]", "authors")
     params.append("field[]", "physicalDescriptions")
     params.append("field[]", "genres")
+    params.append("field[]", "id")
     return axios.get<FinnaSearchResponse>(baseURL, { params }).then((response) => groupBooks(response.data.records ?? []))
 }
 
