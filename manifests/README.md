@@ -26,9 +26,9 @@ Contains the staging and production configs. This file is not committed to versi
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: bookclub-staging-config
+  name: bookclub-staging-cfg
 data:
-  DATABASE_URL: postgresql://username:password@localhost:5432/clubdb
+  DATABASE_URL: postgresql://username:password@localhost:5432/bookclub_staging?ssl=true
   SECRET: "putsomekindapasswordhere"
 
 ---
@@ -37,9 +37,9 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: bookclub-prod-config
+  name: bookclub-prod-cfg
 data:
-  DATABASE_URL: postgresql://username:password@localhost:5432/clubdb
+  DATABASE_URL: postgresql://username:password@localhost:5432/bookclub_prod?ssl=true
   SECRET: "putsomekindapasswordhere"
 ```
 
