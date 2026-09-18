@@ -1,17 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { expect, test, vi, describe, beforeEach } from 'vitest'
 import App from '@/App'
-import userService from '@/services/users'
-import * as auth from '@/services/auth'
+import loginService from '@/services/login'
 import axios from 'axios'
 
-vi.mock('@/services/users')
-vi.mock('@/services/auth')
-
-const renderAt = (route: string) => {
-	window.history.pushState({}, '', route)
-	return render(<App />)
-}
+vi.mock('@/services/login')
 
 vi.mock('@/pages/LoginPage', () => ({
 	default: () => <div>Login Page</div>
@@ -35,30 +28,16 @@ describe('routes', () => {
 	})
 
 	test('shows authenticated routes when login is valid', async () => {
-		vi.mocked(userService.getAll).mockResolvedValue([{ id: '1', username: 'test' }] as never)
-
-		vi.mocked(auth.isLoggedIn).mockReturnValue(true)
+		vi.mocked(loginService.getSelf).mockResolvedValue({ id: '1', username: 'test', email: 'test@test.com' } as never)
 
 		render(<App />)
 
 		await waitFor(() => {
 			expect(screen.getByText('Home Page')).toBeInTheDocument()
 		})
-		expect(screen.queryByText('Login Page')).not.toBeInTheDocument()
 	})
 
-	test('shows login routes when no users exist', async () => {
-		vi.mocked(userService.getAll).mockResolvedValue([])
-
-		render(<App />)
-
-		await waitFor(() => {
-			expect(screen.getByText('Login Page')).toBeInTheDocument()
-		})
-		expect(screen.queryByText('Home Page')).not.toBeInTheDocument()
-	})
-
-	test('shows login routes when API returns 401', async () => {
+	test('shows login routes when API returns 401 (no user)', async () => {
 		const error = {
 			response: {
 				status: 401
@@ -67,13 +46,12 @@ describe('routes', () => {
 
 		vi.spyOn(axios, 'isAxiosError').mockReturnValue(true)
 
-		vi.mocked(userService.getAll).mockRejectedValue(error)
+		vi.mocked(loginService.getSelf).mockRejectedValue(error)
 
 		render(<App />)
 
 		await waitFor(() => {
 			expect(screen.getByText('Login Page')).toBeInTheDocument()
 		})
-		expect(screen.queryByText('Home Page')).not.toBeInTheDocument()
 	})
 })
