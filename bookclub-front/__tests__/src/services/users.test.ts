@@ -45,3 +45,23 @@ test('create returns created user', async () => {
 	expect(mockedAxios.post).toHaveBeenCalledWith('/api/users', mockUser)
 	expect(result).toEqual(createdUser)
 })
+
+test('requestDeletion returns true when status is 200', async () => {
+	mockedAxios.delete.mockResolvedValue({ status: 200 })
+
+	const result = await users.requestDeletion()
+
+	expect(mockedAxios.delete).toHaveBeenCalledWith(
+		'/api/users',
+		expect.objectContaining({ timeout: 5000 })
+	)
+	expect(result).toBe(true)
+})
+
+test('requestDeletion returns false when status is not 200', async () => {
+	mockedAxios.delete.mockResolvedValue({ status: 204 })
+
+	const result = await users.requestDeletion()
+
+	expect(result).toBe(false)
+})
