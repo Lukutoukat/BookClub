@@ -67,6 +67,38 @@ describe('/api/users', () => {
 
     })
 
+    it('fails when delete returns null (user could not be deleted)', async () => {
+
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+        id: '1',
+        email: 'matti@test.com',
+        name: 'matti'
+      });
+
+      (prisma.user.delete as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app).delete('/api/users').set(authHeaders()).send()
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'User could not be deleted' })
+    })
+
+    it('handles database error during deletion', async () => {
+
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+        id: '1',
+        email: 'matti@test.com',
+        name: 'matti'
+      });
+
+      (prisma.user.delete as jest.Mock).mockRejectedValue(new Error('DB error'))
+
+      const response = await request(app).delete('/api/users').set(authHeaders()).send()
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'A database error occurred' })
+    })
+
   })
 
 })
