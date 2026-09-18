@@ -11,14 +11,12 @@ import PasswordResetPage from './pages/PasswordResetPage'
 import NewCyclePage from './pages/NewCyclePage'
 import { PageMenu } from './components/PageMenu'
 import { PageLayout } from './components/PageLayout'
-import { isLoggedIn } from './services/auth'
 import { useEffect, useState } from 'react'
-import userService from './services/users'
+import loginService from './services/login'
 import ClubSettingsPage from './pages/BookClubSettingsPage'
 import { NotificationProvider } from './context/NotificationContext'
 import { BottomDescription } from './components/BottomDescription'
 
-//useEffect!!! :)
 
 const App = () => {
 	const [loginValid, setLoginValid] = useState(true)
@@ -27,13 +25,8 @@ const App = () => {
 		() =>
 			void (async function () {
 				try {
-					const userExists = await userService.getAll()
-					if (userExists.length > 0 && isLoggedIn()) {
-						setLoginValid(true)
-					}
-					if (userExists.length === 0) {
-						setLoginValid(false)
-					}
+					const self = await loginService.getSelf();
+					setLoginValid(self !== undefined)
 				} catch (error) {
 					if (axios.isAxiosError(error) && error.response?.status === 401) {
 						setLoginValid(false)

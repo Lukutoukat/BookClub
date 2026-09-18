@@ -12,10 +12,23 @@ export type userWithToken = {
 	token: string
 }
 
+export type LoggedInUser = {
+	id: string,
+	name: string,
+	email: string
+}
+
 const login = async (credentials: LoginCredentials): Promise<userWithToken> => {
 	const response = await axios.post<userWithToken>(baseUrl, credentials)
 
 	return response.data
 }
 
-export default { login }
+const getSelf = async(): Promise<LoggedInUser | undefined> => {
+	const response = await axios.get<LoggedInUser>(baseUrl + '/me')
+	if (response.status !== 200)
+		return undefined
+	return response.data
+}
+
+export default { login, getSelf }

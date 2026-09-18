@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { prisma } from '../db.ts'
 import dotenv from 'dotenv'
 import express, { type Request, type Response } from 'express'
+import userExtractor from '../middleware/userExtractor.ts'
 
 const loginRouter = express.Router()
 dotenv.config()
@@ -54,6 +55,10 @@ loginRouter.post('/', async (req: Request, res: Response) => {
 
   res.status(200).send({ token, email: user.email, name: user.name })
   return
+})
+
+loginRouter.get('/me', userExtractor, (req: Request, res: Response)=> {
+  res.status(200).json(req.user);
 })
 
 export default loginRouter
