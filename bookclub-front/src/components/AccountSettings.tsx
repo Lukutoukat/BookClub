@@ -14,11 +14,6 @@ const AccountSettings = ({ handleLogOut }: AccountSettingsProps) => {
 	const [deleting, setDeleting] = useState(false)
 
 	const deleteAccount = async () => {
-		// Deletion already in progress
-		if (deleting) {
-			return
-		}
-
 		// Set deletion state
 		setDeleting(true)
 
