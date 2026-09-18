@@ -7,7 +7,7 @@ interface Props {
     bookclubId: string
 }
 
-export const ClubMemberList = ({ bookclubId }: Props) => {
+export const BookclubMemberList = ({ bookclubId }: Props) => {
     const [members, setMembers] = useState<BookclubMember[]>([])
     const { showSuccess } = useNotification()
 
