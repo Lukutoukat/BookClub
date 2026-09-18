@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@/utils/test-utils'
 import userEvent from '@testing-library/user-event'
 
-import { ClubMemberList } from '@/components/ClubMemberList'
+import { ClubMemberList } from '@/components/BookclubMemberList'
 import memberService from '@/services/bookclubmembers'
 
 vi.mock('@/services/bookclubmembers')

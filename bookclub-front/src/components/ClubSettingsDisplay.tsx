@@ -4,7 +4,7 @@ import { PageHeader } from './PageHeader'
 import { ButtonDialog } from './ButtonDialog'
 import { Card, CardContent } from './ui/card'
 import { SectionHeader } from './SectionHeader'
-import { ClubMemberList } from './ClubMemberList'
+import { ClubMemberList } from './BookclubMemberList'
 type Props = {
 	bookclubId: string
 }
