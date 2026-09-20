@@ -1,4 +1,5 @@
 import express, { type Request, type Response } from 'express'
+import { randomInt } from 'node:crypto'
 import { prisma } from '../db.ts'
 import userExtractor from '../middleware/userExtractor.ts'
 const bookClubRouter = express.Router()
@@ -9,6 +10,10 @@ interface BookClub {
   invite_code?: string
   status?: number
   owner_id?: string
+}
+
+const generateInviteCode = (): string => {
+  return Array.from({ length: 12 }, () => randomInt(0, 10).toString()).join('')
 }
 
 bookClubRouter.get('/', async (req: Request, res: Response) => {
@@ -52,7 +57,7 @@ bookClubRouter.post(
   userExtractor,
   async (req: Request<unknown, unknown, BookClub>, res: Response) => {
     const newBookClub: BookClub = req.body
-    newBookClub.invite_code = Math.random().toString(36).substring(2, 7).toUpperCase()
+    newBookClub.invite_code = generateInviteCode()
     if (req.user) {
       try {
         const created = await prisma.bookClub.create({
