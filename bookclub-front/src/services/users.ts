@@ -22,7 +22,16 @@ const create = async (newUser: CreateUser) => {
 	return response.data
 }
 
+/**
+ * Requests the immediate deletion of the currently logged in account.
+ */
+const requestDeletion = async (): Promise<boolean> => {
+	const response = await axios.delete(baseUrl, { ...getAuthConfig(), timeout: 5000 })
+	return response.status === 200
+}
+
 export default {
 	getAll,
-	create
+	create,
+	requestDeletion
 }
