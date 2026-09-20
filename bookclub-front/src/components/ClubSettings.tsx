@@ -21,13 +21,14 @@ const ClubSettings = () => {
 
 	const handleJoinSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		if (inviteCode.invite_code.trim().length !== 5) {
-			setMessage('Enter a 5-character code.')
+		const trimmedCode = inviteCode.invite_code.trim()
+		if (trimmedCode.length !== 12 || !/^\d{12}$/.test(trimmedCode)) {
+			setMessage('Enter a 12-digit code.')
 			return
 		}
 		try {
 			await bookclubmembersService.create({
-				invite_code: inviteCode.invite_code.trim().toUpperCase(),
+				invite_code: trimmedCode,
 				user_role: 1
 			})
 		} catch (err: unknown) {
@@ -68,10 +69,12 @@ const ClubSettings = () => {
 						<Input
 							id="join-code"
 							name="invite_code"
-							maxLength={5}
+							maxLength={12}
+							inputMode="numeric"
+							pattern="[0-9]*"
 							value={inviteCode.invite_code}
 							onChange={handleChange}
-							className="w-[9ch]"
+							className="w-[13ch]"
 						/>
 						<Button type="submit">Join</Button>
 					</form>

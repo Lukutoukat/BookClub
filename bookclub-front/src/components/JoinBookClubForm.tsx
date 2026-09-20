@@ -36,15 +36,15 @@ const JoinBookClubForm = ({ listMutated }: Props) => {
 
 		const trimmedCode = inviteCode.invite_code.trim()
 
-		if (trimmedCode.length !== 5) {
-			setMessage('Enter a 5-character code.')
+		if (trimmedCode.length !== 12 || !/^\d{12}$/.test(trimmedCode)) {
+			setMessage('Enter a 12-digit code.')
 			return
 		}
 
 		try {
 			await bookclubmembersService.create({
 				user_role: 1,
-				invite_code: trimmedCode.toUpperCase()
+				invite_code: trimmedCode
 			})
 			setInviteCode({ ...emptyJoinRequest })
 			listMutated()
@@ -78,10 +78,12 @@ const JoinBookClubForm = ({ listMutated }: Props) => {
 									<Input
 										id="invite-code"
 										name="invite_code"
-										maxLength={5}
+										maxLength={12}
+										inputMode="numeric"
+										pattern="[0-9]*"
 										value={inviteCode.invite_code}
 										onChange={handleChange}
-										placeholder="XXXXX"
+										placeholder="123456789012"
 										required
 									/>
 								</FieldContent>
