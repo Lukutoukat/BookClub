@@ -135,3 +135,47 @@ test('searchHelmetBooks returns empty array when records are missing', async () 
 
     expect(result).toEqual([])
 })
+
+test('returns languages from Finna', async () => {
+    const mockLanguages = [
+        { value: "fin", translated: "finnish" },
+        { value: "swe", translated: "ruotsi" },
+        { value: "eng", translated: "englanti" }
+    ]
+
+    mockedAxios.get.mockResolvedValue({
+        data: {
+            facets: {
+                language: mockLanguages
+            }
+        }
+    })
+
+    const result = await finnaService.searchHelmetLanguages()
+
+    expect(result).toEqual(mockLanguages)
+})
+
+test('searchHelmetLanguages filters out non-selectable languages', async () => {
+    const mockLanguages = [
+        { value: "fin", translated: "finnish" },
+        { value: "eng", translated: "englanti" },
+        { value: "zxx", translated: "ei kielellistä sisältöä, soveltumaton" },
+        { value: "mul", translated: "useita kieliö" }
+    ]
+
+    mockedAxios.get.mockResolvedValue({
+        data: {
+            facets: {
+                language: mockLanguages
+            }
+        }
+    })
+
+    const result = await finnaService.searchHelmetLanguages()
+
+    expect(result).toEqual([
+        { value: "fin", translated: "finnish" },
+        { value: "eng", translated: "englanti" }
+    ])
+})

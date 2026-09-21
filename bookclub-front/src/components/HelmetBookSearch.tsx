@@ -1,7 +1,9 @@
-import  { useState } from 'react'
-import finnaService, { getPageCount, getPrimaryAuthor, type FinnaBook} from '@/services/finna'
+import  { useEffect, useState } from 'react'
+import finnaService, { getPageCount, getPrimaryAuthor, type FinnaBook, type FinnaLanguage} from '@/services/finna'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 type HelmetBookSearchProps = {
     onBookSelect: (book: FinnaBook) => void
@@ -12,6 +14,16 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
     const [bookGroups, setBookGroups] = useState<FinnaBook[][]>([])
     const [selectedBook, setSelectedBook] = useState<FinnaBook | null>(null)
     const [searchError, setSearchError] = useState('')
+    const [selectedLanguages, setSelectedLanguages] = useState<string[] >([
+        'fin', 'swe', 'eng'
+    ])
+    const [languages, setLanguages] = useState<FinnaLanguage[]>([])
+
+    useEffect(() => {
+        finnaService.searchHelmetLanguages().then((fetchedLanguages) => {
+            setLanguages(fetchedLanguages)
+        })
+    }, [])
 
 
     const handleSearch = async () => {
@@ -25,7 +37,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
 
 
         try {
-            const books = await finnaService.searchHelmetBooks(query)
+            const books = await finnaService.searchHelmetBooks(query, selectedLanguages)
             if (books.length === 0) {
                 setSearchError('No books found.')
                 return
@@ -50,11 +62,44 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 Search
             </Button>
 
-            {searchError !== '' && (
-                <p className="text-sm text-destructive">
+            {searchError && (
+                <p className="text-sm text-red-500">
                     {searchError}
                 </p>
             )}
+
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button type="button" variant="outline">
+                        Languages
+                    </Button>
+                </PopoverTrigger>
+
+                <PopoverContent>
+                    <ScrollArea className="h-64">
+                        {languages.map((language) => (
+                            <div key={language.value}>
+                                <input
+                                    type="checkbox"
+                                    checked={selectedLanguages.includes(language.value)}
+                                    onChange={() => {
+                                        if (selectedLanguages.includes(language.value)) {
+                                            const newLanguages = selectedLanguages.filter(
+                                                (value) => value !== language.value)
+                                            setSelectedLanguages(newLanguages)
+                                        
+                                        } else {
+                                            const newLanguages = [...selectedLanguages, language.value]
+                                            setSelectedLanguages(newLanguages)
+                                        }
+                                    }}
+                                />
+                                {language.translated}
+                            </div>
+                        ))}
+                    </ScrollArea>
+                </PopoverContent>
+            </Popover>
 
             <div className="mt-4 space-y-3">
                 {bookGroups.map((group) => (
