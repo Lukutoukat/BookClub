@@ -58,7 +58,13 @@ loginRouter.post('/', async (req: Request, res: Response) => {
 })
 
 loginRouter.get('/me', userExtractor, (req: Request, res: Response)=> {
-  res.status(200).json(req.user);
+  if (!req.user) {
+    res.status(401).json({error: "Invalid token"});
+    return
+  }
+
+  const {id, name, email} = req.user;
+  res.status(200).json({id, name, email});
 })
 
 export default loginRouter

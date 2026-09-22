@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getAuthConfig } from '@/services/auth.ts'
 const baseUrl = '/api/login'
 
 type LoginCredentials = {
@@ -25,7 +26,7 @@ const login = async (credentials: LoginCredentials): Promise<userWithToken> => {
 }
 
 const getSelf = async(): Promise<LoggedInUser | undefined> => {
-	const response = await axios.get<LoggedInUser>(baseUrl + '/me')
+	const response = await axios.get<LoggedInUser>(baseUrl + '/me', getAuthConfig())
 	if (response.status !== 200)
 		return undefined
 	return response.data
