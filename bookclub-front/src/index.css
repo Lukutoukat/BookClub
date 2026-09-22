@@ -235,7 +235,7 @@
 	}
 
 	.member-list {
-		@apply flex flex-row flex-wrap items-center justify-between border-b-1 min-h-[50px]
+		@apply flex flex-row flex-wrap items-center justify-between border-b-1 min-h-[50px] bg-[#F0F0F0] rounded-xl m-2 pl-4 pr-4 capitalize wrap-anywhere 
 	}
 
 	.form-grid {

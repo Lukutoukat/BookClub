@@ -5,9 +5,11 @@ import { useNotification } from "@/context/NotificationContext"
 
 interface Props {
     bookclubId: string
+    canManageMembers?: boolean
+    className?: string
 }
 
-export const ClubMemberList = ({ bookclubId }: Props) => {
+export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: Props) => {
     const [members, setMembers] = useState<BookclubMember[]>([])
     const { showSuccess } = useNotification()
 
@@ -16,6 +18,7 @@ export const ClubMemberList = ({ bookclubId }: Props) => {
             .then(memberData => {
                 setMembers(memberData)
             })
+            .catch(error => console.error('failed to load members', error))
     }, [bookclubId])
 
     const handleMemberDeletion = async (user_id: string) => {
@@ -32,11 +35,11 @@ export const ClubMemberList = ({ bookclubId }: Props) => {
     return (
         <>
             {members.map((member) => (
-                <div key={member.id} className='member-list'>
+                <div key={member.id} className={className}>
                     <div>
                         {member.User?.name}
                     </div>
-                    {member.user_role !== 0 && (
+                    {canManageMembers && member.user_role !== 0 && (
                         <ButtonDialog
                             buttonText="Remove"
                             buttonOnClick={() => handleMemberDeletion(member.user_id)}
