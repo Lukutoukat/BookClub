@@ -1,6 +1,7 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
 import bcrypt from 'bcrypt'
+import userExtractor from '../middleware/userExtractor.ts'
 const userRouter = express.Router()
 
 interface User {
@@ -66,6 +67,31 @@ userRouter.post('/', async (req: Request<unknown, unknown, User>, res: Response)
   } catch (error) {
     console.error('POST /api/users error:', error)
     res.status(500).json({ error: 'database error' })
+  }
+})
+
+userRouter.delete('/', userExtractor, async (req: Request, res: Response) => {
+  try {
+
+    // Ensure request contains an existing extracted user
+    const user = req.user;
+    if (!user) {
+      res.status(403).json({})
+      return;
+    }
+
+    // Attempt to delete current user
+    const userDeletion = await prisma.user.delete({where: {id: user.id}})
+    if (!userDeletion) {
+      res.status(500).json({ error: 'User could not be deleted'})
+      return;
+    }
+
+    res.status(200).json({})
+  } catch (error) {
+    console.error('DELETE /api/users error:', error)
+
+    res.status(500).json({ error: 'A database error occurred' })
   }
 })
 
