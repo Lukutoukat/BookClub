@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterAll, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { UserLoginDisplay } from '@/components/UserLoginDisplay'
+import { AppProvider } from '@/context/AppContext.tsx'
 
 describe('UserLoginDisplay', () => {
 	beforeEach(() => {
@@ -17,10 +18,13 @@ describe('UserLoginDisplay', () => {
 	})
 
 	it('displays logged in user name when user exists', () => {
-		const user = { name: 'Matti' }
-		localStorage.setItem('loggedBookappUser', JSON.stringify(user))
+		const user = { id: "1", name: 'Matti', email: "matti@gmail.com" }
 
-		render(<UserLoginDisplay />)
+		render(
+			<AppProvider user={user}>
+				<UserLoginDisplay />
+			</AppProvider>
+		)
 
 		expect(screen.getByText(/Logged in as: Matti/i)).toBeInTheDocument()
 	})
