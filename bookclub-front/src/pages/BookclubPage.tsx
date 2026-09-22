@@ -9,6 +9,9 @@ import { SuggestBook } from '@/components/SuggestBook'
 import bookclubmembersService from '@/services/bookclubmembers'
 import { Column } from '@/components/Column'
 import CycleHistoryList from '@/components/CycleHistoryList'
+import { BookclubMemberList } from '@/components/BookclubMemberList'
+import { Card, CardContent } from '@/components/ui/card'
+import { SectionHeader } from '@/components/SectionHeader'
 
 const BookclubPage = () => {
 	const { bookclubId } = useParams<{ bookclubId: string }>()
@@ -95,6 +98,20 @@ const BookclubPage = () => {
 				)}
 
 				<CycleHistoryList bookclubId={bookclubId} />
+
+				{/* CLUB MEMBER LIST */}
+				<Card>
+					<SectionHeader 
+						title='Club Members'
+					/>
+					<CardContent>
+						<BookclubMemberList 
+							bookclubId={bookclubId}
+							canManageMembers={false}
+							className='member-list'
+						/>
+					</CardContent>
+				</Card>
 
 				{/* Admin settings */}
 				{isAdmin && <BookClubGoCycleSetting bookclubId={bookclubId} />}

@@ -41,7 +41,10 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 				/>
 				<CardContent>
 					<BookclubMemberList 
-						bookclubId={bookclubId}/>
+						bookclubId={bookclubId}
+						canManageMembers={true}
+						className='member-list'
+					/>	
 				</CardContent>
 				<SectionHeader
 					title="Manage Club"
