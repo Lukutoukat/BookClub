@@ -28,7 +28,7 @@ describe('routes', () => {
 	})
 
 	test('shows authenticated routes when login is valid', async () => {
-		vi.mocked(loginService.getSelf).mockResolvedValue({ id: '1', username: 'test', email: 'test@test.com' } as never)
+		vi.mocked(loginService.getSelf).mockResolvedValue({ id: '1', name: 'test', email: 'test@test.com' } as never)
 
 		render(<App />)
 

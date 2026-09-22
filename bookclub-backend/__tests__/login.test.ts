@@ -92,7 +92,7 @@ describe('/api/login', () => {
       const res = await request(app).get('/api/login/me').set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(200)
-      expect(res.body).toMatchObject(user)
+      expect(res.body).toEqual(user)
     })
 
     test('401 without token', async () => {
