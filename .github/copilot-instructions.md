@@ -61,12 +61,6 @@ Keep frontend and backend changes isolated to the relevant package unless an API
 - For schema changes, consider backward compatibility and deployment order. Do not make destructive production changes without an explicit migration and rollout plan.
 - Keep `manifests/configmaps.yaml` out of version control when it contains real environment values.
 
-## Docker and deployment
-
-- Check both `docker-compose.yaml` and the relevant Dockerfiles when changing runtime, ports, build output, or service dependencies.
-- Keep container behavior reproducible and avoid relying on files that are ignored or generated only on a developer machine.
-- When changing deployment behavior, update the appropriate files under `manifests/` and `manifests/README.md`.
-- Verify staging and production configuration differences before modifying shared manifest structure.
 
 ## Validation expectations
 
