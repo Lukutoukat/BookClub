@@ -4,7 +4,8 @@ name: Main Branch Protection
 on:
   pull_request:
     branches:
-      - main
+      - 'main'
+      - '!dev'
 
 jobs:
   ensure-main-branch:
