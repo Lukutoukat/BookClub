@@ -1,17 +1,12 @@
 import { Badge } from '@/components/ui/badge'
-
-interface LoggedUser {
-	name?: string
-}
+import { useContext } from 'react'
+import { AppContext } from '@/context/AppContext.tsx'
 
 export const UserLoginDisplay = () => {
-	const userJson = localStorage.getItem('loggedBookappUser')
-	if (!userJson) return null
+	const { user } = useContext(AppContext);
+	if (!user) return null;
 
 	try {
-		const user = JSON.parse(userJson) as LoggedUser
-		if (!user?.name) return null
-
 		return (
 			<Badge
 				variant="secondary"
