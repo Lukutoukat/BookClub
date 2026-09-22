@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@/utils/test-utils'
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 
 import BookclubPage from '@/pages/BookclubPage'
@@ -10,9 +10,13 @@ vi.mock('@/services/bookclubmembers')
 
 const mockUseParams = vi.fn()
 
-vi.mock('react-router-dom', () => ({
-	useParams: () => mockUseParams()
-}))
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('react-router-dom')>()
+  return {
+    ...actual,
+    useParams: () => mockUseParams()
+  }
+})
 
 vi.mock('@/components/BookclubComponent', () => ({
 	BookclubComponent: ({ bookclubId }: { bookclubId: string }) => <div>Bookclub</div>
@@ -40,6 +44,7 @@ describe('BookclubPage', () => {
 		} as any)
 
 		vi.mocked(bookclubmembersService.get).mockResolvedValue([])
+		vi.mocked(bookclubmembersService.getByClubId).mockResolvedValue([])
 
 		render(<BookclubPage />)
 
@@ -59,6 +64,7 @@ describe('BookclubPage', () => {
 		} as any)
 
 		vi.mocked(bookclubmembersService.get).mockResolvedValue([])
+		vi.mocked(bookclubmembersService.getByClubId).mockResolvedValue([])
 
 		render(<BookclubPage />)
 
