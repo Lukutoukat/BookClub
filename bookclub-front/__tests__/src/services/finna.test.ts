@@ -181,6 +181,7 @@ test('searchHelmetLanguages filters out non-selectable languages', async () => {
 })
 
 test('searchHelmetBooks adds selected languages to filters', async () => {
+    mockedAxios.get.mockClear()
     mockedAxios.get.mockResolvedValue({
         data: {
             resultCount: 0,
