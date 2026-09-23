@@ -20,9 +20,15 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
     const [languages, setLanguages] = useState<FinnaLanguage[]>([])
 
     useEffect(() => {
-        finnaService.searchHelmetLanguages().then((fetchedLanguages) => {
-            setLanguages(fetchedLanguages)
-        })
+        const fetchLanguages = async () => {
+            try {
+                const result = await finnaService.searchHelmetLanguages()
+                setLanguages(result)
+            } catch {
+                setLanguages([])
+            }
+        }
+        void fetchLanguages()
     }, [])
 
 
@@ -34,10 +40,14 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
 
         setSearchError('')
         setBookGroups([])
-
+        
+        let usedLanguages = selectedLanguages
+        if (usedLanguages.length === 0) {
+            usedLanguages = ['fin', 'swe', 'eng']
+        }
 
         try {
-            const books = await finnaService.searchHelmetBooks(query, selectedLanguages)
+            const books = await finnaService.searchHelmetBooks(query, usedLanguages)
             if (books.length === 0) {
                 setSearchError('No books found.')
                 return
@@ -78,7 +88,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 <PopoverContent>
                     <ScrollArea className="h-64">
                         {languages.map((language) => (
-                            <div key={language.value}>
+                            <div key={language.value} className="flex items-center gap-2 py-1">
                                 <input
                                     type="checkbox"
                                     checked={selectedLanguages.includes(language.value)}

@@ -6,6 +6,13 @@ import finnaService, { type FinnaBook, getPrimaryAuthor, getPageCount} from "@/s
 
 vi.mock("@/services/finna")
 
+vi.mocked(finnaService.searchHelmetLanguages).mockResolvedValue([
+    { value: "fin", translated: "suomi" },
+    { value: "swe", translated: "ruotsi" },
+    { value: "eng", translated: "englanti" },
+    { value: "ger", translated: "saksa" },
+])
+
 const mockBook: FinnaBook = {
     
         id: "book1",
@@ -99,4 +106,56 @@ test('calls onBookSelect when a book is selected', async () => {
     await user.click(screen.getByRole('radio'))
 
     expect(onBookSelect).toHaveBeenCalledWith(mockBook)
+})
+
+test('uses default languages when language selections are not changed', async () => {
+    const user = userEvent.setup()
+    const onBookSelect = vi.fn()
+    
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([])
+
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+
+    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'])
+})
+
+test('uses default languages when all language selections are unchecked', async () => {
+    const user = userEvent.setup()
+    const onBookSelect = vi.fn()
+    
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([])
+    
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    await user.click(screen.getByRole('button', {name: 'Languages'}))
+    const checkboxes = screen.getAllByRole('checkbox')
+    await user.click(checkboxes[0])
+    await user.click(checkboxes[1])
+    await user.click(checkboxes[2])
+
+    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+    
+    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'])
+})
+
+test('add selected language to search', async () => {
+    const user = userEvent.setup()
+    const onBookSelect = vi.fn()
+
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([])
+
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    await user.click(screen.getByRole('button', {name: 'Languages'}))
+    const checkboxes = screen.getAllByRole('checkbox')
+    await user.click(checkboxes[3])
+
+    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+
+    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng', 'ger'])
 })
