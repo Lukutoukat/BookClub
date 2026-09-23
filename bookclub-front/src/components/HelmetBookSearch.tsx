@@ -74,7 +74,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
             </Button>
 
             {searchError && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                     {searchError}
                 </p>
             )}
