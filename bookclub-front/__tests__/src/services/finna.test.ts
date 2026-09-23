@@ -192,7 +192,7 @@ test('searchHelmetBooks adds selected languages to filters', async () => {
     await finnaService.searchHelmetBooks("1984", ["fin", "ger"])
     const params = mockedAxios.get.mock.calls[0][1]?.params as URLSearchParams
     const filters = params.getAll("filter[]")
-    console.log(filters)
+
     expect(filters).toContain('~language:"fin"')
     expect(filters).toContain('~language:"ger"')
 })
