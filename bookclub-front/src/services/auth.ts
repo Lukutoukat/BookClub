@@ -19,7 +19,3 @@ export const getAuthConfig = () => {
 export const clearToken = () => {
 	localStorage.removeItem('loggedBookappToken')
 }
-
-export const isLoggedIn = () => {
-	return Boolean(localStorage.getItem('loggedBookappToken'))
-}

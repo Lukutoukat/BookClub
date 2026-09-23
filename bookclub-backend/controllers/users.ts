@@ -70,18 +70,6 @@ userRouter.post('/', async (req: Request<unknown, unknown, User>, res: Response)
   }
 })
 
-userRouter.get('/', userExtractor, async (_req: Request, res: Response) => {
-  try {
-    const users = await prisma.user.findMany()
-
-    res.json(users)
-  } catch (error) {
-    console.error('GET /api/users error:', error)
-
-    res.status(500).json({ error: 'database error' })
-  }
-})
-
 userRouter.delete('/', userExtractor, async (req: Request, res: Response) => {
   try {
 

@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { prisma } from '../db.ts'
 import dotenv from 'dotenv'
 import express, { type Request, type Response } from 'express'
+import userExtractor from '../middleware/userExtractor.ts'
 
 const loginRouter = express.Router()
 dotenv.config()
@@ -54,6 +55,16 @@ loginRouter.post('/', async (req: Request, res: Response) => {
 
   res.status(200).send({ token, email: user.email, name: user.name })
   return
+})
+
+loginRouter.get('/me', userExtractor, (req: Request, res: Response)=> {
+  if (!req.user) {
+    res.status(401).json({error: "Invalid token"});
+    return
+  }
+
+  const {id, name, email} = req.user;
+  res.status(200).json({id, name, email});
 })
 
 export default loginRouter
