@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { test, expect, vi } from "vitest"
+import { test, expect, vi, beforeEach } from "vitest"
 import { HelmetBookSearch } from "@/components/HelmetBookSearch"
 import finnaService, { type FinnaBook, getPrimaryAuthor, getPageCount} from "@/services/finna"
 
@@ -28,6 +28,10 @@ const mockBook: FinnaBook = {
         physicalDescriptions: ["328 sivua, 20 cm"],
         genres: ["Tieteiskirjat", "Dystopiat"]
 }
+
+beforeEach(() => {
+    vi.clearAllMocks()
+})
 
 test('shows error message when search query is empty', async () => {
     const user = userEvent.setup()

@@ -89,7 +89,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 <PopoverContent>
                     <ScrollArea className="h-64">
                         {languages.map((language) => (
-                            <div key={language.value} className="flex items-center gap-2 py-1">
+                            <label key={language.value} className="flex items-center gap-2 py-1">
                                 <input
                                     type="checkbox"
                                     checked={selectedLanguages.includes(language.value)}
@@ -106,7 +106,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                                     }}
                                 />
                                 {language.translated}
-                            </div>
+                            </label>
                         ))}
                     </ScrollArea>
                 </PopoverContent>
