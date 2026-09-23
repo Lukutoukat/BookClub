@@ -23,6 +23,30 @@ export interface FinnaSearchResponse {
     records?: FinnaBook[]
 }
 
+export interface FinnaLanguage {
+    value: string
+    translated: string
+}
+
+export interface FinnaLanguageResponse {
+    facets: {
+        language: FinnaLanguage[]
+    }
+}
+
+const searchHelmetLanguages = () => {
+    const params = new URLSearchParams()
+    params.append("filter[]", "format:\"0/Book/\"")
+    params.append("filter[]", 'building:"0/Helmet/"')
+    params.append("facet[]", "language")
+    params.append("limit", "0")
+
+    return axios.get<FinnaLanguageResponse>(baseURL, { params }).then((response) => response.data.facets.language.filter(
+        (language) => language.value !== "mul" && language.value !== "zxx")
+    )
+
+}
+
 export const getPrimaryAuthor = (book: FinnaBook) => {
     return Object.keys(book.authors?.primary ?? {})[0] ?? ''
 }
@@ -54,11 +78,14 @@ const groupBooks = (books: FinnaBook[]) : FinnaBook[][] => {
     return Array.from(groups.values())
 }
 
-const searchHelmetBooks = (query: string) => {
+const searchHelmetBooks = (query: string, languages: string[]) => {
     const params = new URLSearchParams()
     params.append("lookfor", query)
     params.append("filter[]", 'format:"0/Book/"')
     params.append("filter[]", 'building:"0/Helmet/"')
+    languages.forEach((language) => {
+        params.append("filter[]", `~language:"${language}"`)
+    })
     params.append("limit", "10")
     params.append("field[]", "id")
     params.append("field[]", "title")
@@ -68,10 +95,10 @@ const searchHelmetBooks = (query: string) => {
     params.append("field[]", "authors")
     params.append("field[]", "physicalDescriptions")
     params.append("field[]", "genres")
-    params.append("field[]", "id")
     return axios.get<FinnaSearchResponse>(baseURL, { params }).then((response) => groupBooks(response.data.records ?? []))
 }
 
 export default {
     searchHelmetBooks,
+    searchHelmetLanguages,
 }

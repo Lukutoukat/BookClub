@@ -1,7 +1,9 @@
-import  { useState } from 'react'
-import finnaService, { getPageCount, getPrimaryAuthor, type FinnaBook} from '@/services/finna'
+import  { useEffect, useState } from 'react'
+import finnaService, { getPageCount, getPrimaryAuthor, type FinnaBook, type FinnaLanguage} from '@/services/finna'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 type HelmetBookSearchProps = {
     onBookSelect: (book: FinnaBook) => void
@@ -12,6 +14,24 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
     const [bookGroups, setBookGroups] = useState<FinnaBook[][]>([])
     const [selectedBook, setSelectedBook] = useState<FinnaBook | null>(null)
     const [searchError, setSearchError] = useState('')
+    const [languageError, setLanguageError] = useState('')
+    const [selectedLanguages, setSelectedLanguages] = useState<string[] >([
+        'fin', 'swe', 'eng'
+    ])
+    const [languages, setLanguages] = useState<FinnaLanguage[]>([])
+
+    useEffect(() => {
+        const fetchLanguages = async () => {
+            try {
+                const result = await finnaService.searchHelmetLanguages()
+                setLanguages(result)
+            } catch {
+                setLanguages([])
+                setLanguageError('Failed to load languages.')
+            }
+        }
+        void fetchLanguages()
+    }, [])
 
 
     const handleSearch = async () => {
@@ -22,10 +42,14 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
 
         setSearchError('')
         setBookGroups([])
-
+        
+        let usedLanguages = selectedLanguages
+        if (usedLanguages.length === 0) {
+            usedLanguages = ['fin', 'swe', 'eng']
+        }
 
         try {
-            const books = await finnaService.searchHelmetBooks(query)
+            const books = await finnaService.searchHelmetBooks(query, usedLanguages)
             if (books.length === 0) {
                 setSearchError('No books found.')
                 return
@@ -50,11 +74,49 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 Search
             </Button>
 
-            {searchError !== '' && (
+            {searchError && (
                 <p className="text-sm text-destructive">
                     {searchError}
                 </p>
             )}
+            {languageError && (
+                <p className="text-sm text-destructive">
+                    {languageError}
+                </p>
+            )}
+
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button type="button" variant="outline">
+                        Languages
+                    </Button>
+                </PopoverTrigger>
+
+                <PopoverContent>
+                    <ScrollArea className="h-64">
+                        {languages.map((language) => (
+                            <label key={language.value} className="flex items-center gap-2 py-1">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedLanguages.includes(language.value)}
+                                    onChange={() => {
+                                        if (selectedLanguages.includes(language.value)) {
+                                            const newLanguages = selectedLanguages.filter(
+                                                (value) => value !== language.value)
+                                            setSelectedLanguages(newLanguages)
+                                        
+                                        } else {
+                                            const newLanguages = [...selectedLanguages, language.value]
+                                            setSelectedLanguages(newLanguages)
+                                        }
+                                    }}
+                                />
+                                {language.translated}
+                            </label>
+                        ))}
+                    </ScrollArea>
+                </PopoverContent>
+            </Popover>
 
             <div className="mt-4 space-y-3">
                 {bookGroups.map((group) => (
