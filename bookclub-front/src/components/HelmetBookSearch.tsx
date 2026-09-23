@@ -14,6 +14,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
     const [bookGroups, setBookGroups] = useState<FinnaBook[][]>([])
     const [selectedBook, setSelectedBook] = useState<FinnaBook | null>(null)
     const [searchError, setSearchError] = useState('')
+    const [languageError, setLanguageError] = useState('')
     const [selectedLanguages, setSelectedLanguages] = useState<string[] >([
         'fin', 'swe', 'eng'
     ])
@@ -26,7 +27,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 setLanguages(result)
             } catch {
                 setLanguages([])
-                setSearchError('Failed to load languages.')
+                setLanguageError('Failed to load languages.')
             }
         }
         void fetchLanguages()
@@ -76,6 +77,11 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
             {searchError && (
                 <p className="text-sm text-destructive">
                     {searchError}
+                </p>
+            )}
+            {languageError && (
+                <p className="text-sm text-destructive">
+                    {languageError}
                 </p>
             )}
 
