@@ -26,6 +26,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 setLanguages(result)
             } catch {
                 setLanguages([])
+                setSearchError('Failed to load languages.')
             }
         }
         void fetchLanguages()

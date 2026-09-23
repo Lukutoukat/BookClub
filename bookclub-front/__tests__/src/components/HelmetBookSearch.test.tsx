@@ -159,3 +159,13 @@ test('add selected language to search', async () => {
 
     expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng', 'ger'])
 })
+
+test('shows error message when search languages fail to load', async () => {
+    vi.mocked(finnaService.searchHelmetLanguages).mockRejectedValue('Server error')
+
+    const onBookSelect = vi.fn()
+
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    expect(await screen.findByText('Failed to load languages.')).toBeDefined()
+})
