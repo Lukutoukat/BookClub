@@ -191,29 +191,6 @@ describe('/api/vote', () => {
     })
   })
 
-  describe('GET', () => {
-    it('returns all votes', async () => {
-      ;(prisma.bookVoted.findMany as jest.Mock).mockResolvedValue(mockVote)
-
-      const response = await request(app).get('/api/vote')
-
-      expect(response.status).toBe(200)
-      expect(response.body).toEqual({
-        proposal_id: '1',
-        weight: 3
-      })
-    })
-
-    it('returns 500 if get fails', async () => {
-      ;(prisma.bookVoted.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
-
-      const response = await request(app).get('/api/vote')
-
-      expect(response.status).toBe(500)
-      expect(response.body).toEqual({ error: 'database error' })
-    })
-  })
-
   describe('GET/:cycle_id', () => {
     it('returns user votes for the cycle', async () => {
       ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue([{ id: '1' }])

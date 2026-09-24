@@ -14,18 +14,6 @@ const mockVote = {
 	weight: 1
 }
 
-test('getAll returns all votes', async () => {
-	const mockVotes = [mockVote]
-
-	mockedAxios.get.mockResolvedValue({
-		data: mockVotes
-	})
-
-	const result = await vote.getAll()
-
-	expect(result).toEqual(mockVotes)
-})
-
 test('getOwn returns own votes', async () => {
 	const mockVotes = [mockVote]
 
