@@ -31,18 +31,6 @@ test('create returns created bookclub', async () => {
 	expect(result).toEqual(mockBookClub)
 })
 
-test('getAll returns all bookclubs', async () => {
-	const mockBookClubs = [mockBookClub]
-
-	mockedAxios.get.mockResolvedValue({
-		data: mockBookClubs
-	})
-
-	const result = await bookclubs.getAll()
-
-	expect(result).toEqual(mockBookClubs)
-})
-
 test('remove deletes the correct bookclub', async () => {
 	const mockId = '1'
 

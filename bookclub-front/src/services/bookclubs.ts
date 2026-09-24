@@ -15,10 +15,6 @@ const create = async (newBookClub: CreateBookClub) => {
 	return await axios.post<BookClub>(baseUrl, newBookClub, getAuthConfig()).then((res) => res.data)
 }
 
-const getAll = () => {
-	return axios.get<BookClub[]>(baseUrl).then((res) => res.data)
-}
-
 const get = (clubIds: string[]): Promise<BookClub[]> => {
 	return axios
 		.get<BookClub[]>(baseUrl, {
@@ -36,7 +32,6 @@ const remove = (id: string) => {
 }
 export default {
 	create,
-	getAll,
 	get,
 	remove
 }
