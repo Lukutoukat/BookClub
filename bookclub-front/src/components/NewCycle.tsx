@@ -5,11 +5,12 @@ import { Button } from './ui/button'
 import { RangeCalendarComponent } from './RangeCalendarComponent'
 import { type DateRange } from 'react-day-picker'
 import cycleService, { type CreateCycle } from '../services/cycle'
+import bookclubService from '@/services/bookclubs.ts'
 
 type Bookclub = {
-	id: number
+	id: string
 	name: string
-	invite_code: string
+	invite_code?: string
 }
 
 type Props = {
@@ -28,22 +29,16 @@ export const NewCycle = ({ bookclubId }: Props) => {
 	useEffect(() => {
 		const fetchBookclub = async () => {
 			try {
-				const res = await fetch(`/api/bookclubs/${bookclubId}`)
-
-				if (!res.ok) {
-					setBookclub(null)
-					return
-				}
-
-				const data = (await res.json()) as Bookclub
-				setBookclub(data)
+				const bookclub = await bookclubService.get(bookclubId)
+				setBookclub(bookclub)
 			} finally {
 				setLoading(false)
 			}
 		}
 
-		if (bookclubId) void fetchBookclub()
-	}, [bookclubId])
+		return void fetchBookclub()
+	}, [])
+
 
 	const handleCreate = async () => {
 		if (dateRange?.from && dateRange?.to) {

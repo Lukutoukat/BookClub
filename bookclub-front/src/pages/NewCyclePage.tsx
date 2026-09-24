@@ -9,7 +9,7 @@ import { Column } from '@/components/Column'
 
 const NewCyclePage = () => {
 	const { bookclubId } = useParams<{ bookclubId: string }>()
-	const [loadedClubs, setLoadedClubs] = useState<BookClub[]>([])
+	const [loadedClub, setLoadedClub] = useState<BookClub | undefined>()
 	const [isLoading, setIsLoading] = useState(false)
 	const navigate = useNavigate()
 
@@ -22,9 +22,9 @@ const NewCyclePage = () => {
 		setIsLoading(true)
 
 		bookClubService
-			.get([bookclubId])
-			.then((clubs) => {
-				setLoadedClubs(clubs)
+			.get(bookclubId)
+			.then((club) => {
+				setLoadedClub(club)
 				setIsLoading(false)
 			})
 			.catch((error) => {
@@ -39,19 +39,19 @@ const NewCyclePage = () => {
 			<PageHeader
 				badgeText="New Cycle"
 				title={
-					isLoading || loadedClubs.length === 0
+					isLoading
 						? 'Loading...'
-						: (loadedClubs[0]?.name ?? 'Bookclub')
+						: (loadedClub?.name ?? 'Bookclub')
 				}
 				description=""
 				buttonText="Back"
 				buttonOnClick={async () => {
-					await navigate(`/club/${loadedClubs[0]?.id ?? ''}`)
+					await navigate(`/club/${loadedClub?.id ?? ''}`)
 				}}
 			/>
 			<Column>
-				<NewCycle bookclubId={loadedClubs[0]?.id ?? ''} />
-				<EndPhase bookclubId={loadedClubs[0]?.id ?? ''} />
+				<NewCycle bookclubId={loadedClub?.id ?? ''} />
+				<EndPhase bookclubId={loadedClub?.id ?? ''} />
 			</Column>
 		</>
 	)

@@ -1,45 +1,116 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
 import userExtractor from '../middleware/userExtractor.ts'
+
 const bookClubRouter = express.Router()
 
 interface BookClub {
   id: string
   name: string
-  invite_code?: string
-  status?: number
-  owner_id?: string
+  invite_code?: string | null
+  status?: number | null
+  owner_id?: string | null
 }
 
-bookClubRouter.get('/', async (req: Request, res: Response) => {
-  const clubs = req.query.clubIds
+interface StrippedBookClub {
+  id: string,
+  name: string,
+}
 
-  const clubIds = Array.isArray(clubs)
-    ? clubs.filter((id): id is string => typeof id === 'string')
-    : typeof clubs === 'string'
-      ? [clubs]
-      : []
 
+/**
+ * Function to strip sensitive information from a book club object
+ */
+function stripBookClub(club: BookClub): StrippedBookClub {
+  return {
+    id: club.id,
+    name: club.name
+  }
+}
+
+/**
+ * GET '/'
+ *
+ * Method to request all clubs the current user is a part of.
+ */
+bookClubRouter.get('/', userExtractor, async (req: Request, res: Response) => {
+  // Ensure request has a user
+  if (!req.user) {
+    res.status(401).json({ error: 'Missing user' })
+    return
+  }
+
+  const userId = req.user.id;
   try {
-    const result = await prisma.bookClub.findMany({
+    // Fetch all clubs, where the user is a member or owner
+    const resultClubs = await prisma.bookClub.findMany({
       where: {
-        id: { in: clubIds }
+        OR: [
+          { owner_id: userId },
+          { BookClubMembers: { some: { user_id: userId } } }
+        ]
       }
     })
-    res.json(result)
+
+    // If user is owner, return all info, otherwise return stripped info
+    const filteredResults = resultClubs.map((club) => {
+      const isOwner = club.owner_id === userId;
+
+      // Full info
+      if (isOwner) {
+        return club;
+      }
+
+      // Stripped member info
+      return stripBookClub(club);
+    })
+
+    res.status(200).json(filteredResults)
   } catch (error) {
     console.error('GET /api/bookclubs error:', error)
     res.status(500).json({ error: 'database error' })
   }
 })
 
-bookClubRouter.get('/:id', async (req: Request, res: Response) => {
+
+/**
+ * GET '/:id'
+ *
+ * Method to get a club by an ID.
+ */
+bookClubRouter.get('/:id', userExtractor, async (req: Request, res: Response) => {
+  // Ensure request has a user
+  if (!req.user) {
+    res.status(401).json({ error: 'Missing user' })
+    return
+  }
+
+  const userId = req.user.id;
+
   try {
     const id = req.params.id as string | undefined
+
+    // Fetch club with given ID and user being a member or owner
     const bookclub = await prisma.bookClub.findUnique({
-      where: { id }
+      where: {
+        id: id,
+        OR: [{ owner_id: userId }, { BookClubMembers: { some: { user_id: userId } } }]
+      }
     })
-    res.json(bookclub)
+
+    if (!bookclub) {
+      res.status(404).json({ error: 'Club not found or no permission to access that club'})
+      return
+    }
+
+    // If owner, return full info
+    if (bookclub.owner_id === userId) {
+      res.status(200).json(bookclub)
+      return
+    }
+
+    // If member, return stripped info
+    res.status(200).json(stripBookClub(bookclub))
   } catch (error) {
     console.error('GET /api/bookclubs/:id error:', error)
     res.status(500).json({ error: 'database error' })
@@ -47,10 +118,13 @@ bookClubRouter.get('/:id', async (req: Request, res: Response) => {
   return
 })
 
-bookClubRouter.post(
-  '/',
-  userExtractor,
-  async (req: Request<unknown, unknown, BookClub>, res: Response) => {
+/**
+ * POST '/'
+ *
+ * Method to create a new book club.
+ * Request body contains new clubs information.
+ */
+bookClubRouter.post('/', userExtractor, async (req: Request<unknown, unknown, BookClub>, res: Response) => {
     const newBookClub: BookClub = req.body
     newBookClub.invite_code = Math.random().toString(36).substring(2, 7).toUpperCase()
     if (req.user) {
@@ -72,6 +146,7 @@ bookClubRouter.post(
         })
         if (!addedMember) {
           res.status(500).json({ error: 'database error adding member' })
+          return;
         }
         res.json(created)
       } catch (error) {
@@ -85,22 +160,46 @@ bookClubRouter.post(
   }
 )
 
-bookClubRouter.delete('/:id', async (req, res) => {
-  const id = req.params.id as string | undefined
+/**
+ * DELETE '/:id'
+ *
+ * Method to delete a book club by its ID.
+ */
+bookClubRouter.delete('/:id', userExtractor, async (req, res) => {
+  // Ensure request has a user
+  if (!req.user) {
+    return res.status(401).json({ error: 'Missing user' })
+  }
 
-  if (id === undefined) {
-    res.status(400).json({ error: 'bookclub id is undefined' })
-    return
+  const userId = req.user.id;
+  const id = req.params.id as string | undefined
+  if (!id) {
+    return res.status(400).json({ error: 'bookclub id is undefined' })
   }
 
   try {
+    // Find club by ID
+    const club = await prisma.bookClub.findUnique({ where: { id } })
+
+    // Ensure club exists
+    if (!club) {
+      return res.status(404).json({ error: 'Unknown club'})
+    }
+
+    // Ensure deleting user is owner
+    if (club.owner_id !== userId) {
+      return res.status(401).json({ error: 'Must be owner of the club to delete'})
+    }
+
+    // Delete club
     await prisma.bookClub.delete({
       where: { id }
     })
-    res.status(204).end()
+
+    return res.status(204).end()
   } catch (error) {
     console.error('DELETE /api/bookclubs error: ', error)
-    res.status(500).json({ error: 'database error in deleting bookclub' })
+    return res.status(500).json({ error: 'database error in deleting bookclub' })
   }
 })
 

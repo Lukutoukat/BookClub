@@ -15,15 +15,19 @@ const create = async (newBookClub: CreateBookClub) => {
 	return await axios.post<BookClub>(baseUrl, newBookClub, getAuthConfig()).then((res) => res.data)
 }
 
-const get = (clubIds: string[]): Promise<BookClub[]> => {
+/**
+ * Get all clubs the current user is a part of
+ */
+const getAll = () => {
+	return axios.get<BookClub[]>(baseUrl, getAuthConfig()).then((res) => res.data);
+}
+
+/**
+ * Get a single club by its ID
+ */
+const get = (clubId: string): Promise<BookClub> => {
 	return axios
-		.get<BookClub[]>(baseUrl, {
-			...getAuthConfig(),
-			params: { clubIds },
-			paramsSerializer: {
-				indexes: null
-			}
-		})
+		.get<BookClub>(baseUrl + '/' + clubId, getAuthConfig())
 		.then((res) => res.data)
 }
 
@@ -33,5 +37,6 @@ const remove = (id: string) => {
 export default {
 	create,
 	get,
+	getAll,
 	remove
 }
