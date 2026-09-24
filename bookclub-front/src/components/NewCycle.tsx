@@ -30,7 +30,9 @@ export const NewCycle = ({ bookclubId }: Props) => {
 		const fetchBookclub = async () => {
 			try {
 				const bookclub = await bookclubService.get(bookclubId)
-				setBookclub(bookclub)
+				if (bookclub) {
+					setBookclub(bookclub)
+				}
 			} finally {
 				setLoading(false)
 			}

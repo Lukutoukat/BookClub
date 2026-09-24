@@ -172,10 +172,7 @@ bookClubRouter.delete('/:id', userExtractor, async (req, res) => {
   }
 
   const userId = req.user.id;
-  const id = req.params.id as string | undefined
-  if (!id) {
-    return res.status(400).json({ error: 'bookclub id is undefined' })
-  }
+  const id = req.params.id as string
 
   try {
     // Find club by ID
