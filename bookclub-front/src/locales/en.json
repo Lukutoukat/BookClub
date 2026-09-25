@@ -9,6 +9,8 @@
         "settings": "Settings"
     },
     "home": {
-        "title": "Clubs, books and more"
+        "badge": "Home",
+        "title": "Clubs, books and more",
+        "description": "Manage your book clubs, suggest new books and make decisions together."
     }
 }
