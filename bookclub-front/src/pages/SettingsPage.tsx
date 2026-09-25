@@ -3,6 +3,7 @@ import { useLogin } from '@/hooks/useLogin'
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
+import LanguageSelector from '@/components/LanguageSelector'
 import { Column } from '@/components/Column'
 
 const SettingsPage = () => {
@@ -21,6 +22,8 @@ const SettingsPage = () => {
 				<AccountSettings handleLogOut={logout} />
 
 				<ThemeSelector />
+
+				<LanguageSelector />
 			</Column>
 		</>
 	)
