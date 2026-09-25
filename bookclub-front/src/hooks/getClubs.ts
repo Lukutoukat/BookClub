@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-import bookclubmembersService from '@/services/bookclubmembers'
 import bookClubService, { type BookClubFields } from '@/services/bookclubs'
 
 export const useGetClubs = () => {
@@ -16,10 +15,8 @@ export const useGetClubs = () => {
 			void (async function () {
 				try {
 					setErrorMessage(null)
-					const usersClubs = await bookclubmembersService.get()
-					const clubIds = usersClubs.map((club) => club.bookclub_id)
-					const loadedClubs = await bookClubService.get(clubIds)
-					setList([...loadedClubs])
+					const usersClubs = await bookClubService.getAll();
+					setList([...usersClubs])
 				} catch {
 					setErrorMessage('Failed to load bookclubs.')
 				} finally {

@@ -11,16 +11,6 @@ interface VoteRequest {
   weight?: number
 }
 
-voteRouter.get('/', async (_req: Request, res: Response) => {
-  try {
-    const result = await prisma.bookVoted.findMany()
-    res.json(result)
-  } catch (error) {
-    console.error('GET /api/bookclubs error:', error)
-    res.status(500).json({ error: 'database error' })
-  }
-})
-
 voteRouter.get(
   '/:cycle_id',
   userExtractor,

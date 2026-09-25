@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { PageHeader } from '../components/PageHeader'
+import bookclubService from '@/services/bookclubs'
+
 type Bookclub = {
 	id: string
 	name: string
-	invite_code: string
+	invite_code?: string
 }
 
 type Props = {
@@ -13,24 +15,20 @@ type Props = {
 export const BookclubComponent = ({ bookclubId }: Props) => {
 	const [bookclub, setBookclub] = useState<Bookclub | null>(null)
 	const [loading, setLoading] = useState(true)
+
 	useEffect(() => {
 		const fetchBookclub = async () => {
 			try {
-				const res = await fetch(`/api/bookclubs/${bookclubId}`)
-
-				if (!res.ok) {
-					setBookclub(null)
-					return
+				const bookclub = await bookclubService.get(bookclubId)
+				if (bookclub) {
+					setBookclub(bookclub)
 				}
-
-				const data = (await res.json()) as Bookclub
-				setBookclub(data)
 			} finally {
 				setLoading(false)
 			}
 		}
 
-		if (bookclubId) void fetchBookclub()
+		return void fetchBookclub()
 	}, [bookclubId])
 
 	if (loading) return null
@@ -46,6 +44,9 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
 				afterButtonClick="alert"
 				buttonOnClick={async () => {
 					try {
+						if (!bookclub.invite_code) {
+							return;
+						}
 						await navigator.clipboard.writeText(bookclub.invite_code)
 					} catch {}
 				}}

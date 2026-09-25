@@ -1,7 +1,6 @@
 /// <reference types="jest" />
 
 import request from 'supertest'
-import jwt from 'jsonwebtoken'
 
 jest.mock('../db.ts', () => ({
   prisma: {
@@ -11,71 +10,71 @@ jest.mock('../db.ts', () => ({
       delete: jest.fn(),
       findUnique: jest.fn()
     },
-    user: {
-      findUnique: jest.fn()
-    },
     bookClubMembers: {
       create: jest.fn()
     }
   }
 }))
 
+jest.mock('../middleware/userExtractor.ts', () => ({
+  __esModule: true,
+  default: jest.fn()
+}))
+
 import { app } from '../index.ts'
 import { prisma } from '../db.ts'
+import userExtractor from '../middleware/userExtractor.ts'
 
-const mockBookClub_1 = {
+const mockBookClubOwner = {
   id: '1',
   name: 'Read it and weep',
   invite_code: 'ABCDE',
-  status: undefined,
   owner_id: '1'
 }
 
-const mockBookClub_2 = {
+const mockBookClubOther = {
   id: '2',
   name: 'Bookclub 2',
   invite_code: 'FGHIJ',
-  status: undefined,
   owner_id: '2'
 }
 
-const mockUser_1 = {
-  user_id: '1',
-  user_role: 0,
-  bookclub_id: '1'
+const mockUser = {
+  id: '1',
+  email: 'matti@test.com',
+  name: 'matti'
 }
 
-const authHeaders = () => {
-  if (!process.env.SECRET) {
-    process.env.SECRET = 'testsecret'
-  }
+const setUser = (user = mockUser) => {
+  ;(userExtractor as jest.Mock).mockImplementation((req: any, _res: any, next: any) => {
+    req.user = user
+    next()
+  })
+}
 
-  return {
-    Authorization: `Bearer ${jwt.sign({ id: 1 }, process.env.SECRET)}`
-  }
+const setNoUser = () => {
+  ;(userExtractor as jest.Mock).mockImplementation((_req: any, _res: any, next: any) => {
+    next()
+  })
 }
 
 describe('/api/bookclubs', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.spyOn(console, 'error').mockImplementation(() => {})
-    process.env.SECRET = 'testsecret'
-    ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
-      id: '1',
-      email: 'matti@test.com',
-      name: 'matti'
-    })
+    setUser()
   })
 
   afterEach(() => {
     jest.restoreAllMocks()
   })
 
-  describe('GET', () => {
-    it('returns book clubs', async () => {
-      const mockBookClubs = [mockBookClub_1, mockBookClub_2]
-
-      ;(prisma.bookClub.findMany as jest.Mock).mockResolvedValue(mockBookClubs)
+  describe('GET /', () => {
+    it('returns all clubs with owner full info and members stripped', async () => {
+      ;(prisma.bookClub.findMany as jest.Mock).mockResolvedValue([
+        mockBookClubOwner,
+        mockBookClubOther
+      ])
 
       const response = await request(app).get('/api/bookclubs')
 
@@ -85,18 +84,13 @@ describe('/api/bookclubs', () => {
           id: '1',
           name: 'Read it and weep',
           invite_code: 'ABCDE',
-          status: undefined,
           owner_id: '1'
         },
         {
           id: '2',
-          name: 'Bookclub 2',
-          invite_code: 'FGHIJ',
-          status: undefined,
-          owner_id: '2'
+          name: 'Bookclub 2'
         }
       ])
-
       expect(prisma.bookClub.findMany).toHaveBeenCalledTimes(1)
     })
 
@@ -109,8 +103,19 @@ describe('/api/bookclubs', () => {
       expect(response.body).toEqual({ error: 'database error' })
     })
 
-    it('returns a specific bookclub', async () => {
-      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClub_1)
+    it('returns 401 if user is missing', async () => {
+      setNoUser()
+
+      const response = await request(app).get('/api/bookclubs')
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({ error: 'Missing user' })
+    })
+  })
+
+  describe('GET /:id', () => {
+    it('returns full info for owner', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOwner)
 
       const response = await request(app).get('/api/bookclubs/1')
 
@@ -119,11 +124,34 @@ describe('/api/bookclubs', () => {
         id: '1',
         name: 'Read it and weep',
         invite_code: 'ABCDE',
-        status: undefined,
         owner_id: '1'
       })
     })
-    it('returns 500 if specific club not found', async () => {
+
+    it('returns stripped info for member', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOther)
+
+      const response = await request(app).get('/api/bookclubs/2')
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        id: '2',
+        name: 'Bookclub 2'
+      })
+    })
+
+    it('returns 404 if club not found or no access', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app).get('/api/bookclubs/1')
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({
+        error: 'Club not found or no permission to access that club'
+      })
+    })
+
+    it('returns 500 if get fails', async () => {
       ;(prisma.bookClub.findUnique as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
       const response = await request(app).get('/api/bookclubs/1')
@@ -131,33 +159,31 @@ describe('/api/bookclubs', () => {
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
     })
+
+    it('returns 401 if user is missing', async () => {
+      setNoUser()
+
+      const response = await request(app).get('/api/bookclubs/1')
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({ error: 'Missing user' })
+    })
   })
 
-  describe('POST', () => {
-    it('creates a book club', async () => {
-      const newBookClub = {
-        name: 'Read it and weep',
-        owner_id: '1'
-      }
+  describe('POST /', () => {
+    it('creates a book club and adds owner as member', async () => {
+      ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(mockBookClubOwner)
+      ;(prisma.bookClubMembers.create as jest.Mock).mockResolvedValue({})
 
-      ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(mockBookClub_1)
-      ;(prisma.bookClubMembers.create as jest.Mock).mockResolvedValue(mockUser_1)
+      const response = await request(app).post('/api/bookclubs').send({ name: 'Read it and weep' })
 
-      const response = await request(app)
-        .post('/api/bookclubs')
-        .set(authHeaders())
-        .send(newBookClub)
       expect(response.status).toBe(200)
-
-      expect(response.body.name).toBe('Read it and weep')
-      expect(response.body.status).toBe(undefined)
-      expect(response.body.owner_id).toBe('1')
-
-      expect(response.body.invite_code).toBeDefined()
-      expect(response.body.invite_code).toHaveLength(5)
-
-      expect(prisma.bookClub.create).toHaveBeenCalledTimes(1)
-
+      expect(response.body).toEqual({
+        id: '1',
+        name: 'Read it and weep',
+        invite_code: 'ABCDE',
+        owner_id: '1'
+      })
       expect(prisma.bookClub.create).toHaveBeenCalledWith({
         data: {
           name: 'Read it and weep',
@@ -166,42 +192,96 @@ describe('/api/bookclubs', () => {
           invite_code: expect.any(String)
         }
       })
+      expect(prisma.bookClubMembers.create).toHaveBeenCalledWith({
+        data: {
+          user_id: '1',
+          user_role: 0,
+          bookclub_id: '1'
+        }
+      })
     })
 
-    it('returns 500 if post fails', async () => {
+    it('returns 500 if adding member fails', async () => {
+      ;(prisma.bookClub.create as jest.Mock).mockResolvedValue(mockBookClubOwner)
+      ;(prisma.bookClubMembers.create as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app).post('/api/bookclubs').send({ name: 'Read it and weep' })
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({ error: 'database error adding member' })
+    })
+
+    it('returns 500 if create fails', async () => {
       ;(prisma.bookClub.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
-      const response = await request(app).post('/api/bookclubs').set(authHeaders()).send({
-        name: 'Wrong bookclub'
-      })
+      const response = await request(app).post('/api/bookclubs').send({ name: 'Wrong bookclub' })
 
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
     })
+
+    it('returns 401 if user is missing', async () => {
+      setNoUser()
+
+      const response = await request(app).post('/api/bookclubs').send({ name: 'X' })
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({ error: 'user not found' })
+    })
   })
 
-  describe('DELETE', () => {
-    it('deletes a bookclub', async () => {
+  describe('DELETE /:id', () => {
+    it('deletes a bookclub owned by user', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOwner)
       ;(prisma.bookClub.delete as jest.Mock).mockResolvedValue({})
 
       const response = await request(app).delete('/api/bookclubs/1')
 
       expect(response.status).toBe(204)
-      expect(response.body).toEqual({})
-      expect(prisma.bookClub.delete).toHaveBeenCalledTimes(1)
       expect(prisma.bookClub.delete).toHaveBeenCalledWith({
         where: { id: '1' }
       })
     })
 
+    it('returns 404 if club does not exist', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app).delete('/api/bookclubs/1')
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({ error: 'Unknown club' })
+    })
+
+    it('returns 401 if user is not owner', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOther)
+
+      const response = await request(app).delete('/api/bookclubs/2')
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'Must be owner of the club to delete'
+      })
+    })
+
     it('returns 500 if delete fails', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOwner)
       ;(prisma.bookClub.delete as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
       const response = await request(app).delete('/api/bookclubs/1')
+
       expect(response.status).toBe(500)
       expect(response.body).toEqual({
         error: 'database error in deleting bookclub'
       })
+    })
+
+    it('returns 401 if user is missing', async () => {
+      setNoUser()
+
+      const response = await request(app).delete('/api/bookclubs/1')
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({ error: 'Missing user' })
     })
   })
 })
