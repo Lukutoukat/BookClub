@@ -1,0 +1,14 @@
+{
+    "common": {
+        "logged": "Logged in as: "
+    },
+    "navigation": {
+        "home": "Home",
+        "books": "Books",
+        "create": "Create",
+        "settings": "Settings"
+    },
+    "home": {
+        "title": "Clubs, books and more"
+    }
+}
