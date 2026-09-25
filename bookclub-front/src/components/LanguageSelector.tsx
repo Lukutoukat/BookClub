@@ -4,10 +4,10 @@ import { Languages } from "lucide-react"
 
 const LanguageSelector = () => {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>
-                    <Languages />
+        <Card className='border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur'>
+            <CardHeader className='border-b border-border/60 py-4 sm:py-2'>
+                <CardTitle className='text-xl sm:text-2xl flex items-center gap-2'>
+                    <Languages className='w-5 h-5' />
                     Language
                 </CardTitle>
                 <CardDescription>
@@ -16,12 +16,12 @@ const LanguageSelector = () => {
             </CardHeader>
 
             <CardContent>
-                <Select>
-                    <SelectTrigger>
-                        <SelectValue />
+                <Select onValueChange={(value) => console.log(value)}>
+                    <SelectTrigger className='w-full min-w-0'>
+                        <SelectValue placeholder="English" />
                     </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
+                    <SelectContent position='popper' className='w-(--radix-select-trigger-width) min-w-0'>
+                        <SelectGroup className='py-4 sm:py-4'>
                             <SelectItem value='en'>
                                 English
                             </SelectItem>
