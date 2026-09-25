@@ -185,7 +185,7 @@ bookClubRouter.delete('/:id', userExtractor, async (req, res) => {
 
     // Ensure deleting user is owner
     if (club.owner_id !== userId) {
-      return res.status(401).json({ error: 'Must be owner of the club to delete'})
+      return res.status(403).json({ error: 'Must be owner of the club to delete'})
     }
 
     // Delete club
