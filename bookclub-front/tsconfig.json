@@ -9,6 +9,7 @@
 		"noFallthroughCasesInSwitch": true,
 		"module": "nodenext",
 		"esModuleInterop": true,
+		"resolveJsonModule": true,
 		"allowImportingTsExtensions": true,
 		"paths": {
 			"@/*": ["./src/*"]
