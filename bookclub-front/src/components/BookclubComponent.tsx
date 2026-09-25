@@ -29,7 +29,7 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
 		}
 
 		return void fetchBookclub()
-	}, [])
+	}, [bookclubId])
 
 	if (loading) return null
 	if (!bookclub) return <div>Book club not found</div>

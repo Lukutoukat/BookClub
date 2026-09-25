@@ -1,49 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { addDays } from 'date-fns'
 import { Button } from './ui/button'
 import { RangeCalendarComponent } from './RangeCalendarComponent'
 import { type DateRange } from 'react-day-picker'
 import cycleService, { type CreateCycle } from '../services/cycle'
-import bookclubService from '@/services/bookclubs.ts'
-
-type Bookclub = {
-	id: string
-	name: string
-	invite_code?: string
-}
 
 type Props = {
-	bookclubId: string
+	bookclubId?: string
 }
 
 export const NewCycle = ({ bookclubId }: Props) => {
-	const [bookclub, setBookclub] = useState<Bookclub | null>(null)
-	const [loading, setLoading] = useState(true)
 	const [dateRange, setDateRange] = useState<DateRange | undefined>({
 		from: addDays(new Date(new Date()), 14),
 		to: addDays(new Date(new Date()), 28)
 	})
 	const navigate = useNavigate()
 
-	useEffect(() => {
-		const fetchBookclub = async () => {
-			try {
-				const bookclub = await bookclubService.get(bookclubId)
-				if (bookclub) {
-					setBookclub(bookclub)
-				}
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		return void fetchBookclub()
-	}, [])
-
-
 	const handleCreate = async () => {
-		if (dateRange?.from && dateRange?.to) {
+		if (dateRange?.from && dateRange.to) {
 			const createdcycle: CreateCycle = {
 				bookclub_id: bookclubId,
 				proposalEnd: dateRange.from,
@@ -58,8 +33,10 @@ export const NewCycle = ({ bookclubId }: Props) => {
 		}
 	}
 
-	if (loading) return null
-	if (!bookclub) return <div>Bookclub not found</div>
+	if (!bookclubId) {
+		return null;
+	}
+
 	return (
 		<>
 			<RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange}>

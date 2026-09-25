@@ -1,16 +1,17 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { NewCycle } from '@/components/NewCycle'
 import { EndPhase } from '@/components/EndPhase'
 import { PageHeader } from '@/components/PageHeader'
-import { useNavigate } from 'react-router-dom'
-import bookClubService, { type BookClub } from '@/services/bookclubs'
-import { useState, useEffect } from 'react'
+import { type BookClub } from '@/services/bookclubs'
+import { useEffect, useState } from 'react'
 import { Column } from '@/components/Column'
+import bookclubService from '@/services/bookclubs.ts'
 
 const NewCyclePage = () => {
 	const { bookclubId } = useParams<{ bookclubId: string }>()
+
 	const [loadedClub, setLoadedClub] = useState<BookClub | undefined>()
-	const [isLoading, setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -19,30 +20,27 @@ const NewCyclePage = () => {
 			return
 		}
 
-		setIsLoading(true)
-
-		bookClubService
-			.get(bookclubId)
-			.then((club) => {
-				setLoadedClub(club)
-				setIsLoading(false)
-			})
-			.catch((error) => {
-				setIsLoading(false)
+		const fetchBookclub = async () => {
+			setIsLoading(true)
+			try {
+				const bookclub = await bookclubService.get(bookclubId)
+				setLoadedClub(bookclub)
+			} catch (error) {
 				console.error('Failed to load book club:', error)
 				void navigate('/') // Redirect to home page on error
-			})
+			} finally {
+				setIsLoading(false)
+			}
+		}
+
+		void fetchBookclub()
 	}, [bookclubId])
 
 	return (
 		<>
 			<PageHeader
 				badgeText="New Cycle"
-				title={
-					isLoading
-						? 'Loading...'
-						: (loadedClub?.name ?? 'Bookclub')
-				}
+				title={isLoading ? '' : (loadedClub?.name ?? 'Bookclub')}
 				description=""
 				buttonText="Back"
 				buttonOnClick={async () => {
@@ -50,8 +48,8 @@ const NewCyclePage = () => {
 				}}
 			/>
 			<Column>
-				<NewCycle bookclubId={loadedClub?.id ?? ''} />
-				<EndPhase bookclubId={loadedClub?.id ?? ''} />
+				<NewCycle bookclubId={bookclubId} />
+				<EndPhase bookclubId={bookclubId} />
 			</Column>
 		</>
 	)

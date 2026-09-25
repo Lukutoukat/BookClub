@@ -26,18 +26,6 @@ describe('NewCycle', () => {
 		vi.clearAllMocks()
 	})
 
-	it('renders bookclub not found when API call fails', async () => {
-		globalThis.fetch = vi.fn().mockResolvedValue({
-			ok: false
-		})
-
-		render(<NewCycle bookclubId="1" />)
-
-		await waitFor(() => {
-			expect(screen.getByText('Bookclub not found')).toBeInTheDocument()
-		})
-	})
-
 	it('creates cycle and navigates to bookclub page when user presses create', async () => {
 		mockGet.mockResolvedValue({
 			id: '1',

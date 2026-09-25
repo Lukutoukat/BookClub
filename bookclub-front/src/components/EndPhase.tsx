@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { ButtonDialog } from './ButtonDialog'
 
 type Props = {
-	bookclubId: string
+	bookclubId?: string
 }
 
 export const EndPhase = ({ bookclubId }: Props) => {
@@ -23,11 +23,19 @@ export const EndPhase = ({ bookclubId }: Props) => {
 		removeErrorMessage()
 
 		try {
+			if (!bookclubId) {
+				setErrorMessage(getErrorMessage('Failed to end phase.'))
+				return;
+			}
 			await cycleService.endLatestCyclePhase(bookclubId)
 			await navigate('/club/' + bookclubId)
 		} catch (error) {
 			setErrorMessage(getErrorMessage(error, 'Failed to end phase.'))
 		}
+	}
+
+	if (!bookclubId) {
+		return null
 	}
 
 	return (
