@@ -257,7 +257,7 @@ describe('/api/bookclubs', () => {
 
       const response = await request(app).delete('/api/bookclubs/2')
 
-      expect(response.status).toBe(401)
+      expect(response.status).toBe(403)
       expect(response.body).toEqual({
         error: 'Must be owner of the club to delete'
       })
