@@ -82,6 +82,8 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
             />
 
             <Button type="button" onClick={() => { 
+                setPage(1)
+                setResultCount(0)
                 void handleSearch(1) 
                 }}
             >
