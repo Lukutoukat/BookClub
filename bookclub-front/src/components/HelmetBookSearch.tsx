@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 type HelmetBookSearchProps = {
     onBookSelect: (book: FinnaBook) => void
@@ -19,6 +20,9 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
         'fin', 'swe', 'eng'
     ])
     const [languages, setLanguages] = useState<FinnaLanguage[]>([])
+    const [page, setPage] = useState(1)
+    const [resultCount, setResultCount] = useState(0)
+    const totalPages = Math.max(1, Math.ceil(resultCount / 10))
 
     useEffect(() => {
         const fetchLanguages = async () => {
@@ -34,9 +38,12 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
     }, [])
 
 
-    const handleSearch = async () => {
+    const handleSearch = async (pageToSearch: number) => {
         if (query.trim() === '') {
             setSearchError('Please enter a search query.')
+            setBookGroups([])
+            setResultCount(0)
+            setPage(1)
             return
         }
 
@@ -49,12 +56,16 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
         }
 
         try {
-            const books = await finnaService.searchHelmetBooks(query, usedLanguages)
-            if (books.length === 0) {
+            const result = await finnaService.searchHelmetBooks(query, usedLanguages, pageToSearch)
+            
+            setResultCount(result.resultCount)
+            setPage(pageToSearch)
+
+            if (result.books.length === 0) {
                 setSearchError('No books found.')
                 return
             }
-            setBookGroups(books)
+            setBookGroups(result.books)
 
         } catch {
             setSearchError('Search failed.')
@@ -70,9 +81,44 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 placeholder="Search from Helmet"
             />
 
-            <Button type="button" onClick={handleSearch}>
+            <Button type="button" onClick={() => { 
+                void handleSearch(1) 
+                }}
+            >
                 Search
             </Button>
+            
+            <div className="flex items-center justify-center gap-3">
+                <Button 
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    aria-label="Previous Page"
+                    disabled={page === 1}
+                    onClick={() => {
+                        const prevPage = page - 1
+                        void handleSearch(prevPage)
+                }}>
+                    <ChevronLeft />
+                </Button>
+
+                <span>
+                    {page} / {totalPages}
+                </span>
+
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    aria-label="Next Page"
+                    disabled={page >= totalPages}
+                    onClick={() => {
+                        const nextPage = page + 1
+                        void handleSearch(nextPage)
+                    }}>
+                    <ChevronRight />
+                </Button>
+            </div>
 
             {searchError && (
                 <p className="text-sm text-destructive">

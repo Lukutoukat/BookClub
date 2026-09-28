@@ -116,24 +116,26 @@ test('searchHelmetBooks returns grouped books', async () => {
         }
     })
 
-    const result = await finnaService.searchHelmetBooks("1984", ["eng"])
+    const result = await finnaService.searchHelmetBooks("1984", ["eng"], 1)
 
-    expect(result.length).toBe(3)
-    expect(result[0].length).toBe(2)
-    expect(result[1].length).toBe(1)
-    expect(result[2].length).toBe(1)
+    expect(result.books.length).toBe(3)
+    expect(result.books[0].length).toBe(2)
+    expect(result.books[1].length).toBe(1)
+    expect(result.books[2].length).toBe(1)
+    expect(result.resultCount).toBe(4)
 })
 
-test('searchHelmetBooks returns empty array when records are missing', async () => {
+test('searchHelmetBooks returns empty books when records are missing', async () => {
     mockedAxios.get.mockResolvedValue({
         data: {
             resultCount: 0,
         }
     })
 
-    const result = await finnaService.searchHelmetBooks("randomquery", ["eng"])
+    const result = await finnaService.searchHelmetBooks("randomquery", ["eng"], 1)
 
-    expect(result).toEqual([])
+    expect(result.books).toEqual([])
+    expect(result.resultCount).toBe(0)
 })
 
 test('returns languages from Finna', async () => {
@@ -189,11 +191,26 @@ test('searchHelmetBooks adds selected languages to filters', async () => {
         }
     })
 
-    await finnaService.searchHelmetBooks("1984", ["fin", "ger"])
+    await finnaService.searchHelmetBooks("1984", ["fin", "ger"], 1)
     const params = mockedAxios.get.mock.calls[0][1]?.params as URLSearchParams
     const filters = params.getAll("filter[]")
 
     expect(filters).toContain('~language:"fin"')
     expect(filters).toContain('~language:"ger"')
+})
+
+test('searchHelmetBooks adds page number to params', async () => {
+    mockedAxios.get.mockClear()
+    mockedAxios.get.mockResolvedValue({
+        data: {
+            resultCount: 0,
+            records: []
+        }
+    })
+    
+    await finnaService.searchHelmetBooks("1984", ["eng"], 2)
+    const params = mockedAxios.get.mock.calls[0][1]?.params as URLSearchParams
+    const pageParam = params.get("page")
+    expect(pageParam).toBe("2")
 })
 
