@@ -13,18 +13,6 @@ const mockProposal = {
 	bookclub_id: 'bookclub_1'
 }
 
-test('getAll returns all proposals', async () => {
-	const mockProposals = [mockProposal]
-
-	mockedAxios.get.mockResolvedValue({
-		data: mockProposals
-	})
-
-	const result = await propose.getAll()
-
-	expect(result).toEqual(mockProposals)
-})
-
 test('getProposedBooks returns all proposals', async () => {
 	const mockProposals = [mockProposal]
 

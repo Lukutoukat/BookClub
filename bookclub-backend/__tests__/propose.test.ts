@@ -201,29 +201,6 @@ describe('/api/propose', () => {
     })
   })
 
-  describe('GET', () => {
-    it('returns proposed books', async () => {
-      ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue(mockProposal)
-
-      const response = await request(app).get('/api/propose')
-
-      expect(response.status).toBe(200)
-      expect(response.body).toEqual({
-        bookclub_id: '1',
-        book_id: '1'
-      })
-    })
-
-    it('returns 500 if get fails', async () => {
-      ;(prisma.bookProposed.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
-
-      const response = await request(app).get('/api/propose')
-
-      expect(response.status).toBe(500)
-      expect(response.body).toEqual({ error: 'database error' })
-    })
-  })
-
   describe('DELETE', () => {
     it('deletes a proposed book', async () => {
       ;(prisma.bookProposed.deleteMany as jest.Mock).mockResolvedValue({

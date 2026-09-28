@@ -11,15 +11,6 @@ interface ProposeRequest {
   bookclub_id?: string
 }
 
-proposeRouter.get('/', async (_req: Request, res: Response) => {
-  try {
-    const result = await prisma.bookProposed.findMany()
-    res.json(result)
-  } catch (error) {
-    console.error('GET /api/bookclubs error:', error)
-    res.status(500).json({ error: 'database error' })
-  }
-})
 
 proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, res: Response) => {
   const { cycle_id, book_id } = req.params
