@@ -24,6 +24,10 @@ const NewCyclePage = () => {
 			setIsLoading(true)
 			try {
 				const bookclub = await bookclubService.get(bookclubId)
+				if (!bookclub) {
+					void navigate('/')
+					return
+				}
 				setLoadedClub(bookclub)
 			} catch (error) {
 				console.error('Failed to load book club:', error)

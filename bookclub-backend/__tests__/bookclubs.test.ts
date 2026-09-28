@@ -252,7 +252,7 @@ describe('/api/bookclubs', () => {
       expect(response.body).toEqual({ error: 'Unknown club' })
     })
 
-    it('returns 401 if user is not owner', async () => {
+    it('returns 403 if user is not owner', async () => {
       ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOther)
 
       const response = await request(app).delete('/api/bookclubs/2')

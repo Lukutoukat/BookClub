@@ -20,9 +20,7 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
 		const fetchBookclub = async () => {
 			try {
 				const bookclub = await bookclubService.get(bookclubId)
-				if (bookclub) {
-					setBookclub(bookclub)
-				}
+				setBookclub(bookclub ?? null)
 			} finally {
 				setLoading(false)
 			}
