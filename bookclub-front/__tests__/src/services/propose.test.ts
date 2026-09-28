@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { test, expect, vi } from 'vitest'
+import { test, describe, expect, vi } from 'vitest'
 import type { Mocked } from 'vitest'
 import propose from '@/services/propose'
 
@@ -13,49 +13,52 @@ const mockProposal = {
 	bookclub_id: 'bookclub_1'
 }
 
-test('getProposedBooks returns all proposals', async () => {
-	const mockProposals = [mockProposal]
+describe('Propose service', () => {
 
-	mockedAxios.post.mockResolvedValue({
-		data: mockProposals
+	test('getProposedBooks returns all proposals', async () => {
+		const mockProposals = [mockProposal]
+
+		mockedAxios.get.mockResolvedValue({
+			data: mockProposals
+		})
+
+		await propose.getProposedBooks(mockProposal.cycle_id)
+
+		expect(mockedAxios.get).toHaveBeenCalledWith(
+			`/api/propose/${mockProposal.cycle_id}`,
+			expect.objectContaining({
+				headers: expect.objectContaining({
+					Authorization: null
+				})
+			})
+		)
 	})
 
-	await propose.getProposedBooks(mockProposal.cycle_id)
-
-	expect(mockedAxios.post).toHaveBeenCalledWith(
-		`/api/propose/${mockProposal.cycle_id}`,
-		{},
-		expect.objectContaining({
-			headers: expect.objectContaining({
-				Authorization: null
-			})
+	test('create returns created proposal', async () => {
+		mockedAxios.post.mockResolvedValue({
+			data: mockProposal
 		})
-	)
-})
 
-test('create returns created proposal', async () => {
-	mockedAxios.post.mockResolvedValue({
-		data: mockProposal
+		const result = await propose.create(mockProposal)
+
+		expect(result).toEqual(mockProposal)
 	})
 
-	const result = await propose.create(mockProposal)
+	test('removeProposedBooks deletes the correct proposal', async () => {
+		const mockId = '1'
 
-	expect(result).toEqual(mockProposal)
-})
+		mockedAxios.delete.mockResolvedValue({})
 
-test('removeProposedBooks deletes the correct proposal', async () => {
-	const mockId = '1'
+		await propose.removeProposedBook(mockId, mockProposal.book_id)
 
-	mockedAxios.delete.mockResolvedValue({})
-
-	await propose.removeProposedBook(mockId, mockProposal.book_id)
-
-	expect(mockedAxios.delete).toHaveBeenCalledWith(
-		`/api/propose/${mockId}/${mockProposal.book_id}`,
-		expect.objectContaining({
-			headers: expect.objectContaining({
-				Authorization: null
+		expect(mockedAxios.delete).toHaveBeenCalledWith(
+			`/api/propose/${mockId}/${mockProposal.book_id}`,
+			expect.objectContaining({
+				headers: expect.objectContaining({
+					Authorization: null
+				})
 			})
-		})
-	)
+		)
+	})
 })
+

@@ -16,7 +16,7 @@ export type Propose = ProposeFields
 export type CreatePropose = Omit<ProposeFields, 'id'>
 
 const getProposedBooks = (cycleId: string) => {
-	return axios.post<Book[]>(`${baseUrl}/${cycleId}`, {}, getAuthConfig()).then((res) => res.data)
+	return axios.get<Book[]>(`${baseUrl}/${cycleId}`, getAuthConfig()).then((res) => res.data)
 }
 
 const removeProposedBook = (cycle_id: string, book_id: string) => {

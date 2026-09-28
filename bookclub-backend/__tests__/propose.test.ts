@@ -164,40 +164,43 @@ describe('/api/propose', () => {
         error: 'Book already proposed for this cycle!'
       })
     })
-    it('filters current cycles books', async () => {
-      const MockProposal = {
-        id: '1',
-        cycle_id: '1',
-        book_id: '1',
-        Book: {
-          id: '1',
-          user_id: '1'
-        }
-      }
 
-      ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue([MockProposal])
-      ;(prisma.book.findUnique as jest.Mock).mockResolvedValue({
-        id: '1'
+    describe('GET', () => {
+      it('filters current cycles books', async () => {
+        const MockProposal = {
+          id: '1',
+          cycle_id: '1',
+          book_id: '1',
+          Book: {
+            id: '1',
+            user_id: '1'
+          }
+        }
+
+        ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValue([MockProposal])
+        ;(prisma.book.findUnique as jest.Mock).mockResolvedValue({
+          id: '1'
+        })
+
+        const response = await request(app).get('/api/propose/1').set(authHeaders())
+        console.log(response.body)
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual([
+          {
+            id: '1',
+            owned_by_user: true,
+            proposal_id: '1',
+            user_id: '1'
+          }
+        ])
       })
+      it('returns 500 if error in filtering books', async () => {
+        ;(prisma.bookProposed.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
+        const response = await request(app).get('/api/propose/1').set(authHeaders())
 
-      const response = await request(app).post('/api/propose/1').set(authHeaders())
-      console.log(response.body)
-      expect(response.status).toBe(200)
-      expect(response.body).toEqual([
-        {
-          id: '1',
-          owned_by_user: true,
-          proposal_id: '1',
-          user_id: '1'
-        }
-      ])
-    })
-    it('returns 500 if error in filtering books', async () => {
-      ;(prisma.bookProposed.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
-      const response = await request(app).post('/api/propose/1').set(authHeaders())
-
-      expect(response.status).toBe(500)
-      expect(response.body).toEqual({ error: 'database error' })
+        expect(response.status).toBe(500)
+        expect(response.body).toEqual({ error: 'database error' })
+      })
     })
   })
 
