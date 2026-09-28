@@ -19,15 +19,11 @@ export const EndPhase = ({ bookclubId }: Props) => {
 		setErrorMessage(null)
 	}
 
-	const handleEndPhase = async () => {
+	const handleEndPhase = async (id: string) => {
 		removeErrorMessage()
 
 		try {
-			if (!bookclubId) {
-				setErrorMessage(getErrorMessage('Failed to end phase.'))
-				return;
-			}
-			await cycleService.endLatestCyclePhase(bookclubId)
+			await cycleService.endLatestCyclePhase(id)
 			await navigate('/club/' + bookclubId)
 		} catch (error) {
 			setErrorMessage(getErrorMessage(error, 'Failed to end phase.'))
@@ -49,7 +45,7 @@ export const EndPhase = ({ bookclubId }: Props) => {
 					<ButtonDialog
 						buttonText="End current phase"
 						alertDialogDescription="The current phase will be ended and this action cannot be undone."
-						buttonOnClick={handleEndPhase}
+						buttonOnClick={() => void handleEndPhase(bookclubId)}
 					/>
 				</div>
 				<ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />
