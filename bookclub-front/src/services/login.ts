@@ -20,9 +20,9 @@ export type LoggedInUser = {
 }
 
 const login = async (credentials: LoginCredentials): Promise<userWithToken> => {
-	const response = await axios.post<userWithToken>(baseUrl, credentials)
-
-	return response.data
+	return axios
+		.post<userWithToken>(baseUrl, credentials)
+		.then((res) => res.data)
 }
 
 const getSelf = async(): Promise<LoggedInUser | undefined> => {

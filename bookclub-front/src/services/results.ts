@@ -10,7 +10,9 @@ export interface BookResult extends Book {
 }
 
 const getResults = (cycleId: string) => {
-	return axios.get<BookResult[]>(`${baseUrl}/${cycleId}`, getAuthConfig()).then((res) => res.data)
+	return axios
+		.get<BookResult[]>(`${baseUrl}/${cycleId}`, getAuthConfig())
+		.then((res) => res.data)
 }
 
 const getWinner = (cycleId: string) => {

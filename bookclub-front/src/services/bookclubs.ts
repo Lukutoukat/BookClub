@@ -12,8 +12,10 @@ export interface BookClubFields {
 export type BookClub = BookClubFields
 export type CreateBookClub = Omit<BookClubFields, 'id'>
 
-const create = async (newBookClub: CreateBookClub) => {
-	return await axios.post<BookClub>(baseUrl, newBookClub, getAuthConfig()).then((res) => res.data)
+const create = (newBookClub: CreateBookClub) => {
+	return axios
+		.post<BookClub>(baseUrl, newBookClub, getAuthConfig())
+		.then((res) => res.data)
 }
 
 /**
@@ -34,8 +36,10 @@ const get = (clubId: string) => {
 }
 
 const remove = (id: string) => {
-	return axios.delete(`${baseUrl}/${id}`, getAuthConfig())
+	return axios
+		.delete(`${baseUrl}/${id}`, getAuthConfig())
 }
+
 export default {
 	create,
 	get,

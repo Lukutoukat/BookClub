@@ -26,7 +26,9 @@ const removeProposedBook = (cycle_id: string, book_id: string) => {
 }
 
 const create = (propose: CreatePropose) => {
-	return axios.post<Propose>(baseUrl, propose, getAuthConfig()).then((res) => res.data)
+	return axios
+		.post<Propose>(baseUrl, propose, getAuthConfig())
+		.then((res) => res.data)
 }
 
 export default { getProposedBooks, create, removeProposedBook }
