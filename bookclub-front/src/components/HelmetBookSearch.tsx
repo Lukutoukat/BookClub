@@ -198,15 +198,15 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                                             }}
                                         />
                                         <span className="text-sm">
-                                            {book.year} - {book.languages?.join(', ')}
-                                            {pages !== '' && ` - ${pages} pages`} - {book.cleanIsbn}
+                                            {book.languages?.join(', ')}
+                                            {pages !== '' && ` - ${pages} pages`}
                                         </span>
 																				<span className="text-blue-500">
 																					<a
 																						target="_blank"
 																						href={'https://helmet.finna.fi/Record/' + book.id}
 																						rel="noreferrer"
-																					>Helmet</a>
+																					> Helmet</a>
 																				</span>
                                     </label>
                                 )
