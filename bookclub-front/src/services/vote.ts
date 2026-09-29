@@ -13,12 +13,6 @@ export interface VoteFields {
 export type Vote = VoteFields
 export type CreateVote = Omit<VoteFields, 'id'>
 
-const getAll = () => {
-	return axios
-		.get<Vote[]>(baseUrl)
-		.then((res) => res.data)
-}
-
 const getOwn = (cycleId: string) => {
 	return axios
 		.get<Vote[]>(`${baseUrl}/${cycleId}`, getAuthConfig())
@@ -37,4 +31,4 @@ const create = (vote: CreateVote) => {
 		.then((res) => res.data)
 }
 
-export default { getAll, create, getOwn, update }
+export default { create, getOwn, update }

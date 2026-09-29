@@ -104,6 +104,7 @@ describe('ClubSettings', () => {
 	})
 
 	it('calls bookclubService.remove and navigates after delete', async () => {
+		vi.mocked(bookclubmembersService.getByClubId).mockResolvedValue([])
 		vi.mocked(bookclubService.remove).mockResolvedValue(undefined)
 
 		render(<ClubSettingsDisplay bookclubId="1" />)

@@ -9,10 +9,20 @@ spec:
   lookupPolicy:
     local: false
   tags:
+    # STAGING IMAGE STREAM
     - name: staging
       from:
         kind: DockerImage
         name: lukutoukat/bookclub:staging
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Local
+    # PRODUCTION IMAGE STREAM
+    - name: prod
+      from:
+        kind: DockerImage
+        name: lukutoukat/bookclub:prod
       importPolicy:
         scheduled: true
       referencePolicy:

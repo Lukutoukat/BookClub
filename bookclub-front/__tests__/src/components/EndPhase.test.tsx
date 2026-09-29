@@ -12,6 +12,11 @@ describe('EndPhase', () => {
 		vi.clearAllMocks()
 	})
 
+	it('does not render anything without a club id', () => {
+		const { container } = render(<EndPhase />)
+		expect(container).toBeEmptyDOMElement()
+	})
+
 	it('renders phase title and button', () => {
 		render(<EndPhase bookclubId="1" />)
 
@@ -46,5 +51,27 @@ describe('EndPhase', () => {
 		await waitFor(() => {
 			expect(cycleService.endLatestCyclePhase).toHaveBeenCalledWith('1')
 		})
+	})
+	
+	it('displays an error on service error', async () => {
+
+		const expectedErrorMessage = 'Failed to get latest cycle'
+		vi.mocked(cycleService.endLatestCyclePhase).mockRejectedValue(new Error(expectedErrorMessage))
+
+		render(<EndPhase bookclubId="1" />)
+
+		await userEvent.click(
+			screen.getByRole('button', {
+				name: 'End current phase'
+			})
+		)
+
+		await userEvent.click(
+			screen.getByRole('button', {
+				name: /continue/i
+			})
+		)
+
+		expect(screen.getByText(expectedErrorMessage, { exact: false })).toBeDefined()
 	})
 })

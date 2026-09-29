@@ -1,34 +1,36 @@
-import { describe, it, expect, vi, beforeEach, afterAll, afterEach } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { UserLoginDisplay } from '@/components/UserLoginDisplay'
+import { AppProvider } from '@/context/AppContext.tsx'
 
 describe('UserLoginDisplay', () => {
-	beforeEach(() => {
-		localStorage.clear()
-	})
-
-	afterEach(() => {
-		localStorage.clear()
-	})
-
 	it('returns null when no user is logged in', () => {
-		const { container } = render(<UserLoginDisplay />)
+		const { container } = render(
+			<AppProvider user={undefined}>
+				<UserLoginDisplay />
+			</AppProvider>
+		)
 		expect(container.firstChild).toBeNull()
 	})
 
 	it('displays logged in user name when user exists', () => {
-		const user = { name: 'Matti' }
-		localStorage.setItem('loggedBookappUser', JSON.stringify(user))
+		const user = { id: '1', name: 'Matti', email: 'matti@gmail.com' }
 
-		render(<UserLoginDisplay />)
+		render(
+			<AppProvider user={user}>
+				<UserLoginDisplay />
+			</AppProvider>
+		)
 
 		expect(screen.getByText(/Logged in as: Matti/i)).toBeInTheDocument()
 	})
 
 	it('returns null when user object is empty', () => {
-		localStorage.setItem('loggedBookappUser', JSON.stringify({}))
-
-		const { container } = render(<UserLoginDisplay />)
+		const { container } = render(
+			<AppProvider user={undefined}>
+				<UserLoginDisplay />
+			</AppProvider>
+		)
 		expect(container.firstChild).toBeNull()
 	})
 })

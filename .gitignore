@@ -30,4 +30,5 @@ coverage
 
 coverage
 configmap.yaml
+configmaps.yaml
 roles.yaml

@@ -1,0 +1,31 @@
+# STAGING SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookclub-staging-svc
+spec:
+  selector:
+    app: bookclub
+    env: staging
+  ports:
+    - protocol: TCP
+      port: 3003
+      targetPort: 3003
+  type: ClusterIP
+
+---
+
+# PRODUCTION SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookclub-prod-svc
+spec:
+  selector:
+    app: bookclub
+    env: prod
+  ports:
+    - protocol: TCP
+      port: 3003
+      targetPort: 3003
+  type: ClusterIP

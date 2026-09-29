@@ -22,12 +22,6 @@ export interface CycleWithStatus {
 export type Cycle = CycleFields
 export type CreateCycle = Omit<CycleFields, 'id'>
 
-const getAll = () => {
-	return axios
-		.get<Cycle[]>(baseUrl)
-		.then((res) => res.data)
-}
-
 const getClubCycles = (bookclubId: string) => {
 	return axios
 		.get<Cycle[]>(`${baseUrl}/${bookclubId}`)
@@ -92,4 +86,4 @@ const create = (cycle: CreateCycle) => {
 		.then((res) => res.data)
 }
 
-export default { getAll, create, getLatestCycle, endLatestCyclePhase, getClubCycles }
+export default { create, getLatestCycle, endLatestCyclePhase, getClubCycles }

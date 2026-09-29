@@ -5,7 +5,8 @@ const baseUrl = '/api/bookclubs'
 export interface BookClubFields {
 	id: string
 	name: string
-	owner_id: string
+	owner_id?: string
+	invite_code?: string
 }
 
 export type BookClub = BookClubFields
@@ -17,22 +18,21 @@ const create = (newBookClub: CreateBookClub) => {
 		.then((res) => res.data)
 }
 
+/**
+ * Get all clubs the current user is a part of
+ */
 const getAll = () => {
-	return axios
-		.get<BookClub[]>(baseUrl)
-		.then((res) => res.data)
+	return axios.get<BookClub[]>(baseUrl, getAuthConfig()).then((res) => res.data);
 }
 
-const get = (clubIds: string[]): Promise<BookClub[]> => {
+/**
+ * Get a single club by its ID
+ */
+const get = (clubId: string) => {
 	return axios
-		.get<BookClub[]>(baseUrl, {
-			...getAuthConfig(),
-			params: { clubIds },
-			paramsSerializer: {
-				indexes: null
-			}
-		})
+		.get<BookClub>(baseUrl + '/' + clubId, getAuthConfig())
 		.then((res) => res.data)
+		.catch(() => undefined)
 }
 
 const remove = (id: string) => {
@@ -42,7 +42,7 @@ const remove = (id: string) => {
 
 export default {
 	create,
-	getAll,
 	get,
+	getAll,
 	remove
 }
