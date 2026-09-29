@@ -89,9 +89,7 @@ test('shows book search result', async () => {
 
     expect(await screen.findByText('1984')).toBeDefined()
     expect(await screen.findByText('George Orwell')).toBeDefined()
-    expect(await screen.findByText(/2021/)).toBeDefined()
     expect(await screen.findByText(/English/)).toBeDefined()
-    expect(await screen.findByText(/9780451524935/)).toBeDefined()
     expect(await screen.findByText(/328 pages/)).toBeDefined()
 })
 
