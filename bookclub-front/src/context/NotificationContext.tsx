@@ -1,29 +1,35 @@
-import SuccessMessageDisplay from '@/components/successMessageDisplay'
+import NotificationToast from '@/components/NotificationToast.tsx'
 import { useCallback, useContext, useEffect, useState, type ReactNode, createContext } from 'react'
+import type { Notification } from '@/types.ts'
 
 interface NotificationContextType {
 	showSuccess: (message: string) => void
+	showError: (message: string) => void
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined)
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
-	const [message, setMessage] = useState<string | undefined>(undefined)
+	const [notification, setNotification] = useState<Notification | undefined>(undefined)
 
 	const showSuccess = useCallback((msg: string) => {
-		setMessage(msg)
+		setNotification({message: msg, type: 'success'})
+	}, [])
+
+	const showError = useCallback((msg: string)=> {
+		setNotification({message: msg, type: 'error'})
 	}, [])
 
 	useEffect(() => {
-		if (!message) return
-		const t = setTimeout(() => setMessage(undefined), 5000)
+		if (!notification) return
+		const t = setTimeout(() => setNotification(undefined), 5000)
 		return () => clearTimeout(t)
-	}, [message])
+	}, [notification])
 
 	return (
-		<NotificationContext.Provider value={{ showSuccess }}>
+		<NotificationContext.Provider value={{ showSuccess, showError }}>
 			{children}
-			<SuccessMessageDisplay message={message} />
+			<NotificationToast notification={notification} />
 		</NotificationContext.Provider>
 	)
 }
