@@ -15,12 +15,8 @@ export type deletePropose = Omit<ProposeFields, 'id' | 'book_id' | 'cycle_id'>
 export type Propose = ProposeFields
 export type CreatePropose = Omit<ProposeFields, 'id'>
 
-const getAll = () => {
-	return axios.get<Propose[]>(baseUrl).then((res) => res.data)
-}
-
 const getProposedBooks = (cycleId: string) => {
-	return axios.post<Book[]>(`${baseUrl}/${cycleId}`, {}, getAuthConfig()).then((res) => res.data)
+	return axios.get<Book[]>(`${baseUrl}/${cycleId}`, getAuthConfig()).then((res) => res.data)
 }
 
 const removeProposedBook = (cycle_id: string, book_id: string) => {
@@ -33,4 +29,4 @@ const create = (propose: CreatePropose) => {
 	return axios.post<Propose>(baseUrl, propose, getAuthConfig()).then((res) => res.data)
 }
 
-export default { getAll, getProposedBooks, create, removeProposedBook }
+export default { getProposedBooks, create, removeProposedBook }

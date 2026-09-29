@@ -13,26 +13,6 @@ const mockUser = {
 	password: 'salasana123'
 }
 
-test('getAll returns all users', async () => {
-	const mockUsers = [
-		{ id: 1, ...mockUser },
-		{
-			id: 2,
-			email: 'maria@example.com',
-			name: 'Maria Karvonen',
-			password: 'salasana456'
-		}
-	]
-
-	mockedAxios.get.mockResolvedValue({
-		data: mockUsers
-	})
-
-	const result = await users.getAll()
-
-	expect(result).toEqual(mockUsers)
-})
-
 test('create returns created user', async () => {
 	const createdUser = { id: 1, ...mockUser }
 

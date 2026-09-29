@@ -11,16 +11,6 @@ interface CycleRequest {
   votingEnd?: Date
 }
 
-cycleRouter.get('/', async (_req: Request, res: Response) => {
-  try {
-    const result = await prisma.cycle.findMany()
-    res.json(result)
-  } catch (error) {
-    console.error('GET /api/cycles error:', error)
-    res.status(500).json({ error: 'database error' })
-  }
-})
-
 cycleRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
   const { id } = req.params
   try {
