@@ -13,26 +13,6 @@ const mockUser = {
 	password: 'salasana123'
 }
 
-test('getAll returns all users', async () => {
-	const mockUsers = [
-		{ id: 1, ...mockUser },
-		{
-			id: 2,
-			email: 'maria@example.com',
-			name: 'Maria Karvonen',
-			password: 'salasana456'
-		}
-	]
-
-	mockedAxios.get.mockResolvedValue({
-		data: mockUsers
-	})
-
-	const result = await users.getAll()
-
-	expect(result).toEqual(mockUsers)
-})
-
 test('create returns created user', async () => {
 	const createdUser = { id: 1, ...mockUser }
 
@@ -44,4 +24,24 @@ test('create returns created user', async () => {
 
 	expect(mockedAxios.post).toHaveBeenCalledWith('/api/users', mockUser)
 	expect(result).toEqual(createdUser)
+})
+
+test('requestDeletion returns true when status is 200', async () => {
+	mockedAxios.delete.mockResolvedValue({ status: 200 })
+
+	const result = await users.requestDeletion()
+
+	expect(mockedAxios.delete).toHaveBeenCalledWith(
+		'/api/users',
+		expect.objectContaining({ timeout: 5000 })
+	)
+	expect(result).toBe(true)
+})
+
+test('requestDeletion returns false when status is not 200', async () => {
+	mockedAxios.delete.mockResolvedValue({ status: 204 })
+
+	const result = await users.requestDeletion()
+
+	expect(result).toBe(false)
 })

@@ -11,18 +11,20 @@ export interface User {
 
 export type CreateUser = Omit<User, 'id'>
 
-const getAll = async () => {
-	const response = await axios.get<User[]>(baseUrl, getAuthConfig())
-	console.log('response serviceissä', response)
-	return response.data
-}
-
 const create = async (newUser: CreateUser) => {
 	const response = await axios.post<User>(baseUrl, newUser)
 	return response.data
 }
 
+/**
+ * Requests the immediate deletion of the currently logged in account.
+ */
+const requestDeletion = async (): Promise<boolean> => {
+	const response = await axios.delete(baseUrl, { ...getAuthConfig(), timeout: 5000 })
+	return response.status === 200
+}
+
 export default {
-	getAll,
-	create
+	create,
+	requestDeletion
 }

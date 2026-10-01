@@ -12,12 +12,29 @@ resultRouter.get(
 
     if (req.user) {
       try {
+        const membership = await prisma.bookClubMembers.findFirst({
+          where: {
+            user_id: req.user.id,
+            BookClub: {
+              Cycle: {
+                some: { id: cycle_id }
+              }
+            }
+          }
+        })
+
+        if (!membership) {
+          res.status(403).json({ error: 'Not a member of this cycle' })
+          return
+        }
+
         const proposals = await prisma.bookProposed.findMany({
           where: {
             cycle_id
           },
           include: {
-            Book: true
+            Book: true,
+            Cycle: true
           }
         })
 

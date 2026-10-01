@@ -14,7 +14,6 @@ interface BookClubMembersRequest {
 }
 
 BookClubMembersRouter.get('/', userExtractor, async (req: Request, res: Response) => {
-  console.log('TOKEEEN AND USER')
   if (!req.token) {
     return res.status(401).json({
       error: 'missing token'
@@ -49,15 +48,14 @@ BookClubMembersRouter.get('/:id', userExtractor, async (req: Request, res: Respo
     const isClub = await prisma.bookClub.findFirst({
       where: { id: bookclub_id }
     })
-    const isAdmin = await prisma.bookClubMembers.findFirst({
-      where: { user_id: req.user.id, user_role: 0, bookclub_id }
+    const isMember = await prisma.bookClubMembers.findFirst({
+      where: { user_id: req.user.id, bookclub_id }
     })
 
     if (!isClub) {
       return res.status(404).json({ error: 'club not found' })
     }
-
-    if (!isAdmin) {
+    if (!isMember) {
       return res.status(403).json({ error: 'permission denied' })
     }
 

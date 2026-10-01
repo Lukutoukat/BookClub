@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@/utils/test-utils'
 import userEvent from '@testing-library/user-event'
 
-import { ClubMemberList } from '@/components/ClubMemberList'
+import { BookclubMemberList } from '@/components/BookclubMemberList'
 import memberService from '@/services/bookclubmembers'
 
 vi.mock('@/services/bookclubmembers')
@@ -46,7 +46,7 @@ describe('ClubMemberList', () => {
 	it('renders the club members returned by the API', async () => {
 		vi.mocked(memberService.getByClubId).mockResolvedValue([mockMember1, mockMember2])
 
-		render(<ClubMemberList bookclubId="1" />)
+		render(<BookclubMemberList bookclubId="1" canManageMembers={true}/>)
 
 		await waitFor(() => {
 			expect(memberService.getByClubId).toHaveBeenCalledWith('1')
@@ -59,7 +59,7 @@ describe('ClubMemberList', () => {
 	it('does not render the remove button for a club admin', async () => {
 		vi.mocked(memberService.getByClubId).mockResolvedValue([mockAdmin])
 
-		render(<ClubMemberList bookclubId="1" />)
+		render(<BookclubMemberList bookclubId="1" canManageMembers={true}/>)
 
 		await waitFor(() => {
 			expect(screen.getByText('Admin')).toBeInTheDocument()
@@ -73,7 +73,7 @@ describe('ClubMemberList', () => {
 		vi.mocked(memberService.getByClubId).mockResolvedValue([mockMember1, mockMember2])
 		vi.mocked(memberService.remove).mockResolvedValue({} as never)
 
-		render(<ClubMemberList bookclubId="1" />)
+		render(<BookclubMemberList bookclubId="1" canManageMembers={true}/>)
 
 		const removeButtons = await screen.findAllByRole('button', { name: /remove/i })
 		await user.click(removeButtons[0])

@@ -116,22 +116,101 @@ test('searchHelmetBooks returns grouped books', async () => {
         }
     })
 
-    const result = await finnaService.searchHelmetBooks("1984")
+    const result = await finnaService.searchHelmetBooks("1984", ["eng"], 1)
 
-    expect(result.length).toBe(3)
-    expect(result[0].length).toBe(2)
-    expect(result[1].length).toBe(1)
-    expect(result[2].length).toBe(1)
+    expect(result.books.length).toBe(3)
+    expect(result.books[0].length).toBe(2)
+    expect(result.books[1].length).toBe(1)
+    expect(result.books[2].length).toBe(1)
+    expect(result.resultCount).toBe(4)
 })
 
-test('searchHelmetBooks returns empty array when records are missing', async () => {
+test('searchHelmetBooks returns empty books when records are missing', async () => {
     mockedAxios.get.mockResolvedValue({
         data: {
             resultCount: 0,
         }
     })
 
-    const result = await finnaService.searchHelmetBooks("randomquery")
+    const result = await finnaService.searchHelmetBooks("randomquery", ["eng"], 1)
 
-    expect(result).toEqual([])
+    expect(result.books).toEqual([])
+    expect(result.resultCount).toBe(0)
 })
+
+test('returns languages from Finna', async () => {
+    const mockLanguages = [
+        { value: "fin", translated: "finnish" },
+        { value: "swe", translated: "ruotsi" },
+        { value: "eng", translated: "englanti" }
+    ]
+
+    mockedAxios.get.mockResolvedValue({
+        data: {
+            facets: {
+                language: mockLanguages
+            }
+        }
+    })
+
+    const result = await finnaService.searchHelmetLanguages()
+
+    expect(result).toEqual(mockLanguages)
+})
+
+test('searchHelmetLanguages filters out non-selectable languages', async () => {
+    const mockLanguages = [
+        { value: "fin", translated: "suomi" },
+        { value: "eng", translated: "englanti" },
+        { value: "zxx", translated: "ei kielellistä sisältöä, soveltumaton" },
+        { value: "mul", translated: "useita kieliä" }
+    ]
+
+    mockedAxios.get.mockResolvedValue({
+        data: {
+            facets: {
+                language: mockLanguages
+            }
+        }
+    })
+
+    const result = await finnaService.searchHelmetLanguages()
+
+    expect(result).toEqual([
+        { value: "fin", translated: "suomi" },
+        { value: "eng", translated: "englanti" }
+    ])
+})
+
+test('searchHelmetBooks adds selected languages to filters', async () => {
+    mockedAxios.get.mockClear()
+    mockedAxios.get.mockResolvedValue({
+        data: {
+            resultCount: 0,
+            records: []
+        }
+    })
+
+    await finnaService.searchHelmetBooks("1984", ["fin", "ger"], 1)
+    const params = mockedAxios.get.mock.calls[0][1]?.params as URLSearchParams
+    const filters = params.getAll("filter[]")
+
+    expect(filters).toContain('~language:"fin"')
+    expect(filters).toContain('~language:"ger"')
+})
+
+test('searchHelmetBooks adds page number to params', async () => {
+    mockedAxios.get.mockClear()
+    mockedAxios.get.mockResolvedValue({
+        data: {
+            resultCount: 0,
+            records: []
+        }
+    })
+    
+    await finnaService.searchHelmetBooks("1984", ["eng"], 2)
+    const params = mockedAxios.get.mock.calls[0][1]?.params as URLSearchParams
+    const pageParam = params.get("page")
+    expect(pageParam).toBe("2")
+})
+

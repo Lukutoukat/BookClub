@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getAuthConfig } from '@/services/auth.ts'
 const baseUrl = '/api/login'
 
 type LoginCredentials = {
@@ -12,10 +13,23 @@ export type userWithToken = {
 	token: string
 }
 
-const login = async (credentials: LoginCredentials): Promise<userWithToken> => {
-	const response = await axios.post<userWithToken>(baseUrl, credentials)
+export type LoggedInUser = {
+	id: string,
+	name: string,
+	email: string
+}
 
+const login = async (credentials: LoginCredentials): Promise<userWithToken> => {
+	return axios
+		.post<userWithToken>(baseUrl, credentials)
+		.then((res) => res.data)
+}
+
+const getSelf = async(): Promise<LoggedInUser | undefined> => {
+	const response = await axios.get<LoggedInUser>(baseUrl + '/me', getAuthConfig())
+	if (response.status !== 200)
+		return undefined
 	return response.data
 }
 
-export default { login }
+export default { login, getSelf }
