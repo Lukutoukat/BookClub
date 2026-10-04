@@ -12,9 +12,9 @@ const HomePage = () => {
 	return (
 		<>
 			<PageHeader
-				badgeText={t('home.badge')}
-				title={t('home.title')}
-				description={t('home.description')}
+				badgeText={t('labels.home')}
+				title={t('home.title', { ns: 'pages' })}
+				description={t('home.description', { ns: 'pages' })}
 			/>
 			<Column>
 				<BookClubList bookClubs={bookClubs} isLoading={isLoading} errorMessage={errorMessage} />

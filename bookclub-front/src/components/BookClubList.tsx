@@ -4,6 +4,7 @@ import { type BookClub } from '@/services/bookclubs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
+import { useTranslation } from 'react-i18next'
 
 export interface BookClubListHandle {
 	reload: () => Promise<void>
@@ -34,16 +35,17 @@ const BookClubItem = ({ bookClub }: { bookClub: BookClub }) => {
 }
 
 const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
+	const { t } = useTranslation('pages')
 	const clubCount = bookClubs.length
-	const description = `${clubCount} ${clubCount === 1 ? 'book club' : 'book clubs'}`
+	const description = t('home.clubs.count', { count: clubCount })
 
 	if (isLoading) {
 		return (
 			<Card className="card-base">
-				<SectionHeader title="Your book clubs" description={description} />
+				<SectionHeader title={t('home.clubs.title')} description={description} />
 				<CardContent className="card-content">
 					<div className="text-sm text-muted-foreground text-center py-6">
-						Loading book clubs...
+						{t('neutral.loadingClubs', { ns: 'messages' })}
 					</div>
 				</CardContent>
 			</Card>
@@ -53,7 +55,7 @@ const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
 	if (errorMessage) {
 		return (
 			<Card className="card-base">
-				<SectionHeader title="Your book clubs" description={description} />
+				<SectionHeader title={t('home.clubs.title')} description={description} />
 				<CardContent className="card-content">
 					<div className="padding-2 bg-destructive/10 border border-destructive/30 rounded text-destructive text-sm">
 						{errorMessage}
@@ -66,9 +68,9 @@ const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
 	if (bookClubs.length === 0) {
 		return (
 			<Card className="card-base">
-				<SectionHeader title="Your book clubs" description={description} />
+				<SectionHeader title={t('home.clubs.title')} description={description} />
 				<CardContent className="card-content">
-					<div className="text-sm text-muted-foreground text-center py-6">No book clubs yet</div>
+					<div className="text-sm text-muted-foreground text-center py-6">{t('home.clubs.empty')}</div>
 				</CardContent>
 			</Card>
 		)
@@ -76,7 +78,7 @@ const BookClubList = ({ bookClubs, isLoading, errorMessage }: Props) => {
 
 	return (
 		<Card className="card-base">
-			<SectionHeader title="Your book clubs" description={description} />
+			<SectionHeader title={t('home.clubs.title')} description={description} />
 			<CardContent className="card-content">
 				<div className="space-y-4">
 					{bookClubs.map((club: BookClub) => (

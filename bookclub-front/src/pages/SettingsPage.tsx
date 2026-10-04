@@ -5,16 +5,18 @@ import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
 import LanguageSelector from '@/components/LanguageSelector'
 import { Column } from '@/components/Column'
+import { useTranslation } from 'react-i18next'
 
 const SettingsPage = () => {
 	const { logout } = useLogin()
+	const { t } = useTranslation()
 
 	return (
 		<>
 			<PageHeader
-				badgeText="Settings"
-				title="Settings"
-				description="Change your settings or create or join a book club."
+				badgeText={t('labels.settings')}
+				title={t('settings.title', { ns: 'pages' })}
+				description={t('settings.description', { ns: 'pages' })}
 			/>
 			<Column>
 				<ClubSettings />

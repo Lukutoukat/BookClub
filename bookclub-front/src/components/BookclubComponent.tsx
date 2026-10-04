@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PageHeader } from '../components/PageHeader'
+import { useTranslation } from 'react-i18next'
+
 type Bookclub = {
 	id: string
 	name: string
@@ -11,8 +13,10 @@ type Props = {
 }
 
 export const BookclubComponent = ({ bookclubId }: Props) => {
+	const { t } = useTranslation('pages')
 	const [bookclub, setBookclub] = useState<Bookclub | null>(null)
 	const [loading, setLoading] = useState(true)
+
 	useEffect(() => {
 		const fetchBookclub = async () => {
 			try {
@@ -34,14 +38,14 @@ export const BookclubComponent = ({ bookclubId }: Props) => {
 	}, [bookclubId])
 
 	if (loading) return null
-	if (!bookclub) return <div>Book club not found</div>
+	if (!bookclub) return <div>{t('club.notFound')}</div>
 
 	return (
 		<>
 			<PageHeader
-				badgeText="Club"
+				badgeText={t('labels.club', { ns: 'common' })}
 				title={bookclub.name}
-				description="Suggest books and decide your next read together."
+				description={t('club.description')}
 				buttonText={bookclub.invite_code}
 				afterButtonClick="alert"
 				buttonOnClick={async () => {

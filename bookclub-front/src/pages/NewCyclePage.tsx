@@ -6,8 +6,10 @@ import { useNavigate } from 'react-router-dom'
 import bookClubService, { type BookClub } from '@/services/bookclubs'
 import { useState, useEffect } from 'react'
 import { Column } from '@/components/Column'
+import { useTranslation } from 'react-i18next'
 
 const NewCyclePage = () => {
+	const { t } = useTranslation()
 	const { bookclubId } = useParams<{ bookclubId: string }>()
 	const [loadedClubs, setLoadedClubs] = useState<BookClub[]>([])
 	const [isLoading, setIsLoading] = useState(false)
@@ -37,7 +39,7 @@ const NewCyclePage = () => {
 	return (
 		<>
 			<PageHeader
-				badgeText="New Cycle"
+				badgeText={t('labels.cycle')}
 				title={
 					isLoading || loadedClubs.length === 0
 						? 'Loading...'

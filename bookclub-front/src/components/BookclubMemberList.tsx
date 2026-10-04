@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { ButtonDialog } from "./ButtonDialog"
 import memberService, { type BookclubMember } from "../services/bookclubmembers"
 import { useNotification } from "@/context/NotificationContext"
+import { useTranslation } from "react-i18next"
 
 interface Props {
     bookclubId: string
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: Props) => {
+    const { t } = useTranslation()
     const [members, setMembers] = useState<BookclubMember[]>([])
     const { showSuccess } = useNotification()
 
@@ -25,10 +27,10 @@ export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: 
         try {
             await memberService.remove(bookclubId, user_id)
             setMembers(members.filter(member => member.user_id !== user_id))
-            showSuccess('Club member removed successfully.')
+            showSuccess(t('success.memberRemoved', { ns: 'messages' }))
         } catch (error) {
             // TODO: handle error messaging through Notification system
-            console.error('error during deletion', error)
+            console.error('Failed to delete member: ', error)
         }
     }
 
@@ -41,11 +43,11 @@ export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: 
                     </div>
                     {canManageMembers && member.user_role !== 0 && (
                         <ButtonDialog
-                            buttonText="Remove"
+                            buttonText={t('actions.remove')}
                             buttonOnClick={() => handleMemberDeletion(member.user_id)}
-                            alertDialogText={`Are you sure you want to remove ${member.User?.name} from the club?`}
-                            alertDialogDescription="Once the member is removed, it cannot be undone."
-                            alertDialogContinueText="Remove"
+                            alertDialogText={t('club.members.deleteQuestion', { name: member.User?.name, ns: 'pages' })}
+                            alertDialogDescription={t('club.members.deleteWarning', { ns: 'pages' })}
+                            alertDialogContinueText={t('actions.remove')}
                             buttonVariant="destructive"
                         />
                     )}

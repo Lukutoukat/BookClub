@@ -5,6 +5,7 @@ import { Button } from './ui/button'
 import { RangeCalendarComponent } from './RangeCalendarComponent'
 import { type DateRange } from 'react-day-picker'
 import cycleService, { type CreateCycle } from '../services/cycle'
+import { useTranslation } from 'react-i18next'
 
 type Bookclub = {
 	id: number
@@ -17,6 +18,7 @@ type Props = {
 }
 
 export const NewCycle = ({ bookclubId }: Props) => {
+	const { t } = useTranslation()
 	const [bookclub, setBookclub] = useState<Bookclub | null>(null)
 	const [loading, setLoading] = useState(true)
 	const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -56,18 +58,18 @@ export const NewCycle = ({ bookclubId }: Props) => {
 				await cycleService.create(createdcycle)
 				await navigate(`/club/${bookclubId}`)
 			} catch (error) {
-				console.error('Failed to create cycle:', error)
+				console.error(t('error.api.createCycle', { ns: 'messages' }), error)
 			}
 		}
 	}
 
 	if (loading) return null
-	if (!bookclub) return <div>Bookclub not found</div>
+	if (!bookclub) return <div>{t('club.notFound', { ns: 'pages' })}</div>
 	return (
 		<>
 			<RangeCalendarComponent dateRange={dateRange} setDateRange={setDateRange}>
 				<Button onClick={handleCreate} className="w-fit self-end mx-4">
-					Create
+					{t('actions.create')}
 				</Button>
 			</RangeCalendarComponent>
 		</>

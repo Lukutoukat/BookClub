@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { CheckCircle2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 type successMessageProps = {
 	message?: string
 }
 
 const SuccessMessageDisplay = ({ message }: successMessageProps) => {
+	const { t } = useTranslation()
 	const [localMessage, setLocalMessage] = useState<string | undefined>(message)
 	const [isLeaving, setIsLeaving] = useState(false)
 	const [mounted, setMounted] = useState(false)
@@ -54,7 +56,7 @@ const SuccessMessageDisplay = ({ message }: successMessageProps) => {
 					<CheckCircle2 className="h-5 w-5 text-emerald-100 dark:text-emerald-300 shrink-0" />
 					<div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
 						<AlertTitle className="font-semibold text-emerald-50 dark:text-emerald-300 m-0 pb-0 leading-none">
-							Confirmation:
+							{t('labels.confirmation')}
 						</AlertTitle>
 						<AlertDescription className="text-emerald-50 dark:text-emerald-300 leading-normal">
 							{localMessage}

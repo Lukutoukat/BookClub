@@ -6,12 +6,14 @@ import type { BookResult } from '@/services/results'
 import ResultService from '@/services/results'
 import ErrorMessageDisplay from './errorMessageDisplay'
 import { getErrorMessage } from '@/lib/errorMessage'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
 	cycle: CycleFields
 }
 
 const CycleItem = ({ cycle }: Props) => {
+	const { t } = useTranslation('pages')
 	const [winner, setWinner] = useState<BookResult | null>(null)
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -27,12 +29,13 @@ const CycleItem = ({ cycle }: Props) => {
 
 	const determineCycleStatus = () => {
 		const now = new Date()
-		if (cycle.votingEnd && new Date(cycle.votingEnd) < now) return 'Completed'
-		if (cycle.proposalEnd && new Date(cycle.proposalEnd) < now) return 'Voting'
-		return 'Suggest'
+		if (cycle.votingEnd && new Date(cycle.votingEnd) < now) return 'completed'
+		if (cycle.proposalEnd && new Date(cycle.proposalEnd) < now) return 'voting'
+		return 'suggest'
 	}
 
 	const status = determineCycleStatus()
+	const statusLabel = t(`labels.${status}`, { ns: 'common' })
 
 	const loadWinner = async () => {
 		removeErrorMessage()
@@ -40,12 +43,12 @@ const CycleItem = ({ cycle }: Props) => {
 			const winningBook: BookResult = await ResultService.getWinner(cycle.id)
 			setWinner(winningBook)
 		} catch (error) {
-			setErrorMessage(getErrorMessage(error, 'Failed to fetch winner.'))
+			setErrorMessage(getErrorMessage(error, t('error.api.fetchWinner', { ns: 'messages' })))
 		}
 	}
 
 	useEffect(() => {
-		if (status === 'Completed') {
+		if (status === 'completed') {
 			void loadWinner()
 		}
 	}, [status, cycle.id])
@@ -53,18 +56,18 @@ const CycleItem = ({ cycle }: Props) => {
 	return (
 		<Card className="border-border/60 bg-background/80 shadow-sm transition-all hover:bg-background/90">
 			<CardContent className="px-3 py-4 sm:px-4 pl-4 sm:pl-5 flex flex-col gap-3">
-				<Badge>{status}</Badge>
+				<Badge>{statusLabel}</Badge>
 
 				<div className="space-y-1">
 					<div className="flex flex-row items-center justify-between">
-						<h3 className="font-medium text-sm text-muted-foreground">Suggest:</h3>
+						<h3 className="font-medium text-sm text-muted-foreground">{t('club.cycle.phase.suggestPhase')}</h3>
 						<p className="text-sm">
 							{' '}
 							{formatDate(cycle.createdAt)} - {formatDate(cycle.proposalEnd)}{' '}
 						</p>
 					</div>
 					<div className="flex flex-row items-center justify-between">
-						<h3 className="font-medium text-sm text-muted-foreground">Voting:</h3>
+						<h3 className="font-medium text-sm text-muted-foreground">{t('club.cycle.phase.votingPhase')}</h3>
 						<p className="text-sm">
 							{' '}
 							{formatDate(cycle.proposalEnd)} - {formatDate(cycle.votingEnd)}{' '}
@@ -72,19 +75,19 @@ const CycleItem = ({ cycle }: Props) => {
 					</div>
 				</div>
 
-				{status === 'Completed' && (
+				{status === 'completed' && (
 					<div className="mt-2 pt-3 border-t border-border/40">
-						<h4 className="font-semibold text-sm text-foreground">Winning Book:</h4>
+						<h4 className="font-semibold text-sm text-foreground">{t('club.cycle.phase.winning')}</h4>
 						{winner ? (
 							<p className="text-sm font-medium mt-0.5 text-primary">
 								{winner.name}
 								{winner.score !== undefined && (
-									<span className="text-xs text-muted-foreground ml-2">({winner.score} pts)</span>
+									<span className="text-xs text-muted-foreground ml-2">({winner.score} {t('labels.points', { ns: 'common' })})</span>
 								)}
 							</p>
 						) : (
 							<p className="text-sm italic text-muted-foreground mt-0.5">
-								{errorMessage ? 'Error loading winner' : 'Calculating or no votes cast...'}
+								{errorMessage ? t('error.api.loadWinner', { ns: 'messages' }) : t('neutral.loadingVotes', { ns: 'messages' })}
 							</p>
 						)}
 					</div>
