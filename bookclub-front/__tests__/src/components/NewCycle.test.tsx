@@ -31,7 +31,7 @@ describe('NewCycle', () => {
 		render(<NewCycle bookclubId="1" />)
 
 		await waitFor(() => {
-			expect(screen.getByText('Bookclub not found')).toBeInTheDocument()
+			expect(screen.getByText('Book club not found')).toBeInTheDocument()
 		})
 	})
 

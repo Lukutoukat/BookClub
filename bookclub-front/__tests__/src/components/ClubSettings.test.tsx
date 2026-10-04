@@ -72,7 +72,7 @@ describe('ClubSettings', () => {
 		const error = new AxiosError()
 		error.response = {
 			data: {
-				error: 'Invalid invite code'
+				error: 'Invalid invite code.'
 			}
 		} as any
 
@@ -84,7 +84,7 @@ describe('ClubSettings', () => {
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Invalid invite code')).toBeDefined()
+			expect(screen.getByText('Invalid invite code.')).toBeDefined()
 		})
 	})
 
@@ -99,7 +99,7 @@ describe('ClubSettings', () => {
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Registration failed')).toBeDefined()
+			expect(screen.getByText('Registration failed.')).toBeDefined()
 		})
 	})
 
@@ -112,7 +112,7 @@ describe('ClubSettings', () => {
 		const deleteButton = screen.getByRole('button', { name: /Delete club/i })
 		deleteButton.click()
 
-		const continueButton = await screen.findByTitle('continue')
+		const continueButton = await screen.findByTitle('Continue')
 		continueButton.click()
 
 		await waitFor(() => {
@@ -132,7 +132,7 @@ describe('ClubSettings', () => {
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Unexpected error occurred')).toBeDefined()
+			expect(screen.getByText('Unexpected error occurred.')).toBeDefined()
 		})
 	})
 })

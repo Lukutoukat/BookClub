@@ -117,7 +117,7 @@ describe('BookItem', () => {
 		)
 
 		await user.click(screen.getByTitle('Delete book'))
-		await user.click(screen.getByTitle('continue'))
+		await user.click(screen.getByTitle('Continue'))
 
 		expect(onDelete).toHaveBeenCalledWith('1')
 	})

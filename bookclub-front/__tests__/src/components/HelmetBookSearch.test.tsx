@@ -53,7 +53,7 @@ test('shows no books found message when search returns empty', async () => {
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), 'randomquery')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), 'randomquery')
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
     expect(await screen.findByText('No books found.')).toBeDefined()
@@ -67,7 +67,7 @@ test('show search failed when search throws an error', async () => {
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
     expect(await screen.findByText('Search failed.')).toBeDefined()
@@ -84,7 +84,7 @@ test('shows book search result', async () => {
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
     expect(await screen.findByText('1984')).toBeDefined()
@@ -105,7 +105,7 @@ test('calls onBookSelect when a book is selected', async () => {
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
     await user.click(screen.getByRole('radio'))
 
@@ -120,7 +120,7 @@ test('uses default languages when language selections are not changed', async ()
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
     expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'])
@@ -140,7 +140,7 @@ test('uses default languages when all language selections are unchecked', async 
     await user.click(checkboxes[1])
     await user.click(checkboxes[2])
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
     
     expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'])
@@ -158,7 +158,7 @@ test('add selected language to search', async () => {
     const checkboxes = screen.getAllByRole('checkbox')
     await user.click(checkboxes[3])
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
     expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng', 'ger'])

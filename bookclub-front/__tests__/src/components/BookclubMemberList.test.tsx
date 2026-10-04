@@ -78,7 +78,7 @@ describe('ClubMemberList', () => {
 		const removeButtons = await screen.findAllByRole('button', { name: /remove/i })
 		await user.click(removeButtons[0])
 
-		const continueButton = await screen.findByTitle('continue')
+		const continueButton = await screen.findByTitle('Continue')
 		await user.click(continueButton)
 
 		await waitFor(() => {
