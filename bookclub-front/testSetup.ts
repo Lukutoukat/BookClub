@@ -1,6 +1,7 @@
 import { afterEach, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
+import './testI18n'
 
 const { mockUseParams } = vi.hoisted(() => ({
 	mockUseParams: vi.fn()
