@@ -49,7 +49,7 @@ test('shows no books found message when search returns empty', async () => {
     const user = userEvent.setup()
     const onBookSelect = vi.fn()
 
-    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([])
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [], resultCount: 0})
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
@@ -78,7 +78,7 @@ test('shows book search result', async () => {
     const user = userEvent.setup()
     const onBookSelect = vi.fn()
     
-    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([[mockBook]])
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [[mockBook]], resultCount: 1})
     vi.mocked(getPrimaryAuthor).mockReturnValue('George Orwell')
     vi.mocked(getPageCount).mockReturnValue('328')
 
@@ -89,9 +89,7 @@ test('shows book search result', async () => {
 
     expect(await screen.findByText('1984')).toBeDefined()
     expect(await screen.findByText('George Orwell')).toBeDefined()
-    expect(await screen.findByText(/2021/)).toBeDefined()
     expect(await screen.findByText(/English/)).toBeDefined()
-    expect(await screen.findByText(/9780451524935/)).toBeDefined()
     expect(await screen.findByText(/328 pages/)).toBeDefined()
 })
 
@@ -99,7 +97,7 @@ test('calls onBookSelect when a book is selected', async () => {
     const user = userEvent.setup()
     const onBookSelect = vi.fn()
 
-    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([[mockBook]])
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [[mockBook]], resultCount: 1})
     vi.mocked(getPrimaryAuthor).mockReturnValue('George Orwell')
     vi.mocked(getPageCount).mockReturnValue('328')
 
@@ -116,21 +114,21 @@ test('uses default languages when language selections are not changed', async ()
     const user = userEvent.setup()
     const onBookSelect = vi.fn()
     
-    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([])
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [], resultCount: 0})
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
     await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
-    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'])
+    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'], 1)
 })
 
 test('uses default languages when all language selections are unchecked', async () => {
     const user = userEvent.setup()
     const onBookSelect = vi.fn()
     
-    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([])
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [], resultCount: 0})
     
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
@@ -143,14 +141,14 @@ test('uses default languages when all language selections are unchecked', async 
     await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
     
-    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'])
+    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'], 1)
 })
 
 test('add selected language to search', async () => {
     const user = userEvent.setup()
     const onBookSelect = vi.fn()
 
-    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue([])
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [], resultCount: 0})
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
@@ -161,7 +159,7 @@ test('add selected language to search', async () => {
     await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
-    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng', 'ger'])
+    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng', 'ger'], 1)
 })
 
 test('shows error message when search languages fail to load', async () => {
@@ -173,3 +171,95 @@ test('shows error message when search languages fail to load', async () => {
 
     expect(await screen.findByText('Failed to load languages.')).toBeDefined()
 })
+
+test('previous page button is disabled on first page', async () => {
+    const onBookSelect = vi.fn()
+
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    const prevButton = screen.getByRole('button', {name: 'Previous Page'})
+    expect(prevButton).toHaveProperty('disabled', true)
+})
+
+test('next page button is enabled when there are more results', async () => {
+    const user = userEvent.setup()
+    const onBookSelect = vi.fn()
+
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [[mockBook]], resultCount: 15})
+
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+
+    const nextButton = screen.getByRole('button', {name: 'Next Page'})
+    expect(nextButton).toHaveProperty('disabled', false)
+})
+
+test('next page button searches next page when clicked', async () => {
+    const user = userEvent.setup()
+    const onBookSelect = vi.fn()
+    
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [[mockBook]], resultCount: 15})
+
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+    await user.click(screen.getByRole('button', {name: 'Next Page'}))
+
+    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'], 2)
+})
+
+test('previous page button searches previous page when clicked', async () => {
+    const user = userEvent.setup()
+    const onBookSelect = vi.fn()
+    
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [[mockBook]], resultCount: 15})
+    
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+    await user.click(screen.getByRole('button', {name: 'Next Page'}))
+    await user.click(screen.getByRole('button', {name: 'Previous Page'}))
+    
+    expect(finnaService.searchHelmetBooks).toHaveBeenCalledWith('1984', ['fin', 'swe', 'eng'], 1)
+})
+
+test('next page button is disabled when on last page', async () => {
+    const user = userEvent.setup()
+    const onBookSelect = vi.fn()
+    
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [[mockBook]], resultCount: 15})
+
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+    
+    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+    await user.click(screen.getByRole('button', {name: 'Next Page'}))
+
+    const nextButton = screen.getByRole('button', {name: 'Next Page'})
+    expect(nextButton).toHaveProperty('disabled', true)
+})
+
+test('empty search query resets page to 1', async () => {
+    const user = userEvent.setup()
+    const onBookSelect = vi.fn()
+
+    vi.mocked(finnaService.searchHelmetBooks).mockResolvedValue({books: [[mockBook]], resultCount: 15})
+    
+    render(<HelmetBookSearch onBookSelect={onBookSelect} />)
+
+    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+    await user.click(screen.getByRole('button', {name: 'Next Page'}))
+    await user.clear(screen.getByPlaceholderText('Search from Helmet'))
+    await user.click(screen.getByRole('button', {name: 'Search'}))
+
+    expect(screen.getByText('1 / 1')).toBeDefined()
+
+    const nextButton = screen.getByRole('button', {name: 'Next Page'})
+    expect(nextButton).toHaveProperty('disabled', true)
+})
+

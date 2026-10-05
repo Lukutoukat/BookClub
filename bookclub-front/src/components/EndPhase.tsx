@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { ButtonDialog } from './ButtonDialog'
 
 type Props = {
-	bookclubId: string
+	bookclubId?: string
 }
 
 export const EndPhase = ({ bookclubId }: Props) => {
@@ -20,15 +20,19 @@ export const EndPhase = ({ bookclubId }: Props) => {
 		setErrorMessage(null)
 	}
 
-	const handleEndPhase = async () => {
+	const handleEndPhase = async (id: string) => {
 		removeErrorMessage()
 
 		try {
-			await cycleService.endLatestCyclePhase(bookclubId)
+			await cycleService.endLatestCyclePhase(id)
 			await navigate('/club/' + bookclubId)
 		} catch (error) {
 			setErrorMessage(getErrorMessage(error, t('error.api.endPhase', { ns: 'messages' })))
 		}
+	}
+
+	if (!bookclubId) {
+		return null
 	}
 
 	return (
@@ -42,7 +46,7 @@ export const EndPhase = ({ bookclubId }: Props) => {
 					<ButtonDialog
 						buttonText={t('club.cycle.phase.endCurrentPhase')}
 						alertDialogDescription={t('club.cycle.phase.warning')}
-						buttonOnClick={handleEndPhase}
+						buttonOnClick={() => void handleEndPhase(bookclubId)}
 					/>
 				</div>
 				<ErrorMessageDisplay message={errorMessage as string} remove={removeErrorMessage} />

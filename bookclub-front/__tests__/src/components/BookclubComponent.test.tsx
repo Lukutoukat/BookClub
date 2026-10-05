@@ -5,6 +5,8 @@ import bookclubService from '@/services/bookclubs'
 
 vi.mock('@/services/bookclubs')
 
+const mockedGet = vi.mocked(bookclubService.get)
+
 const mockNavigate = vi.fn()
 
 vi.mock('react-router-dom', () => ({
@@ -20,13 +22,14 @@ describe('BookclubComponent', () => {
 		vi.restoreAllMocks()
 	})
 
-	it('renders book club name and invite code after successful fetch', async () => {
-		globalThis.fetch = vi.fn(() =>
-			Promise.resolve({
-				ok: true,
-				json: () => Promise.resolve({ id: 1, name: 'Test Club', invite_code: 'CODE123' })
-			})
-		) as any
+	it('renders book club name and invite code', async () => {
+		
+		mockedGet.mockResolvedValue({
+			id: '1',
+			name: 'Test Club',
+			owner_id: '1',
+			invite_code: 'CODE123'
+		})
 
 		render(<BookclubComponent bookclubId="1" />)
 
@@ -36,12 +39,9 @@ describe('BookclubComponent', () => {
 		})
 	})
 
-	it('shows "Book club not found" when fetch returns 404', async () => {
-		globalThis.fetch = vi.fn(() =>
-			Promise.resolve({
-				ok: false
-			})
-		) as any
+	it('shows "Book club not found" when fetch fails', async () => {
+
+		mockedGet.mockResolvedValue(undefined)
 
 		render(<BookclubComponent bookclubId="1" />)
 

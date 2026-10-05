@@ -3,11 +3,14 @@ import { render, screen, waitFor } from '@/utils/test-utils'
 import userEvent from '@testing-library/user-event'
 import { NewCycle } from '@/components/NewCycle'
 import cycleService from '@/services/cycle'
-import { BrowserRouter } from 'react-router-dom'
+import bookclubService from '@/services/bookclubs.ts'
 
 vi.mock('@/services/cycle')
+vi.mock('@/services/bookclubs')
 
 const mockNavigate = vi.fn()
+const mockGet = vi.mocked(bookclubService.get)
+
 
 vi.mock('react-router-dom', async () => {
 	const actual = await vi.importActual('react-router-dom')
@@ -23,6 +26,7 @@ describe('NewCycle', () => {
 		vi.clearAllMocks()
 	})
 
+<<<<<<< HEAD
 	it('renders bookclub not found when API call fails', async () => {
 		globalThis.fetch = vi.fn().mockResolvedValue({
 			ok: false
@@ -35,14 +39,13 @@ describe('NewCycle', () => {
 		})
 	})
 
+=======
+>>>>>>> dev
 	it('creates cycle and navigates to bookclub page when user presses create', async () => {
-		globalThis.fetch = vi.fn().mockResolvedValue({
-			ok: true,
-			json: async () => ({
-				id: '1',
-				name: 'My Bookclub',
-				invite_code: 'invite'
-			})
+		mockGet.mockResolvedValue({
+			id: '1',
+			name: 'My Bookclub',
+			invite_code: 'invite'
 		})
 
 		vi.mocked(cycleService.create).mockResolvedValue({} as any)

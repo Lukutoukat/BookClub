@@ -1,18 +1,19 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { NewCycle } from '@/components/NewCycle'
 import { EndPhase } from '@/components/EndPhase'
 import { PageHeader } from '@/components/PageHeader'
-import { useNavigate } from 'react-router-dom'
-import bookClubService, { type BookClub } from '@/services/bookclubs'
-import { useState, useEffect } from 'react'
+import { type BookClub } from '@/services/bookclubs'
+import { useEffect, useState } from 'react'
 import { Column } from '@/components/Column'
 import { useTranslation } from 'react-i18next'
+import bookclubService from '@/services/bookclubs.ts'
 
 const NewCyclePage = () => {
 	const { t } = useTranslation()
 	const { bookclubId } = useParams<{ bookclubId: string }>()
-	const [loadedClubs, setLoadedClubs] = useState<BookClub[]>([])
-	const [isLoading, setIsLoading] = useState(false)
+
+	const [loadedClub, setLoadedClub] = useState<BookClub | undefined>()
+	const [isLoading, setIsLoading] = useState(true)
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -21,39 +22,40 @@ const NewCyclePage = () => {
 			return
 		}
 
-		setIsLoading(true)
-
-		bookClubService
-			.get([bookclubId])
-			.then((clubs) => {
-				setLoadedClubs(clubs)
-				setIsLoading(false)
-			})
-			.catch((error) => {
-				setIsLoading(false)
+		const fetchBookclub = async () => {
+			setIsLoading(true)
+			try {
+				const bookclub = await bookclubService.get(bookclubId)
+				if (!bookclub) {
+					void navigate('/')
+					return
+				}
+				setLoadedClub(bookclub)
+			} catch (error) {
 				console.error('Failed to load book club:', error)
 				void navigate('/') // Redirect to home page on error
-			})
+			} finally {
+				setIsLoading(false)
+			}
+		}
+
+		void fetchBookclub()
 	}, [bookclubId])
 
 	return (
 		<>
 			<PageHeader
 				badgeText={t('labels.cycle')}
-				title={
-					isLoading || loadedClubs.length === 0
-						? 'Loading...'
-						: (loadedClubs[0]?.name ?? 'Bookclub')
-				}
+				title={isLoading ? '' : (loadedClub?.name ?? 'Bookclub')}
 				description=""
 				buttonText="Back"
 				buttonOnClick={async () => {
-					await navigate(`/club/${loadedClubs[0]?.id ?? ''}`)
+					await navigate(`/club/${loadedClub?.id ?? ''}`)
 				}}
 			/>
 			<Column>
-				<NewCycle bookclubId={loadedClubs[0]?.id ?? ''} />
-				<EndPhase bookclubId={loadedClubs[0]?.id ?? ''} />
+				<NewCycle bookclubId={bookclubId} />
+				<EndPhase bookclubId={bookclubId} />
 			</Column>
 		</>
 	)

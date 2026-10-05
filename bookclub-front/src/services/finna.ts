@@ -34,6 +34,11 @@ export interface FinnaLanguageResponse {
     }
 }
 
+export interface HelmetBookSearchResult {
+    books: FinnaBook[][]
+    resultCount: number
+}
+
 const searchHelmetLanguages = () => {
     const params = new URLSearchParams()
     params.append("filter[]", "format:\"0/Book/\"")
@@ -78,7 +83,7 @@ const groupBooks = (books: FinnaBook[]) : FinnaBook[][] => {
     return Array.from(groups.values())
 }
 
-const searchHelmetBooks = (query: string, languages: string[]) => {
+const searchHelmetBooks = (query: string, languages: string[], page: number) => {
     const params = new URLSearchParams()
     params.append("lookfor", query)
     params.append("filter[]", 'format:"0/Book/"')
@@ -87,6 +92,7 @@ const searchHelmetBooks = (query: string, languages: string[]) => {
         params.append("filter[]", `~language:"${language}"`)
     })
     params.append("limit", "10")
+    params.append("page", page.toString())
     params.append("field[]", "id")
     params.append("field[]", "title")
     params.append("field[]", "cleanIsbn")
@@ -95,7 +101,14 @@ const searchHelmetBooks = (query: string, languages: string[]) => {
     params.append("field[]", "authors")
     params.append("field[]", "physicalDescriptions")
     params.append("field[]", "genres")
-    return axios.get<FinnaSearchResponse>(baseURL, { params }).then((response) => groupBooks(response.data.records ?? []))
+    
+    return axios.get<FinnaSearchResponse>(baseURL, { params }).then((response) => {
+        const books = groupBooks(response.data.records ?? [])
+        return {
+            books: books,
+            resultCount: response.data.resultCount
+        }
+    })
 }
 
 export default {

@@ -11,13 +11,38 @@ interface ProposeRequest {
   bookclub_id?: string
 }
 
-proposeRouter.get('/', async (_req: Request, res: Response) => {
-  try {
-    const result = await prisma.bookProposed.findMany()
-    res.json(result)
-  } catch (error) {
-    console.error('GET /api/bookclubs error:', error)
-    res.status(500).json({ error: 'database error' })
+proposeRouter.get('/:id', userExtractor, async (req: Request, res: Response) => {
+  const cycleId = req.params.id as string
+
+  if (req.user) {
+    try {
+      const proposedBooks = await prisma.bookProposed.findMany({
+        where: {
+          cycle_id: cycleId,
+        },
+        include: {
+          Book: true
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
+
+      const books = proposedBooks
+        .filter((p) => p.Book)
+        .map((p) => ({
+          ...p.Book,
+          proposal_id: p.id,
+          owned_by_user: p.Book?.user_id === req.user?.id
+        }))
+
+      res.json(books)
+    } catch (error) {
+      console.error('GET /api/books error:', error)
+      res.status(500).json({ error: 'database error' })
+    }
+  } else {
+    res.status(401).json({ error: 'user not found' })
   }
 })
 
@@ -53,40 +78,6 @@ proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, 
     }
   }
   return
-})
-
-proposeRouter.post('/:id', userExtractor, async (req: Request, res: Response) => {
-  const cycleId = req.params.id as string
-
-  if (req.user) {
-    try {
-      const proposedBooks = await prisma.bookProposed.findMany({
-        where: {
-          cycle_id: cycleId
-        },
-        include: {
-          Book: true
-        }, orderBy: {
-          createdAt: 'desc'
-        }
-      })
-
-      const books = proposedBooks
-        .filter((p) => p.Book)
-        .map((p) => ({
-          ...p.Book,
-          proposal_id: p.id,
-          owned_by_user: p.Book?.user_id === req.user?.id
-        }))
-
-      res.json(books)
-    } catch (error) {
-      console.error('GET /api/books error:', error)
-      res.status(500).json({ error: 'database error' })
-    }
-  } else {
-    res.status(401).json({ error: 'user not found' })
-  }
 })
 
 proposeRouter.post(

@@ -14,7 +14,6 @@ interface BookClubMembersRequest {
 }
 
 BookClubMembersRouter.get('/', userExtractor, async (req: Request, res: Response) => {
-  console.log('TOKEEEN AND USER')
   if (!req.token) {
     return res.status(401).json({
       error: 'missing token'
