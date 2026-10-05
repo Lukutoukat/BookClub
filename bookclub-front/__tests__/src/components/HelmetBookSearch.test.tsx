@@ -189,7 +189,7 @@ test('next page button is enabled when there are more results', async () => {
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
     const nextButton = screen.getByRole('button', {name: 'Next Page'})
@@ -204,7 +204,7 @@ test('next page button searches next page when clicked', async () => {
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
     await user.click(screen.getByRole('button', {name: 'Next Page'}))
 
@@ -219,7 +219,7 @@ test('previous page button searches previous page when clicked', async () => {
     
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
     await user.click(screen.getByRole('button', {name: 'Next Page'}))
     await user.click(screen.getByRole('button', {name: 'Previous Page'}))
@@ -235,7 +235,7 @@ test('next page button is disabled when on last page', async () => {
 
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
     
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
     await user.click(screen.getByRole('button', {name: 'Next Page'}))
 
@@ -251,10 +251,10 @@ test('empty search query resets page to 1', async () => {
     
     render(<HelmetBookSearch onBookSelect={onBookSelect} />)
 
-    await user.type(screen.getByPlaceholderText('Search from Helmet'), '1984')
+    await user.type(screen.getByPlaceholderText('Search from Helmet...'), '1984')
     await user.click(screen.getByRole('button', {name: 'Search'}))
     await user.click(screen.getByRole('button', {name: 'Next Page'}))
-    await user.clear(screen.getByPlaceholderText('Search from Helmet'))
+    await user.clear(screen.getByPlaceholderText('Search from Helmet...'))
     await user.click(screen.getByRole('button', {name: 'Search'}))
 
     expect(screen.getByText('1 / 1')).toBeDefined()

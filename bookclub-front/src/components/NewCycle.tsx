@@ -5,12 +5,14 @@ import { Button } from './ui/button'
 import { RangeCalendarComponent } from './RangeCalendarComponent'
 import { type DateRange } from 'react-day-picker'
 import cycleService, { type CreateCycle } from '../services/cycle'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
 	bookclubId?: string
 }
 
 export const NewCycle = ({ bookclubId }: Props) => {
+	const { t } = useTranslation()
 	const [dateRange, setDateRange] = useState<DateRange | undefined>({
 		from: addDays(new Date(new Date()), 14),
 		to: addDays(new Date(new Date()), 28)
