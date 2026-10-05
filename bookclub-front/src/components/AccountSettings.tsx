@@ -5,6 +5,8 @@ import { useState } from 'react'
 
 import userService from '@/services/users'
 import { ButtonDialog } from '@/components/ButtonDialog.tsx'
+import { useNotification } from '@/context/NotificationContext.tsx'
+import { getErrorMessage } from '@/lib/errorMessage.ts'
 
 type AccountSettingsProps = {
 	handleLogOut: () => void
@@ -12,6 +14,7 @@ type AccountSettingsProps = {
 
 const AccountSettings = ({ handleLogOut }: AccountSettingsProps) => {
 	const [deleting, setDeleting] = useState(false)
+	const { showError } = useNotification()
 
 	const deleteAccount = async () => {
 		// Set deletion state
@@ -24,8 +27,8 @@ const AccountSettings = ({ handleLogOut }: AccountSettingsProps) => {
 			handleLogOut()
 		} catch (error) {
 			// Failed to delete
-			// TODO: Replace this with an error toast
-			console.log('Failed to delete account', error)
+			const errorMessage = getErrorMessage(error)
+			showError('Failed to delete account: ' + errorMessage)
 		} finally {
 			// Reset deletion state
 			setDeleting(false)

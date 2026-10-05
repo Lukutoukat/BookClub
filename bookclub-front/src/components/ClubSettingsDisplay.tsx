@@ -5,19 +5,23 @@ import { ButtonDialog } from './ButtonDialog'
 import { Card, CardContent } from './ui/card'
 import { SectionHeader } from './SectionHeader'
 import { BookclubMemberList } from './BookclubMemberList'
+import { useNotification } from '@/context/NotificationContext.tsx'
+import { getErrorMessage } from '@/lib/errorMessage.ts'
 type Props = {
 	bookclubId: string
 }
 
 export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 	const navigate = useNavigate()
+	const { showError } = useNotification()
 	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
 		event.preventDefault()
 		try {
 			await bookclubService.remove(bookclubId)
 			await navigate('/home', { replace: true })
 		} catch (error) {
-			console.error('error during deletion', error)
+			const errorMessage = getErrorMessage(error)
+			showError('Failed to delete club: ' + errorMessage)
 		}
 	}
 
