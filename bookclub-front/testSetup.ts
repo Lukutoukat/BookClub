@@ -17,14 +17,18 @@ vi.mock('react-router-dom', async (importOriginal) => {
 	}
 })
 
-vi.mock('@/context/NotificationContext', () => {
+vi.mock('@/context/NotificationContext', async (importOriginal) => {
+	const actual = await importOriginal<typeof import('@/context/NotificationContext')>()
 	const noop = vi.fn()
 	return {
-		NotificationProvider: ({ children }: { children: ReactNode }) => children,
-		useNotification: () => ({
-			showSuccess: noop,
-			showError: noop,
-		}),
+		...actual,
+		useNotification: () => {
+			try {
+				return actual.useNotification()
+			} catch {
+				return { showSuccess: noop, showError: noop }
+			}
+		}
 	}
 })
 

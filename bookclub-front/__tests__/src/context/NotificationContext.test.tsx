@@ -1,6 +1,9 @@
+vi.unmock('@/context/NotificationContext')
+
 import { render, screen, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NotificationProvider, useNotification } from '@/context/NotificationContext'
+
 
 // Helper to trigger notifications via the hook
 const TestComponent = () => {
