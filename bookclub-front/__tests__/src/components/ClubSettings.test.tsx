@@ -28,7 +28,7 @@ describe('ClubSettings', () => {
 		render(<ClubSettings />)
 
 		expect(screen.getByText('Clubs')).toBeDefined()
-		expect(screen.getByLabelText(/join with code/i)).toBeDefined()
+		expect(screen.getByLabelText(/join with a code/i)).toBeDefined()
 		expect(screen.getByRole('button', { name: /join/i })).toBeDefined()
 
 		const createLink = screen.getByRole('link', { name: /create/i })
@@ -40,7 +40,7 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abc')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abc')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		expect(screen.getByText('Enter a 5-character code.')).toBeDefined()
@@ -55,7 +55,7 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
@@ -80,7 +80,7 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
@@ -95,7 +95,7 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
@@ -128,7 +128,7 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
