@@ -1,5 +1,6 @@
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
+import i18n from "i18next"
+import { initReactI18next } from "react-i18next"
+import LanguageDetector from 'i18next-browser-languagedetector'
 
 import enCommon from '@/locales/en/common.json'
 import enMessages from '@/locales/en/messages.json'
@@ -20,17 +21,23 @@ const resources = {
 };
 
 void i18n
+    .use(LanguageDetector)
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
         resources,
-        fallbackLng: 'en', // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
-        // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
-        // if you're using a language detector, do not define the lng option
-        lng: localStorage.getItem('language') ?? 'en',
+        fallbackLng: 'en',
+
         debug: false,
 
         ns: ["common", "messages", "pages"],
         defaultNS: "common",
+
+        detection: {
+            order: ['localStorage', 'navigator'],
+            lookupLocalStorage: 'language',
+            caches: [],
+        },
+        
         interpolation: {
             escapeValue: false // react already safes from xss
         }
