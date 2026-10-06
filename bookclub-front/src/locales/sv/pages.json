@@ -73,7 +73,7 @@
         "clubs": {
             "title": "Klubbar",
             "description": "Gå med i eller skapa din egen bokklubb.",
-            "join": "Gå med med kod",
+            "join": "Gå med med en kod",
             "joinHint": "Ange inbjudningskoden du fick från din klubb.",
             "newClub": "Skapa en ny klubb",
             "newClubHint": "Starta en ny klubb och bjud in andra att gå med."

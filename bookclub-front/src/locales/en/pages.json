@@ -74,7 +74,7 @@
         "clubs": {
             "title": "Clubs",
             "description": "Join or create your own book club.",
-            "join": "Join with code",
+            "join": "Join with a code",
             "joinHint": "Enter the invite code you received from your club.",
             "newClub": "Create a new club",
             "newClubHint": "Set up a new club and invite others to join."
