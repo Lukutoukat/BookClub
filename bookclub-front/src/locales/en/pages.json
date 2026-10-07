@@ -96,10 +96,7 @@
         },
         "language": {
             "title": "Language",
-            "description": "Change website language",
-            "en": "English",
-            "fi": "Suomi",
-            "sv": "Svenska"
+            "description": "Change website language"
         }
     },
 

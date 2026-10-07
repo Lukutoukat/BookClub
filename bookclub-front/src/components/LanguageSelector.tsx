@@ -5,6 +5,13 @@ import { useTranslation } from 'react-i18next'
 
 const LanguageSelector = () => {
     const { t, i18n } = useTranslation('pages')
+    const availableLanguages = Object.keys(i18n.services.resourceStore.data)
+    const currentLanguage = i18n.resolvedLanguage ?? i18n.language
+
+    const displayName = (lng: string) => {
+        const name = new Intl.DisplayNames([lng], { type: 'language' }).of(lng) ?? lng
+        return name.charAt(0).toLocaleUpperCase(lng) + name.slice(1)
+    }
 
     return (
         <Card className='border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur'>
@@ -20,28 +27,27 @@ const LanguageSelector = () => {
 
             <CardContent>
                 <Select 
-                    value={i18n.language}
+                    value={currentLanguage}
                     onValueChange={(value) => {
                         localStorage.setItem('language', value)
                         void i18n.changeLanguage(value)
                     }}
                 >
                     <SelectTrigger className='w-full min-w-0'>
-                        <SelectValue placeholder={t(`settings.language.${i18n.language}`)} />
+                        <SelectValue>
+                            {displayName(currentLanguage)}
+                        </SelectValue>
                     </SelectTrigger>
                     <SelectContent position='popper' className='w-(--radix-select-trigger-width) min-w-0'>
                         <SelectGroup className='py-4 sm:py-4'>
-                            <SelectItem value='en'>
-                                {t('settings.language.en')}
-                            </SelectItem>
-                            <SelectSeparator />
-                            <SelectItem value='fi'>
-                                {t('settings.language.fi')}
-                            </SelectItem>
-                            <SelectSeparator />
-                            <SelectItem value='sv'>
-                                {t('settings.language.sv')}
-                            </SelectItem>
+                            {availableLanguages.map((lng, index) => (
+                                <div key={lng}>
+                                    <SelectItem value={lng}>
+                                        {displayName(lng)}
+                                    </SelectItem>
+                                    {index < availableLanguages.length - 1 && <SelectSeparator />}
+                                </div>
+                            ))}
                         </SelectGroup>
                     </SelectContent>
                 </Select>
