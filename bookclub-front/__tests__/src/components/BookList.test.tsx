@@ -201,6 +201,16 @@ describe('BookList', () => {
 			expect(vi.mocked(proposeService.getProposedBooks)).toHaveBeenCalledWith('c1')
 			expect(vi.mocked(voteService.getOwn)).toHaveBeenCalledWith('c1')
 		})
+
+		test('shows binary voting instructions when voting system is binary', async () => {
+			vi.mocked(proposeService.getProposedBooks).mockResolvedValue([mockBook()])
+			vi.mocked(voteService.getOwn).mockResolvedValue([])
+
+			render(<BookList show="votedBooks" cycleId="c1" votingSystem="binary" />)
+
+			expect(await screen.findAllByText('Would read')).toHaveLength(2)
+			expect(screen.getAllByText('Wont read')).toHaveLength(2)
+		})
 	})
 
 	describe('delete functionality', () => {

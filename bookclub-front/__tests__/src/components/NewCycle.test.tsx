@@ -101,4 +101,10 @@ describe('NewCycle', () => {
 
 		expect(screen.getByText('Binary')).toBeInTheDocument()
 	})
+
+	it('renders nothing when bookclubId is not provided', () => {
+		render(<NewCycle />)
+		
+		expect(screen.queryByText('Create')).toBeNull()
+	})
 })
