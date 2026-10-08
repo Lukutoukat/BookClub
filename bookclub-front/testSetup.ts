@@ -34,6 +34,12 @@ Object.defineProperty(Element.prototype, 'scrollIntoView', {
 	writable: true
 })
 
+Object.defineProperties(Element.prototype, {
+	hasPointerCapture: { value: vi.fn(() => false), writable: true },
+	setPointerCapture: { value: vi.fn(), writable: true },
+	releasePointerCapture: { value: vi.fn(), writable: true }
+})
+
 const localStorageMock = (() => {
 	let store: Record<string, string> = {}
 	return {

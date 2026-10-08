@@ -19,6 +19,7 @@ interface BookListProps {
 	show?: string
 	cycleId?: string
 	description?: string
+	votingSystem?: string
 }
 
 const BookList = forwardRef<BookListHandle, BookListProps>(
@@ -27,7 +28,8 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 			emptyMessage = 'No books yet.',
 			show = 'savedBooks',
 			cycleId = 'nocycle',
-			description = 'Books: '
+			description = 'Books: ',
+			votingSystem = 'three-level'
 		},
 		ref
 	) => {
@@ -185,16 +187,31 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 						<SectionHeader title={`${description} (${bookCount})`} />
 						{isVotingPhase && (
 							<div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
-								<p>
-									<span className="font-medium text-foreground">Want to read</span> = 3 points
-								</p>
-								<p>
-									<span className="font-medium text-foreground">Could read</span> = 2 points
-								</p>
-								<p>
-									<span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
-									points
-								</p>
+								{votingSystem === 'three-level' && (
+									<>
+										<p>
+											<span className="font-medium text-foreground">Want to read</span> = 3 points
+										</p>
+										<p>
+											<span className="font-medium text-foreground">Could read</span> = 2 points
+										</p>
+										<p>
+											<span className="font-medium text-foreground">Don&apos;t want to read</span> = 0
+											points
+										</p>
+									</>
+								)}
+
+								{votingSystem === 'binary' && (
+									<>
+										<p>
+											<span className="font-medium text-foreground">Would read</span> = 1 point
+										</p>
+										<p>
+											<span className="font-medium text-foreground">Wont read</span> = 0 points
+										</p>
+									</>
+								)}
 								<br></br>
 								<p>
 									<span>
@@ -228,6 +245,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>(
 											existingVote={
 												book.proposal_id ? votesByProposalId[book.proposal_id] : undefined
 											}
+											votingSystem={votingSystem}
 										/>
 									)
 								})}

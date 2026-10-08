@@ -34,6 +34,7 @@ describe('NewCycle', () => {
 		})
 
 		vi.mocked(cycleService.create).mockResolvedValue({} as any)
+		vi.mocked(cycleService.getLatestCycle).mockResolvedValue(undefined)
 		const user = userEvent.setup()
 
 		render(<NewCycle bookclubId="1" />)
@@ -45,7 +46,59 @@ describe('NewCycle', () => {
 		const button = screen.getByRole('button', { name: /Create/i })
 		await user.click(button)
 
-		expect(vi.mocked(cycleService.create)).toHaveBeenCalled()
+		expect(vi.mocked(cycleService.create)).toHaveBeenCalledWith({
+			bookclub_id: '1',
+			proposalEnd: expect.any(Date),
+			votingEnd: expect.any(Date),
+			votingSystem: 'three-level'
+		})
 		expect(mockNavigate).toHaveBeenCalledWith('/club/1')
+	})
+
+	it('uses the latest cycle voting system as default', async () => {
+		vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
+			id: 'previous-cycle',
+			bookclub_id: '1',
+			votingSystem: 'binary',
+			phase: 'over'
+		})
+		const user = userEvent.setup()
+
+		render(<NewCycle bookclubId="1" />)
+
+		await waitFor(() => {
+			expect(screen.getByText('Binary')).toBeInTheDocument()
+		})
+		
+		await user.click(screen.getByRole('button', { name: /Create/i }))
+
+		expect(cycleService.create).toHaveBeenCalledWith({
+			bookclub_id: '1',
+			proposalEnd: expect.any(Date),
+			votingEnd: expect.any(Date),
+			votingSystem: 'binary'
+		})
+	})
+
+	it('allows the user to select binary voting system', async () => {
+		vi.mocked(cycleService.getLatestCycle).mockResolvedValue(undefined)
+		const user = userEvent.setup()
+
+		vi.mocked(cycleService.create).mockResolvedValue({} as any)
+		
+		render(<NewCycle bookclubId="1" />)
+
+		await user.click(await screen.findByRole('combobox', { name: 'Voting system' }))
+		await user.click(screen.getByRole('option', { name: 'Binary' }))
+		await user.click(screen.getByRole('button', { name: /Create/i }))
+
+		expect(cycleService.create).toHaveBeenCalledWith({
+			bookclub_id: '1',
+			proposalEnd: expect.any(Date),
+			votingEnd: expect.any(Date),
+			votingSystem: 'binary'
+		})
+
+		expect(screen.getByText('Binary')).toBeInTheDocument()
 	})
 })

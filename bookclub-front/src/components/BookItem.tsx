@@ -19,6 +19,7 @@ const BookItem = ({
 	onEdit,
 	isReadOnly,
 	isVotingPhase,
+	votingSystem = 'three-level',
 	onVote,
 	existingVote,
 	podium
@@ -28,6 +29,7 @@ const BookItem = ({
 	onEdit: () => void
 	isReadOnly: boolean
 	isVotingPhase: boolean
+	votingSystem?: string
 	onVote: (bookId: string, weight: number, voteId: string | null) => Promise<void>
 	existingVote?: VoteFields
 	podium?: 'first' | 'second' | 'third' | null
@@ -169,24 +171,46 @@ const BookItem = ({
 										await onVote(book.proposal_id, w, voteId ?? null)
 									}}
 								>
-									<div className="flex items-center gap-3">
-										<RadioGroupItem value="3" id={`want-${book.id}`} />
-										<Label htmlFor={`want-${book.id}`} className="text-sm">
-											Want to read
-										</Label>
-									</div>
-									<div className="flex items-center gap-3">
-										<RadioGroupItem value="2" id={`could-${book.id}`} />
-										<Label htmlFor={`could-${book.id}`} className="text-sm">
-											Could read
-										</Label>
-									</div>
-									<div className="flex items-center gap-3">
-										<RadioGroupItem value="0" id={`dont-${book.id}`} />
-										<Label htmlFor={`dont-${book.id}`} className="text-sm">
-											Don&apos;t want to read
-										</Label>
-									</div>
+									{votingSystem === 'binary' && (
+										<>
+											<div className="flex items-center gap-3">
+												<RadioGroupItem value="1" id={`would-${book.id}`} />
+												<Label htmlFor={`would-${book.id}`} className="text-sm">
+													Would read
+												</Label>
+											</div>
+											
+											<div className="flex items-center gap-3">
+												<RadioGroupItem value="0" id={`wont-${book.id}`} />
+												<Label htmlFor={`wont-${book.id}`} className="text-sm">
+													Wont read
+												</Label>
+											</div>
+										</>
+									)}
+
+									{votingSystem === 'three-level' && (
+										<>
+											<div className="flex items-center gap-3">
+												<RadioGroupItem value="3" id={`want-${book.id}`} />
+												<Label htmlFor={`want-${book.id}`} className="text-sm">
+													Want to read
+												</Label>
+											</div>
+											<div className="flex items-center gap-3">
+												<RadioGroupItem value="2" id={`could-${book.id}`} />
+												<Label htmlFor={`could-${book.id}`} className="text-sm">
+													Could read
+												</Label>
+											</div>
+											<div className="flex items-center gap-3">
+												<RadioGroupItem value="0" id={`dont-${book.id}`} />
+												<Label htmlFor={`dont-${book.id}`} className="text-sm">
+													Don&apos;t want to read
+												</Label>
+											</div>
+										</>
+									)}
 								</RadioGroup>
 							</div>
 						)}

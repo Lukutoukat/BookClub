@@ -9,6 +9,7 @@ interface CycleRequest {
   bookclub_id?: string
   proposalEnd?: Date
   votingEnd?: Date
+  votingSystem?: string
 }
 
 cycleRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
@@ -69,11 +70,21 @@ cycleRouter.post(
           res.status(403).json({ error: 'User is not admin of book club!' })
           return
         }
+        if (
+          newCycle.votingSystem !== undefined &&
+          newCycle.votingSystem !== 'three-level' &&
+          newCycle.votingSystem !== 'binary'
+        ) {
+          res.status(400).json({ error: 'Invalid voting system!' })
+          return
+        }
+
         await prisma.cycle.create({
           data: {
             bookclub_id: newCycle.bookclub_id,
             proposalEnd: newCycle.proposalEnd,
-            votingEnd: newCycle.votingEnd
+            votingEnd: newCycle.votingEnd,
+            votingSystem: newCycle.votingSystem
           }
         })
         res.json(newCycle)
