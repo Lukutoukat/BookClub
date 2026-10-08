@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { type Book } from '@/services/books'
 import { type VoteFields } from '@/services/vote'
@@ -32,6 +33,7 @@ const BookItem = ({
 	existingVote?: VoteFields
 	podium?: 'first' | 'second' | 'third' | null
 }) => {
+	const { t } = useTranslation('pages')
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isDeleting, setIsDeleting] = useState(false)
 	const [weight, setWeight] = useState<number | null>(null)
@@ -78,7 +80,7 @@ const BookItem = ({
 								{book.score}
 							</span>
 							<span className="text-[8px] sm:text-[9px] md:text-[10px] text-muted-foreground uppercase">
-								pts
+								{t('labels.points', { ns: 'common' })}
 							</span>
 						</div>
 					)}
@@ -107,7 +109,7 @@ const BookItem = ({
 											onEdit()
 										}}
 									>
-										Edit
+										{t('actions.edit', { ns: 'common' })}
 									</Button>
 								)}
 
@@ -118,8 +120,8 @@ const BookItem = ({
 										buttonVariant="ghost"
 										buttonClassName="h-6 w-6 text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
 										buttonText=""
-										buttonTitle="Delete book"
-										alertDialogDescription="Deleting a book cannot be undone."
+										buttonTitle={t('books.delete.title')}
+										alertDialogDescription={t('books.delete.warning')}
 									>
 										<Trash2 className="h-4 w-4" />
 									</ButtonDialog>
@@ -149,7 +151,7 @@ const BookItem = ({
 										<ChevronDown className="h-4 w-4" />
 									)}
 									<span className="text-xs font-medium hidden sm:inline ml-1">
-										{isExpanded ? 'Less' : 'More'}
+										{isExpanded ? t('actions.less', { ns: 'common' }) : t('actions.more', { ns: 'common' })}
 									</span>
 								</Button>
 							</div>
@@ -172,19 +174,19 @@ const BookItem = ({
 									<div className="flex items-center gap-3">
 										<RadioGroupItem value="3" id={`want-${book.id}`} />
 										<Label htmlFor={`want-${book.id}`} className="text-sm">
-											Want to read
+											{t('books.votes.wantToRead')}
 										</Label>
 									</div>
 									<div className="flex items-center gap-3">
 										<RadioGroupItem value="2" id={`could-${book.id}`} />
 										<Label htmlFor={`could-${book.id}`} className="text-sm">
-											Could read
+											{t('books.votes.couldRead')}
 										</Label>
 									</div>
 									<div className="flex items-center gap-3">
 										<RadioGroupItem value="0" id={`dont-${book.id}`} />
 										<Label htmlFor={`dont-${book.id}`} className="text-sm">
-											Don&apos;t want to read
+											{t('books.votes.dontWantToRead')}
 										</Label>
 									</div>
 								</RadioGroup>
@@ -197,20 +199,20 @@ const BookItem = ({
 								<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 text-sm">
 									<div>
 										<p className="text-muted-foreground text-xs uppercase tracking-wider mb-2">
-											Language
+											{t('books.fields.language')}
 										</p>
 										<p className="font-medium text-sm">{book.language}</p>
 									</div>
 									<div>
 										<p className="text-muted-foreground text-xs uppercase tracking-wider mb-2">
-											Pages
+											{t('books.fields.pages')}
 										</p>
 										<p className="font-medium text-sm">{book.pages}</p>
 									</div>
 									{book.isbn && (
 										<div className="col-span-2">
 											<p className="text-muted-foreground text-xs uppercase tracking-wider mb-2">
-												ISBN
+													{t('books.fields.isbn')}
 											</p>
 											<p className="font-medium font-mono text-sm">{formatISBN(book.isbn)}</p>
 										</div>
@@ -220,7 +222,7 @@ const BookItem = ({
 								{book.comment && (
 									<div className="bg-muted/30 rounded-lg p-4 border border-border/40">
 										<p className="text-sm leading-relaxed text-foreground/80">
-											<span className="font-semibold text-foreground/90 mr-2">Notes:</span>
+											<span className="font-semibold text-foreground/90 mr-2">{t('books.fields.notes')}</span>
 											{book.comment}
 										</p>
 									</div>

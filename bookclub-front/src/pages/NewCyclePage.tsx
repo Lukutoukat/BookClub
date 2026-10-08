@@ -5,9 +5,11 @@ import { PageHeader } from '@/components/PageHeader'
 import { type BookClub } from '@/services/bookclubs'
 import { useEffect, useState } from 'react'
 import { Column } from '@/components/Column'
+import { useTranslation } from 'react-i18next'
 import bookclubService from '@/services/bookclubs.ts'
 
 const NewCyclePage = () => {
+	const { t } = useTranslation()
 	const { bookclubId } = useParams<{ bookclubId: string }>()
 
 	const [loadedClub, setLoadedClub] = useState<BookClub | undefined>()
@@ -43,7 +45,7 @@ const NewCyclePage = () => {
 	return (
 		<>
 			<PageHeader
-				badgeText="New Cycle"
+				badgeText={t('labels.cycle')}
 				title={isLoading ? '' : (loadedClub?.name ?? 'Bookclub')}
 				description=""
 				buttonText="Back"

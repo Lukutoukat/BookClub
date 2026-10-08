@@ -7,6 +7,7 @@ import {
 	CommandItem,
 	CommandList
 } from '@/components/ui/command'
+import { useTranslation } from 'react-i18next'
 
 import bookService, { type Book } from '@/services/books'
 import proposeService from '@/services/propose'
@@ -36,6 +37,7 @@ type bookSelectorProps = {
 }
 
 const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
+	const { t } = useTranslation('pages')
 	const [open, setOpen] = useState(false)
 	const [books, setBooks] = useState<Book[]>([])
 	const [isLoading, setIsLoading] = useState(true)
@@ -61,7 +63,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 			setBooks(loadedBooks)
 			console.log(`Loading book ${selectedDisplay}`)
 		} catch {
-			setErrorMessage('Failed to load books.')
+			setErrorMessage(t('error.api.loadBooks', { ns: 'messages' }))
 		} finally {
 			setIsLoading(false)
 		}
@@ -116,10 +118,10 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				})
 				if (onBookAdded) {
 					await onBookAdded()
-					showSuccess('Book proposed successfully!')
+					showSuccess(t('success.bookProposed', { ns: 'messages' }))
 				}
 			} catch (error) {
-				setErrorMessage(getErrorMessage(error, 'Failed to propose book.'))
+				setErrorMessage(getErrorMessage(error, t('error.api.proposeBook', { ns: 'messages' })))
 			}
 		}
 		setInputValue('')
@@ -141,17 +143,16 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 			<AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>Are you sure?</AlertDialogTitle>
+						<AlertDialogTitle>{t('club.cycle.bookSelector.confirmTitle')}</AlertDialogTitle>
 						<AlertDialogDescription>
-							Do you want to suggest
 							{selectedBookId
-								? ' ' + books.find((b) => b.id === selectedBookId)?.name + '?'
-								: 'Error'}
+								? t('club.cycle.bookSelector.confirmText', { name: books.find((b) => b.id === selectedBookId)?.name ?? '' })
+								: t('club.cycle.bookSelector.confirmTitle')}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
-						<AlertDialogAction onClick={submitSelectedBook}>Continue</AlertDialogAction>
+						<AlertDialogCancel>{t('actions.cancel', { ns: 'common' })}</AlertDialogCancel>
+						<AlertDialogAction onClick={submitSelectedBook}>{t('actions.continue', { ns: 'common' })}</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
@@ -164,7 +165,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				{/* The Search Input replaces the Button entirely */}
 				<div className="flex w-full min-w-0 items-center gap-2 [&_[data-slot=command-input-wrapper]]:flex-1 [&_[data-slot=command-input-wrapper]]:p-0">
 					<CommandInput
-						placeholder={selectedDisplay === 'proposedBooks' ? 'Search suggested' : 'Search saved'}
+						placeholder={selectedDisplay === 'proposedBooks' ? t('club.cycle.bookSelector.searchSuggested') : t('club.cycle.bookSelector.searchSaved')}
 						value={inputValue}
 						onValueChange={(search: string) => {
 							setInputValue(search)
@@ -177,17 +178,17 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 						onClick={swapDisplay}
 						variant="secondary"
 					>
-						Switch
+						{t('actions.switch', { ns: 'common' })}
 					</Button>
 				</div>
 				{/* The Dropdown list (absolutely positioned below the input) */}
 				{open && (
 					<CommandList className="absolute top-full left-0 z-50 mt-1 w-full rounded-xl border border-border bg-background shadow-md mx-0 px-0">
 						{isLoading ? (
-							<CommandEmpty>Loading books...</CommandEmpty>
+							<CommandEmpty>{t('neutral.loadingBooks', { ns: 'messages' })}</CommandEmpty>
 						) : (
 							<>
-								<CommandEmpty>No books found.</CommandEmpty>
+								<CommandEmpty>{t('club.cycle.bookSelector.empty')}</CommandEmpty>
 								<CommandGroup className="mx-0 px-0 w-full">
 									{books.map((book) => (
 										<CommandItem

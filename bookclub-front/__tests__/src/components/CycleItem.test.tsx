@@ -70,7 +70,7 @@ describe('CycleItem Component', () => {
 
 		render(<CycleItem cycle={mockCycle} />)
 
-		const errorMessage = await screen.findByText('Error loading winner')
+		const errorMessage = await screen.findByText('Error loading winner.')
 		expect(errorMessage).toBeInTheDocument()
 	})
 })

@@ -1,0 +1,175 @@
+{
+    "user": {
+        "title": "Gå med i klubben",
+        "description": "Skapa din egen bokklubb och börja läsa tillsammans med dina vänner.",
+        "username": "Användarnamn",
+        "password": "Lösenord",
+        "confirmPassword": "Bekräfta lösenord",
+        "emailAddress": "E-postadress",
+        "registerTitle": "Skapa ett konto",
+        "registerDescription": "Skapa ett konto och påbörja din läsresa tillsammans med vänner.",
+        "registerButton": "Skapa ett nytt konto",
+        "registerHint": "Kontrollera uppgifterna en extra gång innan du skapar kontot.",
+        "passwordHint": "Lösenordet måste vara minst 8 tecken långt och innehålla stora och små bokstäver samt en siffra.",
+        "loginTitle": "Inloggning",
+        "loginDescription": "Logga in på ditt bokklubbskonto."
+    },
+
+    "books": {
+        "title": "Spara böcker",
+        "description": "Spara böckerna du vill läsa och föreslå i framtiden.",
+        "fields": {
+            "title": "Titel",
+            "author": "Författare",
+            "year": "År",
+            "pages": "Sidor",
+            "language": "Språk",
+            "genre": "Genre",
+            "isbn": "ISBN",
+            "comment": "Kommentar",
+            "notes": "Anteckningar"
+        },
+        "form": {
+            "formTitle": "Lägg till en bok",
+            "editTitle": "Redigera bok",
+            "editDescription": "Redigera bokens uppgifter",
+            "languageFilter": "Språk"
+        },
+        "saved": {
+            "title": "Dina sparade böcker",
+            "empty": "Inga böcker ännu."
+        },
+        "votes": {
+            "wantToRead": "Vill läsa",
+            "couldRead": "Kan tänka mig att läsa",
+            "dontWantToRead": "Vill inte läsa",
+            "hint": "Rösterna sparas automatiskt. Du kan ändra dina röster under omröstningsfasen."
+        },
+        "delete": {
+            "title": "Ta bort bok",
+            "warning": "Att ta bort en bok kan inte ångras."
+        }
+    },
+
+    "home": {
+        "title": "Klubbar, böcker och mer",
+        "description": "Hantera dina bokklubbar, föreslå nya böcker och fatta beslut tillsammans.",
+        "clubs": {
+            "title": "Dina bokklubbar",
+            "count_one": "{{count}} bokklubb",
+            "count_other": "{{count}} bokklubbar",
+            "empty": "Inga bokklubbar ännu"
+        },
+        "joinClub": {
+            "title": "Gå med i en bokklubb",
+            "inviteCode": "Inbjudningskod",
+            "hint": "Du får en inbjudningskod av administratören för din bokklubb."
+        }
+    },
+
+    "settings": {
+        "title": "Inställningar",
+        "description": "Ändra dina inställningar, eller skapa/gå med i en bokklubb.",
+        "clubs": {
+            "title": "Klubbar",
+            "description": "Gå med i eller skapa din egen bokklubb.",
+            "join": "Gå med med en kod",
+            "joinHint": "Ange inbjudningskoden du fick från din klubb.",
+            "newClub": "Skapa en ny klubb",
+            "newClubHint": "Starta en ny klubb och bjud in andra att gå med."
+        },
+        "account": {
+            "title": "Konto",
+            "description": "Ändra dina kontoinställningar",
+            "logout": "Logga ut",
+            "delete": "Ta bort konto",
+            "deleting": "Tar bort...",
+            "deleteQuestion": "Är du säker på att du vill ta bort ditt konto?",
+            "deleteWarning": "När ditt konto har tagits bort kan det inte ångras."
+        },
+        "theme": {
+            "title": "Tema",
+            "description": "Välj ditt föredragna tema",
+            "light": "Ljust",
+            "dark": "Mörkt"
+        },
+        "language": {
+            "title": "Språk",
+            "description": "Ändra webbplatsens språk"
+        }
+    },
+
+    "createClub": {
+        "title": "Ny bokklubb",
+        "description": "Skapa en ny bokklubb där du och dina vänner kan njuta av att läsa tillsammans.",
+        "form": {
+            "title": "Skapa en ny bokklubb",
+            "fieldLabel": "Namnge din bokklubb",
+            "hint": "Kontrollera att det inte finns stavfel innan du skapar en ny bokklubb."
+        }
+    },
+
+    "club": {
+        "notFound": "Bokklubben hittades inte",
+        "missingId": "Bokklubbens id saknas",
+        "description": "Föreslå böcker och bestäm tillsammans vad ni ska läsa härnäst.",
+        "adminPanelTitle": "Hantera din bokklubb",
+        "invite": {
+            "title": "Inbjudningskoden kopierad!",
+            "description": "Inbjudningskoden har kopierats till urklipp och kan klistras in och delas med vänner."
+        },
+        "settings": {
+            "title": "Bokklubbsinställningar",
+            "description": "Ändra bokklubbens inställningar.",
+            "manageMembers": {
+                "title": "Hantera medlemmar",
+                "description": "Du kan hantera enskilda medlemmar nedan"
+            },
+            "manageClub": {
+                "title": "Hantera klubb",
+                "description": "Du kan ta bort din bokklubb och all information som hör till den nedan"
+            },
+            "deleteQuestion": "Är du säker på att du vill ta bort den här bokklubben?",
+            "deleteWarning": "När bokklubben har tagits bort kan det inte ångras."
+        },
+        "members": {
+            "title": "Klubbmedlemmar",
+            "deleteQuestion": "Är du säker på att du vill ta bort användaren '{{name}}' från klubben?",
+            "deleteWarning": "När medlemmen har tagits bort kan det inte ångras."
+        },
+        "cycle": {
+            "title": "Cykler ({{count}})",
+            "defaultName": "Bokklubb",
+            "phase": {
+                "title": "Fas",
+                "suggestPhase": "Förslag:",
+                "votingPhase": "Omröstning:",
+                "winning": "Vinnande bok:",
+                "endCurrentPhase": "Avsluta nuvarande fas",
+                "warning": "Den nuvarande fasen avslutas och åtgärden kan inte ångras."
+            },
+            "calendar": {
+                "title": "Välj datum",
+                "description": "Välj slutdatum för förslagsfasen och omröstningsfasen.",
+                "suggestEnd": "Sluttid för förslag",
+                "votingEnd": "Sluttid för omröstning"
+            },
+            "suggest": {
+                "title": "Föreslå bok",
+                "description": "Sök bland sparade böcker, växla till dina tidigare föreslagna böcker eller skapa en ny bok att föreslå!"
+            },
+            "bookSelector": {
+                "searchSaved": "Sök bland sparade",
+                "searchSuggested": "Sök bland föreslagna",
+                "empty": "Inga böcker hittades.",
+                "confirmTitle": "Är du säker?",
+                "confirmText": "Vill du föreslå '{{name}}'?"
+            },
+            "bookList": {
+                "defaultDescription": "Böcker: ",
+                "suggestedDescription": "Föreslagna böcker",
+                "empty": "Inga böcker har föreslagits ännu. Bli den första att lägga till en!"
+            }
+        }
+    }
+}

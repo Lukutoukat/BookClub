@@ -1,0 +1,176 @@
+{
+    "user": {
+        "title": "Join the club",
+        "description": "Create your own book club and start reading with your friends.",
+        "username": "Username",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "emailAddress": "Email address",
+        "registerTitle": "Create an account",
+        "registerDescription": "Create an account and begin your reading journey with friends.",
+        "registerButton": "Create a new account",
+        "registerHint": "Double-check the details before creating the account.",
+        "passwordHint": "Password must be at least 8 characters long and include uppercase, lowercase and a number.",
+        "loginTitle": "Login",
+        "loginDescription": "Log in to your book club account."
+    },
+
+    "books": {
+        "title": "Save books",
+        "description": "Save the books you want to read and suggest in the future.",
+        "createNew": "Create a new book",
+        "fields": {
+            "title": "Title",
+            "author": "Author",
+            "year": "Year",
+            "pages": "Pages",
+            "language": "Language",
+            "genre": "Genre",
+            "isbn": "ISBN",
+            "comment": "Comment",
+            "notes": "Notes"
+        },
+        "form": {
+            "formTitle": "Add a book",
+            "editTitle": "Edit book",
+            "editDescription": "Edit the details of the book",
+            "languageFilter": "Languages"
+        },
+        "saved": {
+            "title": "Your saved books",
+            "empty": "No books yet."
+        },
+        "votes": {
+            "wantToRead": "Want to read",
+            "couldRead": "Could read",
+            "dontWantToRead": "Don't want to read",
+            "hint": "Votes are saved automatically. You can change your votes during the voting phase."
+        },
+        "delete": {
+            "title": "Delete book",
+            "warning": "Deleting a book cannot be undone."
+        }
+    },
+
+    "home": {
+        "title": "Clubs, books and more",
+        "description": "Manage your book clubs, suggest new books and make decisions together.",
+        "clubs": {
+            "title": "Your book clubs",
+            "count_one": "{{count}} book club",
+            "count_other": "{{count}} book clubs",
+            "empty": "No book clubs yet"
+        },
+        "joinClub": {
+            "title": "Join a book club",
+            "inviteCode": "Invite code",
+            "hint": "You'll receive an invite code from your book club administrator."
+        }
+    },
+
+    "settings": {
+        "title": "Settings",
+        "description": "Change your settings, or create/join a book club.",
+        "clubs": {
+            "title": "Clubs",
+            "description": "Join or create your own book club.",
+            "join": "Join with a code",
+            "joinHint": "Enter the invite code you received from your club.",
+            "newClub": "Create a new club",
+            "newClubHint": "Set up a new club and invite others to join."
+        },
+        "account": {
+            "title": "Account",
+            "description": "Change your account settings",
+            "logout": "Log out",
+            "delete": "Delete Account",
+            "deleting": "Deleting...",
+            "deleteQuestion": "Are you sure you want to delete your account?",
+            "deleteWarning": "Once your account is deleted, it cannot be undone."
+        },
+        "theme": {
+            "title": "Theme",
+            "description": "Choose your preferred theme",
+            "light": "Light",
+            "dark": "Dark"
+        },
+        "language": {
+            "title": "Language",
+            "description": "Change website language"
+        }
+    },
+
+    "createClub": {
+        "title": "New book club",
+        "description": "Create a new book club for you and your friends to enjoy reading together.",
+        "form": {
+            "title": "Create a new book club",
+            "fieldLabel": "Name your book club",
+            "hint": "Double-check for spelling mistakes before creating a new book club."
+        }
+    },
+
+    "club": {
+        "notFound": "Book club not found",
+        "missingId": "Missing book club id",
+        "description": "Suggest books and decide your next read together.",
+        "adminPanelTitle": "Manage your book club",
+        "invite": {
+            "title": "Copied invite code!",
+            "description": "The invite code is copied to the clipboard and can be pasted and shared to friends."
+        },
+        "settings": {
+            "title": "Book Club Settings",
+            "description": "Change book club settings.",
+            "manageMembers": {
+                "title": "Manage Members",
+                "description": "You can manage individual members below"
+            },
+            "manageClub": {
+                "title": "Manage Club",
+                "description": "You can remove your book club and all information related to it below"
+            },
+            "deleteQuestion": "Are you sure you want to delete this book club?",
+            "deleteWarning": "Once the book club is deleted, it cannot be undone."
+        },
+        "members": {
+            "title": "Club Members",
+            "deleteQuestion": "Are you sure you want to remove user '{{name}}' from the club?",
+            "deleteWarning": "Once the member is removed, it cannot be undone."
+        },
+        "cycle": {
+            "title": "Cycles ({{count}})",
+            "defaultName": "Book club",
+            "phase": {
+                "title": "Phase",
+                "suggestPhase": "Suggest:",
+                "votingPhase": "Voting:",
+                "winning": "Winning Book:",
+                "endCurrentPhase": "End current phase",
+                "warning": "The current phase will be ended and this action cannot be undone."
+            },
+            "calendar": {
+                "title": "Select Dates",
+                "description": "Select the end dates for the suggesting and voting phases.",
+                "suggestEnd": "Suggestion End Time",
+                "votingEnd": "Voting End Time"
+            },
+            "suggest": {
+                "title": "Suggest book",
+                "description": "Search saved books, switch to your previously suggested books, or create a new book to suggest!"
+            },
+            "bookSelector": {
+                "searchSaved": "Search saved",
+                "searchSuggested": "Search suggested",
+                "empty": "No books found.",
+                "confirmTitle": "Are you sure?",
+                "confirmText": "Do you want to suggest '{{name}}'?"
+            },
+            "bookList": {
+                "defaultDescription": "Books: ",
+                "suggestedDescription": "Suggested books",
+                "empty": "No books suggested yet. Be the first to add one!"
+            }
+        }
+    }
+}

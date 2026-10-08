@@ -81,6 +81,41 @@ BookClubApp is developed for all readers, who are looking for a way to manage th
 
     The application should be available at http://localhost:13000
 
+<hr>
+
+### Localization
+The application uses the `react-i18next` library for its localization. English translation is the base of other translations.
+
+#### How to use
+1. Add new key/value translation to appropriate JSON file in `boocklub-front/src/locales/` <br>
+Example in common.json:
+```json
+{
+	"component": {
+		"title": "Component"
+	}
+}
+```
+
+2. Use the t() function to reference translations and replace hardcoded strings. <br>
+Example in Component.tsx:
+```tsx
+import { useTranslation } from 'react-i18next'
+const Component = () => {
+    const { t } = useTranslation() // no parameters uses default 'common' namespace
+
+    return <h1>{t('component.title')}</h1> // nested key access to value
+}
+```
+
+For more information, visit https://react.i18next.com/
+
+#### Adding additional languages
+1. Duplicate and rename the _en_ (english) directory.
+2. Translate all of the needed values inside into the target language.
+3. Import the new translation files in `bookclub-front/src/utils/i18n.ts` and add them to the resources according to the rest. The app handles the language switching.
+
+<hr>
 
 ### Tests and Linting
 

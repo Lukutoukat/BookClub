@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 //import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 type LoginFormProps = {
 	username: string
@@ -20,14 +21,16 @@ const LoginForm = ({
 	handleLogin,
 	message
 }: LoginFormProps) => {
+	const { t } = useTranslation('pages')
 	//const navigate = useNavigate()
+
 	return (
 		<>
 			<form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
 				<div className="grid gap-4 rounded-3xl border border-border/70 bg-muted/20 p-4 shadow-sm sm:gap-5 sm:p-6">
 					<div className="space-y-2">
 						<Label htmlFor="username" className="text-sm text-foreground">
-							Username
+							{t('user.username')}
 						</Label>
 
 						<Input
@@ -44,7 +47,7 @@ const LoginForm = ({
 
 					<div className="space-y-2">
 						<Label htmlFor="password" className="text-sm text-foreground">
-							Password
+							{t('user.password')}
 						</Label>
 
 						<Input
@@ -52,7 +55,7 @@ const LoginForm = ({
 							type="password"
 							name="password"
 							autoComplete="current-password"
-							placeholder="Password"
+							placeholder={t('user.password')}
 							value={password}
 							onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
 							required
@@ -66,7 +69,7 @@ const LoginForm = ({
 				) : null}
 				<div className="flex flex-col gap-3 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
 					<Button type="submit" size="lg" className="w-full sm:w-auto">
-						Log in
+						{t('actions.login', { ns: 'common' })}
 					</Button>
 				</div>
 			</form>

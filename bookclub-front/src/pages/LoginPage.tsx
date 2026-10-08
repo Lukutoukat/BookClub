@@ -6,8 +6,10 @@ import { useLogin } from '@/hooks/useLogin'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '@/components/PageHeader'
 import { Column } from '@/components/Column'
+import { useTranslation } from 'react-i18next'
 
 const LoginPage = () => {
+	const { t } = useTranslation()
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const { login, message } = useLogin()
@@ -23,18 +25,18 @@ const LoginPage = () => {
 	return (
 		<>
 			<PageHeader
-				badgeText="Login"
-				title="Join the club"
-				description="Create your own book club and start reading with your friends."
-				buttonText="Go to registration"
+				badgeText={t('labels.login')}
+				title={t('user.title', { ns: 'pages' })}
+				description={t('user.description', { ns: 'pages' })}
+				buttonText={t('actions.registerTab')}
 				buttonLink="/registration"
 			/>
 			<Column>
 				<Card className="card-base">
 					<CardHeader className="card-header">
-						<CardTitle className="text-xl sm:text-2xl">Login</CardTitle>
+						<CardTitle className="text-xl sm:text-2xl">{t('user.loginTitle', { ns: 'pages' })}</CardTitle>
 
-						<CardDescription className="text-sm sm:text-base"></CardDescription>
+						<CardDescription className="text-sm sm:text-base">{t('user.loginDescription', { ns: 'pages' })}</CardDescription>
 					</CardHeader>
 
 					<CardContent className="pt-4 sm:pt-6">

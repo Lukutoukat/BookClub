@@ -4,8 +4,10 @@ import BookForm from '@/components/BookForm'
 import BookList, { type BookListHandle } from '@/components/BookList'
 import { PageHeader } from '@/components/PageHeader'
 import { Column } from '@/components/Column'
+import { useTranslation } from 'react-i18next'
 
 const BooksPage = () => {
+	const { t } = useTranslation()
 	const bookListRef = useRef<BookListHandle>(null)
 
 	const handleBookAdded = async () => {
@@ -15,13 +17,13 @@ const BooksPage = () => {
 	return (
 		<>
 			<PageHeader
-				badgeText="Books"
-				title="Save books"
-				description="Save the books you want to read and suggest in the future."
+				badgeText={t('labels.books')}
+				title={t('books.title', { ns: 'pages' })}
+				description={t('books.description', { ns: 'pages' })}
 			/>
 			<Column>
 				<BookForm onBookAdded={handleBookAdded} cycle_id="" />
-				<BookList ref={bookListRef} emptyMessage="No books yet." description="Your saved books " />
+				<BookList ref={bookListRef} emptyMessage={t('books.saved.empty', { ns: 'pages' })} description={t('books.saved.title', { ns: 'pages' })} />
 			</Column>
 		</>
 	)

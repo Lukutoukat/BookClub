@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 import { useNavigate } from 'react-router-dom'
 import { useNotification } from '@/context/NotificationContext'
+import { useTranslation } from 'react-i18next'
 
 const emptyUser: CreateUser = {
 	email: '',
@@ -17,6 +18,7 @@ const emptyUser: CreateUser = {
 }
 
 const RegistrationForm = () => {
+	const { t } = useTranslation('pages')
 	const [newUser, setNewUser] = useState<CreateUser>(emptyUser)
 	const [confirmPassword, setConfirmPassword] = useState('')
 	const [message, setMessage] = useState<string | null>(null)
@@ -44,13 +46,13 @@ const RegistrationForm = () => {
 		event.preventDefault()
 
 		if (newUser.password !== confirmPassword) {
-			setMessage('Passwords do not match!')
+			setMessage(t('error.validation.passwordMismatch', { ns: 'messages' }))
 			return
 		}
 
 		if (!isValidPassword(newUser.password)) {
 			alert(
-				'Password must be at least 8 characters long and include uppercase, lowercase and a number.'
+				t('user.passwordHint')
 			)
 			return
 		}
@@ -59,7 +61,7 @@ const RegistrationForm = () => {
 			await userService.create(newUser)
 			setNewUser(emptyUser)
 			setConfirmPassword('')
-			showSuccess('Registration saved.')
+			showSuccess(t('success.register', { ns: 'messages' }))
 			await navigate('/login')
 		} catch (err: unknown) {
 			if (err instanceof AxiosError && err.response?.data) {
@@ -67,12 +69,12 @@ const RegistrationForm = () => {
 				if (errorData.error && typeof errorData.error === 'string') {
 					setMessage(errorData.error)
 				} else {
-					setMessage('Registration failed')
+					setMessage(t('error.api.registrationFailed', { ns: 'messages' }))
 				}
 			} else if (err instanceof AxiosError) {
-				setMessage('Registration failed')
+				setMessage(t('error.api.registrationFailed', { ns: 'messages' }))
 			} else {
-				setMessage('Unexpected error occurred')
+				setMessage(t('error.generic.unexpected', { ns: 'messages' }))
 			}
 		}
 	}
@@ -80,8 +82,8 @@ const RegistrationForm = () => {
 	return (
 		<Card className="card-base">
 			<SectionHeader
-				title="Create an account"
-				description="Create an account and begin your reading journey with friends."
+				title={t('user.registerTitle')}
+				description={t('user.registerDescription')}
 			/>
 
 			<CardContent className="card-content">
@@ -89,7 +91,7 @@ const RegistrationForm = () => {
 					<div className="form-grid">
 						<div className="sm:col-span-2">
 							<Field>
-								<FieldLabel htmlFor="email">Email address</FieldLabel>
+								<FieldLabel htmlFor="email">{t('user.emailAddress')}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="email"
@@ -107,7 +109,7 @@ const RegistrationForm = () => {
 
 						<div className="sm:col-span-2">
 							<Field>
-								<FieldLabel htmlFor="name">Username</FieldLabel>
+								<FieldLabel htmlFor="name">{t('user.username')}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="name"
@@ -115,7 +117,7 @@ const RegistrationForm = () => {
 										value={newUser.name}
 										onChange={handleChange}
 										autoComplete="name"
-										placeholder="Username"
+										placeholder={t('user.username')}
 										required
 									/>
 								</FieldContent>
@@ -123,7 +125,7 @@ const RegistrationForm = () => {
 						</div>
 
 						<Field>
-							<FieldLabel htmlFor="password">Password</FieldLabel>
+							<FieldLabel htmlFor="password">{t('user.password')}</FieldLabel>
 							<FieldContent>
 								<Input
 									id="password"
@@ -132,17 +134,17 @@ const RegistrationForm = () => {
 									value={newUser.password}
 									onChange={handleChange}
 									autoComplete="new-password"
-									placeholder="Secure password"
+									placeholder={t('placeholder.account.password', { ns: 'common' })}
 									required
 									minLength={8}
 									pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
-									title="Password must be at least 8 characters long and include uppercase, lowercase, and a number."
+									title={t('user.passwordHint')}
 								/>
 							</FieldContent>
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
+							<FieldLabel htmlFor="confirmPassword">{t('user.confirmPassword')}</FieldLabel>
 							<FieldContent>
 								<Input
 									id="confirmPassword"
@@ -151,7 +153,7 @@ const RegistrationForm = () => {
 									value={confirmPassword}
 									onChange={handleConfirmPasswordChange}
 									autoComplete="new-password"
-									placeholder="Confirm your password"
+									placeholder={t('placeholder.account.confirmPassword', { ns: 'common' })}
 									required
 								/>
 							</FieldContent>
@@ -165,10 +167,10 @@ const RegistrationForm = () => {
 
 					<div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
 						<p className="max-w-md text-xs text-muted-foreground">
-							Double-check the details before creating the account.
+							{t('user.registerHint')}
 						</p>
 						<Button type="submit" size="lg" className="button-full-sm-auto">
-							Create a new account
+							{t('user.registerButton')}
 						</Button>
 					</div>
 				</form>
