@@ -3,7 +3,7 @@ import {render, screen, cleanup} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {MemoryRouter, useSearchParams} from 'react-router-dom'
 import '@testing-library/jest-dom/vitest'
-import {TabbedColumn, type Tab} from "@/components/TabbedColumn.tsx";// adjust path if needed
+import {TabbedColumn, type Tab} from "@/components/TabbedColumn.tsx"
 
 const tabs: Tab[] = [
     {id: 'home', label: 'Home', content: <div>Content Home</div>},
