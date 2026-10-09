@@ -12,8 +12,10 @@ import CycleHistoryList from '@/components/CycleHistoryList'
 import { BookclubMemberList } from '@/components/BookclubMemberList'
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from '@/components/SectionHeader'
+import { useTranslation } from 'react-i18next'
 
 const BookclubPage = () => {
+	const { t } = useTranslation('pages')
 	const { bookclubId } = useParams<{ bookclubId: string }>()
 	const bookListRef = useRef<BookListHandle>(null)
 
@@ -59,7 +61,8 @@ const BookclubPage = () => {
 	if (loading) return null
 
 	// not in a book club
-	if (!bookclubId) return <div>Missing bookclub id</div>
+
+	if (!bookclubId) return <div>{t('club.missingId')}</div>
 
 	return (
 		<>
@@ -77,8 +80,8 @@ const BookclubPage = () => {
 							ref={bookListRef}
 							show="proposedBooks"
 							cycleId={currentCycle.id}
-							description="Suggested books "
-							emptyMessage="No books suggested yet. Be the first to add one!"
+							description={t('club.cycle.bookList.suggestedDescription')}
+							emptyMessage={t('club.cycle.bookList.empty')}
 						/>
 					</>
 				)}
@@ -102,7 +105,7 @@ const BookclubPage = () => {
 				{/* CLUB MEMBER LIST */}
 				<Card>
 					<SectionHeader 
-						title='Club Members'
+						title={t('club.members.title')}
 					/>
 					<CardContent>
 						<BookclubMemberList 

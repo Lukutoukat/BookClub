@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Clock2Icon } from 'lucide-react'
 import { type DateRange } from 'react-day-picker'
 
@@ -15,6 +16,7 @@ type Props = {
 }
 
 export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Props) => {
+	const { t } = useTranslation('pages')
 	const [startTime, setStartTime] = useState('12:00')
 	const [endTime, setEndTime] = useState('12:00')
 
@@ -69,8 +71,8 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 		<>
 			<Card className="card-base w-full max-w-full overflow-hidden">
 				<SectionHeader
-					title={'Select Dates'}
-					description={'Select the end dates for the suggesting and voting phases.'}
+					title={t('club.cycle.calendar.title')}
+					description={t('club.cycle.calendar.description')}
 				/>
 				<CardContent className="card-content flex justify-center p-4 sm:p-6">
 					<div className="w-full flex justify-center overflow-visible">
@@ -88,7 +90,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 				<CardFooter className="border-t bg-card py-6">
 					<FieldGroup className="flex flex-col gap-6 w-full">
 						<Field>
-							<FieldLabel htmlFor="time-from">Suggesting End Time</FieldLabel>
+							<FieldLabel htmlFor="time-from">{t('club.cycle.calendar.suggestEnd')}</FieldLabel>
 							<div className="flex items-center gap-3 mt-2">
 								<Clock2Icon className="text-muted-foreground w-5 h-5" />
 								<TimePicker
@@ -100,7 +102,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 						</Field>
 
 						<Field>
-							<FieldLabel htmlFor="time-to">Voting End Time</FieldLabel>
+							<FieldLabel htmlFor="time-to">{t('club.cycle.calendar.votingEnd')}</FieldLabel>
 							<div className="flex items-center gap-3 mt-2">
 								<Clock2Icon className="text-muted-foreground w-5 h-5" />
 								<TimePicker

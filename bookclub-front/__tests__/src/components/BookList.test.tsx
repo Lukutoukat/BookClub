@@ -116,7 +116,7 @@ describe('BookList', () => {
 			await screen.findByText('Book 1')
 			const deleteButtons = screen.getAllByTitle('Delete book')
 			await us.click(deleteButtons[0])
-			const continueButtons = screen.getAllByTitle('continue')
+			const continueButtons = screen.getAllByTitle('Continue')
 			await us.click(continueButtons[0])
 
 			const errorMessage = await screen.findByText('Failed to delete book.')
@@ -222,7 +222,7 @@ describe('BookList', () => {
 			await screen.findByText('Book 1') // wait for books to load
 			const deleteButtons = screen.getAllByTitle('Delete book')
 			await us.click(deleteButtons[0])
-			const continueButtons = screen.getAllByTitle('continue')
+			const continueButtons = screen.getAllByTitle('Continue')
 			await us.click(continueButtons[0])
 
 			expect(vi.mocked(bookService.removeFromUser)).toHaveBeenCalledWith(1)

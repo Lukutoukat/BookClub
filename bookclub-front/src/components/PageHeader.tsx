@@ -3,6 +3,7 @@ import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
 import { ButtonDialog } from './ButtonDialog'
 import { UserLoginDisplay } from './UserLoginDisplay'
+import { useTranslation } from 'react-i18next'
 
 interface PageHeaderProps {
 	badgeText: string
@@ -32,6 +33,8 @@ export const PageHeader = ({
 	buttonOnClick,
 	afterButtonClick = 'nothing'
 }: PageHeaderProps) => {
+	const { t } = useTranslation('pages')
+
 	return (
 		<header className="flex relative flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8 2xl:mb-16">
 			<div className="w-full space-y-2 max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
@@ -70,8 +73,8 @@ export const PageHeader = ({
 						buttonOnClick={buttonOnClick}
 						buttonText={buttonText}
 						alertDialogCancelText=""
-						alertDialogText="Copied invite code!"
-						alertDialogDescription="The invite code is copied to the clipboard and can be pasted and shared to friends."
+						alertDialogText={t('club.invite.title')}
+						alertDialogDescription={t('club.invite.description')}
 						buttonVariant="outline"
 					/>
 				)

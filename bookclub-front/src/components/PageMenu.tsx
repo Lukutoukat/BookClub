@@ -3,6 +3,7 @@ import { AppNavbar } from './AppNavbar'
 import { Bookmark, Settings, House, BookUser } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { useTranslation } from 'react-i18next'
 
 export interface MenuItem {
 	label: string
@@ -16,26 +17,27 @@ export interface MenuItem {
  * - AppSidebar on desktop
  */
 export const PageMenu = ({ children }: { children: ReactNode }) => {
+	const { t } = useTranslation()
 	const isMobile = useIsMobile()
 
 	const menuItems: MenuItem[] = [
 		{
-			label: 'Home',
+			label: t('labels.home'),
 			to: '/home',
 			icon: <House className="h-5 w-5" />
 		},
 		{
-			label: 'Books',
+			label: t('labels.books'),
 			to: '/books',
 			icon: <Bookmark className="h-5 w-5" />
 		},
 		{
-			label: 'Create',
+			label: t('labels.create'),
 			to: '/create',
 			icon: <BookUser className="h-5 w-5" />
 		},
 		{
-			label: 'Settings',
+			label: t('labels.settings'),
 			to: '/settings',
 			icon: <Settings className="h-5 w-5" />
 		}

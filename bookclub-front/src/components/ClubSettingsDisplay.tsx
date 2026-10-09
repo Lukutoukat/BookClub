@@ -5,11 +5,13 @@ import { ButtonDialog } from './ButtonDialog'
 import { Card, CardContent } from './ui/card'
 import { SectionHeader } from './SectionHeader'
 import { BookclubMemberList } from './BookclubMemberList'
+import { useTranslation } from 'react-i18next'
 type Props = {
 	bookclubId: string
 }
 
 export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
+	const { t } = useTranslation('pages')
 	const navigate = useNavigate()
 	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
 		event.preventDefault()
@@ -24,10 +26,10 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 	return (
 		<>
 			<PageHeader
-				badgeText="Settings"
-				title="Book Club Settings"
-				description="Suggest books and decide your next read together."
-				buttonText="Back"
+				badgeText={t('labels.settings', { ns: 'common' })}
+				title={t('club.settings.title')}
+				description={t('club.settings.description')}
+				buttonText={t('actions.back', { ns: 'common' })}
 				buttonOnClick={async () => {
 					try {
 						await navigate(`/club/${bookclubId}`)
@@ -36,8 +38,8 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 			/>
 			<Card className="card-base">
 				<SectionHeader 
-					title="Manage Members"
-					description="You can manage individual members below"
+					title={t('club.settings.manageMembers.title')}
+					description={t('club.settings.manageMembers.description')}
 				/>
 				<CardContent>
 					<BookclubMemberList 
@@ -47,16 +49,16 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 					/>	
 				</CardContent>
 				<SectionHeader
-					title="Manage Club"
-					description="You can remove your book club and all information related to it below"
+					title={t('club.settings.manageClub.title')}
+					description={t('club.settings.manageClub.description')}
 				/>
 				<CardContent className="card-content">
 					<ButtonDialog
-						buttonText="Delete club"
+						buttonText={t('actions.deleteClub', { ns: 'common' })}
 						buttonOnClick={handleDeletion}
-						alertDialogDescription="Once the book club is deleted, it cannot be undone."
-						alertDialogContinueText="Delete"
-						alertDialogText="Are you sure you want to delete this book club?"
+						alertDialogDescription={t('club.settings.deleteWarning')}
+						alertDialogContinueText={t('actions.delete', { ns: 'common' })}
+						alertDialogText={t('club.settings.deleteQuestion')}
 					/>
 				</CardContent>
 			</Card>

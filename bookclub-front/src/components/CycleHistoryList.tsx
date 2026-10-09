@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from './SectionHeader'
@@ -12,6 +13,7 @@ type Props = {
 }
 
 const CycleHistoryList = ({ bookclubId }: Props) => {
+	const { t } = useTranslation()
 	const [cycles, setCycles] = useState<CycleFields[]>([])
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -28,7 +30,7 @@ const CycleHistoryList = ({ bookclubId }: Props) => {
 			setCycles(Array.isArray(loadedCycles) ? loadedCycles : [])
 		} catch (error) {
 			setCycles([])
-			setErrorMessage(getErrorMessage(error, 'Failed to fetch cycles.'))
+			setErrorMessage(getErrorMessage(error, t('error.api.fetchCycles', { ns: 'messages' })))
 		}
 	}
 
@@ -36,11 +38,9 @@ const CycleHistoryList = ({ bookclubId }: Props) => {
 		void loadCycles()
 	}, [bookclubId])
 
-	const description = `Cycles (${cycles.length})`
-
 	return (
 		<Card className="card-base">
-			<SectionHeader title={description} />
+			<SectionHeader title={t('club.cycle.title', { count: cycles.length, ns: 'pages' })} />
 			<CardContent className="card-content">
 				<div className="space-y-3">
 					{cycles.map((cycle) => (

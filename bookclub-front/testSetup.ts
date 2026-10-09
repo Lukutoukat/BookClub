@@ -1,6 +1,12 @@
 import { afterEach, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
+import './testI18n'
+
+window.HTMLElement.prototype.hasPointerCapture = vi.fn()
+window.HTMLElement.prototype.setPointerCapture = vi.fn()
+window.HTMLElement.prototype.releasePointerCapture = vi.fn()
+window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 const { mockUseParams } = vi.hoisted(() => ({
 	mockUseParams: vi.fn()
@@ -32,12 +38,6 @@ Object.defineProperty(window, 'matchMedia', {
 Object.defineProperty(Element.prototype, 'scrollIntoView', {
 	value: vi.fn(),
 	writable: true
-})
-
-Object.defineProperties(Element.prototype, {
-	hasPointerCapture: { value: vi.fn(() => false), writable: true },
-	setPointerCapture: { value: vi.fn(), writable: true },
-	releasePointerCapture: { value: vi.fn(), writable: true }
 })
 
 const localStorageMock = (() => {
