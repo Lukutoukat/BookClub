@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
+import { useTranslation } from 'react-i18next'
+
 const emptyJoinRequest: AddBookClubMember = {
 	user_role: 1,
 	invite_code: ''
@@ -19,6 +21,7 @@ type Props = {
 }
 
 const JoinBookClubForm = ({ listMutated }: Props) => {
+	const { t } = useTranslation('pages')
 	const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
 	const [message, setMessage] = useState<string | null>(null)
 
@@ -37,7 +40,7 @@ const JoinBookClubForm = ({ listMutated }: Props) => {
 		const trimmedCode = inviteCode.invite_code.trim()
 
 		if (trimmedCode.length !== 5) {
-			setMessage('Enter a 5-character code.')
+			setMessage(t('error.validation.invalidInviteCode', { ns: 'messages' }))
 			return
 		}
 
@@ -54,26 +57,26 @@ const JoinBookClubForm = ({ listMutated }: Props) => {
 				if (errorData.error && typeof errorData.error === 'string') {
 					setMessage(errorData.error)
 				} else {
-					setMessage('Registration failed')
+					setMessage(t('error.api.registrationFailed', { ns: 'messages' }))
 				}
 			} else if (err instanceof AxiosError) {
-				setMessage('Registration failed')
+				setMessage(t('error.api.registrationFailed', { ns: 'messages' }))
 			} else {
-				setMessage('Unexpected error occurred')
+				setMessage(t('error.generic.unexpected', { ns: 'messages' }))
 			}
 		}
 	}
 
 	return (
 		<Card className="card-base">
-			<SectionHeader title="Join a book club" description="" />
+			<SectionHeader title={t('home.joinClub.title')} description="" />
 
 			<CardContent className="card-content">
 				<form onSubmit={handleJoinSubmit} className="card-form">
 					<div className="form-grid">
 						<div className="sm:col-span-2">
 							<Field>
-								<FieldLabel htmlFor="invite-code">Invite code</FieldLabel>
+								<FieldLabel htmlFor="invite-code">{t('home.joinClub.inviteCode')}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="invite-code"
@@ -93,10 +96,10 @@ const JoinBookClubForm = ({ listMutated }: Props) => {
 
 					<div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
 						<p className="max-w-md text-xs text-muted-foreground">
-							You&apos;ll receive an invite code from your book club administrator.
+							{t('home.joinClub.hint')}
 						</p>
 						<Button type="submit" size="lg" className="w-full sm:w-auto">
-							Join
+							{t('actions.join', { ns: 'common' })}
 						</Button>
 					</div>
 				</form>
