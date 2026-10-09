@@ -167,7 +167,7 @@ describe('BookItem', () => {
 		)
 		
 		expect(screen.getByLabelText('Would read')).toBeInTheDocument()
-		expect(screen.getByLabelText('Wont read')).toBeInTheDocument()
+		expect(screen.getByLabelText('Won't read')).toBeInTheDocument()
 		expect(screen.queryByLabelText('Want to read')).toBeNull()
 		expect(screen.queryByLabelText('Could read')).toBeNull()
 		expect(screen.queryByLabelText("Don't want to read")).toBeNull()
