@@ -209,7 +209,7 @@ describe('BookList', () => {
 			render(<BookList show="votedBooks" cycleId="c1" votingSystem="binary" />)
 
 			expect(await screen.findAllByText('Would read')).toHaveLength(2)
-			expect(screen.getAllByText('Wont read')).toHaveLength(2)
+			expect(screen.getAllByText(/won['’]?t read/i)).toHaveLength(2)
 		})
 	})
 
