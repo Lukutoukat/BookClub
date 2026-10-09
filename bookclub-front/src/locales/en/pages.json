@@ -45,7 +45,7 @@
             "couldRead": "Could read",
             "dontWantToRead": "Don't want to read",
             "wouldRead": "Would read",
-            "wontRead": "Wont read",
+            "wontRead": "Won't read",
             "hint": "Votes are saved automatically. You can change your votes during the voting phase."
         },
         "delete": {
