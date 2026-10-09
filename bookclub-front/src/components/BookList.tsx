@@ -203,7 +203,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>((props, ref) => {
 							{votingSystem === 'binary' && (
 								<>
 									<p>
-										<span className="font-medium text-foreground">{t('books.votes.wouldRead', { ns: 'pages' })}</span> = 1 {t('labels.point')}
+										<span className="font-medium text-foreground">{t('books.votes.wouldRead', { ns: 'pages' })}</span> = 1 {t('labels.points')}
 									</p>
 									<p>
 										<span className="font-medium text-foreground">{t('books.votes.wontRead', { ns: 'pages' })}</span> = 0 {t('labels.points')}
