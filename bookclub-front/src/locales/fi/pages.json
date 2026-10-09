@@ -44,6 +44,8 @@
             "wantToRead": "Haluan lukea",
             "couldRead": "Voisin lukea",
             "dontWantToRead": "En halua lukea",
+            "wouldRead": "Lukisin",
+            "wontRead": "En lukisi",
             "hint": "Äänet tallentuvat automaattisesti. Voit muuttaa ääniäsi äänestysvaiheen aikana."
         },
         "delete": {
@@ -108,6 +110,16 @@
             "fieldLabel": "Anna kirjakerhollesi nimi",
             "hint": "Tarkista kirjoitusvirheet ennen uuden kirjakerhon luomista."
         }
+    },
+
+    "newCycleSettings": {
+        "title": "Asetukset",
+        "description": "Tämän kierroksen asetukset",
+        "votingSystem": "Äänestysjärjestelmä",
+        "threeLevel": "Kolmitasoinen",
+        "binary": "Binäärinen",
+        "threeLevelDescription": "Kolmitasoinen äänestysjärjestelmä: Jokainen jäsen arvostelee, kuinka halukas hän on lukemaan jokaisen ehdotetun kirjan: haluaa lukea, voisi lukea tai ei halua lukea. Äänestysjärjestelmää ei voi muuttaa kierroksen luomisen jälkeen.",
+        "binaryDescription": "Binäärinen äänestysjärjestelmä: Jokainen jäsen voi äänestää jokaisesta ehdotetusta kirjasta puolesta tai vastaan. Äänestysjärjestelmää ei voi muuttaa kierroksen luomisen jälkeen."
     },
 
     "club": {

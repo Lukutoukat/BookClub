@@ -20,6 +20,7 @@ interface BookListProps {
 	show?: string
 	cycleId?: string
 	description?: string
+	votingSystem?: string
 }
 
 const BookList = forwardRef<BookListHandle, BookListProps>((props, ref) => {
@@ -28,7 +29,8 @@ const BookList = forwardRef<BookListHandle, BookListProps>((props, ref) => {
 		emptyMessage = t('books.saved.empty', { ns: 'pages' }),
 		show = 'savedBooks',
 		cycleId = 'nocycle',
-		description = t('club.cycle.bookList.defaultDescription', { ns: 'pages' })
+		description = t('club.cycle.bookList.defaultDescription', { ns: 'pages' }),
+		votingSystem = 'three-level'
 	} = props
 
 	const [books, setBooks] = useState<Book[]>([])
@@ -185,21 +187,36 @@ const BookList = forwardRef<BookListHandle, BookListProps>((props, ref) => {
 					<SectionHeader title={`${description} (${bookCount})`} />
 					{isVotingPhase && (
 						<div className="text-xs sm:text-sm text-muted-foreground mb-3 px-6 space-y-">
-							<p>
-								<span className="font-medium text-foreground">{t('books.votes.wantToRead', { ns: 'pages' })}</span> = 3 {t('labels.points')}
-							</p>
-							<p>
-								<span className="font-medium text-foreground">{t('books.votes.couldRead', { ns: 'pages' })}</span> = 2 {t('labels.points')}
-							</p>
-							<p>
-								<span className="font-medium text-foreground">{t('books.votes.dontWantToRead', { ns: 'pages' })}</span> = 0 {t('labels.points')}
-							</p>
-							<br></br>
-							<p>
+							{votingSystem === 'three-level' && (
+								<>
+									<p>
+										<span className="font-medium text-foreground">{t('books.votes.wantToRead', { ns: 'pages' })}</span> = 3 {t('labels.points')}
+									</p>
+									<p>
+										<span className="font-medium text-foreground">{t('books.votes.couldRead', { ns: 'pages' })}</span> = 2 {t('labels.points')}
+									</p>
+									<p>
+										<span className="font-medium text-foreground">{t('books.votes.dontWantToRead', { ns: 'pages' })}</span> = 0 {t('labels.points')}
+									</p>
+								</>
+							)}
+							{votingSystem === 'binary' && (
+								<>
+									<p>
+										<span className="font-medium text-foreground">{t('books.votes.wouldRead', { ns: 'pages' })}</span> = 1 {t('labels.points')}
+									</p>
+									<p>
+										<span className="font-medium text-foreground">{t('books.votes.wontRead', { ns: 'pages' })}</span> = 0 {t('labels.points')}
+									</p>
+								</>
+							)}
+							<br />
+							<p>	
 								<span>{t('books.votes.hint', { ns: 'pages' })}</span>
 							</p>
 						</div>
 					)}
+
 					<CardContent className="card-content">
 						<div className="space-y-3">
 							{books.map((book, index) => {
@@ -224,6 +241,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>((props, ref) => {
 										existingVote={
 											book.proposal_id ? votesByProposalId[book.proposal_id] : undefined
 										}
+										votingSystem={votingSystem}
 									/>
 								)
 							})}

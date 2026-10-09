@@ -67,6 +67,46 @@ voteRouter.put('/:id', userExtractor, async (req: Request<{ id: string }>, res: 
           error: 'not authorized to update this vote'
         })
       }
+      if (!vote.proposal_id) {
+        return res.status(404).json({
+          error: 'vote has no proposal'
+        })
+      }
+      const proposal = await prisma.bookProposed.findUnique({
+        where: { id: vote.proposal_id },
+        select: { cycle_id: true }
+      })
+
+      if (!proposal || !proposal.cycle_id) {
+        return res.status(404).json({
+          error: 'proposal or cycle not found'
+        })
+      }
+
+      const cycle = await prisma.cycle.findUnique({
+        where: { id: proposal.cycle_id },
+        select: { votingSystem: true }
+      })
+
+      if (!cycle) {
+        return res.status(404).json({
+          error: 'cycle not found'
+        })
+      }
+
+      let allowedWeights: number[]
+
+      if (cycle.votingSystem === 'binary') {
+        allowedWeights = [0, 1]
+      } else {
+        allowedWeights = [0, 2, 3]
+      }
+
+      if (typeof weight !== 'number' || !allowedWeights.includes(weight)) {
+        return res.status(400).json({
+          error: 'Invalid weight for voting system!'
+        })
+      }
 
       const result = await prisma.bookVoted.update({
         where: { id },
@@ -112,10 +152,24 @@ voteRouter.post(
           where: {
             id: proposeResult.cycle_id
           },
-          select: { bookclub_id: true }
+          select: { bookclub_id: true, votingSystem: true }
         })
         if (!cycleResult) {
           res.status(400).json({ error: 'Cycle does not exist!' })
+          return
+        }
+        let allowedWeights: number[]
+
+        if (cycleResult.votingSystem === 'binary') {
+          allowedWeights = [0, 1]
+        } else {
+          allowedWeights = [0, 2, 3]
+        }
+        if (
+          typeof newVote.weight !== 'number' ||
+          !allowedWeights.includes(newVote.weight)
+        ) {
+          res.status(400).json({ error: 'Invalid weight for voting system!' })
           return
         }
         if (proposeResult.book_id === null || proposeResult.book_id === undefined) {

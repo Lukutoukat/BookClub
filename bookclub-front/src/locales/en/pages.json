@@ -44,6 +44,8 @@
             "wantToRead": "Want to read",
             "couldRead": "Could read",
             "dontWantToRead": "Don't want to read",
+            "wouldRead": "Would read",
+            "wontRead": "Won't read",
             "hint": "Votes are saved automatically. You can change your votes during the voting phase."
         },
         "delete": {
@@ -108,6 +110,16 @@
             "fieldLabel": "Name your book club",
             "hint": "Double-check for spelling mistakes before creating a new book club."
         }
+    },
+
+    "newCycleSettings": {
+        "title": "Settings",
+        "description": "Settings for this cycle",
+        "votingSystem": "Voting system",
+        "threeLevel": "Three-level",
+        "binary": "Binary",
+        "threeLevelDescription": "Three-level voting system: Each member rates how willing they are to read each proposed book: want to read, could read, or do not want to read. The voting system cannot be changed after the cycle is created.",
+        "binaryDescription": "Binary voting system: Each member can vote for or against each proposed book. The voting system cannot be changed after the cycle is created."
     },
 
     "club": {
