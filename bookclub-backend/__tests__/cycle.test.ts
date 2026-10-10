@@ -52,7 +52,8 @@ describe('/api/cycles', () => {
   const mockCycle = {
     bookclub_id: '1',
     proposalEnd: '2026-06-30',
-    votingEnd: '2026-07-01'
+    votingEnd: '2026-07-01',
+    votingSystem: 'binary'
   }
 
   describe('POST', () => {
@@ -69,7 +70,8 @@ describe('/api/cycles', () => {
         data: {
           bookclub_id: '1',
           proposalEnd: '2026-06-30',
-          votingEnd: '2026-07-01'
+          votingEnd: '2026-07-01',
+          votingSystem: 'binary'
         }
       })
 
@@ -140,6 +142,25 @@ describe('/api/cycles', () => {
       expect(response.body).toEqual({
         error: 'User is not admin of book club!'
       })
+    })
+
+    it('returns 400 if voting system is invalid', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+        user_role: 0
+      })
+
+      const response = await request(app).post('/api/cycles').set(authHeaders()).send({
+        bookclub_id: '1',
+        proposalEnd: '2026-06-30',
+        votingEnd: '2026-07-01',
+        votingSystem: 'invalid-system!'
+      })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        error: 'Invalid voting system!'
+      })
+      expect(prisma.cycle.create).not.toHaveBeenCalled()
     })
   })
 

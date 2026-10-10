@@ -43,6 +43,8 @@
             "wantToRead": "Vill läsa",
             "couldRead": "Kan tänka mig att läsa",
             "dontWantToRead": "Vill inte läsa",
+            "wouldRead": "Skulle läsa",
+            "wontRead": "Skulle inte läsa",
             "hint": "Rösterna sparas automatiskt. Du kan ändra dina röster under omröstningsfasen."
         },
         "delete": {
@@ -107,6 +109,16 @@
             "fieldLabel": "Namnge din bokklubb",
             "hint": "Kontrollera att det inte finns stavfel innan du skapar en ny bokklubb."
         }
+    },
+
+    "newCycleSettings": {
+        "title": "Inställningar",
+        "description": "Inställningar för denna cykel",
+        "votingSystem": "Röstningssystem",
+        "threeLevel": "Tre nivåer",
+        "binary": "Binärt",
+        "threeLevelDescription": "Tre-nivå röstningssystem: Varje medlem betygsätter hur villig de är att läsa varje föreslagen bok: vill läsa, kan tänka sig att läsa eller vill inte läsa. Röstningssystemet kan inte ändras efter att cykeln har skapats.",
+        "binaryDescription": "Binärt röstningssystem: Varje medlem kan rösta för eller emot varje föreslagen bok. Röstningssystemet kan inte ändras efter att cykeln har skapats."
     },
 
     "club": {

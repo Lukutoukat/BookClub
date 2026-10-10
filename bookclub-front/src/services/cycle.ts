@@ -9,6 +9,7 @@ export interface CycleFields {
 	createdAt?: Date
 	proposalEnd?: Date
 	votingEnd?: Date
+	votingSystem?: string
 }
 
 export interface CycleWithStatus {
@@ -16,6 +17,7 @@ export interface CycleWithStatus {
 	bookclub_id?: string
 	proposalEnd?: Date
 	votingEnd?: Date
+	votingSystem?: string
 	phase?: string
 }
 
@@ -30,9 +32,12 @@ const getClubCycles = (bookclubId: string) => {
 
 const getLatestCycle = (bookclubId: string) => {
 	return axios
-		.get<CycleWithStatus>(`${baseUrl}/latest/${bookclubId}`)
+		.get<CycleWithStatus | null>(`${baseUrl}/latest/${bookclubId}`)
 		.then((res) => {
 			const cycle = res.data
+			if (!cycle) {
+				return undefined
+			}
 			const now = new Date()
 
 			let phase = 'proposal'
