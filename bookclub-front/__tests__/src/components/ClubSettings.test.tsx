@@ -128,7 +128,7 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettingsDisplay bookclubId="1" />)
 		;(await screen.findByRole('button', { name: /Delete club/i })).click()
-		;(await screen.findByTitle('continue')).click()
+		;(await screen.findByText('Delete')).click()
 
 		expect(await screen.findByText('Failed to delete club: Timed out')).toBeDefined()
 		expect(mockNavigate).not.toHaveBeenCalled()
