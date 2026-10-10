@@ -12,12 +12,16 @@ import CycleHistoryList from '@/components/CycleHistoryList'
 import { BookclubMemberList } from '@/components/BookclubMemberList'
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from '@/components/SectionHeader'
+import { useNotification } from '@/context/NotificationContext.tsx'
+import { getErrorMessage } from '@/lib/errorMessage.ts'
 import { useTranslation } from 'react-i18next'
 
 const BookclubPage = () => {
 	const { t } = useTranslation('pages')
 	const { bookclubId } = useParams<{ bookclubId: string }>()
 	const bookListRef = useRef<BookListHandle>(null)
+
+	const { showError } = useNotification()
 
 	const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
 	const [loading, setLoading] = useState(true)
@@ -29,7 +33,7 @@ const BookclubPage = () => {
 				const cycle = await cycleService.getLatestCycle(bookclubId as string)
 				setCurrentCycle(cycle)
 			} catch (error) {
-				console.log(error)
+				showError(getErrorMessage(error))
 			} finally {
 				setLoading(false)
 			}
@@ -43,7 +47,8 @@ const BookclubPage = () => {
 				)
 				setIsAdmin(isAdminMember)
 			} catch (error) {
-				console.error('Failed to check admin status:', error)
+				const errorMessage = getErrorMessage(error)
+				showError('Failed to check admin status: ' + errorMessage)
 				setIsAdmin(false)
 			}
 		}

@@ -1,6 +1,8 @@
+// test/setup.ts
 import { afterEach, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
+import { ReactNode } from 'react'
 import './testI18n'
 
 window.HTMLElement.prototype.hasPointerCapture = vi.fn()
@@ -18,6 +20,21 @@ vi.mock('react-router-dom', async (importOriginal) => {
 		...actual,
 		useParams: vi.fn(() => ({})),
 		useNavigate: () => vi.fn()
+	}
+})
+
+vi.mock('@/context/NotificationContext', async (importOriginal) => {
+	const actual = await importOriginal<typeof import('@/context/NotificationContext')>()
+	const noop = vi.fn()
+	return {
+		...actual,
+		useNotification: () => {
+			try {
+				return actual.useNotification()
+			} catch {
+				return { showSuccess: noop, showError: noop }
+			}
+		}
 	}
 })
 

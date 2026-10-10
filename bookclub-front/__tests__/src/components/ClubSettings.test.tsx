@@ -8,6 +8,7 @@ import ClubSettings from '@/components/ClubSettings'
 import bookclubmembersService from '@/services/bookclubmembers'
 import ClubSettingsDisplay from '@/components/ClubSettingsDisplay'
 import bookclubService from '@/services/bookclubs'
+import { useNotification } from '@/context/NotificationContext.tsx'
 
 vi.mock('@/services/bookclubmembers')
 vi.mock('@/services/bookclubs')
@@ -119,6 +120,18 @@ describe('ClubSettings', () => {
 			expect(bookclubService.remove).toHaveBeenCalledWith('1')
 			expect(mockNavigate).toHaveBeenCalledWith('/home', { replace: true })
 		})
+	})
+
+	it('shows error toast when deletion fails', async () => {
+		vi.mocked(bookclubmembersService.getByClubId).mockResolvedValue([])
+		vi.mocked(bookclubService.remove).mockRejectedValue(new Error('Timed out'))
+
+		render(<ClubSettingsDisplay bookclubId="1" />)
+		;(await screen.findByRole('button', { name: /Delete club/i })).click()
+		;(await screen.findByText('Delete')).click()
+
+		expect(await screen.findByText('Failed to delete club: Timed out')).toBeDefined()
+		expect(mockNavigate).not.toHaveBeenCalled()
 	})
 
 	it('shows unexpected error message for non-axios errors', async () => {

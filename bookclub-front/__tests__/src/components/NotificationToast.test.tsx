@@ -25,12 +25,12 @@ describe('NotificationToast', () => {
 		const { rerender } = render(
 			<NotificationToast notification={{ message: 'Success message', type: 'success' }} />
 		)
-		expect(screen.getByText('Confirmation')).toBeInTheDocument()
+		expect(screen.getByText('Confirmation:')).toBeInTheDocument()
 		expect(screen.getByText('Success message')).toBeInTheDocument()
 		expect(screen.getByTestId('check-circle')).toBeInTheDocument()
 
 		rerender(<NotificationToast notification={{ message: 'Error message', type: 'error' }} />)
-		expect(screen.getByText('Error')).toBeInTheDocument()
+		expect(screen.getByText('Error:')).toBeInTheDocument()
 		expect(screen.getByText('Error message')).toBeInTheDocument()
 		expect(screen.getByTestId('octagon-alert')).toBeInTheDocument()
 		expect(screen.queryByText('Success message')).not.toBeInTheDocument()

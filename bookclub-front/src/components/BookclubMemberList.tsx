@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { ButtonDialog } from "./ButtonDialog"
 import memberService, { type BookclubMember } from "../services/bookclubmembers"
 import { useNotification } from "@/context/NotificationContext"
+import { getErrorMessage } from '@/lib/errorMessage.ts'
 import { useTranslation } from "react-i18next"
 
 interface Props {
@@ -13,14 +14,14 @@ interface Props {
 export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: Props) => {
     const { t } = useTranslation()
     const [members, setMembers] = useState<BookclubMember[]>([])
-    const { showSuccess } = useNotification()
+    const { showSuccess, showError } = useNotification()
 
     useEffect(() => {
         void memberService.getByClubId(bookclubId)
             .then(memberData => {
                 setMembers(memberData)
             })
-            .catch(error => console.error('failed to load members', error))
+            .catch(error => showError('Failed to load club members: ' + getErrorMessage(error)))
     }, [bookclubId])
 
     const handleMemberDeletion = async (user_id: string) => {
@@ -29,8 +30,7 @@ export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: 
             setMembers(members.filter(member => member.user_id !== user_id))
             showSuccess(t('success.memberRemoved', { ns: 'messages' }))
         } catch (error) {
-            // TODO: handle error messaging through Notification system
-            console.error('Failed to delete member: ', error)
+					showError('Failed to delete a member: ' + getErrorMessage(error))
         }
     }
 

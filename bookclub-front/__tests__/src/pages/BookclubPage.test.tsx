@@ -111,4 +111,31 @@ describe('BookclubPage', () => {
 			expect(screen.queryByText('Toni')).toBeNull()
 		})
 	})
+
+	it('shows error toast when admin status check fails', async () => {
+		mockUseParams.mockReturnValue({ bookclubId: 'A' })
+
+		vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
+			id: 1,
+			phase: 'proposal'
+		} as any)
+		vi.mocked(bookclubmembersService.get).mockRejectedValue(new Error('Network down'))
+		vi.mocked(bookclubmembersService.getByClubId).mockResolvedValue([])
+
+		render(<BookclubPage />)
+
+		expect(await screen.findByText('Failed to check admin status: Network down')).toBeDefined()
+	})
+
+	it('shows error toast when fetching the latest cycle fails', async () => {
+		mockUseParams.mockReturnValue({ bookclubId: 'A' })
+
+		vi.mocked(cycleService.getLatestCycle).mockRejectedValue(new Error('Server exploded'))
+		vi.mocked(bookclubmembersService.get).mockResolvedValue([])
+		vi.mocked(bookclubmembersService.getByClubId).mockResolvedValue([])
+
+		render(<BookclubPage />)
+
+		expect(await screen.findByText('Server exploded')).toBeDefined()
+	})
 })
