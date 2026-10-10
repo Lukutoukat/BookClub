@@ -1,0 +1,188 @@
+{
+    "user": {
+        "title": "Liity kerhoon",
+        "description": "Luo oma kirjakerho ja aloita lukeminen ystäviesi kanssa.",
+        "username": "Käyttäjätunnus",
+        "password": "Salasana",
+        "confirmPassword": "Vahvista salasana",
+        "emailAddress": "Sähköpostiosoite",
+        "registerTitle": "Luo tili",
+        "registerDescription": "Luo tili ja aloita lukumatka ystäviesi kanssa.",
+        "registerButton": "Luo uusi tili",
+        "registerHint": "Tarkista tiedot vielä kerran ennen tilin luomista.",
+        "passwordHint": "Salasanan on oltava vähintään 8 merkkiä pitkä, ja siinä on oltava isoja ja pieniä kirjaimia sekä numero.",
+        "loginTitle": "Kirjaudu sisään",
+        "loginDescription": "Kirjaudu sisään tilillesi jotta voit olla osa kirjakerhoja."
+    },
+
+    "books": {
+        "title": "Tallenna kirjoja",
+        "description": "Tallenna kirjat, jotka haluat lukea ja ehdottaa tulevaisuudessa.",
+        "createNew": "Luo uusi kirja",
+        "fields": {
+            "title": "Nimi",
+            "author": "Kirjailija",
+            "year": "Vuosi",
+            "pages": "Sivut",
+            "language": "Kieli",
+            "genre": "Genre",
+            "isbn": "ISBN",
+            "comment": "Kommentti",
+            "notes": "Muistiinpanot"
+        },
+        "form": {
+            "formTitle": "Lisää kirja",
+            "editTitle": "Muokkaa kirjaa",
+            "editDescription": "Muokkaa kirjan tietoja",
+            "languageFilter": "Kielet"
+        },
+        "saved": {
+            "title": "Tallentamasi kirjat",
+            "empty": "Ei vielä lisättyjä kirjoja."
+        },
+        "votes": {
+            "wantToRead": "Haluan lukea",
+            "couldRead": "Voisin lukea",
+            "dontWantToRead": "En halua lukea",
+            "wouldRead": "Lukisin",
+            "wontRead": "En lukisi",
+            "hint": "Äänet tallentuvat automaattisesti. Voit muuttaa ääniäsi äänestysvaiheen aikana."
+        },
+        "delete": {
+            "title": "Poista kirja",
+            "warning": "Kirjan poistamista ei voi peruuttaa."
+        }
+    },
+
+    "home": {
+        "title": "Kerhoja, kirjoja ja paljon muuta",
+        "description": "Hallitse kirjakerhojasi, ehdota uusia kirjoja ja tehkää päätöksiä yhdessä.",
+        "clubs": {
+            "title": "Kirjakerhosi",
+            "count_one": "{{count}} kirjakerho",
+            "count_other": "{{count}} kirjakerhoa",
+            "empty": "Ei vielä kirjakerhoja"
+        },
+        "joinClub": {
+            "title": "Liity kirjakerhoon",
+            "inviteCode": "Kutsukoodi",
+            "hint": "Saat kutsukoodin kirjakerhosi ylläpitäjältä."
+        }
+    },
+
+    "settings": {
+        "title": "Asetukset",
+        "description": "Muuta asetuksiasi tai luo kirjakerho / liity kirjakerhoon.",
+        "clubs": {
+            "title": "Kerhot",
+            "description": "Liity tai luo oma kirjakerho.",
+            "join": "Liity koodilla",
+            "joinHint": "Anna kerholtasi saama kutsukoodi.",
+            "newClub": "Luo uusi kerho",
+            "newClubHint": "Perusta uusi kerho ja kutsu muita mukaan."
+        },
+        "account": {
+            "title": "Tili",
+            "description": "Muuta tilisi asetuksia",
+            "logout": "Kirjaudu ulos",
+            "delete": "Poista tili",
+            "deleting": "Poistetaan...",
+            "deleteQuestion": "Haluatko varmasti poistaa tilisi?",
+            "deleteWarning": "Tilin poistamista ei voi peruuttaa."
+        },
+        "theme": {
+            "title": "Teema",
+            "description": "Valitse haluamasi teema",
+            "light": "Vaalea",
+            "dark": "Tumma"
+        },
+        "language": {
+            "title": "Kieli",
+            "description": "Vaihda sivuston kieli"
+        }
+    },
+
+    "createClub": {
+        "title": "Uusi kirjakerho",
+        "description": "Luo uusi kirjakerho itsellesi ja ystävillesi, jotta voitte nauttia lukemisesta yhdessä.",
+        "form": {
+            "title": "Luo uusi kirjakerho",
+            "fieldLabel": "Anna kirjakerhollesi nimi",
+            "hint": "Tarkista kirjoitusvirheet ennen uuden kirjakerhon luomista."
+        }
+    },
+
+    "newCycleSettings": {
+        "title": "Asetukset",
+        "description": "Tämän kierroksen asetukset",
+        "votingSystem": "Äänestysjärjestelmä",
+        "threeLevel": "Kolmitasoinen",
+        "binary": "Binäärinen",
+        "threeLevelDescription": "Kolmitasoinen äänestysjärjestelmä: Jokainen jäsen arvostelee, kuinka halukas hän on lukemaan jokaisen ehdotetun kirjan: haluaa lukea, voisi lukea tai ei halua lukea. Äänestysjärjestelmää ei voi muuttaa kierroksen luomisen jälkeen.",
+        "binaryDescription": "Binäärinen äänestysjärjestelmä: Jokainen jäsen voi äänestää jokaisesta ehdotetusta kirjasta puolesta tai vastaan. Äänestysjärjestelmää ei voi muuttaa kierroksen luomisen jälkeen."
+    },
+
+    "club": {
+        "notFound": "Kirjakerhoa ei löytynyt",
+        "missingId": "Kirjakerhon tunnus puuttuu",
+        "description": "Ehdottakaa kirjoja ja päättäkää yhdessä seuraava lukemisenne.",
+        "adminPanelTitle": "Hallitse kirjakerhoasi",
+        "invite": {
+            "title": "Kutsukoodi kopioitu!",
+            "description": "Kutsukoodi on kopioitu leikepöydälle, ja sen voi liittää sekä jakaa ystäville."
+        },
+        "settings": {
+            "title": "Kirjakerhon asetukset",
+            "description": "Muuta kirjakerhon asetuksia.",
+            "manageMembers": {
+                "title": "Hallitse jäseniä",
+                "description": "Voit hallita yksittäisiä jäseniä alla"
+            },
+            "manageClub": {
+                "title": "Hallitse kerhoa",
+                "description": "Voit poistaa kirjakerhosi ja kaikki siihen liittyvät tiedot alla"
+            },
+            "deleteQuestion": "Haluatko varmasti poistaa tämän kirjakerhon?",
+            "deleteWarning": "Kirjakerhon poistamista ei voi peruuttaa."
+        },
+        "members": {
+            "title": "Kerhon jäsenet",
+            "deleteQuestion": "Haluatko varmasti poistaa käyttäjän '{{name}}' kerhosta?",
+            "deleteWarning": "Jäsenen poistamista ei voi peruuttaa."
+        },
+        "cycle": {
+            "title": "Syklit ({{count}})",
+            "defaultName": "Kirjakerho",
+            "phase": {
+                "title": "Vaihe",
+                "suggestPhase": "Ehdotus:",
+                "votingPhase": "Äänestys:",
+                "winning": "Voittaja:",
+                "endCurrentPhase": "Päätä nykyinen vaihe",
+                "warning": "Nykyinen vaihe päätetään, eikä tätä toimintoa voi peruuttaa."
+            },
+            "calendar": {
+                "title": "Valitse päivämäärät",
+                "description": "Valitse ehdotus- ja äänestysvaiheiden päättymispäivät.",
+                "suggestEnd": "Ehdotusvaiheen päättymisaika",
+                "votingEnd": "Äänestyksen päättymisaika"
+            },
+            "suggest": {
+                "title": "Ehdota kirjaa",
+                "description": "Hae tallennetuista kirjoista, vaihda aiemmin ehdottamiisi kirjoihin tai luo uusi kirja ehdotettavaksi!"
+            },
+            "bookSelector": {
+                "searchSaved": "Hae tallennetuista",
+                "searchSuggested": "Hae ehdotetuista",
+                "empty": "Kirjoja ei löytynyt.",
+                "confirmTitle": "Oletko varma?",
+                "confirmText": "Haluatko ehdottaa kirjaa '{{name}}'?"
+            },
+            "bookList": {
+                "defaultDescription": "Kirjat: ",
+                "suggestedDescription": "Ehdotetut kirjat",
+                "empty": "Kirjoja ei ole vielä ehdotettu. Ole ensimmäinen, joka lisää yhden!"
+            }
+        }
+    }
+}

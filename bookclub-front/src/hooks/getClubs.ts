@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-
 import bookClubService, { type BookClubFields } from '@/services/bookclubs'
 
 export const useGetClubs = () => {

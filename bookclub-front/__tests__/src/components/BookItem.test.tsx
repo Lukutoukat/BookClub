@@ -117,7 +117,7 @@ describe('BookItem', () => {
 		)
 
 		await user.click(screen.getByTitle('Delete book'))
-		await user.click(screen.getByTitle('continue'))
+		await user.click(screen.getByTitle('Continue'))
 
 		expect(onDelete).toHaveBeenCalledWith('1')
 	})
@@ -146,5 +146,34 @@ describe('BookItem', () => {
 		await user.click(screen.getByLabelText('Want to read'))
 
 		expect(onVote).toHaveBeenCalledWith('proposal-1', 3, 'vote-1')
+	})
+
+	it('renders binary voting options when binary voting system is selected', async () => {
+		const onDelete = vi.fn(async () => {})
+		const onEdit = vi.fn()
+		const onVote = vi.fn(async () => {})
+		const user = userEvent.setup()
+		
+		render(
+			<BookItem
+				book={mockBook()}
+				onDelete={onDelete}
+				onEdit={onEdit}
+				isReadOnly={false}
+				isVotingPhase={true}
+				onVote={onVote}
+				votingSystem="binary"
+			/>
+		)
+		
+		expect(screen.getByLabelText('Would read')).toBeInTheDocument()
+		expect(screen.getByLabelText("Won't read")).toBeInTheDocument()
+		expect(screen.queryByLabelText('Want to read')).toBeNull()
+		expect(screen.queryByLabelText('Could read')).toBeNull()
+		expect(screen.queryByLabelText("Don't want to read")).toBeNull()
+
+		await user.click(screen.getByLabelText('Would read'))
+
+		expect(onVote).toHaveBeenCalledWith('proposal-1', 1, null)
 	})
 })

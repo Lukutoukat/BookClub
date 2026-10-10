@@ -5,8 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 import { Button } from '@/components/ui/button'
 import { getInitialTheme, applyThemeToDOM, saveTheme, type Theme } from '@/lib/theme'
+import { useTranslation } from 'react-i18next'
 
 const ThemeSelector = () => {
+	const { t } = useTranslation('pages')
 	const [theme, setTheme] = useState<Theme>(getInitialTheme())
 
 	const applyTheme = (newTheme: Theme): void => {
@@ -20,10 +22,10 @@ const ThemeSelector = () => {
 			<CardHeader className="border-b border-border/60 py-4 sm:py-8">
 				<CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
 					<Palette className="w-5 h-5" />
-					Theme
+					{t('settings.theme.title')}
 				</CardTitle>
 				<CardDescription className="text-sm sm:text-base">
-					Choose your preferred theme
+					{t('settings.theme.description')}
 				</CardDescription>
 			</CardHeader>
 
@@ -34,14 +36,14 @@ const ThemeSelector = () => {
 						onClick={() => applyTheme('light')}
 						className="flex-1"
 					>
-						Light
+						{t('settings.theme.light')}
 					</Button>
 					<Button
 						variant={theme === 'dark' ? 'default' : 'outline'}
 						onClick={() => applyTheme('dark')}
 						className="flex-1"
 					>
-						Dark
+						{t('settings.theme.dark')}
 					</Button>
 				</div>
 			</CardContent>

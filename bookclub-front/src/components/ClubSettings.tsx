@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { SectionHeader } from '@/components/SectionHeader'
 import bookclubmembersService, { type AddBookClubMember } from '@/services/bookclubmembers'
 import { AxiosError } from 'axios'
+import { useTranslation } from 'react-i18next'
 
 const emptyJoinRequest: AddBookClubMember = {
 	invite_code: '',
@@ -16,13 +17,14 @@ const emptyJoinRequest: AddBookClubMember = {
 }
 
 const ClubSettings = () => {
+	const { t } = useTranslation('pages')
 	const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
 	const [message, setMessage] = useState<string | null>(null)
 
 	const handleJoinSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		if (inviteCode.invite_code.trim().length !== 5) {
-			setMessage('Enter a 5-character code.')
+			setMessage(t('error.validation.invalidInviteCode', { ns: 'messages' }))
 			return
 		}
 		try {
@@ -36,12 +38,12 @@ const ClubSettings = () => {
 				if (errorData.error && typeof errorData.error === 'string') {
 					setMessage(errorData.error)
 				} else {
-					setMessage('Registration failed')
+					setMessage(t('error.api.registrationFailed', { ns: 'messages' }))
 				}
 			} else if (err instanceof AxiosError) {
-				setMessage('Registration failed')
+				setMessage(t('error.api.registrationFailed', { ns: 'messages' }))
 			} else {
-				setMessage('Unexpected error occurred')
+				setMessage(t('error.generic.unexpected', { ns: 'messages' }))
 			}
 		}
 	}
@@ -56,13 +58,13 @@ const ClubSettings = () => {
 
 	return (
 		<Card className="border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur">
-			<SectionHeader title="Clubs" description="Join or create your own book club." />
+			<SectionHeader title={t('settings.clubs.title')} description={t('settings.clubs.description')} />
 
 			<CardContent className="space-y-6 pt-4 sm:space-y-6 sm:pt-8">
 				<div className="space-y-4">
-					<Label htmlFor="join-code">Join with code</Label>
+					<Label htmlFor="join-code">{t('settings.clubs.join')}</Label>
 					<p className="text-sm text-muted-foreground">
-						Enter the invite code you received from your club.
+						{t('settings.clubs.joinHint')}
 					</p>
 					<form className="flex items-center gap-4" onSubmit={handleJoinSubmit}>
 						<Input
@@ -73,17 +75,17 @@ const ClubSettings = () => {
 							onChange={handleChange}
 							className="w-[9ch]"
 						/>
-						<Button type="submit">Join</Button>
+						<Button type="submit">{t('actions.join', { ns: 'common' })}</Button>
 					</form>
 				</div>
 
 				<div className="space-y-4">
-					<Label>Create a new club</Label>
+					<Label>{t('settings.clubs.newClub')}</Label>
 					<p className="text-sm text-muted-foreground">
-						Set up a new club and invite others to join.
+						{t('settings.clubs.newClubHint')}
 					</p>
 					<Button asChild>
-						<Link to="/create">Create</Link>
+						<Link to="/create">{t('actions.create', { ns: 'common' })}</Link>
 					</Button>
 				</div>
 

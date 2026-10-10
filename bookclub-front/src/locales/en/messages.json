@@ -1,0 +1,54 @@
+{
+    "neutral": {
+        "loading": "Loading...",
+        "loadingBooks": "Loading books...",
+        "loadingClubs": "Loading book clubs...",
+        "loadingVotes": "Calculating or no votes cast..."
+    },
+    "success": {
+        "bookCreated": "Book created successfully!",
+        "bookProposed": "Book proposed successfully!",
+        "register": "Registration saved.",
+        "memberRemoved": "Club member removed successfully."
+    },
+    "error": {
+        "api": {
+            "registrationFailed": "Registration failed.",
+            "saveBook": "Failed to save book. Please try again.",
+            "loadBooks": "Failed to load books.",
+            "loadWinner": "Error loading winner.",
+            "proposeBook": "Failed to propose book.",
+            "fetchCycles": "Failed to fetch cycles.",
+            "fetchWinner": "Failed to fetch winner.",
+            "deleteClub": "Failed to delete club.",
+            "deleteMember": "Failed to delete member.",
+            "deleteBook": "Failed to delete book.",
+            "endPhase": "Failed to end phase.",
+            "createCycle": "Failed to create cycle.",
+            "helmetLoadLanguages": "Failed to load languages.",
+            "helmetNoBooks": "No books found.",
+            "helmetSearch": "Search failed."
+        },
+        "validation": {
+            "invalidInviteCode": "Enter a 5-character code.",
+            "passwordMismatch": "Passwords do not match!",
+            "helmetEmptyQuery": "Please enter a search query.",
+            "bookTitleRequired": "Book title is required.",
+            "bookAuthorRequired": "Author is required.",
+            "bookYearIsFuture": "Year cannot be in the future.",
+            "bookYearIsZero": "The year zero does not exist.",
+            "bookYearNotValid": "Year must be a valid number.",
+            "bookPages": "Pages must be a non-negative number.",
+            "bookIsbn": "Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).",
+            "bookTitleLength": "Title can contain at most {{maxLength}} characters.",
+            "bookAuthorLength": "Author can contain at most {{maxLength}} characters.",
+            "bookLanguageLength": "Language can contain at most {{maxLength}} characters.",
+            "bookGenreLength": "Genre can contain at most {{maxLength}} characters.",
+            "bookCommentLength": "Comment can contain at most {{maxLength}} characters.",
+            "bookclubIdMissing": "Missing bookclub id"
+        },
+        "generic": {
+            "unexpected": "Unexpected error occurred."
+        }
+    }
+}

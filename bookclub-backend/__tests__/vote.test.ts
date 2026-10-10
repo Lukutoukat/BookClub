@@ -75,7 +75,8 @@ describe('/api/vote', () => {
 
   const mockCycle = {
     id: '1',
-    bookclub_id: '1'
+    bookclub_id: '1',
+    votingSystem: 'three-level'
   }
 
   const mockBook = {
@@ -112,6 +113,27 @@ describe('/api/vote', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual(mockVote)
+    })
+
+    it('returns 400 if binary vote weight is invalid', async () => {
+      ;(prisma.bookProposed.findUnique as jest.Mock).mockResolvedValue(mockProposal)
+      ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue({
+        ...mockCycle,
+        votingSystem: 'binary'
+      })
+      const response = await request(app)
+        .post('/api/vote')
+        .set(authHeaders())
+        .send({
+          ...mockVote,
+          weight: 3
+        })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        error: 'Invalid weight for voting system!'
+      })
+      expect(prisma.bookVoted.create).not.toHaveBeenCalled()
     })
 
     it('returns 400 if proposal does not exist', async () => {
@@ -216,8 +238,11 @@ describe('/api/vote', () => {
     it('updates a vote', async () => {
       ;(prisma.bookVoted.findUnique as jest.Mock).mockResolvedValue({
         id: '1',
-        user_id: '1'
+        user_id: '1',
+        proposal_id: '1'
       })
+      ;(prisma.bookProposed.findUnique as jest.Mock).mockResolvedValue(mockProposal)
+      ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue(mockCycle)
       ;(prisma.bookVoted.update as jest.Mock).mockResolvedValue({
         id: '1',
         weight: 0
@@ -229,6 +254,30 @@ describe('/api/vote', () => {
       expect(prisma.bookVoted.update).toHaveBeenCalledTimes(1)
     })
 
+    it('returns 400 if binary vote weight is invalid', async () => {
+      ;(prisma.bookVoted.findUnique as jest.Mock).mockResolvedValue({
+        id: '1',
+        user_id: '1',
+        proposal_id: '1'
+      })
+      ;(prisma.bookProposed.findUnique as jest.Mock).mockResolvedValue(mockProposal)
+      ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue({
+        ...mockCycle,
+        votingSystem: 'binary'
+      })
+
+      const response = await request(app)
+        .put('/api/vote/1')
+        .set(authHeaders())
+        .send({ weight: 3 })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({
+        error: 'Invalid weight for voting system!'
+      })
+      expect(prisma.bookVoted.update).not.toHaveBeenCalled()
+    })
+    
     it('returns 404 if vote not found', async () => {
       ;(prisma.bookVoted.findUnique as jest.Mock).mockResolvedValue(null)
 

@@ -8,6 +8,7 @@ import ClubSettings from '@/components/ClubSettings'
 import bookclubmembersService from '@/services/bookclubmembers'
 import ClubSettingsDisplay from '@/components/ClubSettingsDisplay'
 import bookclubService from '@/services/bookclubs'
+import { useNotification } from '@/context/NotificationContext.tsx'
 
 vi.mock('@/services/bookclubmembers')
 vi.mock('@/services/bookclubs')
@@ -28,7 +29,7 @@ describe('ClubSettings', () => {
 		render(<ClubSettings />)
 
 		expect(screen.getByText('Clubs')).toBeDefined()
-		expect(screen.getByLabelText(/join with code/i)).toBeDefined()
+		expect(screen.getByLabelText(/join with a code/i)).toBeDefined()
 		expect(screen.getByRole('button', { name: /join/i })).toBeDefined()
 
 		const createLink = screen.getByRole('link', { name: /create/i })
@@ -40,7 +41,7 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abc')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abc')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		expect(screen.getByText('Enter a 5-character code.')).toBeDefined()
@@ -55,7 +56,7 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
@@ -72,7 +73,7 @@ describe('ClubSettings', () => {
 		const error = new AxiosError()
 		error.response = {
 			data: {
-				error: 'Invalid invite code'
+				error: 'Invalid invite code.'
 			}
 		} as any
 
@@ -80,11 +81,11 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Invalid invite code')).toBeDefined()
+			expect(screen.getByText('Invalid invite code.')).toBeDefined()
 		})
 	})
 
@@ -95,11 +96,11 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Registration failed')).toBeDefined()
+			expect(screen.getByText('Registration failed.')).toBeDefined()
 		})
 	})
 
@@ -112,13 +113,25 @@ describe('ClubSettings', () => {
 		const deleteButton = screen.getByRole('button', { name: /Delete club/i })
 		deleteButton.click()
 
-		const continueButton = await screen.findByTitle('continue')
+		const continueButton = await screen.findByTitle('Continue')
 		continueButton.click()
 
 		await waitFor(() => {
 			expect(bookclubService.remove).toHaveBeenCalledWith('1')
 			expect(mockNavigate).toHaveBeenCalledWith('/home', { replace: true })
 		})
+	})
+
+	it('shows error toast when deletion fails', async () => {
+		vi.mocked(bookclubmembersService.getByClubId).mockResolvedValue([])
+		vi.mocked(bookclubService.remove).mockRejectedValue(new Error('Timed out'))
+
+		render(<ClubSettingsDisplay bookclubId="1" />)
+		;(await screen.findByRole('button', { name: /Delete club/i })).click()
+		;(await screen.findByText('Delete')).click()
+
+		expect(await screen.findByText('Failed to delete club: Timed out')).toBeDefined()
+		expect(mockNavigate).not.toHaveBeenCalled()
 	})
 
 	it('shows unexpected error message for non-axios errors', async () => {
@@ -128,11 +141,11 @@ describe('ClubSettings', () => {
 
 		render(<ClubSettings />)
 
-		await user.type(screen.getByLabelText(/join with code/i), 'abcde')
+		await user.type(screen.getByLabelText(/join with a code/i), 'abcde')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Unexpected error occurred')).toBeDefined()
+			expect(screen.getByText('Unexpected error occurred.')).toBeDefined()
 		})
 	})
 })

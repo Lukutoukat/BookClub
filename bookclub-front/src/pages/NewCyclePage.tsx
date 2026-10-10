@@ -5,11 +5,16 @@ import { PageHeader } from '@/components/PageHeader'
 import { type BookClub } from '@/services/bookclubs'
 import { useEffect, useState } from 'react'
 import { Column } from '@/components/Column'
+import { useTranslation } from 'react-i18next'
 import bookclubService from '@/services/bookclubs.ts'
+import { useNotification } from '@/context/NotificationContext.tsx'
+import { getErrorMessage } from '@/lib/errorMessage.ts'
 
 const NewCyclePage = () => {
+	const { t } = useTranslation()
 	const { bookclubId } = useParams<{ bookclubId: string }>()
 
+	const { showError } = useNotification()
 	const [loadedClub, setLoadedClub] = useState<BookClub | undefined>()
 	const [isLoading, setIsLoading] = useState(true)
 	const navigate = useNavigate()
@@ -30,7 +35,8 @@ const NewCyclePage = () => {
 				}
 				setLoadedClub(bookclub)
 			} catch (error) {
-				console.error('Failed to load book club:', error)
+				const errorMessage = getErrorMessage(error)
+				showError('Failed to load book club: ' + errorMessage)
 				void navigate('/') // Redirect to home page on error
 			} finally {
 				setIsLoading(false)
@@ -43,7 +49,7 @@ const NewCyclePage = () => {
 	return (
 		<>
 			<PageHeader
-				badgeText="New Cycle"
+				badgeText={t('labels.cycle')}
 				title={isLoading ? '' : (loadedClub?.name ?? 'Bookclub')}
 				description=""
 				buttonText="Back"
