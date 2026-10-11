@@ -18,7 +18,7 @@ proposeRouter.get('/:id', userExtractor, async (req: Request, res: Response) => 
     try {
       const proposedBooks = await prisma.bookProposed.findMany({
         where: {
-          cycle_id: cycleId,
+          cycle_id: cycleId
         },
         include: {
           Book: true
@@ -48,6 +48,7 @@ proposeRouter.get('/:id', userExtractor, async (req: Request, res: Response) => 
 
 proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, res: Response) => {
   const { cycle_id, book_id } = req.params
+
   if (req.user) {
     try {
       const proposal = await prisma.bookProposed.findFirst({
@@ -71,12 +72,14 @@ proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, 
           user_id: req.user.id
         }
       })
+
       res.json({ message: 'Proposed book removed successfully' })
     } catch (error) {
       console.error('DELETE /api/propose/:id error:', error)
       res.status(500).json({ error: 'database error' })
     }
   }
+
   return
 })
 
@@ -85,10 +88,12 @@ proposeRouter.post(
   userExtractor,
   async (req: Request<unknown, unknown, ProposeRequest>, res: Response) => {
     const newPropose: ProposeRequest = req.body
+
     if (!newPropose.bookclub_id || !newPropose.book_id) {
       res.status(400).json({ error: 'bookclub_id and book_id are required in the body' })
       return
     }
+
     if (req.user) {
       try {
         const cycleResult = await prisma.cycle.findFirst({
@@ -104,6 +109,7 @@ proposeRouter.post(
             createdAt: true
           }
         })
+
         if (!cycleResult) {
           res.status(400).json({ error: 'No active cycle for the book club!' })
           return
@@ -115,6 +121,7 @@ proposeRouter.post(
           },
           select: { id: true }
         })
+
         if (!bookResult) {
           res.status(400).json({ error: 'Book does not exist!' })
           return
@@ -125,6 +132,16 @@ proposeRouter.post(
           return
         }
 
+        const bookClub = await prisma.bookClub.findUnique({
+          where: { id: newPropose.bookclub_id },
+          select: { id: true, maxBooksPerUser: true }
+        })
+
+        if (!bookClub) {
+          res.status(404).json({ error: 'Club not found' })
+          return
+        }
+
         const bookClubMembersResult = await prisma.bookClubMembers.findFirst({
           where: {
             bookclub_id: newPropose.bookclub_id,
@@ -132,10 +149,12 @@ proposeRouter.post(
           },
           select: { id: true }
         })
+
         if (!bookClubMembersResult) {
           res.status(400).json({ error: 'User is not member of book club!' })
           return
         }
+
         const bookProposedResult = await prisma.bookProposed.findFirst({
           where: {
             cycle_id: cycleResult.id,
@@ -143,9 +162,26 @@ proposeRouter.post(
           },
           select: { id: true }
         })
+
         if (bookProposedResult) {
           res.status(400).json({ error: 'Book already proposed for this cycle!' })
           return
+        }
+
+        if ((bookClub.maxBooksPerUser ?? 0) > 0) {
+          const existingUserProposals = await prisma.bookProposed.count({
+            where: {
+              cycle_id: cycleResult.id,
+              user_id: req.user.id
+            }
+          })
+
+          if (existingUserProposals >= bookClub.maxBooksPerUser) {
+            res.status(400).json({
+              error: `You can only propose ${bookClub.maxBooksPerUser} books in this cycle.`
+            })
+            return
+          }
         }
 
         await prisma.bookProposed.create({
@@ -155,6 +191,7 @@ proposeRouter.post(
             user_id: req.user.id
           }
         })
+
         res.json(newPropose)
       } catch (error) {
         console.error('POST /api/bookclubs error:', error)
@@ -163,6 +200,7 @@ proposeRouter.post(
     } else {
       res.status(401).json({ error: 'user not found' })
     }
+
     return
   }
 )
