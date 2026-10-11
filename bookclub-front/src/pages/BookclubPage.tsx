@@ -13,6 +13,8 @@ import {ButtonDialog} from '@/components/ButtonDialog.tsx'
 import {type Tab, TabbedColumn} from '@/components/TabbedColumn.tsx'
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {useTranslation} from 'react-i18next'
+import {getErrorMessage} from "@/lib/errorMessage.ts";
+import {useNotification} from "@/context/NotificationContext.tsx";
 
 /**
  *  HOME TAB
@@ -23,6 +25,8 @@ interface HomeTabProps {
 
 const HomeTab = ({bookclubId}: HomeTabProps) => {
 	const {t} = useTranslation('pages')
+	const {showError} = useNotification()
+
 	const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
 	const [loading, setLoading] = useState(true)
 	const bookListRef = useRef<BookListHandle>(null)
@@ -33,7 +37,7 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 				const cycle = await cycleService.getLatestCycle(bookclubId)
 				setCurrentCycle(cycle)
 			} catch (error) {
-				console.log(error)
+				showError(getErrorMessage(error))
 			} finally {
 				setLoading(false)
 			}
