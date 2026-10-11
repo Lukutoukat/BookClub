@@ -131,6 +131,12 @@
             "title": "Copied invite code!",
             "description": "The invite code is copied to the clipboard and can be pasted and shared to friends."
         },
+        "tabs": {
+            "home": "Home",
+            "members": "Members",
+            "history": "History",
+            "settings": "Settings"
+        },
         "settings": {
             "title": "Book Club Settings",
             "description": "Change book club settings.",

@@ -12,7 +12,7 @@ import {SectionHeader} from '@/components/SectionHeader'
 import {ButtonDialog} from '@/components/ButtonDialog.tsx'
 import {type Tab, TabbedColumn} from '@/components/TabbedColumn.tsx'
 import {Skeleton} from "@/components/ui/skeleton.tsx";
-
+import {useTranslation} from 'react-i18next'
 
 /**
  *  HOME TAB
@@ -22,6 +22,7 @@ interface HomeTabProps {
 }
 
 const HomeTab = ({bookclubId}: HomeTabProps) => {
+	const {t} = useTranslation('pages')
 	const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
 	const [loading, setLoading] = useState(true)
 	const bookListRef = useRef<BookListHandle>(null)
@@ -67,8 +68,8 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 						ref={bookListRef}
 						show="proposedBooks"
 						cycleId={currentCycle.id}
-						description="Suggested books "
-						emptyMessage="No books suggested yet. Be the first to add one!"
+						description={t('club.cycle.bookList.suggestedDescription')}
+						emptyMessage={t('club.cycle.bookList.empty')}
 					/>
 				</>
 			)}
@@ -76,7 +77,7 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 			{/* VOTING PHASE */}
 			{currentCycle?.phase === 'voting' && (
 				<>
-					<BookList ref={bookListRef} show="votedBooks" cycleId={currentCycle.id}/>
+					<BookList ref={bookListRef} show="votedBooks" cycleId={currentCycle.id} votingSystem={currentCycle.votingSystem}/>
 				</>
 			)}
 
@@ -99,11 +100,13 @@ interface MembersTabProps {
 }
 
 const MembersTab = ( {bookclubId} : MembersTabProps ) => {
+	const {t} = useTranslation('pages')
+
 	return (
 		<>
 			{/* CLUB MEMBER LIST */}
 			<Card>
-				<SectionHeader title="Club Members"/>
+				<SectionHeader title={t('club.members.title')}/>
 				<CardContent>
 					<BookclubMemberList
 						bookclubId={bookclubId}
@@ -139,13 +142,15 @@ interface SettingsTabProps {
 }
 
 const SettingsTab = ( {bookclubId } : SettingsTabProps) => {
+	const {t} = useTranslation('pages')
+
 	return (<>
 			<BookClubGoCycleSetting bookclubId={bookclubId}/>
 			<br/>
 			<Card className="card-base">
 				<SectionHeader
-					title="Manage Members"
-					description="You can manage individual members below"
+					title={t('club.settings.manageMembers.title')}
+					description={t('club.settings.manageMembers.description')}
 				/>
 				<CardContent>
 					<BookclubMemberList
@@ -155,15 +160,15 @@ const SettingsTab = ( {bookclubId } : SettingsTabProps) => {
 					/>
 				</CardContent>
 				<SectionHeader
-					title="Manage Club"
-					description="You can remove your book club and all information related to it below"
+					title={t('club.settings.manageClub.title')}
+					description={t('club.settings.manageClub.description')}
 				/>
 				<CardContent className="card-content">
 					<ButtonDialog
-						buttonText="Delete club"
-						alertDialogDescription="Once the book club is deleted, it cannot be undone."
-						alertDialogContinueText="Delete"
-						alertDialogText="Are you sure you want to delete this book club?"
+						buttonText={t('actions.deleteClub', {ns: 'common'})}
+						alertDialogDescription={t('club.settings.deleteWarning')}
+						alertDialogContinueText={t('actions.delete', {ns: 'common'})}
+						alertDialogText={t('club.settings.deleteQuestion')}
 					/>
 				</CardContent>
 			</Card>
@@ -175,6 +180,7 @@ const SettingsTab = ( {bookclubId } : SettingsTabProps) => {
  *  PAGE
  */
 const BookclubPage = () => {
+	const {t} = useTranslation('pages')
 	const { bookclubId } = useParams<{ bookclubId: string }>()
 	const navigate = useNavigate()
 
@@ -190,22 +196,22 @@ const BookclubPage = () => {
 		[
 			{
 				id: 'home',
-				label: 'Home',
+				label: t('club.tabs.home'),
 				content: <HomeTab bookclubId={bookclubId}/>
 			},
 			{
 				id: 'members',
-				label: 'Members',
+				label: t('club.tabs.members'),
 				content: <MembersTab bookclubId={bookclubId}/>
 			},
 			{
 				id: 'history',
-				label: 'History',
+				label: t('club.tabs.history'),
 				content: <HistoryTab bookclubId={bookclubId}/>
 			},
 			{
 				id: 'settings',
-				label: 'Settings',
+				label: t('club.tabs.settings'),
 				content: <SettingsTab bookclubId={bookclubId}/>
 			}
 		], [bookclubId])
