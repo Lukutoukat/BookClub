@@ -31,6 +31,7 @@ model BookClub {
   invite_code     String?           @unique
   status          Int?
   owner_id        String?
+  maxBooksPerUser Int?              @default(0)
   User            User?             @relation(fields: [owner_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   BookClubMembers BookClubMembers[]
   Invite          Invite[]
