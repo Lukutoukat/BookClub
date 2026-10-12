@@ -143,6 +143,10 @@
                 "title": "Hantera medlemmar",
                 "description": "Du kan hantera enskilda medlemmar nedan"
             },
+            "manageCycle": {
+                "title": "Hantera cykel",
+                "description": "Här kan du hantera den aktuella cykeln"
+            },
             "manageClub": {
                 "title": "Hantera klubb",
                 "description": "Du kan ta bort din bokklubb och all information som hör till den nedan"

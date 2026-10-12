@@ -144,6 +144,10 @@
                 "title": "Manage Members",
                 "description": "You can manage individual members below"
             },
+            "manageCycle": {
+                "title": "Manage Cycle",
+                "description": "You can manage the current cycle from here."
+            },
             "manageClub": {
                 "title": "Manage Club",
                 "description": "You can remove your book club and all information related to it below"
