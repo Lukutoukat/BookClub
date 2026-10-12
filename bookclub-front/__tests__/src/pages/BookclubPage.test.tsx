@@ -192,7 +192,10 @@ describe('BookclubPage', () => {
 
         await user.click(screen.getByRole('tab', {name: 'Settings'}))
 
+        expect(screen.getByText('Manage Club')).toBeInTheDocument()
+        expect(screen.getByText('Manage Cycle')).toBeInTheDocument()
         expect(screen.getByText('Manage cycle')).toBeInTheDocument()
-        expect(screen.getByText('Manage club')).toBeInTheDocument()
+        expect(screen.getByText('Manage Members')).toBeInTheDocument()
+        expect(screen.getByText('Delete club')).toBeInTheDocument()
     })
 })
