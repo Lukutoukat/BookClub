@@ -131,6 +131,12 @@
             "title": "Kutsukoodi kopioitu!",
             "description": "Kutsukoodi on kopioitu leikepöydälle, ja sen voi liittää sekä jakaa ystäville."
         },
+        "tabs": {
+            "home": "Etusivu",
+            "members": "Jäsenet",
+            "history": "Historia",
+            "settings": "Asetukset"
+        },
         "settings": {
             "title": "Kirjakerhon asetukset",
             "description": "Muuta kirjakerhon asetuksia.",

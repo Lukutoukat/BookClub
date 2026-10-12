@@ -130,6 +130,12 @@
             "title": "Inbjudningskoden kopierad!",
             "description": "Inbjudningskoden har kopierats till urklipp och kan klistras in och delas med vänner."
         },
+        "tabs": {
+            "home": "Hem",
+            "members": "Medlemmar",
+            "history": "Historik",
+            "settings": "Inställningar"
+        },
         "settings": {
             "title": "Bokklubbsinställningar",
             "description": "Ändra bokklubbens inställningar.",
