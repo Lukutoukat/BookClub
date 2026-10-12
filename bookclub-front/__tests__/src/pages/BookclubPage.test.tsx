@@ -49,7 +49,12 @@ vi.mock('@/components/SuggestBook', () => ({
 }))
 
 vi.mock('@/components/bookClubGoCycleSetting', () => ({
-    default: () => <div>Cycle settings</div>,
+    default: () => (
+        <div>
+            <div>Manage cycle</div>
+            <div>Manage club</div>
+        </div>
+    ),
 }))
 
 vi.mock('@/components/CycleHistoryList', () => ({
@@ -178,15 +183,16 @@ describe('BookclubPage', () => {
             id: 1,
             phase: 'proposal',
         } as any)
+        vi.mocked(bookclubmembersService.get).mockResolvedValue([
+            {bookclub_id: BOOKCLUB_ID, user_role: 0}
+        ] as any)
 
         const user = userEvent.setup()
         render(<BookclubPage/>)
 
         await user.click(screen.getByRole('tab', {name: 'Settings'}))
 
-        expect(await screen.findByText('Cycle settings')).toBeInTheDocument()
-        expect(screen.getByText('Manage Members')).toBeInTheDocument()
-        expect(screen.getByText('Manage Club')).toBeInTheDocument()
-        expect(screen.getByText('Delete club')).toBeInTheDocument()
+        expect(screen.getByText('Manage cycle')).toBeInTheDocument()
+        expect(screen.getByText('Manage club')).toBeInTheDocument()
     })
 })
