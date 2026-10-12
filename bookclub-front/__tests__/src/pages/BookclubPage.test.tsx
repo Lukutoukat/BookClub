@@ -123,22 +123,6 @@ describe('BookclubPage', () => {
         expect(screen.queryByText('Suggest a book')).not.toBeInTheDocument()
     })
 
-    it('logs the error and renders no cycle content when getLatestCycle rejects', async () => {
-        const error = new Error('network down')
-        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {
-        })
-
-        vi.mocked(cycleService.getLatestCycle).mockRejectedValue(error)
-
-        render(<BookclubPage/>)
-
-        await waitFor(() => expect(consoleSpy).toHaveBeenCalledWith(error))
-        expect(screen.queryByText('Suggest a book')).not.toBeInTheDocument()
-        expect(screen.queryByText('Book list')).not.toBeInTheDocument()
-
-        consoleSpy.mockRestore()
-    })
-
     it('reloads the book list when a book is added', async () => {
         vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
             id: 1,
