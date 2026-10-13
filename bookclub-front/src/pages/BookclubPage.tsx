@@ -70,6 +70,7 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 						bookclubId={bookclubId}
 						cycle_id={currentCycle.id}
 					/>
+					<br/>
 					<BookList
 						ref={bookListRef}
 						show="proposedBooks"
