@@ -4,7 +4,7 @@ import { type DateRange } from 'react-day-picker'
 
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent } from '@/components/ui/card'
-import { Field, FieldContent, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Field, FieldContent, FieldGroup } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import { InputField } from '@/components/ui/input-field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -114,7 +114,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 										onOpenChange={(open) => setOpenPicker(open ? 'suggestions' : null)}
 									>
 										<PopoverTrigger asChild>
-											<InputField asChild>
+											<InputField asChild className="h-9">
 												<Button type="button" variant="outline" aria-label="Suggestion phase ends" className="justify-between gap-3 whitespace-normal text-left">
 													<span className={dateRange?.from ? 'font-medium text-foreground' : 'text-muted-foreground'}>
 														{formatDateTime(dateRange?.from)}
@@ -134,8 +134,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 											/>
 										</PopoverContent>
 									</Popover>
-									<FieldLabel htmlFor="time-from" className="mt-1 text-xs text-muted-foreground">Phase end time</FieldLabel>
-									<TimePicker value={startTime} onChange={handleStartTimeChange} disabled={!dateRange?.from} />
+									<TimePicker label="Phase end time" id="time-from" value={startTime} onChange={handleStartTimeChange} disabled={!dateRange?.from} />
 								</FieldContent>
 							</div>
 						</Field>
@@ -152,7 +151,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 										onOpenChange={(open) => setOpenPicker(open ? 'voting' : null)}
 									>
 										<PopoverTrigger asChild>
-											<InputField asChild>
+											<InputField asChild className="h-9">
 												<Button type="button" variant="outline" aria-label="Voting phase ends" className="justify-between gap-3 whitespace-normal text-left">
 													<span className={dateRange?.to ? 'font-medium text-foreground' : 'text-muted-foreground'}>
 														{formatDateTime(dateRange?.to)}
@@ -172,8 +171,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 											/>
 										</PopoverContent>
 									</Popover>
-									<FieldLabel htmlFor="time-to" className="mt-1 text-xs text-muted-foreground">Phase end time</FieldLabel>
-									<TimePicker value={endTime} onChange={handleEndTimeChange} disabled={!dateRange?.to} />
+									<TimePicker label="Phase end time" id="time-to" value={endTime} onChange={handleEndTimeChange} disabled={!dateRange?.to} />
 								</FieldContent>
 							</div>
 						</Field>
