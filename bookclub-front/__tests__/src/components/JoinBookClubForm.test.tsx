@@ -58,7 +58,7 @@ describe('JoinBookClubForm', () => {
 		const error = new AxiosError()
 		error.response = {
 			data: {
-				error: 'Invalid invite code'
+				error: 'Invalid invite code.'
 			}
 		} as any
 
@@ -71,7 +71,7 @@ describe('JoinBookClubForm', () => {
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Invalid invite code')).toBeInTheDocument()
+			expect(screen.getByText('Invalid invite code.')).toBeInTheDocument()
 		})
 	})
 
@@ -85,7 +85,7 @@ describe('JoinBookClubForm', () => {
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Registration failed')).toBeInTheDocument()
+			expect(screen.getByText('Registration failed.')).toBeInTheDocument()
 		})
 	})
 
@@ -99,7 +99,7 @@ describe('JoinBookClubForm', () => {
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
 		await waitFor(() => {
-			expect(screen.getByText('Unexpected error occurred')).toBeInTheDocument()
+			expect(screen.getByText('Unexpected error occurred.')).toBeInTheDocument()
 		})
 	})
 })

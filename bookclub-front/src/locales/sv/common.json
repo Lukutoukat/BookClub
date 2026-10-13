@@ -1,0 +1,62 @@
+{
+    "actions": {
+        "back": "Tillbaka",
+        "cancel": "Avbryt",
+        "close": "Stäng",
+        "continue": "Fortsätt",
+        "create": "Skapa",
+        "delete": "Ta bort",
+        "edit": "Redigera",
+        "join": "Gå med",
+        "less": "Mindre",
+        "more": "Mer",
+        "login": "Logga in",
+        "add": "Lägg till",
+        "remove": "Ta bort",
+        "search": "Sök",
+        "suggest": "Föreslå",
+        "switch": "Byt",
+        "update": "Uppdatera",
+        "manageCycle": "Hantera cykel",
+        "manageClub": "Hantera klubb",
+        "deleteClub": "Ta bort klubb",
+        "loginTab": "Gå till inloggning",
+        "registerTab": "Gå till registrering",
+        "createBook": "Skapa en ny bok"
+    },
+    "labels": {
+        "home": "Hem",
+        "books": "Böcker",
+        "create": "Skapa",
+        "settings": "Inställningar",
+        "club": "Klubb",
+        "login": "Inloggning",
+        "cycle": "Ny cykel",
+        "registration": "Registrering",
+        "loggedInAs": "Inloggad som: {{name}}",
+        "error": "Fel: ",
+        "confirmation": "Bekräftelse: ",
+        "completed": "Avslutad",
+        "voting": "Omröstning",
+        "suggest": "Föreslå"
+    },
+    "placeholder": {
+        "bookForm": {
+            "language": "Engelska",
+            "genre": "Historisk fiktion",
+            "comment": "Lägg till en kort anteckning om varför den här boken bör läsas."
+        },
+        "account": {
+            "password": "Säkert lösenord",
+            "confirmPassword": "Bekräfta ditt lösenord"
+        },
+        "misc": {
+            "search": "Sök från Helmet..."
+        }
+    },
+    "defaults": {
+        "buttonText": "Klicka här",
+        "buttonAlertTitle": "Är du helt säker?",
+        "buttonAlertDescription": "Den här åtgärden måste godkännas genom att klicka på fortsätt."
+    }
+}

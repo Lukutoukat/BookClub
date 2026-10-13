@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CalendarIcon } from 'lucide-react'
 import { type DateRange } from 'react-day-picker'
+import { useTranslation } from 'react-i18next'
 
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent } from '@/components/ui/card'
@@ -26,6 +27,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 	const [startTime, setStartTime] = useState(() => formatTimeValue(dateRange?.from))
 	const [endTime, setEndTime] = useState(() => formatTimeValue(dateRange?.to))
 	const [openPicker, setOpenPicker] = useState<'suggestions' | 'voting' | null>(null)
+	const { t } = useTranslation('pages')
 
 	useEffect(() => {
 		if (dateRange?.from) setStartTime(formatTimeValue(dateRange.from))
@@ -97,8 +99,8 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 		<>
 			<Card className="card-base w-full max-w-full overflow-hidden">
 				<SectionHeader
-					title={'Select Dates'}
-					description={'Select the end dates for the suggesting and voting phases.'}
+					title={t('club.cycle.calendar.title')}
+					description={t('club.cycle.calendar.description')}
 				/>
 				<CardContent className="card-content p-4 sm:p-6">
 					<FieldGroup className="grid gap-4 sm:grid-cols-2">

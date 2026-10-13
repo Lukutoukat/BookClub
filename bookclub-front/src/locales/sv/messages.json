@@ -1,0 +1,53 @@
+{
+    "neutral": {
+        "loading": "Laddar...",
+        "loadingBooks": "Laddar böcker...",
+        "loadingClubs": "Laddar bokklubbar...",
+        "loadingVotes": "Räknar ut eller inga röster har lagts..."
+    },
+    "success": {
+        "bookCreated": "Boken har skapats!",
+        "bookProposed": "Boken har föreslagits!",
+        "register": "Registreringen har sparats.",
+        "memberRemoved": "Klubbmedlemmen har tagits bort."
+    },
+    "error": {
+        "api": {
+            "registrationFailed": "Registreringen misslyckades.",
+            "saveBook": "Det gick inte att spara boken. Försök igen.",
+            "loadBooks": "Det gick inte att ladda böckerna.",
+            "loadWinner": "Fel vid laddning av vinnaren.",
+            "proposeBook": "Det gick inte att föreslå boken.",
+            "fetchWinner": "Det gick inte att hämta vinnaren.",
+            "fetchCycles": "Det gick inte att hämta cyklarna.",
+            "deleteClub": "Det gick inte att ta bort klubben.",
+            "deleteMember": "Det gick inte att ta bort medlemmen.",
+            "deleteBook": "Det gick inte att ta bort boken.",
+            "endPhase": "Det gick inte att avsluta fasen.",
+            "createCycle": "Det gick inte att skapa cykeln.",
+            "helmetLoadLanguages": "Det gick inte att ladda språken.",
+            "helmetNoBooks": "Inga böcker hittades.",
+            "helmetSearch": "Sökningen misslyckades."
+        },
+        "validation": {
+            "invalidInviteCode": "Ange en kod på 5 tecken.",
+            "passwordMismatch": "Lösenorden matchar inte!",
+            "helmetEmptyQuery": "Ange en sökfråga.",
+            "bookTitleRequired": "Boktitel krävs.",
+            "bookAuthorRequired": "Författare krävs.",
+            "bookYearIsFuture": "Året kan inte ligga i framtiden.",
+            "bookYearIsZero": "År noll existerar inte.",
+            "bookYearNotValid": "Året måste vara ett giltigt tal.",
+            "bookPages": "Sidantalet måste vara ett icke-negativt tal.",
+            "bookIsbn": "Ogiltigt ISBN. Måste vara 10 eller 13 siffror (bindestreck är tillåtna).",
+            "bookTitleLength": "Titeln får innehålla högst {{maxLength}} tecken.",
+            "bookAuthorLength": "Författaren får innehålla högst {{maxLength}} tecken.",
+            "bookLanguageLength": "Språket får innehålla högst {{maxLength}} tecken.",
+            "bookGenreLength": "Genren får innehålla högst {{maxLength}} tecken.",
+            "bookCommentLength": "Kommentaren får innehålla högst {{maxLength}} tecken."
+        },
+        "generic": {
+            "unexpected": "Ett oväntat fel inträffade."
+        }
+    }
+}

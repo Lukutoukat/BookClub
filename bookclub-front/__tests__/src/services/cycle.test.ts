@@ -26,7 +26,8 @@ describe('getLatestCycle returns the latest cycle', () => {
 		const mockCycleWithDates = {
 			...mockCycle,
 			proposalEnd: '2026-01-20T00:00:00Z',
-			votingEnd: '2026-01-30T00:00:00Z'
+			votingEnd: '2026-01-30T00:00:00Z',
+			votingSystem: 'binary'
 		}
 
 		mockedAxios.get.mockResolvedValue({
@@ -89,6 +90,16 @@ describe('getLatestCycle returns the latest cycle', () => {
 			...mockCycleWithDates,
 			phase: 'over'
 		})
+	})
+
+	it('returns undefined when no cycle is found', async () => {
+		mockedAxios.get.mockResolvedValue({
+			data: null
+		})
+		
+		const result = await cycle.getLatestCycle(mockCycle.bookclub_id)
+
+		expect(result).toBeUndefined()
 	})
 })
 
