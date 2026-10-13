@@ -4,7 +4,7 @@ import { type DateRange } from 'react-day-picker'
 
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent } from '@/components/ui/card'
-import { FieldLabel } from '@/components/ui/field'
+import { Field, FieldContent, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import { InputField } from '@/components/ui/input-field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -41,12 +41,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 
 	const formatDate = (date: Date | undefined) => {
 		if (!date) return 'Choose a date'
-		return new Intl.DateTimeFormat('en-GB', {
-			weekday: 'short',
-			day: 'numeric',
-			month: 'short',
-			year: 'numeric'
-		}).format(date)
+		return new Intl.DateTimeFormat(navigator.language).format(date)
 	}
 
 	const formatDateTime = (date: Date | undefined) => {
@@ -106,75 +101,83 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 					description={'Select the end dates for the suggesting and voting phases.'}
 				/>
 				<CardContent className="card-content p-4 sm:p-6">
-					<div className="grid gap-4 sm:grid-cols-2">
-						<div className="min-w-0 space-y-3 rounded-lg border border-border/70 bg-background/60 p-3 sm:p-4">
-							<div>
-								<p className="text-sm font-semibold text-foreground">Suggestion phase ends</p>
-								<p className="mt-1 text-xs text-muted-foreground">Set the date and closing time for suggestions phase.</p>
+					<FieldGroup className="grid gap-4 sm:grid-cols-2">
+						<Field className="min-w-0">
+							<div className="space-y-3 rounded-lg border border-border/70 bg-background/60 p-3 sm:p-4">
+								<div>
+									<p className="text-sm font-semibold text-foreground">Suggestion phase ends</p>
+									<p className="mt-1 text-xs text-muted-foreground">Set the date and closing time for suggestions phase.</p>
+								</div>
+								<FieldContent className="gap-3">
+									<Popover
+										open={openPicker === 'suggestions'}
+										onOpenChange={(open) => setOpenPicker(open ? 'suggestions' : null)}
+									>
+										<PopoverTrigger asChild>
+											<InputField asChild>
+												<Button type="button" variant="outline" aria-label="Suggestion phase ends" className="justify-between gap-3 whitespace-normal text-left">
+													<span className={dateRange?.from ? 'font-medium text-foreground' : 'text-muted-foreground'}>
+														{formatDateTime(dateRange?.from)}
+													</span>
+													<CalendarIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+												</Button>
+											</InputField>
+										</PopoverTrigger>
+										<PopoverContent align="start" className="w-auto p-2">
+											<Calendar
+												mode="single"
+												selected={dateRange?.from}
+												defaultMonth={dateRange?.from ?? new Date()}
+												onSelect={handleSuggestionsDateSelect}
+												numberOfMonths={1}
+												disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0)) || (dateRange?.to !== undefined && applyTimeToDate(date, startTime) >= dateRange.to)}
+											/>
+										</PopoverContent>
+									</Popover>
+									<FieldLabel htmlFor="time-from" className="mt-1 text-xs text-muted-foreground">Phase end time</FieldLabel>
+									<TimePicker value={startTime} onChange={handleStartTimeChange} disabled={!dateRange?.from} />
+								</FieldContent>
 							</div>
-							<Popover
-								open={openPicker === 'suggestions'}
-								onOpenChange={(open) => setOpenPicker(open ? 'suggestions' : null)}
-							>
-								<PopoverTrigger asChild>
-									<InputField asChild>
-										<Button type="button" variant="outline" aria-label="Suggestion phase ends" className="justify-between gap-3 whitespace-normal text-left">
-										<span className={dateRange?.from ? 'font-medium text-foreground' : 'text-muted-foreground'}>
-											{formatDateTime(dateRange?.from)}
-										</span>
-										<CalendarIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-										</Button>
-									</InputField>
-								</PopoverTrigger>
-								<PopoverContent align="start" className="w-auto p-2">
-									<Calendar
-										mode="single"
-										selected={dateRange?.from}
-										defaultMonth={dateRange?.from ?? new Date()}
-										onSelect={handleSuggestionsDateSelect}
-										numberOfMonths={1}
-										disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0)) || (dateRange?.to !== undefined && applyTimeToDate(date, startTime) >= dateRange.to)}
-									/>
-								</PopoverContent>
-							</Popover>
-							<FieldLabel htmlFor="time-from" className="mt-1 text-xs text-muted-foreground">Phase end time</FieldLabel>
-							<TimePicker value={startTime} onChange={handleStartTimeChange} disabled={!dateRange?.from} />
-						</div>
+						</Field>
 
-						<div className="min-w-0 space-y-3 rounded-lg border border-border/70 bg-background/60 p-3 sm:p-4">
-							<div>
-								<p className="text-sm font-semibold text-foreground">Voting phase ends</p>
-								<p className="mt-1 text-xs text-muted-foreground">Set the date and closing time for voting phase.</p>
+						<Field className="min-w-0">
+							<div className="space-y-3 rounded-lg border border-border/70 bg-background/60 p-3 sm:p-4">
+								<div>
+									<p className="text-sm font-semibold text-foreground">Voting phase ends</p>
+									<p className="mt-1 text-xs text-muted-foreground">Set the date and closing time for voting phase.</p>
+								</div>
+								<FieldContent className="gap-3">
+									<Popover
+										open={openPicker === 'voting'}
+										onOpenChange={(open) => setOpenPicker(open ? 'voting' : null)}
+									>
+										<PopoverTrigger asChild>
+											<InputField asChild>
+												<Button type="button" variant="outline" aria-label="Voting phase ends" className="justify-between gap-3 whitespace-normal text-left">
+													<span className={dateRange?.to ? 'font-medium text-foreground' : 'text-muted-foreground'}>
+														{formatDateTime(dateRange?.to)}
+													</span>
+													<CalendarIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+												</Button>
+											</InputField>
+										</PopoverTrigger>
+										<PopoverContent align="start" className="w-auto p-2">
+											<Calendar
+												mode="single"
+												selected={dateRange?.to}
+												defaultMonth={dateRange?.to ?? dateRange?.from ?? new Date()}
+												onSelect={handleVotingDateSelect}
+												numberOfMonths={1}
+												disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0)) || (dateRange?.from !== undefined && applyTimeToDate(date, endTime) <= dateRange.from)}
+											/>
+										</PopoverContent>
+									</Popover>
+									<FieldLabel htmlFor="time-to" className="mt-1 text-xs text-muted-foreground">Phase end time</FieldLabel>
+									<TimePicker value={endTime} onChange={handleEndTimeChange} disabled={!dateRange?.to} />
+								</FieldContent>
 							</div>
-							<Popover
-								open={openPicker === 'voting'}
-								onOpenChange={(open) => setOpenPicker(open ? 'voting' : null)}
-							>
-								<PopoverTrigger asChild>
-									<InputField asChild>
-										<Button type="button" variant="outline" aria-label="Voting phase ends" className="justify-between gap-3 whitespace-normal text-left">
-										<span className={dateRange?.to ? 'font-medium text-foreground' : 'text-muted-foreground'}>
-											{formatDateTime(dateRange?.to)}
-										</span>
-										<CalendarIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-										</Button>
-									</InputField>
-								</PopoverTrigger>
-								<PopoverContent align="start" className="w-auto p-2">
-									<Calendar
-										mode="single"
-										selected={dateRange?.to}
-										defaultMonth={dateRange?.to ?? dateRange?.from ?? new Date()}
-										onSelect={handleVotingDateSelect}
-										numberOfMonths={1}
-										disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0)) || (dateRange?.from !== undefined && applyTimeToDate(date, endTime) <= dateRange.from)}
-									/>
-								</PopoverContent>
-							</Popover>
-							<FieldLabel htmlFor="time-to" className="mt-1 text-xs text-muted-foreground">Phase end time</FieldLabel>
-							<TimePicker value={endTime} onChange={handleEndTimeChange} disabled={!dateRange?.to} />
-						</div>
-					</div>
+						</Field>
+					</FieldGroup>
 				</CardContent>
 				{children}
 			</Card>
