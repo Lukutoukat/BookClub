@@ -1,14 +1,16 @@
 import {render, screen, waitFor} from '@/utils/test-utils'
 import {describe, expect, it, vi, beforeEach} from 'vitest'
 import userEvent from '@testing-library/user-event'
-import {forwardRef, useImperativeHandle, type Ref} from 'react'
+import {forwardRef, useImperativeHandle, type Ref, type SyntheticEvent} from 'react'
 
 import BookclubPage from '@/pages/BookclubPage'
 import cycleService from '@/services/cycle'
 import bookclubmembersService from '@/services/bookclubmembers'
+import bookclubService from '@/services/bookclubs'
 
-const {mockReload} = vi.hoisted(() => ({
+const {mockReload, mockShowError} = vi.hoisted(() => ({
     mockReload: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+    mockShowError: vi.fn(),
 }))
 
 const mockUseParams = vi.fn()
@@ -25,6 +27,15 @@ vi.mock('react-router-dom', async (importOriginal) => {
 
 vi.mock('@/services/cycle')
 vi.mock('@/services/bookclubmembers')
+vi.mock('@/services/bookclubs')
+
+vi.mock('@/context/NotificationContext.tsx', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/context/NotificationContext.tsx')>()
+    return {
+        ...actual,
+        useNotification: () => ({showError: mockShowError}),
+    }
+})
 
 vi.mock('@/components/BookclubComponent', () => ({
     BookclubComponent: ({bookclubId}: { bookclubId: string }) => (
@@ -62,7 +73,10 @@ vi.mock('@/components/CycleHistoryList', () => ({
 }))
 
 vi.mock('@/components/ButtonDialog', () => ({
-    ButtonDialog: ({buttonText}: { buttonText: string }) => <div>{buttonText}</div>,
+    ButtonDialog: ({buttonText, buttonOnClick}: {
+        buttonText: string
+        buttonOnClick?: (event: SyntheticEvent<HTMLButtonElement>) => void | Promise<void>
+    }) => <button onClick={buttonOnClick}>{buttonText}</button>,
 }))
 
 const BOOKCLUB_ID = '1'
@@ -197,5 +211,80 @@ describe('BookclubPage', () => {
         expect(screen.getByText('Manage cycle')).toBeInTheDocument()
         expect(screen.getByText('Manage Members')).toBeInTheDocument()
         expect(screen.getByText('Delete club')).toBeInTheDocument()
+    })
+
+    it('handles failure when loading the latest cycle', async () => {
+        vi.mocked(cycleService.getLatestCycle).mockRejectedValue(new Error('cycle failed'))
+
+        const user = userEvent.setup()
+        render(<BookclubPage/>)
+
+        // Ensure the Home tab is active so HomeTab mounts and its effect runs
+        await user.click(screen.getByRole('tab', {name: 'Home'}))
+
+        await waitFor(() => {
+            expect(cycleService.getLatestCycle).toHaveBeenCalledWith(BOOKCLUB_ID)
+            expect(mockShowError).toHaveBeenCalledWith('cycle failed')
+        })
+    })
+
+    it('handles failure when checking admin status', async () => {
+        vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
+            id: 1,
+            phase: 'proposal',
+        } as any)
+        vi.mocked(bookclubmembersService.get).mockRejectedValue(new Error('admin check failed'))
+
+        render(<BookclubPage/>)
+
+        await waitFor(() => {
+            expect(mockShowError).toHaveBeenCalledWith('Failed to check admin status: admin check failed')
+        })
+    })
+
+    it('deletes the club and navigates home when confirmed', async () => {
+        vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
+            id: 1,
+            phase: 'proposal',
+        } as any)
+        vi.mocked(bookclubmembersService.get).mockResolvedValue([
+            {bookclub_id: BOOKCLUB_ID, user_role: 0},
+        ] as any)
+        vi.mocked(bookclubService.remove).mockResolvedValue(undefined as any)
+
+        const user = userEvent.setup()
+        render(<BookclubPage/>)
+
+        await user.click(screen.getByRole('tab', {name: 'Settings'}))
+        await screen.findByText('Manage Club')
+        await user.click(await screen.findByRole('button', {name: 'Delete club'}))
+
+        await waitFor(() => {
+            expect(bookclubService.remove).toHaveBeenCalledWith(BOOKCLUB_ID)
+            expect(mockNavigate).toHaveBeenCalledWith('/home', {replace: true})
+        })
+    })
+
+    it('shows an error when deleting the club fails', async () => {
+        vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
+            id: 1,
+            phase: 'proposal',
+        } as any)
+        vi.mocked(bookclubmembersService.get).mockResolvedValue([
+            {bookclub_id: BOOKCLUB_ID, user_role: 0},
+        ] as any)
+        vi.mocked(bookclubService.remove).mockRejectedValue(new Error('delete failed'))
+
+        const user = userEvent.setup()
+        render(<BookclubPage/>)
+
+        await user.click(screen.getByRole('tab', {name: 'Settings'}))
+        await screen.findByText('Manage Club')
+        await user.click(await screen.findByRole('button', {name: 'Delete club'}))
+
+        await waitFor(() => {
+            expect(bookclubService.remove).toHaveBeenCalledWith(BOOKCLUB_ID)
+            expect(mockShowError).toHaveBeenCalledWith('Failed to delete club: delete failed')
+        })
     })
 })
