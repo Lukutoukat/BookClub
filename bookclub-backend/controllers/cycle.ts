@@ -23,10 +23,10 @@ cycleRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
         createdAt: 'desc'
       }
     })
-    res.json(result)
+    return res.json(result)
   } catch (error) {
     console.error('GET /api/cycles/:id error:', error)
-    res.status(500).json({ error: 'database error' })
+    return res.status(500).json({ error: 'database error' })
   }
 })
 
@@ -41,10 +41,10 @@ cycleRouter.get('/latest/:id', async (req: Request<{ id: string }>, res: Respons
         createdAt: 'desc'
       }
     })
-    res.json(result)
+    return res.json(result)
   } catch (error) {
     console.error('GET /api/cycles/latest/:id error:', error)
-    res.status(500).json({ error: 'database error' })
+    return res.status(500).json({ error: 'database error' })
   }
 })
 
@@ -63,20 +63,17 @@ cycleRouter.post(
           select: { user_role: true }
         })
         if (!result) {
-          res.status(400).json({ error: 'User is not member of book club!' })
-          return
+          return res.status(400).json({ error: 'User is not member of book club!' })
         }
         if (result.user_role !== 0) {
-          res.status(403).json({ error: 'User is not admin of book club!' })
-          return
+          return res.status(403).json({ error: 'User is not admin of book club!' })
         }
         if (
           newCycle.votingSystem !== undefined &&
           newCycle.votingSystem !== 'three-level' &&
           newCycle.votingSystem !== 'binary'
         ) {
-          res.status(400).json({ error: 'Invalid voting system!' })
-          return
+          return res.status(400).json({ error: 'Invalid voting system!' })
         }
 
         await prisma.cycle.create({
@@ -87,15 +84,14 @@ cycleRouter.post(
             votingSystem: newCycle.votingSystem
           }
         })
-        res.json(newCycle)
+        return res.json(newCycle)
       } catch (error) {
         console.error('POST /api/cycles error:', error)
-        res.status(500).json({ error: 'database error' })
+        return res.status(500).json({ error: 'database error' })
       }
     } else {
-      res.status(401).json({ error: 'user not found' })
+      return res.status(401).json({ error: 'user not found' })
     }
-    return
   }
 )
 
@@ -143,15 +139,14 @@ cycleRouter.put(
           }
         })
 
-        res.json(updated)
+        return res.json(updated)
       } catch (error) {
         console.error('PUT /api/cycles/:id error:', error)
-        res.status(500).json({ error: 'database error' })
+        return res.status(500).json({ error: 'database error' })
       }
     } else {
-      res.status(401).json({ error: 'user not found' })
+      return res.status(401).json({ error: 'user not found' })
     }
-    return res.status(403).json({ error: 'authentication failed!' })
   }
 )
 

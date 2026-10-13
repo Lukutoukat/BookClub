@@ -144,6 +144,10 @@
                 "title": "Hallitse jäseniä",
                 "description": "Voit hallita yksittäisiä jäseniä alla"
             },
+            "manageCycle": {
+                "title": "Hallitse sykliä",
+                "description": "Voit hallita nykyistä sykliä täältä"
+            },
             "manageClub": {
                 "title": "Hallitse kerhoa",
                 "description": "Voit poistaa kirjakerhosi ja kaikki siihen liittyvät tiedot alla"

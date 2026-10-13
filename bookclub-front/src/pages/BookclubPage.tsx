@@ -1,20 +1,22 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import {BookclubComponent} from '@/components/BookclubComponent'
 import BookList, {type BookListHandle} from '@/components/BookList'
-import BookClubGoCycleSetting from '@/components/bookClubGoCycleSetting'
 import cycleService, {type CycleWithStatus} from '@/services/cycle'
+import bookclubService from '@/services/bookclubs'
+import bookclubmembersService from '@/services/bookclubmembers'
 import {SuggestBook} from '@/components/SuggestBook'
 import CycleHistoryList from '@/components/CycleHistoryList'
 import {BookclubMemberList} from '@/components/BookclubMemberList'
 import {Card, CardContent} from '@/components/ui/card'
 import {SectionHeader} from '@/components/SectionHeader'
-import {ButtonDialog} from '@/components/ButtonDialog.tsx'
 import {type Tab, TabbedColumn} from '@/components/TabbedColumn.tsx'
 import {Skeleton} from "@/components/ui/skeleton.tsx";
-import {useTranslation} from 'react-i18next'
 import {getErrorMessage} from "@/lib/errorMessage.ts";
 import {useNotification} from "@/context/NotificationContext.tsx";
+import { useTranslation } from 'react-i18next'
+import { ButtonDialog } from '@/components/ButtonDialog'
+import { Button } from '@/components/ui/button'
 
 /**
  *  HOME TAB
@@ -68,6 +70,7 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 						bookclubId={bookclubId}
 						cycle_id={currentCycle.id}
 					/>
+					<br/>
 					<BookList
 						ref={bookListRef}
 						show="proposedBooks"
@@ -143,39 +146,63 @@ const HistoryTab = ( {bookclubId } : HistoryTabProps) => {
  */
 interface SettingsTabProps {
 	bookclubId: string
+	isAdmin: boolean
 }
 
-const SettingsTab = ( {bookclubId } : SettingsTabProps) => {
-	const {t} = useTranslation('pages')
-
-	return (<>
-			<BookClubGoCycleSetting bookclubId={bookclubId}/>
-			<br/>
-			<Card className="card-base">
-				<SectionHeader
-					title={t('club.settings.manageMembers.title')}
-					description={t('club.settings.manageMembers.description')}
-				/>
-				<CardContent>
-					<BookclubMemberList
-						bookclubId={bookclubId}
-						canManageMembers={true}
-						className="member-list"
+const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
+	const { t } = useTranslation('pages')
+	const navigate = useNavigate()
+	const { showError } = useNotification()
+	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
+		event.preventDefault()
+		try {
+			await bookclubService.remove(bookclubId)
+			await navigate('/home', { replace: true })
+		} catch (error) {
+			const errorMessage = getErrorMessage(error)
+			showError('Failed to delete club: ' + errorMessage)
+		}
+	}
+	
+	return (
+		<>
+			{isAdmin && (
+				<Card className="card-base">
+					<SectionHeader 
+						title={t('club.settings.manageMembers.title')}
+						description={t('club.settings.manageMembers.description')}
 					/>
-				</CardContent>
-				<SectionHeader
-					title={t('club.settings.manageClub.title')}
-					description={t('club.settings.manageClub.description')}
-				/>
-				<CardContent className="card-content">
-					<ButtonDialog
-						buttonText={t('actions.deleteClub', {ns: 'common'})}
-						alertDialogDescription={t('club.settings.deleteWarning')}
-						alertDialogContinueText={t('actions.delete', {ns: 'common'})}
-						alertDialogText={t('club.settings.deleteQuestion')}
+					<CardContent>
+						<BookclubMemberList 
+							bookclubId={bookclubId}
+							canManageMembers={true}
+							className='member-list'
+						/>	
+					</CardContent>
+					<SectionHeader
+						title={t('club.settings.manageCycle.title')}
+						description={t('club.settings.manageCycle.description')}
 					/>
-				</CardContent>
-			</Card>
+					<CardContent className='card-content'>
+						<Button asChild className="flex-1 min-w-0">
+							<Link to={`/newcycle/${bookclubId}`}>{t('actions.manageCycle', { ns: 'common' })}</Link>
+						</Button>
+					</CardContent>
+					<SectionHeader
+						title={t('club.settings.manageClub.title')}
+						description={t('club.settings.manageClub.description')}
+					/>
+					<CardContent className="card-content">
+						<ButtonDialog
+							buttonText={t('actions.deleteClub', { ns: 'common' })}
+							buttonOnClick={handleDeletion}
+							alertDialogDescription={t('club.settings.deleteWarning')}
+							alertDialogContinueText={t('actions.delete', { ns: 'common' })}
+							alertDialogText={t('club.settings.deleteQuestion')}
+						/>
+					</CardContent>
+				</Card>
+			)}
 		</>
 	)
 }
@@ -186,7 +213,29 @@ const SettingsTab = ( {bookclubId } : SettingsTabProps) => {
 const BookclubPage = () => {
 	const {t} = useTranslation('pages')
 	const { bookclubId } = useParams<{ bookclubId: string }>()
+	const [isAdmin, setIsAdmin] = useState(false)
+	const { showError } = useNotification()
 	const navigate = useNavigate()
+
+	useEffect(() => {
+		const checkAdminStatus = async () => {
+			try {
+				const memberships = await bookclubmembersService.get()
+				const isAdminMember = memberships.some(
+					(member) => member.bookclub_id === bookclubId && member.user_role === 0
+				)
+				setIsAdmin(isAdminMember)
+			} catch (error) {
+				const errorMessage = getErrorMessage(error)
+				showError('Failed to check admin status: ' + errorMessage)
+				setIsAdmin(false)
+			}
+		}
+
+		if (bookclubId) {
+			void checkAdminStatus()
+		}
+	}, [bookclubId])
 
 	// Missing ID parameter
 	// -> Redirect to home page
@@ -216,9 +265,9 @@ const BookclubPage = () => {
 			{
 				id: 'settings',
 				label: t('club.tabs.settings'),
-				content: <SettingsTab bookclubId={bookclubId}/>
+				content: <SettingsTab bookclubId={bookclubId} isAdmin={isAdmin}/>
 			}
-		], [bookclubId])
+		], [bookclubId, isAdmin, t])
 
 	return (
 		<>
