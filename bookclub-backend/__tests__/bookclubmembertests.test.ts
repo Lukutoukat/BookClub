@@ -184,6 +184,11 @@ describe('/api/bookclubmembers', () => {
       bookclub_id: '1',
     }
 
+    const mockOwnedClub = {
+      id: '1',
+      owner_id: '1'
+    }
+
     it('member is deleted from bookclub', async () => {
       ;(prisma.bookClubMembers.findFirst as jest.Mock)
         .mockResolvedValueOnce(mockAdmin)
@@ -256,6 +261,21 @@ describe('/api/bookclubmembers', () => {
       expect(response.body).toEqual({
         error: 'cannot delete an admin member'
       })
+    })
+
+    it('returns 403 when the club owner tries to leave', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock)
+        .mockResolvedValue(mockOwnedClub)
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'owners must delete the club instead'
+      })
+      expect(prisma.bookClubMembers.deleteMany).not.toHaveBeenCalled()
     })
   })
 })
