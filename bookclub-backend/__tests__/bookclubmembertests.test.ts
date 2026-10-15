@@ -172,7 +172,121 @@ describe('/api/bookclubmembers', () => {
     })
   })
 
-  describe('DELETE', () => {
+  describe('DELETE /:id', () => {
+    const mockClub = {
+      id: '1',
+      owner_id: '2'
+    }
+    
+    it('returns 200 if successfully left club', async () => {
+      const mockMember = {
+        user_id: 1,
+        user_role: 1,
+        bookclub_id: 1
+      }
+
+      ;(prisma.bookClub.findUnique as jest.Mock)
+        .mockResolvedValue(mockClub)
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValue(mockMember)
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({
+        success: true,
+        message: 'successfully left club'
+      })
+      expect(prisma.bookClubMembers.findFirst).toHaveBeenNthCalledWith(1, {
+        where: { user_id: '1', bookclub_id: '1' }
+      })
+      expect(prisma.bookClubMembers.deleteMany).toHaveBeenCalledWith({
+        where: { bookclub_id: '1', user_id: '1' }
+      })
+    })
+
+    it('returns 401 if user is not authenticated', async () => {
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1')
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({
+        error: 'invalid token'
+      })
+      expect(prisma.bookClubMembers.deleteMany).not.toHaveBeenCalled()
+    })
+
+    it('returns 403 if user is not a member', async () => {
+      ;(prisma.bookClub.findFirst as jest.Mock)
+        .mockResolvedValue(mockClub)
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValue(null)
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'permission denied'
+      })
+      expect(prisma.bookClubMembers.deleteMany).not.toHaveBeenCalled()
+    })
+
+    it('returns 403 when the club owner tries to leave', async () => {
+      const mockAdmin = {
+        user_id: 1,
+        user_role: 0,
+        bookclub_id: 1
+      }
+      const mockClub = {
+        id: '1',
+        owner_id: '1'
+      }
+
+      ;(prisma.bookClub.findUnique as jest.Mock)
+        .mockResolvedValue(mockClub)
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValue(mockAdmin)
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/2')
+        .set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'owners must delete the club instead'
+      })
+      expect(prisma.bookClubMembers.deleteMany).not.toHaveBeenCalled()
+    })
+
+    it('returns 500 if failed to leave club', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock)
+        .mockResolvedValue(mockClub)
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValue({
+          user_id: 1,
+          user_role: 1,
+          bookclub_id: 1
+        })
+      ;(prisma.bookClubMembers.deleteMany as jest.Mock)
+        .mockRejectedValue(new Error('database error'))
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({
+        error: 'failed to leave club'
+      })
+      expect(prisma.bookClubMembers.deleteMany).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('DELETE /:id/:user_id', () => {
     const mockAdmin = {
       user_id: '1',
       user_role: 0,
