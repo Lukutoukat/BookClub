@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface ButtonDialogProps {
 	children?: ReactNode
@@ -51,42 +52,44 @@ interface ButtonDialogProps {
  */
 export function ButtonDialog({
 	children,
-	buttonText = 'Click me',
+	buttonText,
 	buttonTitle,
-	alertDialogText = 'Are you absolutely sure?',
-	alertDialogDescription = 'This action needs to be accepted by clicking continue.',
-	alertDialogCancelText = 'Cancel',
-	alertDialogContinueText = 'Continue',
+	alertDialogText,
+	alertDialogDescription,
+	alertDialogCancelText,
+	alertDialogContinueText,
 	buttonOnClick,
 	buttonVariant = 'default',
 	disabled,
 	buttonClassName
 }: ButtonDialogProps) {
+	const { t } = useTranslation()
+
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
 				<Button className={buttonClassName} variant={buttonVariant} title={buttonTitle}>
-					{buttonText}
+					{buttonText ?? t('defaults.buttonText')}
 					{children ?? null}
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>{alertDialogText}</AlertDialogTitle>
-					<AlertDialogDescription>{alertDialogDescription}</AlertDialogDescription>
+					<AlertDialogTitle>{alertDialogText ?? t('defaults.buttonAlertTitle')}</AlertDialogTitle>
+					<AlertDialogDescription>{alertDialogDescription ?? t('defaults.buttonAlertDescription')}</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					{alertDialogCancelText !== '' ? (
-						<AlertDialogCancel title="cancel">{alertDialogCancelText}</AlertDialogCancel>
+						<AlertDialogCancel title={t('actions.cancel')}>{alertDialogCancelText ?? t('actions.cancel')}</AlertDialogCancel>
 					) : (
 						<></>
 					)}
 					<AlertDialogAction
-						title="continue" // eslint-disable-next-line
+						title={t('actions.continue')} // eslint-disable-next-line
 						onClick={buttonOnClick}
 						disabled={disabled}
 					>
-						{alertDialogContinueText}
+						{alertDialogContinueText ?? t('actions.continue')}
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

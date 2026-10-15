@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { CheckCircle2, OctagonAlertIcon } from 'lucide-react'
 import type { Notification } from '@/types.ts'
+import {useTranslation} from "react-i18next";
 
 type NotificationToastProps = {
 	notification?: Notification
@@ -10,7 +11,7 @@ type NotificationToastProps = {
 
 const variantSettings = {
 	success: {
-		text: 'Confirmation',
+		text: 'labels.confirmation',
 		borderColor: 'border-emerald-100',
 		bgColor: 'bg-emerald-600/70',
 		darkBgColor: 'bg-emerald-800/70',
@@ -19,7 +20,7 @@ const variantSettings = {
 		icon: CheckCircle2
 	},
 	error: {
-		text: 'Error',
+		text: 'labels.error',
 		borderColor: 'border-red-100',
 		bgColor: 'bg-red-600/70',
 		darkBgColor: 'bg-red-800/70',
@@ -30,6 +31,7 @@ const variantSettings = {
 }
 
 const NotificationToast = ({ notification }: NotificationToastProps) => {
+	const {t} = useTranslation()
 	const [localNotification, setLocalNotification] = useState<Notification | undefined>(notification)
 	const [isLeaving, setIsLeaving] = useState(false)
 	const [mounted, setMounted] = useState(false)
@@ -79,7 +81,7 @@ const NotificationToast = ({ notification }: NotificationToastProps) => {
 					<Icon className={`h-5 w-5 shrink-0`} />
 					<div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
 						<AlertTitle className="font-semibold m-0 pb-0 leading-none">
-							{settings.text}
+							{t(settings.text)}
 						</AlertTitle>
 						<AlertDescription className={`leading-normal ${settings.textColor} dark:${settings.darkTextColor}`}>
 							{localNotification.message}

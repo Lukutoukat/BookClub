@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type SubmitEventHandler } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import bookclubService, { type CreateBookClub } from '@/services/bookclubs'
 import { SectionHeader } from './SectionHeader'
 // import bookclubmembersService from '@/services/bookclubmembers'
@@ -15,9 +16,11 @@ const emptyBookclub: CreateBookClub = {
 }
 
 const BookclubForm = () => {
+	const { t } = useTranslation('pages')
 	const [newBookclub, setNewBookclub] = useState<CreateBookClub>(emptyBookclub)
 	const [errors, setErrors] = useState<string[]>([])
 	const navigate = useNavigate()
+
 	const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
 		const { name, value } = event.target
 		setNewBookclub((currentBookclub) => ({
@@ -44,7 +47,7 @@ const BookclubForm = () => {
 	}
 	return (
 		<Card className="card-base">
-			<SectionHeader title="Create a new book club" description="" />
+			<SectionHeader title={t('createClub.form.title')} description="" />
 
 			<CardContent className="card-content">
 				{errors.length > 0 && (
@@ -58,7 +61,7 @@ const BookclubForm = () => {
 					<div className="form-grid">
 						<div className="sm:col-span-2">
 							<Field>
-								<FieldLabel htmlFor="name">Name your book club</FieldLabel>
+								<FieldLabel htmlFor="name">{t('createClub.form.fieldLabel')}</FieldLabel>
 								<FieldContent>
 									<Input
 										id="name"
@@ -66,7 +69,7 @@ const BookclubForm = () => {
 										value={newBookclub.name}
 										onChange={handleChange}
 										autoComplete="name"
-										placeholder="Read It And Weep"
+										placeholder={t('placeholder.misc.clubName', { ns: 'common' })}
 										required
 									/>
 								</FieldContent>
@@ -76,10 +79,10 @@ const BookclubForm = () => {
 
 					<div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-4">
 						<p className="text-xs text-muted-foreground">
-							Double-check for spelling mistakes before creating a new book club.
+							{t('createClub.form.hint')}
 						</p>
 						<Button type="submit" size="lg" className="button-full-sm-auto">
-							Create
+							{t('actions.create', { ns: 'common' })}
 						</Button>
 					</div>
 				</form>

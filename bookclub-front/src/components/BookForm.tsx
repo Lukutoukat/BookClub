@@ -2,6 +2,7 @@ import { useState, useEffect, type ChangeEvent, type SubmitEventHandler } from '
 
 import bookService, { type CreateBook, type Book, type BookFields } from '@/services/books'
 import { isValidISBN, cleanISBN } from '@/lib/isbnValidator'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -68,6 +69,7 @@ const BookForm = ({
 	cycle_id,
 	className
 }: BookFormProps) => {
+	const { t } = useTranslation('messages')
 	const [newBook, setNewBook] = useState<BookFormState>(emptyBook)
 	const [errors, setErrors] = useState<string[]>([])
 	const { showSuccess } = useNotification()
@@ -138,61 +140,61 @@ const BookForm = ({
 
 		// Validate name (required)
 		if (!newBook.name || newBook.name.trim() === '') {
-			formErrors.push('Book title is required.')
+			formErrors.push(t('error.validation.bookTitleRequired'))
 		}
 
 		// Validate author (required)
 		if (!newBook.author || newBook.author.trim() === '') {
-			formErrors.push('Author is required.')
+			formErrors.push(t('error.validation.bookAuthorRequired'))
 		}
 
 		// Validate year (required)
 		const yearNum = parseInt(newBook.year, 10)
 
 		if (yearNum > new Date().getFullYear()) {
-			formErrors.push('Year cannot be in the future.')
+			formErrors.push(t('error.validation.bookYearIsFuture'))
 		} else if (yearNum == 0) {
-			formErrors.push('The year zero does not exist.')
+			formErrors.push(t('error.validation.bookYearIsZero'))
 		} else if (!newBook.year || isNaN(yearNum)) {
-			formErrors.push('Year must be a valid number.')
+			formErrors.push(t('error.validation.bookYearNotValid'))
 		}
 
 		// Validate pages only if provided
 		if (newBook.pages) {
 			const pagesNum = parseInt(newBook.pages, 10)
 			if (isNaN(pagesNum) || pagesNum < 0) {
-				formErrors.push('Pages must be a non-negative number.')
+				formErrors.push(t('error.validation.bookPages'))
 			}
 		}
 
 		// Validate ISBN only if provided
 		if (newBook.isbn && !isValidISBN(newBook.isbn)) {
-			formErrors.push('Invalid ISBN. Must be 10 or 13 digits (dashes are allowed).')
+			formErrors.push(t('error.validation.bookIsbn'))
 		}
 
 		// Title length
 		if (newBook.name.length > MAX_TITLE_LENGTH) {
-			formErrors.push(`Title can contain at most ${MAX_TITLE_LENGTH} characters.`)
+			formErrors.push(t('error.validation.bookTitleLength', { maxLength: MAX_TITLE_LENGTH }))
 		}
 
 		// Author length
 		if (newBook.author.length > MAX_AUTHOR_LENGTH) {
-			formErrors.push(`Author can contain at most ${MAX_AUTHOR_LENGTH} characters.`)
+			formErrors.push(t('error.validation.bookAuthorLength', { maxLength: MAX_AUTHOR_LENGTH }))
 		}
 
 		//Language length
 		if (newBook.language.length > MAX_LANGUAGE_LENGTH) {
-			formErrors.push(`Language can contain at most ${MAX_LANGUAGE_LENGTH} characters.`)
+			formErrors.push(t('error.validation.bookLanguageLength', { maxLength: MAX_LANGUAGE_LENGTH }))
 		}
 
 		//Genre length
 		if (newBook.genre.length > MAX_GENRE_LENGTH) {
-			formErrors.push(`Genre can contain at most ${MAX_GENRE_LENGTH} characters.`)
+			formErrors.push(t('error.validation.bookGenreLength', { maxLength: MAX_GENRE_LENGTH }))
 		}
 
 		// Comment length
 		if (newBook.comment.length > MAX_COMMENT_LENGTH) {
-			formErrors.push(`Comment can contain at most ${MAX_COMMENT_LENGTH} characters.`)
+			formErrors.push(t('error.validation.bookCommentLength', { maxLength: MAX_COMMENT_LENGTH }))
 		}
 
 		if (formErrors.length > 0) {
@@ -226,7 +228,7 @@ const BookForm = ({
 					}
 					// Update existing book
 					await bookService.update(bookToEdit.id, bookToUpdateSubmit)
-					showSuccess('Book updated successfully!')
+					showSuccess(t('success.bookCreated'))
 				} else {
 					const bookToSubmit: CreateBook = {
 						isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
@@ -240,7 +242,7 @@ const BookForm = ({
 					}
 					// Create new book
 					await bookService.createForPropose(cycle_id, bookToSubmit)
-					showSuccess('Book created successfully!')
+					showSuccess(t('success.bookCreated'))
 				}
 				setErrors([])
 				if (onBookAdded) {
@@ -262,7 +264,7 @@ const BookForm = ({
 				}
 				// Create new book
 				await bookService.create(bookToSubmit)
-				showSuccess('Book created successfully!')
+				showSuccess(t('success.bookCreated'))
 				setNewBook(emptyBook)
 				setErrors([])
 				if (onBookAdded) {
@@ -271,7 +273,7 @@ const BookForm = ({
 			}
 		} catch (error) {
 			setErrors([
-				'Failed to save book. Please try again.\n' +
+				`${t('error.api.saveBook')}\n` +
 					(error instanceof Error ? error.message : 'Unknown error')
 			])
 		}
@@ -292,7 +294,7 @@ const BookForm = ({
 
 	return (
 		<Card className={`card-base ${className}`}>
-			<SectionHeader title={title ?? 'Add a book'} description={description ?? ''}>
+			<SectionHeader title={title ?? t('books.form.formTitle', { ns: 'pages' })} description={description ?? ''}>
 				{secondaryButtonAction && (
 					<Button
 						variant="secondary"
@@ -300,7 +302,7 @@ const BookForm = ({
 						onClick={secondaryButtonAction}
 						className="gap-4 ml-auto shrink-0"
 					>
-						{secondaryButtonText ?? 'Cancel'}
+						{secondaryButtonText ?? t('actions.cancel', { ns: 'common' })}
 					</Button>
 				)}
 			</SectionHeader>
@@ -310,7 +312,7 @@ const BookForm = ({
 					<div className="form-grid">
 						<Field>
 							<FieldLabel htmlFor="name">
-								Title
+								{t('books.fields.title', { ns: 'pages' })}
 								<span className="text-destructive ml-2">*</span>
 							</FieldLabel>
 							<FieldContent>
@@ -321,14 +323,14 @@ const BookForm = ({
 									maxLength={MAX_TITLE_LENGTH}
 									value={newBook.name}
 									onChange={handleChange}
-									placeholder="A Tale of Two Cities"
+									placeholder={t('placeholder.bookForm.title', { ns: 'common' })}
 									required
 								/>
 							</FieldContent>
 						</Field>
 						<Field>
 							<FieldLabel htmlFor="author">
-								Author
+								{t('books.fields.author', { ns: 'pages' })}
 								<span className="text-destructive ml-2">*</span>
 							</FieldLabel>
 							<FieldContent>
@@ -339,14 +341,14 @@ const BookForm = ({
 									maxLength={MAX_AUTHOR_LENGTH}
 									value={newBook.author}
 									onChange={handleChange}
-									placeholder="Charles Dickens"
+									placeholder={t('placeholder.bookForm.author', { ns: 'common' })}
 									required
 								/>
 							</FieldContent>
 						</Field>
 						<Field>
 							<FieldLabel htmlFor="year">
-								Year
+								{t('books.fields.year', { ns: 'pages' })}
 								<span className="text-destructive ml-2">*</span>
 							</FieldLabel>
 							<FieldContent>
@@ -358,13 +360,13 @@ const BookForm = ({
 									maxLength={5}
 									value={newBook.year}
 									onChange={handleChange}
-									placeholder="1859"
+									placeholder={t('placeholder.bookForm.year', { ns: 'common' })}
 									required
 								/>
 							</FieldContent>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="pages">Pages</FieldLabel>
+							<FieldLabel htmlFor="pages">{t('books.fields.pages', { ns: 'pages' })}</FieldLabel>
 							<FieldContent>
 								<Input
 									id="pages"
@@ -374,12 +376,12 @@ const BookForm = ({
 									maxLength={5}
 									value={newBook.pages}
 									onChange={handleChange}
-									placeholder="544"
-								/>
+									placeholder={t('placeholder.bookForm.pages', { ns: 'common' })}
+							/>
 							</FieldContent>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="language">Language</FieldLabel>
+							<FieldLabel htmlFor="language">{t('books.fields.language', { ns: 'pages' })}</FieldLabel>
 							<FieldContent>
 								<Input
 									id="language"
@@ -388,12 +390,12 @@ const BookForm = ({
 									maxLength={MAX_LANGUAGE_LENGTH}
 									value={newBook.language}
 									onChange={handleChange}
-									placeholder="English"
-								/>
+									placeholder={t('placeholder.bookForm.language', { ns: 'common' })}
+							/>
 							</FieldContent>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="genre">Genre</FieldLabel>
+							<FieldLabel htmlFor="genre">{t('books.fields.genre', { ns: 'pages' })}</FieldLabel>
 							<FieldContent>
 								<Input
 									id="genre"
@@ -402,12 +404,12 @@ const BookForm = ({
 									maxLength={MAX_GENRE_LENGTH}
 									value={newBook.genre}
 									onChange={handleChange}
-									placeholder="Historical fiction"
-								/>
+									placeholder={t('placeholder.bookForm.genre', { ns: 'common' })}
+							/>
 							</FieldContent>
 						</Field>
 						<Field className="sm:col-span-2">
-							<FieldLabel htmlFor="isbn">ISBN</FieldLabel>
+							<FieldLabel htmlFor="isbn">{t('books.fields.isbn', { ns: 'pages' })}</FieldLabel>
 							<FieldContent>
 								<Input
 									id="isbn"
@@ -415,12 +417,12 @@ const BookForm = ({
 									type="text"
 									value={newBook.isbn}
 									onChange={handleChange}
-									placeholder="9780141439600"
-								/>
+									placeholder={t('placeholder.bookForm.isbn', { ns: 'common' })}
+							/>
 							</FieldContent>
 						</Field>
 						<Field className="sm:col-span-2">
-							<FieldLabel htmlFor="comment">Comment</FieldLabel>
+							<FieldLabel htmlFor="comment">{t('books.fields.comment', { ns: 'pages' })}</FieldLabel>
 							<FieldContent>
 								<Textarea
 									id="comment"
@@ -428,9 +430,9 @@ const BookForm = ({
 									maxLength={MAX_COMMENT_LENGTH}
 									value={newBook.comment}
 									onChange={handleChange}
-									placeholder="Add a short note about why this book should be read."
-									className="min-h-14 text-sm sm:min-h-16"
-								/>
+									placeholder={t('placeholder.bookForm.comment', { ns: 'common' })}
+								className="min-h-14 text-sm sm:min-h-16"
+							/>
 							</FieldContent>
 						</Field>
 					</div>
@@ -443,7 +445,7 @@ const BookForm = ({
 					)}
 					<div className="card-actions">
 						<Button type="submit" size="lg" className="button-full-sm-auto">
-							{buttonText ?? 'Add'}
+								{buttonText ?? t('actions.add', { ns: 'common' })}
 						</Button>
 					</div>
 				</form>

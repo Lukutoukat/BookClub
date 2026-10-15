@@ -2,15 +2,18 @@ import RegistrationForm from '@/components/RegistrationForm'
 
 import { PageHeader } from '@/components/PageHeader'
 import { Column } from '@/components/Column'
+import { useTranslation } from 'react-i18next'
 
 const RegistrationPage = () => {
+	const { t } = useTranslation()
+
 	return (
 		<>
 			<PageHeader
-				badgeText="Registration"
-				title="Join the club"
-				description="Create your own book club and start reading with your friends."
-				buttonText="Go to login"
+				badgeText={t('labels.registration')}
+				title={t('user.title', { ns: 'pages' })}
+				description={t('user.description', { ns: 'pages' })}
+				buttonText={t('actions.loginTab')}
 				buttonLink="/login"
 			/>
 

@@ -1,0 +1,53 @@
+{
+    "neutral": {
+        "loading": "Ladataan...",
+        "loadingBooks": "Ladataan kirjoja...",
+        "loadingClubs": "Ladataan kirjakerhoja...",
+        "loadingVotes": "Tuloksen laskenta kesken tai ääniä ei ole annettu..."
+    },
+    "success": {
+        "bookCreated": "Kirja luotu onnistuneesti!",
+        "bookProposed": "Kirja ehdotettu onnistuneesti!",
+        "register": "Rekisteröityminen tallennettu.",
+        "memberRemoved": "Kerhon jäsen poistettu onnistuneesti."
+    },
+    "error": {
+        "api": {
+            "registrationFailed": "Rekisteröinti epäonnistui.",
+            "saveBook": "Kirjan tallentaminen epäonnistui. Yritä uudelleen.",
+            "loadBooks": "Kirjojen lataaminen epäonnistui.",
+            "loadWinner": "Virhe voittajan lataamisessa.",
+            "proposeBook": "Kirjan ehdottaminen epäonnistui.",
+            "fetchCycles": "Syklin hakeminen epäonnistui.",
+            "fetchWinner": "Voittajan hakeminen epäonnistui.",
+            "deleteClub": "Kerhon poistaminen epäonnistui.",
+            "deleteMember": "Jäsenen poistaminen epäonnistui.",
+            "deleteBook": "Kirjan poistaminen epäonnistui.",
+            "endPhase": "Vaiheen päättäminen epäonnistui.",
+            "createCycle": "Syklin luominen epäonnistui.",
+            "helmetLoadLanguages": "Kielten lataaminen epäonnistui.",
+            "helmetNoBooks": "Kirjoja ei löytynyt.",
+            "helmetSearch": "Haku epäonnistui."
+        },
+        "validation": {
+            "invalidInviteCode": "Anna 5:n merkin pituinen koodi.",
+            "passwordMismatch": "Salasanat eivät täsmää!",
+            "helmetEmptyQuery": "Anna hakusana.",
+            "bookTitleRequired": "Kirjan nimi on pakollinen.",
+            "bookAuthorRequired": "Kirjailija on pakollinen.",
+            "bookYearIsFuture": "Vuosi ei voi olla tulevaisuudessa.",
+            "bookYearIsZero": "Vuosi ei voi olla nolla.",
+            "bookYearNotValid": "Vuoden on oltava kelvollinen luku.",
+            "bookPages": "Sivumäärän on oltava ei-negatiivinen luku.",
+            "bookIsbn": "Virheellinen ISBN. Sen on oltava 10 tai 13 numeroa (tavuviivat sallitaan).",
+            "bookTitleLength": "Nimi voi sisältää enintään {{maxLength}} merkkiä.",
+            "bookAuthorLength": "Kirjailija voi sisältää enintään {{maxLength}} merkkiä.",
+            "bookLanguageLength": "Kieli voi sisältää enintään {{maxLength}} merkkiä.",
+            "bookGenreLength": "Genre voi sisältää enintään {{maxLength}} merkkiä.",
+            "bookCommentLength": "Kommentti voi sisältää enintään {{maxLength}} merkkiä."
+        },
+        "generic": {
+            "unexpected": "Tapahtui odottamaton virhe."
+        }
+    }
+}

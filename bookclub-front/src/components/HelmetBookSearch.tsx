@@ -1,4 +1,5 @@
 import  { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import finnaService, { getPageCount, getPrimaryAuthor, type FinnaBook, type FinnaLanguage} from '@/services/finna'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -11,6 +12,7 @@ type HelmetBookSearchProps = {
 }
 
 export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
+    const { t } = useTranslation()
     const [query, setQuery] = useState('')
     const [bookGroups, setBookGroups] = useState<FinnaBook[][]>([])
     const [selectedBook, setSelectedBook] = useState<FinnaBook | null>(null)
@@ -31,7 +33,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 setLanguages(result)
             } catch {
                 setLanguages([])
-                setLanguageError('Failed to load languages.')
+                setLanguageError(t('error.api.helmetLoadLanguages', { ns: 'messages' }))
             }
         }
         void fetchLanguages()
@@ -40,7 +42,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
 
     const handleSearch = async (pageToSearch: number) => {
         if (query.trim() === '') {
-            setSearchError('Please enter a search query.')
+            setSearchError(t('error.validation.helmetEmptyQuery', { ns: 'messages' }))
             setBookGroups([])
             setResultCount(0)
             setPage(1)
@@ -62,13 +64,13 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
             setPage(pageToSearch)
 
             if (result.books.length === 0) {
-                setSearchError('No books found.')
+                setSearchError(t('error.api.helmetNoBooks', { ns: 'messages' }))
                 return
             }
             setBookGroups(result.books)
 
         } catch {
-            setSearchError('Search failed.')
+            setSearchError(t('error.api.helmetSearch', { ns: 'messages' }))
         }
     }
 
@@ -78,7 +80,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 type="text"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search from Helmet"
+                placeholder={t('placeholder.misc.search')}
             />
 
             <Button type="button" onClick={() => { 
@@ -87,7 +89,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                 void handleSearch(1) 
                 }}
             >
-                Search
+                {t('actions.search')}
             </Button>
             
             <div className="flex items-center justify-center gap-3">
@@ -136,7 +138,7 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
             <Popover>
                 <PopoverTrigger asChild>
                     <Button type="button" variant="outline">
-                        Languages
+                        {t('books.form.languageFilter', { ns: 'pages' })}
                     </Button>
                 </PopoverTrigger>
 
@@ -201,13 +203,13 @@ export const HelmetBookSearch = ({ onBookSelect }: HelmetBookSearchProps) => {
                                             {book.languages?.join(', ')}
                                             {pages !== '' && ` - ${pages} pages`}
                                         </span>
-																				<span className="text-blue-500">
-																					<a
-																						target="_blank"
-																						href={'https://helmet.finna.fi/Record/' + book.id}
-																						rel="noreferrer"
-																					> Helmet</a>
-																				</span>
+                                        <span className="text-blue-500">
+                                            <a
+                                                target="_blank"
+                                                href={'https://helmet.finna.fi/Record/' + book.id}
+                                                rel="noreferrer"
+                                            > Helmet</a>
+                                        </span>
                                     </label>
                                 )
                             })}

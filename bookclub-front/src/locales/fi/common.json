@@ -1,0 +1,62 @@
+{
+    "actions": {
+        "back": "Takaisin",
+        "cancel": "Peruuta",
+        "close": "Sulje",
+        "continue": "Jatka",
+        "create": "Luo",
+        "delete": "Poista",
+        "edit": "Muokkaa",
+        "join": "Liity",
+        "more": "Enemmän",
+        "less": "Vähemmän",
+        "login": "Kirjaudu sisään",
+        "add": "Lisää",
+        "remove": "Poista",
+        "search": "Hae",
+        "suggest": "Ehdota",
+        "switch": "Vaihda",
+        "update": "Päivitä",
+        "manageCycle": "Hallitse sykliä",
+        "manageClub": "Hallitse kerhoa",
+        "deleteClub": "Poista kerho",
+        "loginTab": "Siirry kirjautumaan",
+        "registerTab": "Siirry rekisteröintiin",
+        "createBook": "Luo uusi kirja"
+    },
+    "labels": {
+        "home": "Etusivu",
+        "books": "Kirjat",
+        "create": "Luo",
+        "settings": "Asetukset",
+        "club": "Kerho",
+        "cycle": "Uusi sykli",
+        "login": "Kirjautuminen",
+        "registration": "Rekisteröityminen",
+        "loggedInAs": "Kirjautuneena: {{name}}",
+        "error": "Virhe: ",
+        "confirmation": "Vahvistus: ",
+        "completed": "Valmis",
+        "voting": "Äänestys",
+        "suggest": "Ehdota"
+    },
+    "placeholder": {
+        "bookForm": {
+            "language": "Englanti",
+            "genre": "Historiallinen fiktio",
+            "comment": "Lisää lyhyt muistutus siitä, miksi tämä kirja kannattaa lukea."
+        },
+        "account": {
+            "password": "Turvallinen salasana",
+            "confirmPassword": "Vahvista salasanasi"
+        },
+        "misc": {
+            "search": "Hae Helmetistä..."
+        }
+    },
+    "defaults": {
+        "buttonText": "Paina tästä",
+        "buttonAlertTitle": "Oletko aivan varma?",
+        "buttonAlertDescription": "Tämä toiminto on hyväksyttävä painamalla 'Jatka'."
+    }
+}

@@ -146,7 +146,7 @@ describe('BooksPage', () => {
 			const us = user.setup()
 			const deleteButtons = screen.getAllByTitle('Delete book')
 			await us.click(deleteButtons[0])
-			const continueButtons = screen.getAllByTitle('continue')
+			const continueButtons = screen.getAllByTitle('Continue')
 			await us.click(continueButtons[0])
 
 			await waitFor(() => {
@@ -170,7 +170,7 @@ describe('BooksPage', () => {
 			const us = user.setup()
 			const deleteButtons = screen.getAllByTitle('Delete book')
 			await us.click(deleteButtons[0])
-			const continueButtons = screen.getAllByTitle('continue')
+			const continueButtons = screen.getAllByTitle('Continue')
 			await us.click(continueButtons[0])
 
 			expect(bookService.removeFromUser).toHaveBeenCalledWith(1)

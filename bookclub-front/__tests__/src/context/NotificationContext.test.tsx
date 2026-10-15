@@ -1,6 +1,9 @@
+vi.unmock('@/context/NotificationContext')
+
 import { render, screen, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NotificationProvider, useNotification } from '@/context/NotificationContext'
+
 
 // Helper to trigger notifications via the hook
 const TestComponent = () => {
@@ -29,7 +32,7 @@ describe('NotificationProvider', () => {
 
 		act(() => screen.getByText('Show Success').click())
 		expect(screen.getByText('Success!')).toBeInTheDocument()
-		expect(screen.getByText('Confirmation')).toBeInTheDocument()
+		expect(screen.getByText('Confirmation:')).toBeInTheDocument()
 
 		act(() => vi.advanceTimersByTime(5000))
 		// Leaving state
@@ -40,7 +43,7 @@ describe('NotificationProvider', () => {
 
 		act(() => screen.getByText('Show Error').click())
 		expect(screen.getByText('Error!')).toBeInTheDocument()
-		expect(screen.getByText('Error')).toBeInTheDocument()
+		expect(screen.getByText('Error:')).toBeInTheDocument()
 	})
 
 	it('throws when useNotification is used outside NotificationProvider', () => {

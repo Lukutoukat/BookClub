@@ -1,0 +1,69 @@
+{
+    "actions": {
+        "back": "Back",
+        "cancel": "Cancel",
+        "close": "Close",
+        "continue": "Continue",
+        "create": "Create",
+        "delete": "Delete",
+        "edit": "Edit",
+        "join": "Join",
+        "less": "Less",
+        "more": "More",
+        "login": "Log in",
+        "add": "Add",
+        "remove": "Remove",
+        "search": "Search",
+        "suggest": "Suggest",
+        "switch": "Switch",
+        "update": "Update",
+        "manageCycle": "Manage cycle",
+        "manageClub": "Manage club",
+        "deleteClub": "Delete club",
+        "loginTab": "Go to login",
+        "registerTab": "Go to registration",
+        "createBook": "Create a new book"
+    },
+    "labels": {
+        "home": "Home",
+        "books": "Books",
+        "create": "Create",
+        "settings": "Settings",
+        "club": "Club",
+        "login": "Login",
+        "cycle": "New Cycle",
+        "registration": "Registration",
+        "loggedInAs": "Logged in as: {{name}}",
+        "error": "Error: ",
+        "confirmation": "Confirmation: ",
+        "completed": "Completed",
+        "voting": "Voting",
+        "suggest": "Suggest",
+        "points": "pts"
+    },
+    "placeholder": {
+        "bookForm": {
+            "title": "A Tale of Two Cities",
+            "author": "Charles Dickens",
+            "year": "1859",
+            "pages": "544",
+            "language": "English",
+            "genre": "Historical fiction",
+            "isbn": "9780141439600",
+            "comment": "Add a short note about why this book should be read."
+        },
+        "account": {
+            "password": "Secure password",
+            "confirmPassword": "Confirm your password"
+        },
+        "misc": {
+            "clubName": "Read It And Weep",
+            "search": "Search from Helmet..."
+        }
+    },
+    "defaults": {
+        "buttonText": "Click me",
+        "buttonAlertTitle": "Are you absolutely sure?",
+        "buttonAlertDescription": "This action needs to be accepted by clicking continue."
+    }
+}

@@ -135,7 +135,7 @@ describe('BookSelector', () => {
 
 		await waitFor(() => {
 			expect(screen.getByText('Are you sure?')).toBeInTheDocument()
-			expect(screen.getByText(/Do you want to suggest The Great Gatsby?/)).toBeInTheDocument()
+			expect(screen.getByText(/Do you want to suggest 'The Great Gatsby'?/)).toBeInTheDocument()
 		})
 	})
 
@@ -157,7 +157,7 @@ describe('BookSelector', () => {
 			expect(screen.getByText('Are you sure?')).toBeInTheDocument()
 		})
 
-		const continueButton = screen.getByRole('button', { name: /Continue/i })
+		const continueButton = screen.getByRole('button', { name: /continue/i })
 		await user.click(continueButton)
 
 		await waitFor(() => {
@@ -188,7 +188,7 @@ describe('BookSelector', () => {
 			expect(screen.getByText('Are you sure?')).toBeInTheDocument()
 		})
 
-		const continueButton = screen.getByRole('button', { name: /Continue/i })
+		const continueButton = screen.getByRole('button', { name: /continue/i })
 		await user.click(continueButton)
 
 		await waitFor(() => {
