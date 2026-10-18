@@ -22,7 +22,8 @@
         "deleteClub": "Delete club",
         "loginTab": "Go to login",
         "registerTab": "Go to registration",
-        "createBook": "Create a new book"
+        "createBook": "Create a new book",
+        "leaveClub": "Leave"
     },
     "labels": {
         "home": "Home",

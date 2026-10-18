@@ -158,10 +158,9 @@ const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 		try {
 			await bookclubmembersService.leaveClub(bookclubId)
 			await navigate('/home')
-			showSuccess('Succesfully left club')
-		} catch (error) {
-			const errorMessage = getErrorMessage(error)
-			showError('Failed to leave club: ' + errorMessage)
+			showSuccess(t('success.leftClub', { ns: 'messages' }))
+		} catch {
+			showError(t('error.api.leftClub', { ns: 'messages' }))
 		}
 	}	
 	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
@@ -169,9 +168,8 @@ const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 		try {
 			await bookclubService.remove(bookclubId)
 			await navigate('/home', { replace: true })
-		} catch (error) {
-			const errorMessage = getErrorMessage(error)
-			showError('Failed to delete club: ' + errorMessage)
+		} catch {
+			showError(t('error.api.deleteClub', { ns: 'common' }))
 		}
 	}
 	
@@ -220,16 +218,16 @@ const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 			{!isAdmin && (
 				<Card>
 					<SectionHeader 
-						title='Leave club'
-						description='Leave the club'
+						title={t('club.settings.leaveClub.title')}
+						description={t('club.settings.leaveClub.description')}
 					/>
 					<CardContent>
 						<ButtonDialog
-							buttonText='Leave club'
+							buttonText={t('actions.leaveClub', { ns: 'common' })}
 							buttonOnClick={handleClubLeave}
-							alertDialogDescription='This action cannot be undone.'
-							alertDialogContinueText='Leave'
-							alertDialogText='Are you sure you want to leave the club?'
+							alertDialogDescription={t('club.settings.leaveClub.warning')}
+							alertDialogContinueText={t('actions.leaveClub', { ns: 'common' })}
+							alertDialogText={t('club.settings.leaveClub.question')}
 						/>
 					</CardContent>
 				</Card>

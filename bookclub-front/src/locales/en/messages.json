@@ -9,7 +9,9 @@
         "bookCreated": "Book created successfully!",
         "bookProposed": "Book proposed successfully!",
         "register": "Registration saved.",
-        "memberRemoved": "Club member removed successfully."
+        "memberRemoved": "Club member removed successfully.",
+        "leftClub": "Succesfully left club",
+        "": ""
     },
     "error": {
         "api": {
@@ -27,7 +29,8 @@
             "createCycle": "Failed to create cycle.",
             "helmetLoadLanguages": "Failed to load languages.",
             "helmetNoBooks": "No books found.",
-            "helmetSearch": "Search failed."
+            "helmetSearch": "Search failed.",
+            "leftClub": "Failed to leave club."
         },
         "validation": {
             "invalidInviteCode": "Enter a 5-character code.",
