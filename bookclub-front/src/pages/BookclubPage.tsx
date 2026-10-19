@@ -169,7 +169,7 @@ const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 			await bookclubService.remove(bookclubId)
 			await navigate('/home', { replace: true })
 		} catch {
-			showError(t('error.api.deleteClub', { ns: 'common' }))
+			showError(t('error.api.deleteClub', { ns: 'messages' }))
 		}
 	}
 	

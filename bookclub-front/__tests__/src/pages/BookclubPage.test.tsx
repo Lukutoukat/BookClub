@@ -284,7 +284,7 @@ describe('BookclubPage', () => {
 
         await waitFor(() => {
             expect(bookclubService.remove).toHaveBeenCalledWith(BOOKCLUB_ID)
-            expect(mockShowError).toHaveBeenCalledWith('Failed to delete club: delete failed')
+            expect(mockShowError).toHaveBeenCalledWith('Failed to delete club.')
         })
     })
 
@@ -298,7 +298,7 @@ describe('BookclubPage', () => {
  
         await user.click(screen.getByRole('tab', {name: 'Settings'}))
  
-        expect(await screen.findByRole('button', {name: 'Leave club'})).toBeInTheDocument()
+        expect(await screen.findByRole('button', {name: 'Leave'})).toBeInTheDocument()
         expect(screen.queryByRole('button', {name: 'Delete club'})).not.toBeInTheDocument()
     })
  
@@ -313,7 +313,7 @@ describe('BookclubPage', () => {
         await user.click(screen.getByRole('tab', {name: 'Settings'}))
         await screen.findByText('Manage Members')
 
-        expect(screen.queryByRole('button', {name: 'Leave club'})).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', {name: 'Leave'})).not.toBeInTheDocument()
     })
  
     it('leaves the club and navigates home after confirming', async () => {
@@ -326,7 +326,7 @@ describe('BookclubPage', () => {
         render(<BookclubPage/>)
  
         await user.click(screen.getByRole('tab', {name: 'Settings'}))
-        await user.click(await screen.findByRole('button', {name: 'Leave club'}))
+        await user.click(await screen.findByRole('button', {name: 'Leave'}))
  
         await waitFor(() => {
             expect(bookclubmembersService.leaveClub).toHaveBeenCalledWith(BOOKCLUB_ID)
