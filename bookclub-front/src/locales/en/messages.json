@@ -10,8 +10,7 @@
         "bookProposed": "Book proposed successfully!",
         "register": "Registration saved.",
         "memberRemoved": "Club member removed successfully.",
-        "leftClub": "Succesfully left club",
-        "": ""
+        "leftClub": "Succesfully left club"
     },
     "error": {
         "api": {

@@ -152,6 +152,12 @@
                 "title": "Hallitse kerhoa",
                 "description": "Voit poistaa kirjakerhosi ja kaikki siihen liittyvät tiedot alla"
             },
+            "leaveClub": {
+                "title": "Lähde kerhosta",
+                "description": "Lähde kirjakerhosta",
+                "question": "Oletko varma, että haluat lähteä tästä klubista?",
+                "warning": "Tätä toimintoa ei voi peruuttaa."
+            },
             "deleteQuestion": "Haluatko varmasti poistaa tämän kirjakerhon?",
             "deleteWarning": "Kirjakerhon poistamista ei voi peruuttaa."
         },

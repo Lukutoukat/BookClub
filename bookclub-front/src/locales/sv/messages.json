@@ -27,7 +27,8 @@
             "createCycle": "Det gick inte att skapa cykeln.",
             "helmetLoadLanguages": "Det gick inte att ladda språken.",
             "helmetNoBooks": "Inga böcker hittades.",
-            "helmetSearch": "Sökningen misslyckades."
+            "helmetSearch": "Sökningen misslyckades.",
+            "leftClub": "Det gick inte att lämna klubben."
         },
         "validation": {
             "invalidInviteCode": "Ange en kod på 5 tecken.",

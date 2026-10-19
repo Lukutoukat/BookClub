@@ -22,7 +22,8 @@
         "deleteClub": "Ta bort klubb",
         "loginTab": "Gå till inloggning",
         "registerTab": "Gå till registrering",
-        "createBook": "Skapa en ny bok"
+        "createBook": "Skapa en ny bok",
+        "leaveClub": "Källa"
     },
     "labels": {
         "home": "Hem",
