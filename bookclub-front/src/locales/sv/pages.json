@@ -151,6 +151,12 @@
                 "title": "Hantera klubb",
                 "description": "Du kan ta bort din bokklubb och all information som hör till den nedan"
             },
+            "leaveClub": {
+                "title": "Lämna klubben",
+                "description": "Lämna bokklubben",
+                "question": "Är du säker på att du vill lämna klubben?",
+                "warning": "Denna åtgärd kan inte ångras."
+            },
             "deleteQuestion": "Är du säker på att du vill ta bort den här bokklubben?",
             "deleteWarning": "När bokklubben har tagits bort kan det inte ångras."
         },

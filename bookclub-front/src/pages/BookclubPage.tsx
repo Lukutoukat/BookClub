@@ -152,21 +152,31 @@ interface SettingsTabProps {
 const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 	const { t } = useTranslation('pages')
 	const navigate = useNavigate()
-	const { showError } = useNotification()
+	const { showSuccess, showError } = useNotification()
+
+	const handleClubLeave = async () => {
+		try {
+			await bookclubmembersService.leaveClub(bookclubId)
+			await navigate('/home')
+			showSuccess(t('success.leftClub', { ns: 'messages' }))
+		} catch {
+			showError(t('error.api.leftClub', { ns: 'messages' }))
+		}
+	}	
 	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
 		event.preventDefault()
 		try {
 			await bookclubService.remove(bookclubId)
 			await navigate('/home', { replace: true })
-		} catch (error) {
-			const errorMessage = getErrorMessage(error)
-			showError('Failed to delete club: ' + errorMessage)
+		} catch {
+			showError(t('error.api.deleteClub', { ns: 'messages' }))
 		}
 	}
 	
 	return (
 		<>
 			{isAdmin && (
+				<>
 				<Card className="card-base">
 					<SectionHeader 
 						title={t('club.settings.manageMembers.title')}
@@ -199,6 +209,25 @@ const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 							alertDialogDescription={t('club.settings.deleteWarning')}
 							alertDialogContinueText={t('actions.delete', { ns: 'common' })}
 							alertDialogText={t('club.settings.deleteQuestion')}
+						/>
+					</CardContent>
+				</Card>
+				<br/>
+				</>
+			)}
+			{!isAdmin && (
+				<Card>
+					<SectionHeader 
+						title={t('club.settings.leaveClub.title')}
+						description={t('club.settings.leaveClub.description')}
+					/>
+					<CardContent>
+						<ButtonDialog
+							buttonText={t('actions.leaveClub', { ns: 'common' })}
+							buttonOnClick={handleClubLeave}
+							alertDialogDescription={t('club.settings.leaveClub.warning')}
+							alertDialogContinueText={t('actions.leaveClub', { ns: 'common' })}
+							alertDialogText={t('club.settings.leaveClub.question')}
 						/>
 					</CardContent>
 				</Card>

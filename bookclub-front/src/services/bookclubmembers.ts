@@ -34,6 +34,10 @@ const getByClubId = (club_id: string) => {
 	return axios.get<BookclubMember[]>(`${baseUrl}/${club_id}`, getAuthConfig()).then((res) => res.data)
 }
 
+const leaveClub = (club_id: string) => {
+	return axios.delete<BookclubMember>(`${baseUrl}/${club_id}`, getAuthConfig()).then((res) => res.data)
+}
+
 const remove = (club_id: string, user_id: string) => {
 	return axios.delete<BookclubMember>(`${baseUrl}/${club_id}/${user_id}`, getAuthConfig()).then((res) => res.data)
 }
@@ -42,5 +46,6 @@ export default {
 	create,
 	get,
 	getByClubId,
+	leaveClub,
 	remove,
 }

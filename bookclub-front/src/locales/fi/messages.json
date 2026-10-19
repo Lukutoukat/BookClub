@@ -9,7 +9,8 @@
         "bookCreated": "Kirja luotu onnistuneesti!",
         "bookProposed": "Kirja ehdotettu onnistuneesti!",
         "register": "Rekisteröityminen tallennettu.",
-        "memberRemoved": "Kerhon jäsen poistettu onnistuneesti."
+        "memberRemoved": "Kerhon jäsen poistettu onnistuneesti.",
+        "leftClub": "Kerhosta lähdettiin onnistuneesti."
     },
     "error": {
         "api": {
@@ -27,7 +28,8 @@
             "createCycle": "Syklin luominen epäonnistui.",
             "helmetLoadLanguages": "Kielten lataaminen epäonnistui.",
             "helmetNoBooks": "Kirjoja ei löytynyt.",
-            "helmetSearch": "Haku epäonnistui."
+            "helmetSearch": "Haku epäonnistui.",
+            "leftClub": "Seurasta poistuminen epäonnistui."
         },
         "validation": {
             "invalidInviteCode": "Anna 5:n merkin pituinen koodi.",

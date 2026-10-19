@@ -22,7 +22,8 @@
         "deleteClub": "Poista kerho",
         "loginTab": "Siirry kirjautumaan",
         "registerTab": "Siirry rekisteröintiin",
-        "createBook": "Luo uusi kirja"
+        "createBook": "Luo uusi kirja",
+        "leaveClub": "Lähde"
     },
     "labels": {
         "home": "Etusivu",
