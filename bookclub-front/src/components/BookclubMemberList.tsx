@@ -54,7 +54,12 @@ export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: 
             {sortMembers.map((member) => (
                 <div key={member.id} className={className}>
                     <div className="flex items-center gap-2">
-                        {canManageMembers && member.user_role === 0 && (<ShieldUser className='w-6 h-6 shrink-0'/>)}
+                        {canManageMembers && member.user_role === 0 && (<ShieldUser 
+                            aria-label="Admin" 
+                            role="img" 
+                            className='w-6 h-6 shrink-0'
+                            />
+                        )}
                         {member.User?.name}
                     </div>
                     {canManageMembers && member.user_role !== 0 && (

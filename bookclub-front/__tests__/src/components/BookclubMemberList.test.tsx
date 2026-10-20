@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@/utils/test-utils'
+import { render, screen, waitFor, within } from '@/utils/test-utils'
 import userEvent from '@testing-library/user-event'
 
 import { BookclubMemberList } from '@/components/BookclubMemberList'
@@ -84,6 +84,50 @@ describe('ClubMemberList', () => {
 		await waitFor(() => {
 			expect(memberService.remove).toHaveBeenCalledWith('1', '1')
 			expect(screen.queryByText('Pekka')).not.toBeInTheDocument()
+		})
+	})
+
+	it('shows promote button on non-admin members', async () => {
+		vi.mocked(memberService.getByClubId).mockResolvedValue([mockMember1])
+
+		render(<BookclubMemberList bookclubId="1" canManageMembers={true}/>)
+
+		await waitFor(() => {
+			expect(memberService.getByClubId).toHaveBeenCalledWith('1')
+			expect(screen.getByText('Pekka')).toBeInTheDocument()
+			expect(screen.getAllByRole('button', { name: /promote/i })).toHaveLength(1)
+		})
+	})
+	
+	it('does not show promote button on admin members', async () => {
+		vi.mocked(memberService.getByClubId).mockResolvedValue([mockAdmin])
+
+		render(<BookclubMemberList bookclubId="1" canManageMembers={true}/>)
+
+		await waitFor(() => {
+			expect(memberService.getByClubId).toHaveBeenCalledWith('1')
+			expect(screen.getByText('Admin')).toBeInTheDocument()
+			expect(screen.queryByRole('button', { name: /promote/i })).not.toBeInTheDocument()
+		})
+	})
+
+	it('promotes user to admin when clicking promote button', async () => {
+		const user = userEvent.setup()
+
+		vi.mocked(memberService.getByClubId).mockResolvedValue([mockMember1])
+		vi.mocked(memberService.changeRole).mockResolvedValue({ count: 1 })
+
+		render(<BookclubMemberList bookclubId="1" canManageMembers={true}/>)
+
+		const promoteButton = await screen.findByRole('button', { name: /promote/i })
+		await user.click(promoteButton)
+
+		const dialog = await screen.findByRole('alertdialog')
+		await user.click(within(dialog).getByRole('button', { name: /promote/i }))
+
+		await waitFor(() => {
+			expect(screen.getByRole('img', { name: 'Admin' })).toBeInTheDocument()
+			expect(screen.queryByRole('button', { name: /promote/i })).not.toBeInTheDocument()
 		})
 	})
 })
