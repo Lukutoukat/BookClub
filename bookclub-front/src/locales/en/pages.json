@@ -142,7 +142,11 @@
             "description": "Change book club settings.",
             "manageMembers": {
                 "title": "Manage Members",
-                "description": "You can manage individual members below"
+                "description": "You can manage individual members below",
+                "promoteQuestion": "Are you sure you want to promote '{{name}}' to admin?",
+                "promoteWarning": "The member will have access to admin privileges. This action cannot be undone.",
+                "deleteQuestion": "Are you sure you want to remove '{{name}}' from the club?",
+                "deleteWarning": "Once the member is removed, it cannot be undone."
             },
             "manageCycle": {
                 "title": "Manage Cycle",
@@ -162,9 +166,7 @@
             "deleteWarning": "Once the book club is deleted, it cannot be undone."
         },
         "members": {
-            "title": "Club Members",
-            "deleteQuestion": "Are you sure you want to remove user '{{name}}' from the club?",
-            "deleteWarning": "Once the member is removed, it cannot be undone."
+            "title": "Club Members"
         },
         "cycle": {
             "title": "Cycles ({{count}})",
