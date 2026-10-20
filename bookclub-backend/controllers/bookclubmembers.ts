@@ -125,9 +125,6 @@ BookClubMembersRouter.patch('/:id/members/:user_id', userExtractor, async (req: 
   }
 
   try {
-    const club = await prisma.bookClub.findUnique({
-      where: { id: bookclub_id }
-    })
     const isAdmin = await prisma.bookClubMembers.findFirst({
       where: { user_id: req.user.id, user_role: 0, bookclub_id }
     })
@@ -135,9 +132,6 @@ BookClubMembersRouter.patch('/:id/members/:user_id', userExtractor, async (req: 
       where: { user_id, bookclub_id }
     })
 
-    if (!club) {
-      return res.status(404).json({ error: 'club does not exist' })
-    }
     if (!targetMember) {
       return res.status(404).json({ error: 'member not found' })
     }
