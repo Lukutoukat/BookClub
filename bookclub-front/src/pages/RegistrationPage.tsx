@@ -1,11 +1,14 @@
 import RegistrationForm from '@/components/RegistrationForm'
 
+import { usePageTitle } from '@/hooks/usePageTitle'
 import { PageHeader } from '@/components/PageHeader'
 import { Column } from '@/components/Column'
 import { useTranslation } from 'react-i18next'
 
 const RegistrationPage = () => {
 	const { t } = useTranslation()
+
+	usePageTitle(t('labels.registration'))
 
 	return (
 		<>

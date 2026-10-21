@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams, useSearchParams} from 'react-router-dom'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import {BookclubComponent} from '@/components/BookclubComponent'
 import BookList, {type BookListHandle} from '@/components/BookList'
 import cycleService, {type CycleWithStatus} from '@/services/cycle'
@@ -242,9 +243,26 @@ const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 const BookclubPage = () => {
 	const {t} = useTranslation('pages')
 	const { bookclubId } = useParams<{ bookclubId: string }>()
+	const [searchParams] = useSearchParams()
+	const [bookclubName, setBookclubName] = useState<string>('')
 	const [isAdmin, setIsAdmin] = useState(false)
 	const { showError } = useNotification()
 	const navigate = useNavigate()
+
+	useEffect(() => {
+		const fetchClubName = async () => {
+			if (!bookclubId) return
+
+			try {
+				const bookclub = await bookclubService.get(bookclubId)
+				setBookclubName(bookclub?.name ?? '')
+			} catch {
+				showError('Unable to fetch club name')
+			}
+		}
+
+		void fetchClubName()
+	}, [bookclubId])
 
 	useEffect(() => {
 		const checkAdminStatus = async () => {
@@ -265,6 +283,15 @@ const BookclubPage = () => {
 			void checkAdminStatus()
 		}
 	}, [bookclubId])
+
+	const activeTab = searchParams.get('tab') ?? 'home'
+	const tabTitles: Record<string, string> = {
+		'home': t('labels.home', { ns: 'common' }),
+		'members': t('labels.members', { ns: 'common' }),
+		'history': t('labels.history', { ns: 'common' }),
+		'settings': t('labels.settings', { ns: 'common' })
+	}
+	usePageTitle(tabTitles[activeTab] ?? tabTitles.home, bookclubName)
 
 	// Missing ID parameter
 	// -> Redirect to home page
