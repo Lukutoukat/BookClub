@@ -23,7 +23,8 @@
         "loginTab": "Go to login",
         "registerTab": "Go to registration",
         "createBook": "Create a new book",
-        "leaveClub": "Leave"
+        "leaveClub": "Leave",
+        "promote": "Promote"
     },
     "labels": {
         "home": "Home",

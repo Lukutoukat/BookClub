@@ -23,7 +23,8 @@
         "loginTab": "Gå till inloggning",
         "registerTab": "Gå till registrering",
         "createBook": "Skapa en ny bok",
-        "leaveClub": "Källa"
+        "leaveClub": "Källa",
+        "promote": "Befordra"
     },
     "labels": {
         "home": "Hem",

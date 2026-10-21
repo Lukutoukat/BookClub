@@ -23,7 +23,8 @@
         "loginTab": "Siirry kirjautumaan",
         "registerTab": "Siirry rekisteröintiin",
         "createBook": "Luo uusi kirja",
-        "leaveClub": "Lähde"
+        "leaveClub": "Poistu",
+        "promote": "Ylennä"
     },
     "labels": {
         "home": "Etusivu",
