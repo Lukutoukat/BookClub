@@ -26,6 +26,8 @@
         "leaveClub": "Lähde"
     },
     "labels": {
+        "pageTitle": "{{page}} · Kirjakerho",
+        "clubPageTitle": "{{page}} · {{club}}",
         "home": "Etusivu",
         "books": "Kirjat",
         "create": "Luo",
@@ -34,6 +36,8 @@
         "cycle": "Uusi sykli",
         "login": "Kirjautuminen",
         "registration": "Rekisteröityminen",
+        "members": "Jäsenet",
+        "history": "Historia",
         "loggedInAs": "Kirjautuneena: {{name}}",
         "error": "Virhe: ",
         "confirmation": "Vahvistus: ",
