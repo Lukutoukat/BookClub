@@ -256,7 +256,7 @@ const BookclubPage = () => {
 			try {
 				const bookclub = await bookclubService.get(bookclubId)
 				setBookclubName(bookclub?.name ?? '')
-			} catch (error) {
+			} catch {
 				showError('Unable to fetch club name')
 			}
 		}
