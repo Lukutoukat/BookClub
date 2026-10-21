@@ -7,6 +7,18 @@ import memberService from '@/services/bookclubmembers'
 
 vi.mock('@/services/bookclubmembers')
 
+const {mockShowError} = vi.hoisted(() => ({
+    mockShowError: vi.fn(),
+}))
+
+vi.mock('@/context/NotificationContext.tsx', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('@/context/NotificationContext.tsx')>()
+    return {
+        ...actual,
+        useNotification: () => ({showError: mockShowError}),
+    }
+})
+
 describe('ClubMemberList', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
