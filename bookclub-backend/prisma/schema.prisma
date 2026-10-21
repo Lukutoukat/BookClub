@@ -35,6 +35,7 @@ model BookClub {
   BookClubMembers BookClubMembers[]
   Invite          Invite[]
   Cycle           Cycle[]
+  events          Event[]
 }
 
 model BookClubMembers {
@@ -76,6 +77,7 @@ model Cycle {
   votingSystem  String         @default("three-level")
   BookClub      BookClub?      @relation(fields: [bookclub_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   bookProposeds BookProposed[]
+  events        Event[]
 }
 
 model BookSaved {
@@ -104,4 +106,47 @@ model User {
   BookVoted       BookVoted[]
   Books           Book[]
   bookProposeds   BookProposed[]
+  pollVotes       PollVote[]
 }
+
+model Event {
+  id              String            @id @default(uuid())
+  title           String
+  description     String?
+  meetingDate     DateTime?
+  createdAt       DateTime          @default(now())
+  bookclub_id     String
+  cycle_id        String?
+  BookClub        BookClub          @relation(fields: [bookclub_id], references: [id], onDelete: Cascade)
+  Cycle           Cycle?            @relation(fields: [cycle_id], references:[id], onDelete: SetNull)
+  poll            EventPoll?
+}
+
+model EventPoll {
+  id              String            @id @default(uuid())
+  event_id        String            @unique
+  endsAt          DateTime
+  createdAt       DateTime          @default(now())
+  event           Event             @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  options         PollOption[]
+}
+
+model PollOption {
+  id              String            @id @default(uuid())
+  poll_id         String
+  date            DateTime
+  poll            EventPoll         @relation(fields: [poll_id], references: [id], onDelete: Cascade)
+  votes           PollVote[]
+  @@unique([poll_id, date])
+}
+
+model PollVote {
+  id              String            @id @default(uuid())
+  option_id       String
+  user_id         String
+  createdAt       DateTime          @default(now())
+  option          PollOption        @relation(fields: [option_id], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  @@unique([option_id, user_id])
+}
+
