@@ -12,7 +12,8 @@ jest.mock('../db.ts', () => ({
       findFirst: jest.fn()
     },
     event: {
-      create: jest.fn()
+      create: jest.fn(),
+      findMany: jest.fn()
     },
     user: {
       findUnique: jest.fn()
@@ -74,6 +75,19 @@ describe('/api/events', () => {
         title: "Lokakuun tapaaminen",
         meetingDate: "2026-10-15T18:00:00Z"
     }
+
+    const mockEvents = [
+        {
+            id: 'event-1',
+            bookclub_id: '1',
+            title: "Lokakuun tapaaminen",
+        },
+        {
+            id: 'event-2',
+            bookclub_id: '1',
+            title: "Marraskuun tapaaminen",
+        }
+    ]
 
     describe('POST', () => {
         it('creates an event when user is admin', async () => {
@@ -206,7 +220,7 @@ describe('/api/events', () => {
                 user_role: 0
             })
 
-            ;(prisma.event.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
+            ;(prisma.event.create as jest.Mock).mockRejectedValue(new Error('database error'))
 
             const response = await request(app).post('/api/events').set(authHeaders()).send(mockEvent)
             
@@ -250,6 +264,52 @@ describe('/api/events', () => {
                     meetingDate: new Date("2026-10-15T18:00:00Z")
                 }
             })
+        })
+    })
+
+    describe('GET', () => {
+        it('returns all events of the book club', async () => {
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 1
+            })
+
+            ;(prisma.event.findMany as jest.Mock).mockResolvedValue(mockEvents)
+
+            const response = await request(app).get('/api/events/1').set(authHeaders())
+
+            expect(response.status).toBe(200)
+            expect(prisma.event.findMany).toHaveBeenCalledWith({
+                where: {
+                    bookclub_id: '1'
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            })
+            expect(response.body).toEqual(mockEvents)
+        })
+
+        it('returns 403 if user is not a member of the club', async () => {
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
+
+            const response = await request(app).get('/api/events/1').set(authHeaders())
+            
+            expect(response.status).toBe(403)
+            expect(prisma.event.findMany).not.toHaveBeenCalled()
+            expect(response.body.error).toBe('Not a member of this club')
+        })
+
+        it('returns 500 if fetching events fails', async () => {
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 1
+            })
+
+            ;(prisma.event.findMany as jest.Mock).mockRejectedValue(new Error('database error'))
+
+            const response = await request(app).get('/api/events/1').set(authHeaders())
+
+            expect(response.status).toBe(500)
+            expect(response.body.error).toBe('database error')
         })
     })
 })

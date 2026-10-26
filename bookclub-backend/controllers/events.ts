@@ -82,6 +82,40 @@ eventRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Event
 
 })
 
-// GET EVENTS  ===> seuraavalla kerralla
+eventRouter.get('/:id', userExtractor, async (req: Request<{ id: string }>, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'user not found' })
+    }
+
+    const { id } = req.params
+
+    try {
+        const member = await prisma.bookClubMembers.findFirst({
+            where: {
+                bookclub_id: id,
+                user_id: req.user.id
+            }
+        })
+
+        if (!member) {
+            return res.status(403).json({ error: 'Not a member of this club' })
+        }
+
+        const events = await prisma.event.findMany({
+            where: {
+                bookclub_id: id
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
+
+        return res.status(200).json(events)
+
+    } catch (error) {
+        console.error('Error fetching events:', error)
+        return res.status(500).json({ error: 'database error' })
+    }
+})
 
 export default eventRouter
