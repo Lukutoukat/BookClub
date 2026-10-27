@@ -10,7 +10,8 @@
         "bookProposed": "Book proposed successfully!",
         "register": "Registration saved.",
         "memberRemoved": "Club member removed successfully.",
-        "leftClub": "Succesfully left club"
+        "leftClub": "Succesfully left club",
+        "promotedMember": "Succesfully promoted member to admin."
     },
     "error": {
         "api": {
@@ -29,7 +30,8 @@
             "helmetLoadLanguages": "Failed to load languages.",
             "helmetNoBooks": "No books found.",
             "helmetSearch": "Search failed.",
-            "leftClub": "Failed to leave club."
+            "leftClub": "Failed to leave club.",
+            "promotedMember": "Failed to promote member to admin."
         },
         "validation": {
             "invalidInviteCode": "Enter a 5-character code.",
