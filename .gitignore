@@ -32,3 +32,10 @@ coverage
 configmap.yaml
 configmaps.yaml
 roles.yaml
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

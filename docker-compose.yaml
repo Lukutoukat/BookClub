@@ -66,6 +66,7 @@ services:
 
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - VITE_BACKEND_PROXY_TARGET=http://backend:3003
 
     command: npm run dev -- --host
 

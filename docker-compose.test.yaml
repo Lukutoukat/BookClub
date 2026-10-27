@@ -1,0 +1,85 @@
+name: bookclub-test
+
+volumes:
+  test_postgres_data:
+  backend-node-modules:
+  frontend-node-modules:
+
+services:
+  test-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test-db
+    ports:
+      - "5434:5432"
+    volumes:
+      - test_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U username -d test-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./bookclub-backend
+      dockerfile: Dockerfile.dev
+    working_dir: /app
+    volumes:
+      - ./bookclub-backend:/app
+      - backend-node-modules:/app/node_modules
+    ports:
+      - "3004:3003"
+    environment:
+      - DATABASE_URL=postgresql://username:password@test-db:5432/test-db
+      - POSTGRES_HOST=test-db
+      - POSTGRES_PASSWORD=password
+      - CHOKIDAR_USEPOLLING=true
+      - REQUEST_ORIGIN=localhost:3003
+      - NODE_ENV=production
+    entrypoint: sh -c "npx prisma migrate deploy && npm run dev"
+    depends_on:
+      test-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3003/ping').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    build:
+      context: ./bookclub-front
+      dockerfile: Dockerfile.dev
+    working_dir: /app
+    volumes:
+      - ./bookclub-front:/app
+      - frontend-node-modules:/app/node_modules
+    ports:
+      - "13001:5173"
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:3003
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:5173').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.64.0-noble
+    user: "1000:1000"
+    working_dir: /app 
+    environment:
+      - PLAYWRIGHT_BASE_URL=http://frontend:5173
+    volumes:
+        - ./:/app
+        - ./playwright-report:/app/playwright-report
+    depends_on:
+      frontend:
+        condition: service_healthy
+    command: sh -c "npx playwright test --config=playwright.config.ts --reporter=html" 
