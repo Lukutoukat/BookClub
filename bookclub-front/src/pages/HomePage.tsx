@@ -1,6 +1,7 @@
 import { PageHeader } from '../components/PageHeader'
 import BookClubList from '@/components/BookClubList'
 import JoinBookClubForm from '@/components/JoinBookClubForm'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import { useGetClubs } from '@/hooks/getClubs'
 import { Column } from '@/components/Column'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +9,8 @@ import { useTranslation } from 'react-i18next'
 const HomePage = () => {
 	const { bookClubs, isLoading, errorMessage, listMutated } = useGetClubs()
 	const { t } = useTranslation()
+
+	usePageTitle(t('labels.home'))
 
 	return (
 		<>

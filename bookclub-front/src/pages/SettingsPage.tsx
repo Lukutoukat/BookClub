@@ -1,5 +1,6 @@
 import { PageHeader } from '@/components/PageHeader'
 import { useLogin } from '@/hooks/useLogin'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import ClubSettings from '@/components/ClubSettings'
 import AccountSettings from '@/components/AccountSettings'
 import ThemeSelector from '@/components/ThemeSelector'
@@ -10,6 +11,8 @@ import { useTranslation } from 'react-i18next'
 const SettingsPage = () => {
 	const { logout } = useLogin()
 	const { t } = useTranslation()
+
+	usePageTitle(t('labels.settings'))
 
 	return (
 		<>

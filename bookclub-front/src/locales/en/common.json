@@ -26,6 +26,8 @@
         "leaveClub": "Leave"
     },
     "labels": {
+        "pageTitle": "{{page}} · Bookclub",
+        "clubPageTitle": "{{page}} · {{club}}",
         "home": "Home",
         "books": "Books",
         "create": "Create",
@@ -34,6 +36,8 @@
         "login": "Login",
         "cycle": "New Cycle",
         "registration": "Registration",
+        "members": "Members",
+        "history": "History",
         "loggedInAs": "Logged in as: {{name}}",
         "error": "Error: ",
         "confirmation": "Confirmation: ",

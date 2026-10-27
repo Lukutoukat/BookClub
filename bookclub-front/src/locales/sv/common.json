@@ -26,6 +26,8 @@
         "leaveClub": "Källa"
     },
     "labels": {
+        "pageTitle": "{{page}} · Bokklubb",
+        "clubPageTitle": "{{page}} · {{club}}",
         "home": "Hem",
         "books": "Böcker",
         "create": "Skapa",
@@ -34,6 +36,8 @@
         "login": "Inloggning",
         "cycle": "Ny cykel",
         "registration": "Registrering",
+        "members": "Medlemmar",
+        "history": "Historik",
         "loggedInAs": "Inloggad som: {{name}}",
         "error": "Fel: ",
         "confirmation": "Bekräftelse: ",
