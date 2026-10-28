@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
+    "test:ci": "node --experimental-strip-types index.ts",
     "test": "jest",
     "coverage": "jest --coverage",
     "format": "prettier --write .",
