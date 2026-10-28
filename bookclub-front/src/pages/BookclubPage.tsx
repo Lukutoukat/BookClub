@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams, useSearchParams} from 'react-router-dom'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import {BookclubComponent} from '@/components/BookclubComponent'
 import BookList, {type BookListHandle} from '@/components/BookList'
 import cycleService, {type CycleWithStatus} from '@/services/cycle'
@@ -152,21 +153,31 @@ interface SettingsTabProps {
 const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 	const { t } = useTranslation('pages')
 	const navigate = useNavigate()
-	const { showError } = useNotification()
+	const { showSuccess, showError } = useNotification()
+
+	const handleClubLeave = async () => {
+		try {
+			await bookclubmembersService.leaveClub(bookclubId)
+			await navigate('/home')
+			showSuccess(t('success.leftClub', { ns: 'messages' }))
+		} catch {
+			showError(t('error.api.leftClub', { ns: 'messages' }))
+		}
+	}	
 	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
 		event.preventDefault()
 		try {
 			await bookclubService.remove(bookclubId)
 			await navigate('/home', { replace: true })
-		} catch (error) {
-			const errorMessage = getErrorMessage(error)
-			showError('Failed to delete club: ' + errorMessage)
+		} catch {
+			showError(t('error.api.deleteClub', { ns: 'messages' }))
 		}
 	}
 	
 	return (
 		<>
 			{isAdmin && (
+				<>
 				<Card className="card-base">
 					<SectionHeader 
 						title={t('club.settings.manageMembers.title')}
@@ -202,6 +213,25 @@ const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 						/>
 					</CardContent>
 				</Card>
+				<br/>
+				</>
+			)}
+			{!isAdmin && (
+				<Card>
+					<SectionHeader 
+						title={t('club.settings.leaveClub.title')}
+						description={t('club.settings.leaveClub.description')}
+					/>
+					<CardContent>
+						<ButtonDialog
+							buttonText={t('actions.leaveClub', { ns: 'common' })}
+							buttonOnClick={handleClubLeave}
+							alertDialogDescription={t('club.settings.leaveClub.warning')}
+							alertDialogContinueText={t('actions.leaveClub', { ns: 'common' })}
+							alertDialogText={t('club.settings.leaveClub.question')}
+						/>
+					</CardContent>
+				</Card>
 			)}
 		</>
 	)
@@ -213,9 +243,26 @@ const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
 const BookclubPage = () => {
 	const {t} = useTranslation('pages')
 	const { bookclubId } = useParams<{ bookclubId: string }>()
+	const [searchParams] = useSearchParams()
+	const [bookclubName, setBookclubName] = useState<string>('')
 	const [isAdmin, setIsAdmin] = useState(false)
 	const { showError } = useNotification()
 	const navigate = useNavigate()
+
+	useEffect(() => {
+		const fetchClubName = async () => {
+			if (!bookclubId) return
+
+			try {
+				const bookclub = await bookclubService.get(bookclubId)
+				setBookclubName(bookclub?.name ?? '')
+			} catch {
+				showError('Unable to fetch club name')
+			}
+		}
+
+		void fetchClubName()
+	}, [bookclubId])
 
 	useEffect(() => {
 		const checkAdminStatus = async () => {
@@ -236,6 +283,15 @@ const BookclubPage = () => {
 			void checkAdminStatus()
 		}
 	}, [bookclubId])
+
+	const activeTab = searchParams.get('tab') ?? 'home'
+	const tabTitles: Record<string, string> = {
+		'home': t('labels.home', { ns: 'common' }),
+		'members': t('labels.members', { ns: 'common' }),
+		'history': t('labels.history', { ns: 'common' }),
+		'settings': t('labels.settings', { ns: 'common' })
+	}
+	usePageTitle(tabTitles[activeTab] ?? tabTitles.home, bookclubName)
 
 	// Missing ID parameter
 	// -> Redirect to home page

@@ -35,8 +35,8 @@ const authHeaders = () => {
 
 describe('/api/results', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.resetAllMocks()
+    // jest.spyOn(console, 'error').mockImplementation(() => {})
     process.env.SECRET = 'testsecret'
     ;(prisma.user.findUnique as jest.Mock).mockResolvedValue({
       id: '1',
@@ -66,6 +66,54 @@ describe('/api/results', () => {
       title: 'Harry Potter'
     }
   }
+
+  const MockProposal_3 = {
+    id: '3',
+    cycle_id: '1',
+    Book: {
+      id: '3',
+      title: 'The Hobbit'
+    }
+  }
+
+  const mockTieTotals = [
+    {
+      proposal_id: '1',
+      _sum: {
+        weight: 6
+      }
+    },
+    {
+      proposal_id: '2',
+      _sum: {
+        weight: 6
+      }
+    },
+    {
+      proposal_id: '3',
+      _sum: {
+        weight: 6
+      }
+    }
+  ]
+
+  const mockTieVoteCounts = [
+    {
+      proposal_id: '1',
+      weight: 3,
+      _count: { _all: 2 }
+    },
+    {
+      proposal_id: '2',
+      weight: 2,
+      _count: { _all: 3 }
+    },
+    {
+      proposal_id: '3',
+      weight: 3,
+      _count: { _all: 2 }
+    }
+  ] 
 
   const mockClubMember = {
     id: '1',
@@ -198,5 +246,63 @@ describe('/api/results', () => {
         score: 3
       })
     })
+
+    it('resolves a tie between three books using the number of 3-point votes and a hash as a tiebreaker', async () => {
+      ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValueOnce([
+        MockProposal_1,
+        MockProposal_2,
+        MockProposal_3
+      ]).mockResolvedValueOnce([
+        MockProposal_3,
+        MockProposal_2,
+        MockProposal_1
+      ])
+      
+      ;(prisma.bookVoted.groupBy as jest.Mock)
+      .mockResolvedValueOnce(mockTieTotals)
+      .mockResolvedValueOnce(mockTieVoteCounts)
+      .mockResolvedValueOnce(mockTieTotals)
+      .mockResolvedValueOnce(mockTieVoteCounts)
+
+      const firstResponse = await request(app)
+        .get('/api/results/1/winner')
+        .set(authHeaders())
+
+      const secondResponse = await request(app)
+        .get('/api/results/1/winner')
+        .set(authHeaders())
+
+      expect(firstResponse.status).toBe(200)
+      expect(secondResponse.status).toBe(200)
+
+      expect(firstResponse.body.proposal_id).toBe('3')
+      expect(secondResponse.body.proposal_id).toBe('3')
+    })
+
+    it('resolves a tie between two books in binary voting system using hash as a tiebreaker', async () => {
+      ;(prisma.bookProposed.findMany as jest.Mock).mockResolvedValueOnce([
+        MockProposal_1,
+        MockProposal_2
+      ])
+
+      ;(prisma.bookVoted.groupBy as jest.Mock).mockResolvedValueOnce([
+        {
+          proposal_id: '1',
+          _sum: { weight: 1 }
+        },
+        {
+          proposal_id: '2',
+          _sum: { weight: 1 }
+        }
+      ]).mockResolvedValueOnce([])
+
+      const response = await request(app)
+        .get('/api/results/1/winner')
+        .set(authHeaders())
+
+      expect(response.status).toBe(200)
+      expect(response.body.proposal_id).toBe('2')
+    })
+
   })
 })

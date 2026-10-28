@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import LoginForm from '@/components/LoginForm'
 import { useLogin } from '@/hooks/useLogin'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '@/components/PageHeader'
@@ -13,6 +14,8 @@ const LoginPage = () => {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const { login, message } = useLogin()
+
+	usePageTitle(t('labels.login'))
 
 	const handleLogin = async (event: React.SyntheticEvent<HTMLFormElement>) => {
 		event.preventDefault()
