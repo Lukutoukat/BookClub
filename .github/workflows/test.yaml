@@ -90,3 +90,17 @@ jobs:
 
       - name: Run e2e tests
         run: npm run e2e
+
+      - name: Show Docker logs on failure
+        if: failure()
+        run: |
+          echo "=== docker compose ps ==="
+          docker compose ps
+          echo "=== backend logs ==="
+          docker compose logs --no-color --tail=200 backend
+          echo "=== db logs ==="
+          docker compose logs --no-color --tail=200 db
+          echo "=== backend inspect ==="
+          docker inspect bookclub-test-backend-1 || true
+          echo "=== db inspect ==="
+          docker inspect bookclub-test-test-db-1 || true
