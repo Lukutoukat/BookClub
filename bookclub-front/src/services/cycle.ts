@@ -15,6 +15,7 @@ export interface CycleFields {
 export interface CycleWithStatus {
 	id: string
 	bookclub_id?: string
+	createdAt?: Date
 	proposalEnd?: Date
 	votingEnd?: Date
 	votingSystem?: string
