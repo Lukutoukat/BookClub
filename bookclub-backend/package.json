@@ -13,8 +13,9 @@
     "coverage": "jest --coverage",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "start": "node index.ts",
-    "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
+    "postinstall": "npx prisma generate",
+    "start": "npx prisma generate && node index.ts",  
+    "dev": "npx prisma generate && concurrently \"tsc --watch\" \"node --watch index.ts\"",
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",

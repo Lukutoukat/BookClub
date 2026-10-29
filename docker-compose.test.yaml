@@ -39,7 +39,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - REQUEST_ORIGIN=localhost:3003
       - NODE_ENV=production
-    entrypoint: sh -c "npx prisma migrate deploy && npm run test:ci"
+    entrypoint: sh -c "npx prisma generate &&npx prisma migrate deploy && npm run test:ci"
     depends_on:
       test-db:
         condition: service_healthy
