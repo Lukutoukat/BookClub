@@ -72,14 +72,13 @@ services:
 
   playwright:
     image: mcr.microsoft.com/playwright:v1.64.0-noble
-    user: "1000:1000"
-    working_dir: /app 
+    working_dir: /app
     environment:
       - PLAYWRIGHT_BASE_URL=http://frontend:5173
     volumes:
-        - ./:/app
-        - ./playwright-report:/app/playwright-report
+      - ./:/app
+      - ./playwright-report:/app/playwright-report
     depends_on:
       frontend:
         condition: service_healthy
-    command: sh -c "npx playwright test --config=playwright.config.ts --reporter=html" 
+    command: sh -c "mkdir -p /app/test-results /app/playwright-report && chmod -R a+rwX /app/test-results /app/playwright-report && npx playwright test --config=playwright.config.ts --reporter=html"
