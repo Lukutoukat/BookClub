@@ -1,5 +1,6 @@
 import {TestProvider} from "@/services/book-providers/test.ts";
 import {FinnaProvider} from "@/services/book-providers/finna.ts";
+import type {GenericBook} from "@/types.ts";
 
 /* ---------- */
 /* Typing and constants */
@@ -7,14 +8,9 @@ import {FinnaProvider} from "@/services/book-providers/finna.ts";
 /** Change this to change the currently used default provider */
 const defaultProvider: ProviderKey = 'finna'
 
-export interface BookRecord {
+
+export interface FetchedProviderBook extends GenericBook {
     provider: ProviderKey,
-    id: string,
-    title?: string,
-    year?: string,
-    authors?: string[],
-    description?: string,
-    genres?: string[]
 }
 
 export type BookProviderErrorCode =
@@ -40,13 +36,13 @@ export interface BookFetchOptions {
     provider?: ProviderKey,
 }
 
-export interface BookProvider<R extends BookRecord = BookRecord> {
+export interface BookProvider<R extends FetchedProviderBook = FetchedProviderBook> {
     fetch(opts: BookFetchOptions): Promise<{ result: R[]; error?: BookProviderError }>;
 }
 
 export const providers = {
-    test: TestProvider,
-    finna: FinnaProvider,
+    get test() {return TestProvider},
+    get finna() {return FinnaProvider},
 };
 
 export type ProviderKey = keyof typeof providers

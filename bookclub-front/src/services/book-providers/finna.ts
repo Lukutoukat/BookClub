@@ -1,4 +1,4 @@
-import {type BookProvider, BookProviderError, type BookRecord} from "@/services/book-providers/index.ts";
+import {type BookProvider, BookProviderError, type FetchedProviderBook} from "@/services/book-providers/index.ts";
 import axios from "axios";
 
 const finnaSearchUrl = 'https://api.finna.fi/v1/search'
@@ -48,12 +48,12 @@ const searchHelmetBooks = async (query: string, languages: string[], page: numbe
 }
 
 
-export interface FinnaBookRecord extends BookRecord {
+export interface FinnaBookRecord extends FetchedProviderBook {
     provider: 'finna'
     helmetId: string
 }
 
-export function isFinnaBookRecord(record: BookRecord): record is FinnaBookRecord {
+export function isFinnaBookRecord(record: FetchedProviderBook): record is FinnaBookRecord {
     return record.provider === "finna"
         && ('helmetId' in record && typeof record.helmetId === 'string')
 }

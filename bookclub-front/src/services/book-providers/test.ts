@@ -1,11 +1,11 @@
-import type {BookProvider, BookRecord} from "@/services/book-providers/index.ts";
+import type {BookProvider, FetchedProviderBook} from "@/services/book-providers/index.ts";
 
-export interface TestBookRecord extends BookRecord {
+export interface TestBookRecord extends FetchedProviderBook {
     provider: 'test'
     test: true
 }
 
-export function isTestBookRecord(record: BookRecord): record is TestBookRecord {
+export function isTestBookRecord(record: FetchedProviderBook): record is TestBookRecord {
     return "test" in record && record.test === true;
 }
 
