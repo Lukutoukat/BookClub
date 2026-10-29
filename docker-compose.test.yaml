@@ -82,4 +82,4 @@ services:
     depends_on:
       frontend:
         condition: service_healthy
-    command: sh -c "npm ci && npx playwright test --config=playwright.config.ts --reporter=html" 
+    command: sh -c "npx playwright install --with-deps && npx playwright test --config=playwright.config.ts --reporter=html" 
