@@ -15,7 +15,7 @@
     "lint": "eslint .",
     "postinstall": "npx prisma generate",
     "start": "npx prisma generate && node index.ts",  
-    "dev": "npx prisma generate && concurrently \"tsc --watch\" \"node --watch index.ts\"",
+    "dev": "npx prisma generate && concurrently \"tsc --watch\" \"node --watch index.ts\""
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
