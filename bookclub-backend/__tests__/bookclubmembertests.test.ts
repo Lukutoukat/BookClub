@@ -144,6 +144,7 @@ describe('/api/bookclubmembers', () => {
       }
       ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue(mockMember_1)
       ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockbookclub)
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
 
       const response = await request(app)
         .post('/api/bookclubmembers')
@@ -154,6 +155,35 @@ describe('/api/bookclubmembers', () => {
       expect(response.body.user_role).toBe(1)
     })
 
+    it('returns 409 when user is already a member of the club', async () => {
+      const newMember = {
+        user_role: 1,
+        invite_code: 'ABCDE'
+      }
+      const mockbookclub = {
+        id: '1',
+        name: 'Read it and weep',
+        invite_code: 'ABCDE',
+        status: undefined,
+        owner_id: '2'
+      }
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockbookclub)
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+        user_id: '1',
+        user_role: 1,
+        bookclub_id: '1'
+      })
+
+      const response = await request(app)
+        .post('/api/bookclubmembers')
+        .set(authHeaders())
+        .send(newMember)
+
+      expect(response.status).toBe(409)
+      expect(response.body).toEqual({ error: 'user already a member of this club' })
+      expect(prisma.bookClubMembers.create).not.toHaveBeenCalled()
+    })
+
     it('returns 500, if database fails', async () => {
       const newMember = {
         user_role: 1,
@@ -161,6 +191,7 @@ describe('/api/bookclubmembers', () => {
       }
       ;(prisma.bookClubMembers.create as jest.Mock).mockRejectedValue(new Error('failure'))
       ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue(mockMember_1)
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
 
       const response = await request(app)
         .post('/api/bookclubmembers')

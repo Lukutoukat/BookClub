@@ -93,6 +93,19 @@ BookClubMembersRouter.post(
           res.status(400).json({ error: 'Invalid invite code.' })
           return
         }
+
+        const existingMembership = await prisma.bookClubMembers.findFirst({
+          where: {
+            user_id: req.user.id,
+            bookclub_id: result.id
+          }
+        })
+
+        if (existingMembership) {
+          res.status(409).json({ error: 'user already a member of this club' })
+          return
+        }
+
         await prisma.bookClubMembers.create({
           data: {
             user_id: req.user.id,
