@@ -132,6 +132,7 @@
         },
         "tabs": {
             "home": "Hem",
+            "events": "Evenemang",
             "members": "Medlemmar",
             "history": "Historik",
             "settings": "Inställningar"

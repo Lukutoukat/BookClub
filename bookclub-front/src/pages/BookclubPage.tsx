@@ -17,6 +17,7 @@ import {useNotification} from "@/context/NotificationContext.tsx";
 import { useTranslation } from 'react-i18next'
 import { ButtonDialog } from '@/components/ButtonDialog'
 import { Button } from '@/components/ui/button'
+import EventList from '@/components/EventList'
 
 /**
  *  HOME TAB
@@ -137,6 +138,21 @@ const HistoryTab = ( {bookclubId } : HistoryTabProps) => {
 	return (
 		<>
 			<CycleHistoryList bookclubId={bookclubId}/>
+		</>
+	)
+}
+
+/**
+ * EVENTS TAB
+ */
+interface EventsTabProps {
+	bookclubId: string
+}
+
+const EventsTab = ( {bookclubId } : EventsTabProps) => {
+	return (
+		<>
+			<EventList bookclubId={bookclubId}/>
 		</>
 	)
 }
@@ -280,6 +296,11 @@ const BookclubPage = () => {
 				id: 'home',
 				label: t('club.tabs.home'),
 				content: <HomeTab bookclubId={bookclubId}/>
+			},
+			{
+				id: 'events',
+				label: t('club.tabs.events'),
+				content: <EventsTab bookclubId={bookclubId}/>
 			},
 			{
 				id: 'members',

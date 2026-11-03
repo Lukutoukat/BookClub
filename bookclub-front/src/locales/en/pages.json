@@ -133,6 +133,7 @@
         },
         "tabs": {
             "home": "Home",
+            "events": "Events",
             "members": "Members",
             "history": "History",
             "settings": "Settings"
