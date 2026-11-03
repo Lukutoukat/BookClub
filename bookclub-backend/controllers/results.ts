@@ -1,8 +1,14 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
 import userExtractor from '../middleware/userExtractor.ts'
+import { createHash } from 'node:crypto'
 
 const resultRouter = express.Router()
+
+
+const getTieBreakerHash = (cycleId: string, proposalId: string): string => {
+  return createHash('sha256').update(`${cycleId}:${proposalId}`).digest('hex')
+}
 
 resultRouter.get(
   '/:cycle_id',
@@ -131,7 +137,42 @@ resultRouter.get(
           score: scoreMap[p.id] ?? 0
         }))
 
-      results.sort((a, b) => b.score - a.score)
+      const highestScore = Math.max(...results.map((r) => r.score))
+
+      const tiedresults = results.filter((r) => r.score === highestScore)
+      const threepointCounts: Record<string, number> = {}
+
+      if (tiedresults.length > 1) {
+        const voteCounts = await prisma.bookVoted.groupBy({
+          by: ['proposal_id', 'weight'],
+          where: {
+            proposal_id: { in: tiedresults.map((r) => r.proposal_id) },
+            weight: { in: [2, 3] }
+          },
+          _count: { _all: true }
+        })
+
+        for (const row of voteCounts) {
+          if (row.proposal_id && row.weight === 3) {
+            threepointCounts[row.proposal_id] = row._count._all
+          }
+        }
+      }
+
+      results.sort((a, b) => {
+        if (b.score !== a.score) {
+          return b.score - a.score
+        }
+
+        const threePointDifference = (threepointCounts[b.proposal_id] ?? 0) - (threepointCounts[a.proposal_id] ?? 0)
+        if (threePointDifference !== 0) {
+          return threePointDifference
+        }
+
+        const hashA = getTieBreakerHash(cycle_id, a.proposal_id)
+        const hashB = getTieBreakerHash(cycle_id, b.proposal_id)
+        return hashA.localeCompare(hashB)
+      })
 
       const winner = results.length > 0 ? results[0] : null
 

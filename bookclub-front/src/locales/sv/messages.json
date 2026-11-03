@@ -9,7 +9,8 @@
         "bookCreated": "Boken har skapats!",
         "bookProposed": "Boken har föreslagits!",
         "register": "Registreringen har sparats.",
-        "memberRemoved": "Klubbmedlemmen har tagits bort."
+        "memberRemoved": "Klubbmedlemmen har tagits bort.",
+        "promotedMember": "Det gick att uppgradera användaren till administratör."
     },
     "error": {
         "api": {
@@ -27,7 +28,9 @@
             "createCycle": "Det gick inte att skapa cykeln.",
             "helmetLoadLanguages": "Det gick inte att ladda språken.",
             "helmetNoBooks": "Inga böcker hittades.",
-            "helmetSearch": "Sökningen misslyckades."
+            "helmetSearch": "Sökningen misslyckades.",
+            "leftClub": "Det gick inte att lämna klubben.",
+            "promotedMember": "Det gick inte att uppgradera användaren till administratör."
         },
         "validation": {
             "invalidInviteCode": "Ange en kod på 5 tecken.",

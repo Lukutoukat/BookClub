@@ -141,7 +141,11 @@
             "description": "Ändra bokklubbens inställningar.",
             "manageMembers": {
                 "title": "Hantera medlemmar",
-                "description": "Du kan hantera enskilda medlemmar nedan"
+                "description": "Du kan hantera enskilda medlemmar nedan",
+                "promoteQuestion": "Är du säker på att du vill göra '{{name}}' till administratör?",
+                "promoteWarning": "Användaren tilldelas administratörsrättigheter för klubben. Denna åtgärd kan inte ångras.",
+                "deleteQuestion": "Är du säker på att du vill ta bort användaren '{{name}}' från klubben?",
+                "deleteWarning": "När medlemmen har tagits bort kan det inte ångras."
             },
             "manageCycle": {
                 "title": "Hantera cykel",
@@ -151,13 +155,17 @@
                 "title": "Hantera klubb",
                 "description": "Du kan ta bort din bokklubb och all information som hör till den nedan"
             },
+            "leaveClub": {
+                "title": "Lämna klubben",
+                "description": "Lämna bokklubben",
+                "question": "Är du säker på att du vill lämna klubben?",
+                "warning": "Denna åtgärd kan inte ångras."
+            },
             "deleteQuestion": "Är du säker på att du vill ta bort den här bokklubben?",
             "deleteWarning": "När bokklubben har tagits bort kan det inte ångras."
         },
         "members": {
-            "title": "Klubbmedlemmar",
-            "deleteQuestion": "Är du säker på att du vill ta bort användaren '{{name}}' från klubben?",
-            "deleteWarning": "När medlemmen har tagits bort kan det inte ångras."
+            "title": "Klubbmedlemmar"
         },
         "cycle": {
             "title": "Cykler ({{count}})",

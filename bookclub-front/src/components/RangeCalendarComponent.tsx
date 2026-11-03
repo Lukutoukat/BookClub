@@ -27,7 +27,8 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 	const [startTime, setStartTime] = useState(() => formatTimeValue(dateRange?.from))
 	const [endTime, setEndTime] = useState(() => formatTimeValue(dateRange?.to))
 	const [openPicker, setOpenPicker] = useState<'suggestions' | 'voting' | null>(null)
-	const { t } = useTranslation('pages')
+	const { t, i18n } = useTranslation('pages')
+	const currentLanguage = i18n.resolvedLanguage ?? i18n.language
 
 	useEffect(() => {
 		if (dateRange?.from) setStartTime(formatTimeValue(dateRange.from))
@@ -43,7 +44,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 
 	const formatDate = (date: Date | undefined) => {
 		if (!date) return 'Choose a date'
-		return new Intl.DateTimeFormat(navigator.language).format(date)
+		return new Intl.DateTimeFormat(currentLanguage).format(date)
 	}
 
 	const formatDateTime = (date: Date | undefined) => {

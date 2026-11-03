@@ -43,34 +43,30 @@ BookClubApp is developed for all readers, who are looking for a way to manage th
 
 3. **Install Dependencies**
 
-	Backend:
-
 	```bash
+ 	# Frontend:
 	cd bookclub-front
 	npm install
-	```
 
-	Frontend:
-
-	```bash
-	cd ../bookclub-backend
+	# Backend:
+ 	cd ../bookclub-backend
 	npm install
 	```
 
-4. **Generate Prisma Client**
+4. **Set Up Environment Variables**
+
+	For local development put this in a `.env` file in bookclub-backend, change the information to match your own setup:
+
+	```
+	DATABASE_URL="postgresql://username:password@localhost:5432/clubdb"
+	SECRET=putsomekindapasswordhere
+	```
+
+5. **Generate Prisma Client**
 
 	In bookclub-backend run:
 	```bash
 	npx prisma generate
-	```
-
-5. **Set Up Environment Variables**
-
-	For local development put this in a `.env` file in bookclub-backend:
-
-	```
-	DATABASE_URL="DATABASE_URL=postgresql://username:password@localhost:5432/clubdb"
-	SECRET=putsomekindapasswordhere
 	```
 
 6. **Run the Application with Docker**

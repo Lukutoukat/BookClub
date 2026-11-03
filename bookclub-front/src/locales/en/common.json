@@ -22,9 +22,13 @@
         "deleteClub": "Delete club",
         "loginTab": "Go to login",
         "registerTab": "Go to registration",
-        "createBook": "Create a new book"
+        "createBook": "Create a new book",
+        "leaveClub": "Leave",
+        "promote": "Promote"
     },
     "labels": {
+        "pageTitle": "{{page}} · Bookclub",
+        "clubPageTitle": "{{page}} · {{club}}",
         "home": "Home",
         "books": "Books",
         "create": "Create",
@@ -33,6 +37,8 @@
         "login": "Login",
         "cycle": "New Cycle",
         "registration": "Registration",
+        "members": "Members",
+        "history": "History",
         "loggedInAs": "Logged in as: {{name}}",
         "error": "Error: ",
         "confirmation": "Confirmation: ",

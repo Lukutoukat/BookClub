@@ -284,7 +284,53 @@ describe('BookclubPage', () => {
 
         await waitFor(() => {
             expect(bookclubService.remove).toHaveBeenCalledWith(BOOKCLUB_ID)
-            expect(mockShowError).toHaveBeenCalledWith('Failed to delete club: delete failed')
+            expect(mockShowError).toHaveBeenCalledWith('Failed to delete club.')
+        })
+    })
+
+    it('shows the Leave club button to regular members', async () => {
+        vi.mocked(bookclubmembersService.get).mockResolvedValue([
+            {bookclub_id: BOOKCLUB_ID, user_role: 1}
+        ])
+ 
+        const user = userEvent.setup()
+        render(<BookclubPage/>)
+ 
+        await user.click(screen.getByRole('tab', {name: 'Settings'}))
+ 
+        expect(await screen.findByRole('button', {name: 'Leave'})).toBeInTheDocument()
+        expect(screen.queryByRole('button', {name: 'Delete club'})).not.toBeInTheDocument()
+    })
+ 
+    it('does not show the Leave club button to admins', async () => {
+        vi.mocked(bookclubmembersService.get).mockResolvedValue([
+            {bookclub_id: BOOKCLUB_ID, user_role: 0}
+        ])
+ 
+        const user = userEvent.setup()
+        render(<BookclubPage/>)
+ 
+        await user.click(screen.getByRole('tab', {name: 'Settings'}))
+        await screen.findByText('Manage Members')
+
+        expect(screen.queryByRole('button', {name: 'Leave'})).not.toBeInTheDocument()
+    })
+ 
+    it('leaves the club and navigates home after confirming', async () => {
+        vi.mocked(bookclubmembersService.get).mockResolvedValue([
+            {bookclub_id: BOOKCLUB_ID, user_role: 1}
+        ])
+        vi.mocked(bookclubmembersService.leaveClub).mockResolvedValue(undefined as any)
+ 
+        const user = userEvent.setup()
+        render(<BookclubPage/>)
+ 
+        await user.click(screen.getByRole('tab', {name: 'Settings'}))
+        await user.click(await screen.findByRole('button', {name: 'Leave'}))
+ 
+        await waitFor(() => {
+            expect(bookclubmembersService.leaveClub).toHaveBeenCalledWith(BOOKCLUB_ID)
+            expect(mockNavigate).toHaveBeenCalledWith('/home')
         })
     })
 })

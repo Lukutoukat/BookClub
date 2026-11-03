@@ -22,9 +22,13 @@
         "deleteClub": "Poista kerho",
         "loginTab": "Siirry kirjautumaan",
         "registerTab": "Siirry rekisteröintiin",
-        "createBook": "Luo uusi kirja"
+        "createBook": "Luo uusi kirja",
+        "leaveClub": "Poistu",
+        "promote": "Ylennä"
     },
     "labels": {
+        "pageTitle": "{{page}} · Kirjakerho",
+        "clubPageTitle": "{{page}} · {{club}}",
         "home": "Etusivu",
         "books": "Kirjat",
         "create": "Luo",
@@ -33,6 +37,8 @@
         "cycle": "Uusi sykli",
         "login": "Kirjautuminen",
         "registration": "Rekisteröityminen",
+        "members": "Jäsenet",
+        "history": "Historia",
         "loggedInAs": "Kirjautuneena: {{name}}",
         "error": "Virhe: ",
         "confirmation": "Vahvistus: ",

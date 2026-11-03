@@ -29,6 +29,7 @@ interface ButtonDialogProps {
 		| 'outline'
 		| 'secondary'
 		| 'ghost'
+		| 'dangerous'
 		| 'destructive'
 		| null
 		| undefined
