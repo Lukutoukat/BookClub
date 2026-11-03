@@ -13,6 +13,19 @@ export interface Event {
     createdAt: string
 }
 
+interface CreateEventData {
+    bookclub_id: string
+    title: string
+    description?: string
+    meetingDate?: string
+}
+
+const create = (data: CreateEventData) => {
+    return axios
+        .post<Event>(baseUrl, data, getAuthConfig())
+        .then((res) => res.data)
+}
+
 const getAll = (bookclubId: string) => {
     return axios
         .get<Event[]>(`${baseUrl}/${bookclubId}`, getAuthConfig())
@@ -20,5 +33,6 @@ const getAll = (bookclubId: string) => {
 }
 
 export default {
-    getAll
+    getAll,
+    create
 }
