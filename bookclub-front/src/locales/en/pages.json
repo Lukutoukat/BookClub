@@ -119,7 +119,16 @@
         "threeLevel": "Three-level",
         "binary": "Binary",
         "threeLevelDescription": "Three-level voting system: Each member rates how willing they are to read each proposed book: want to read, could read, or do not want to read. The voting system cannot be changed after the cycle is created.",
-        "binaryDescription": "Binary voting system: Each member can vote for or against each proposed book. The voting system cannot be changed after the cycle is created."
+        "binaryDescription": "Binary voting system: Each member can vote for or against each proposed book. The voting system cannot be changed after the cycle is created.",
+        "date": {
+            "suggestEndTitle": "Suggestion phase ends",
+            "votingEndTitle": "Voting phase ends",
+            "suggestEndDescription": "Set the date and closing time for suggestions phase.",
+            "votingEndDescription": "Set the date and closing time for voting phase.",
+            "phaseEndTime": "Phase end time",
+            "chooseDate": "Choose a date",
+            "chooseDateTime": "Choose date and time"
+        }
     },
 
     "club": {
