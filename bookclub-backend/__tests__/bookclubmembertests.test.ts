@@ -59,7 +59,7 @@ describe('/api/bookclubmembers', () => {
   })
 
   describe('GET', () => {
-    it('returns the bookclubs where member has joined without leaking user_id', async () => {
+    it('returns the bookclubs where member has joined', async () => {
       ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue(mockMember_1)
 
       const response = await request(app).get('/api/bookclubmembers').set(authHeaders())
@@ -87,7 +87,7 @@ describe('/api/bookclubmembers', () => {
       expect(response.body).toEqual({ error: 'database error' })
     })
 
-    it('/api/bookclubmembers/:id returns the club members of specified club without leaking user_id', async () => {
+    it('/api/bookclubmembers/:id returns the club members of specified club', async () => {
       const mockClubMembers = [
         {
           id: 'membership-1',
@@ -520,5 +520,3 @@ describe('/api/bookclubmembers', () => {
     })
   })
 })
-
-

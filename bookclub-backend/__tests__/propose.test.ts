@@ -166,7 +166,7 @@ describe('/api/propose', () => {
     })
 
     describe('GET', () => {
-      it('filters current cycles books without leaking user_id', async () => {
+      it('filters current cycles books', async () => {
         const mockProposalList = [
           {
             id: 'proposal-1',
@@ -255,5 +255,3 @@ describe('/api/propose', () => {
     })
   })
 })
-
-
