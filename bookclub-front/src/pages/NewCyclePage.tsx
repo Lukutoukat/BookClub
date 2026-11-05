@@ -4,6 +4,7 @@ import { EndPhase } from '@/components/EndPhase'
 import { PageHeader } from '@/components/PageHeader'
 import { type BookClub } from '@/services/bookclubs'
 import { useEffect, useState } from 'react'
+import { usePageTitle } from '@/hooks/usePageTitle'
 import { Column } from '@/components/Column'
 import { useTranslation } from 'react-i18next'
 import bookclubService from '@/services/bookclubs.ts'
@@ -18,6 +19,8 @@ const NewCyclePage = () => {
 	const [loadedClub, setLoadedClub] = useState<BookClub | undefined>()
 	const [isLoading, setIsLoading] = useState(true)
 	const navigate = useNavigate()
+	
+	usePageTitle(t('labels.cycle'))
 
 	useEffect(() => {
 		if (!bookclubId) {

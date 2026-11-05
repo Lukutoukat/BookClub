@@ -23,6 +23,21 @@ test('create returns created bookclubmember', async () => {
 	expect(result).toEqual(mockMember)
 })
 
+test('patch returns patched bookclubmember', async () => {
+	mockedAxios.patch.mockResolvedValue({
+		data: { count: 1 }
+	})
+
+	const result = await bookclubmembers.changeRole('1', '2', 0)
+
+	expect(mockedAxios.patch).toHaveBeenCalledWith(
+		'/api/bookclubmembers/1/members/2',
+		{ role: 0 },
+		expect.anything()
+	)
+	expect(result).toEqual({ count: 1 })
+})
+
 test('get returns all bookclubmembers', async () => {
 	const mockMembers = [mockMember]
 

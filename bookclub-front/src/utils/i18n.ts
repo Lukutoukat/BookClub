@@ -22,7 +22,7 @@ const resources = {
 
 void i18n
     .use(LanguageDetector)
-    .use(initReactI18next) // passes i18n down to react-i18next
+    .use(initReactI18next)
     .init({
         resources,
         fallbackLng: 'en',
@@ -39,7 +39,7 @@ void i18n
         },
         
         interpolation: {
-            escapeValue: false // react already safes from xss
+            escapeValue: false
         }
     }
 );

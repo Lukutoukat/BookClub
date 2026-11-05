@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 import BookForm from '@/components/BookForm'
 import BookList, { type BookListHandle } from '@/components/BookList'
@@ -9,6 +10,8 @@ import { useTranslation } from 'react-i18next'
 const BooksPage = () => {
 	const { t } = useTranslation()
 	const bookListRef = useRef<BookListHandle>(null)
+
+	usePageTitle(t('labels.books'))
 
 	const handleBookAdded = async () => {
 		await bookListRef.current?.reload()
