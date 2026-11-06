@@ -11,6 +11,20 @@ export interface Event {
     description: string | null
     meetingDate: string | null
     createdAt: string
+    poll: {
+        id: string
+        endsAt: string
+        options: {
+            id: string
+            date: string
+            _count: {
+                votes: number
+            }
+            votes: {
+                user_id: string
+            }[]
+        }[]
+    } | null
 }
 
 interface CreateEventData {
@@ -18,6 +32,10 @@ interface CreateEventData {
     title: string
     description?: string
     meetingDate?: string
+    poll?: {
+        endsAt: string
+        dates: string[]
+    }
 }
 
 const create = (data: CreateEventData) => {
@@ -32,7 +50,14 @@ const getAll = (bookclubId: string) => {
         .then((res) => res.data)
 }
 
+const vote = (pollId: string, optionIds: string[]) => {
+    return axios
+        .put(`${baseUrl}/polls/${pollId}/votes`, { optionIds }, getAuthConfig())
+        .then((res) => res.data)
+}
+
 export default {
     getAll,
-    create
+    create,
+    vote
 }

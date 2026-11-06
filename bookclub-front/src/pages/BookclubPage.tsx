@@ -147,12 +147,13 @@ const HistoryTab = ( {bookclubId } : HistoryTabProps) => {
  */
 interface EventsTabProps {
 	bookclubId: string
+	isAdmin: boolean
 }
 
-const EventsTab = ( {bookclubId } : EventsTabProps) => {
+const EventsTab = ( {bookclubId, isAdmin } : EventsTabProps) => {
 	return (
 		<>
-			<EventList bookclubId={bookclubId}/>
+			<EventList bookclubId={bookclubId} isAdmin={isAdmin}/>
 		</>
 	)
 }
@@ -300,7 +301,7 @@ const BookclubPage = () => {
 			{
 				id: 'events',
 				label: t('club.tabs.events'),
-				content: <EventsTab bookclubId={bookclubId}/>
+				content: <EventsTab bookclubId={bookclubId} isAdmin={isAdmin}/>
 			},
 			{
 				id: 'members',

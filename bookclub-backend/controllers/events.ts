@@ -168,6 +168,9 @@ eventRouter.get('/:id', userExtractor, async (req: Request<{ id: string }>, res:
                 poll: {
                     include: {
                         options: {
+                            orderBy: {
+                                date: 'asc'
+                            },
                             include: {
                                 _count: {
                                     select: {
