@@ -33,6 +33,7 @@ export interface BookFetchOptions {
     /** A list of preferred languages as MARC 21 language codes */
     languages?: string[],
     page?: number,
+    limit?: number,
     provider?: ProviderKey,
 }
 

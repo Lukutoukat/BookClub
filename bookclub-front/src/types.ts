@@ -10,7 +10,7 @@ export interface GenericBook {
 	year?: string,
 	coverUrl?: string,
 	authors?: string[],
-	pages?: number,
+	pages?: string,
 	description?: string,
 	language?: string,
 	genres?: string[]
