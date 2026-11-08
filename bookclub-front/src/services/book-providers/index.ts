@@ -54,3 +54,11 @@ export type ProviderKey = keyof typeof providers
 export function fetchBooks(opts: BookFetchOptions = {}) {
     return providers[opts.provider ?? defaultProvider].fetch(opts)
 }
+
+export function isFetchedProviderBook(book: GenericBook | FetchedProviderBook): book is FetchedProviderBook {
+    return (
+        'provider' in book &&
+        typeof book.provider === 'string' &&
+        book.provider in providers
+    )
+}
