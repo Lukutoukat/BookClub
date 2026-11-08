@@ -4,6 +4,8 @@ import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button.tsx";
 import {isFinnaBookRecord} from "@/services/book-providers/finna.ts";
 import {isFetchedProviderBook} from "@/services/book-providers";
+import {ExternalLink} from "lucide-react";
+import React from "react";
 
 const Pad = ({hide = false}: { hide?: boolean }) => <div className={(hide && "hidden sm:block") + " h-3"}/>
 
@@ -85,11 +87,14 @@ const BookItem = ({book, actions, onAction}: BookItemProps) => {
                         {isFinna && (
                             <span className="text-blue-500">
                                 <a
+                                    className="inline-flex items-center gap-1 hover:underline"
                                     target="_blank"
                                     href={'https://helmet.finna.fi/Record/' + book.helmetId}
                                     rel="noreferrer"
                                 >
-                                View on Helmet</a>
+                                View on Helmet
+                                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true"/>
+                                </a>
                             </span>
                         )}
                     </div>

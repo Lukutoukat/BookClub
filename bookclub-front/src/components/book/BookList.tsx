@@ -5,17 +5,20 @@ import type {GenericBook} from "@/types.ts";
 interface BookListProps {
     books: GenericBook[]
     actions?: BookItemAction[]
+    onAction?: (actionId: string, book: GenericBook) => void
 }
 
-export const BookList = ({books, actions}: BookListProps) => {
+export const BookList = ({books, actions, onAction}: BookListProps) => {
     return (
         <>
             <div className={cn("flex flex-col gap-3 w-full")}>
+                <span>{books.length} books</span>
                 {books.map(book =>
                     <BookItem
                         key={book.id}
-                        actions={actions}
                         book={book}
+                        actions={actions}
+                        onAction={(actionId) => onAction?.(actionId, book)}
                     />
                 )}
             </div>
