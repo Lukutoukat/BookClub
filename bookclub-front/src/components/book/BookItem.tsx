@@ -1,22 +1,37 @@
-import {Card} from "@/components/ui/card.tsx";
 import {cn} from "@/lib/utils.ts";
 import type {GenericBook} from "@/types.ts";
+import {useTranslation} from "react-i18next";
+import {Button} from "@/components/ui/button.tsx";
+import {isFinnaBookRecord} from "@/services/book-providers/finna.ts";
+import {isFetchedProviderBook} from "@/services/book-providers";
 
 const Pad = ({hide = false}: { hide?: boolean }) => <div className={(hide && "hidden sm:block") + " h-3"}/>
 
-interface BookItemProps {
-    book: GenericBook,
+export interface BookItemAction {
+    id: string,
+    labelKey: string,
+    Icon?: React.ComponentType<{ "data-icon"?: string; className?: string }>
+    type: "default" | "destructive"
 }
 
-const BookItem = ({book}: BookItemProps) => {
+interface BookItemProps {
+    book: GenericBook,
+    actions?: BookItemAction[]
+    onAction?: (actionId: string) => void
+}
+
+const BookItem = ({book, actions, onAction}: BookItemProps) => {
+    const {t} = useTranslation()
 
     const hasAuthors = book.authors?.length;
     const topAuthors = book.authors?.slice(0, 2) ?? []
 
-    return (
-        <Card size="sm" className="w-full rounded-xl sm:rounded-4xl bg-card overflow-hidden">
+    const isFinna = isFetchedProviderBook(book) && isFinnaBookRecord(book)
 
-            <div className="flex ml-4 gap-3">
+    return (
+        <div className="flex flex-col gap-6 overflow-hidden py-4 ring-1 ring-foreground/10 bg-card border-border/60 w-full rounded-xl sm:rounded-4xl">
+
+            <div className="flex flex-wrap ml-4 gap-3">
 
                 {/* Book Cover */}
                 <div className="w-[35%] max-w-30 shrink-0 aspect-30/46 self-start">
@@ -67,14 +82,36 @@ const BookItem = ({book}: BookItemProps) => {
                     <div className="text-muted-foreground flex flex-col">
                         {book.pages && <span>{book.pages}</span>}
                         {book.language && <span>{book.language}</span>}
+                        {isFinna && (
+                            <span className="text-blue-500">
+                                <a
+                                    target="_blank"
+                                    href={'https://helmet.finna.fi/Record/' + book.helmetId}
+                                    rel="noreferrer"
+                                >
+                                View on Helmet</a>
+                            </span>
+                        )}
                     </div>
 
 
                 </div>
+
+                {/* Action buttons */}
+                <div className="ml-auto mr-5">
+                    {actions?.map(({id, type, Icon, labelKey}) => (
+                        <Button
+                            key={id}
+                            onClick={() => onAction?.(id)}
+                            variant={type === "destructive" ? "destructive" : "default"}
+                        >
+                            {Icon && <Icon data-icon="inline-start" />}
+                            {t(labelKey)}
+                        </Button>
+                    ))}
+                </div>
             </div>
-
-
-        </Card>
+        </div>
     )
 }
 

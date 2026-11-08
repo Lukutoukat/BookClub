@@ -53,6 +53,8 @@ type BookFormProps = {
 	secondaryButtonText?: string
 	secondaryButtonAction?: () => void
 	onBookAdded?: () => Promise<void> | void
+    helmetSearch?: boolean
+    headless?: boolean,
 	cycle_id: string
 	className?: string
 }
@@ -66,6 +68,8 @@ const BookForm = ({
 	secondaryButtonText,
 	secondaryButtonAction,
 	onBookAdded,
+    helmetSearch=true,
+    headless=false,
 	cycle_id,
 	className
 }: BookFormProps) => {
@@ -294,20 +298,22 @@ const BookForm = ({
 
 	return (
 		<Card className={`card-base ${className}`}>
-			<SectionHeader title={title ?? t('books.form.formTitle', { ns: 'pages' })} description={description ?? ''}>
-				{secondaryButtonAction && (
-					<Button
-						variant="secondary"
-						size="sm"
-						onClick={secondaryButtonAction}
-						className="gap-4 ml-auto shrink-0"
-					>
-						{secondaryButtonText ?? t('actions.cancel', { ns: 'common' })}
-					</Button>
-				)}
-			</SectionHeader>
-			<CardContent className="card-content">
-				<HelmetBookSearch onBookSelect={handleHelmetBookSelect} />
+            {!headless && (
+                <SectionHeader title={title ?? t('books.form.formTitle', {ns: 'pages'})} description={description ?? ''}>
+                    {secondaryButtonAction && (
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={secondaryButtonAction}
+                            className="gap-4 ml-auto shrink-0"
+                        >
+                            {secondaryButtonText ?? t('actions.cancel', {ns: 'common'})}
+                        </Button>
+                    )}
+                </SectionHeader>
+            )}
+            <CardContent className="card-content">
+                {helmetSearch && <HelmetBookSearch onBookSelect={handleHelmetBookSelect}/>}
 				<form onSubmit={handleSubmit} className="card-form">
 					<div className="form-grid">
 						<Field>
