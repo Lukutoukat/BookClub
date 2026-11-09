@@ -52,7 +52,7 @@ type BookFormProps = {
 	buttonAction?: () => void
 	secondaryButtonText?: string
 	secondaryButtonAction?: () => void
-	onBookAdded?: () => Promise<void> | void
+	onBookAdded?: (book?: CreateBook) => Promise<void> | void
     helmetSearch?: boolean
     headless?: boolean,
 	cycle_id: string
@@ -215,6 +215,24 @@ const BookForm = ({
 		if (!validateForm()) {
 			return
 		}
+
+        if (headless) {
+            const bookToSubmit: CreateBook = {
+                isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
+                name: newBook.name,
+                author: newBook.author,
+                year: parseInt(newBook.year, 10),
+                pages: newBook.pages ? parseInt(newBook.pages, 10) : undefined,
+                comment: newBook.comment || undefined,
+                language: newBook.language || undefined,
+                genre: newBook.genre || undefined
+            }
+
+            if (onBookAdded)
+                void onBookAdded(bookToSubmit)
+
+            return
+        }
 
 		try {
 			if (bookToEdit !== undefined) {
