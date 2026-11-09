@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {PageHeader} from '@/components/PageHeader'
 import {useTranslation} from 'react-i18next'
 import type {GenericBook} from "@/types.ts";
@@ -6,19 +6,55 @@ import {Button} from "@/components/ui/button.tsx";
 import {Trash2Icon} from "lucide-react";
 import {BookList} from "@/components/book/BookList.tsx";
 import BookCreationDialog from "@/components/book/BookCreationDialog.tsx";
-
+import bookService, {type CreateBook, toCreateBook, toGeneric} from '@/services/books'
+import {useNotification} from "@/context/NotificationContext.tsx";
+import {getErrorMessage} from "@/lib/errorMessage.ts";
 
 const BooksPage = () => {
 	const { t } = useTranslation()
+    const {showSuccess, showError} = useNotification()
 
     const [books, setBooks] = useState<GenericBook[]>([])
 
-    const addBook = (book: GenericBook) => {
-        setBooks((books) => books.concat(book))
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                const books = await bookService.getAll()
+                setBooks(books.map(toGeneric))
+            } catch (error) {
+                showError(getErrorMessage(error))
+            }
+        }
+
+        void fetchBooks()
+    }, [])
+
+    // TODO: Refactor to just use generic book
+    const addBook = async (book: GenericBook) => {
+        const createdBook: CreateBook = toCreateBook(book)
+
+        try {
+            const result = await bookService.create(createdBook)
+            const generic: GenericBook = toGeneric(result)
+
+            setBooks((books) => books.concat(generic))
+
+            showSuccess("Book added!")
+        } catch (error) {
+            const message = getErrorMessage(error)
+            showError("Failed to add a book " + message)
+        }
     }
 
-    const deleteBook = (book: GenericBook) => {
-        setBooks((books) => books.filter(b => b.id !== book.id))
+    const deleteBook = async (book: GenericBook) => {
+        try {
+            const result = await bookService.removeFromUser(book.id);
+            setBooks((books) => books.filter(b => b.id !== result.id))
+            showSuccess("Book deleted!")
+        } catch (error) {
+            const message = getErrorMessage(error)
+            showError("Failed to delete a book " + message)
+        }
     }
 
 	return (
@@ -40,7 +76,7 @@ const BooksPage = () => {
                 actions={[{id: "delete", type: "destructive", labelKey: "Delete", Icon: Trash2Icon}]}
                 onAction={(actionId, book) => {
                     if (actionId === "delete") {
-                        deleteBook(book)
+                        void deleteBook(book)
                     }
                 }}
             />

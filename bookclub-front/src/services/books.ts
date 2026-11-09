@@ -39,7 +39,8 @@ export function toCreateBook(book: GenericBook): CreateBook {
         name: book.title,
         author: book.authors?.[0] ?? "",
         year: book.year ? Number(book.year) : 2000,
-        pages: book.pages ? Number(book.pages) : undefined,
+        // Gets the first int in string
+        pages: book.pages ? Number(book.pages.replace(/(^\d+)(.+$)/i, '$1')) : undefined,
         comment: undefined,
         language: book.language,
         genre: book.genres?.[0],
