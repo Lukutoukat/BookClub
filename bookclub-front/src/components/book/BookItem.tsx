@@ -1,19 +1,26 @@
 import {cn} from "@/lib/utils.ts";
 import type {GenericBook} from "@/types.ts";
-import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button.tsx";
 import {isFinnaBookRecord} from "@/services/book-providers/finna.ts";
 import {isFetchedProviderBook} from "@/services/book-providers";
 import {ExternalLink} from "lucide-react";
 import React from "react";
+import {ButtonDialog} from "@/components/ButtonDialog.tsx";
 
 const Pad = ({hide = false}: { hide?: boolean }) => <div className={(hide && "hidden sm:block") + " h-3"}/>
 
+export interface BookItemActionConfirmation {
+    title: string
+    description: string
+    continue: string
+}
+
 export interface BookItemAction {
     id: string,
-    labelKey: string,
+    label: string,
     Icon?: React.ComponentType<{ "data-icon"?: string; className?: string }>
     type: "default" | "destructive"
+    confirmation?: BookItemActionConfirmation
 }
 
 interface BookItemProps {
@@ -23,7 +30,6 @@ interface BookItemProps {
 }
 
 const BookItem = ({book, actions, onAction}: BookItemProps) => {
-    const {t} = useTranslation()
 
     const hasAuthors = book.authors?.length;
     const topAuthors = book.authors?.slice(0, 2) ?? []
@@ -104,15 +110,28 @@ const BookItem = ({book, actions, onAction}: BookItemProps) => {
 
                 {/* Action buttons */}
                 <div className="ml-auto mr-5">
-                    {actions?.map(({id, type, Icon, labelKey}) => (
-                        <Button
-                            key={id}
-                            onClick={() => onAction?.(id)}
-                            variant={type === "destructive" ? "destructive" : "default"}
-                        >
-                            {Icon && <Icon data-icon="inline-start" />}
-                            {t(labelKey)}
-                        </Button>
+                    {actions?.map(({id, type, Icon, label, confirmation}) => (
+                        <>
+                            {confirmation ? (
+                                <ButtonDialog
+                                    buttonText={label}
+                                    buttonVariant={type === "destructive" ? "destructive" : "default"}
+                                    buttonOnClick={() => onAction?.(id)}
+                                    alertDialogText={confirmation.title}
+                                    alertDialogDescription={confirmation.description}
+                                    alertDialogContinueText={confirmation.continue}
+                                />
+                            ) : (
+                                <Button
+                                    key={id}
+                                    onClick={() => onAction?.(id)}
+                                    variant={type === "destructive" ? "destructive" : "default"}
+                                >
+                                    {Icon && <Icon data-icon="inline-start" />}
+                                    {label}
+                                </Button>
+                            )}
+                        </>
                     ))}
                 </div>
             </div>

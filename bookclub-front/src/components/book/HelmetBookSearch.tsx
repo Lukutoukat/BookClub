@@ -141,7 +141,7 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = 10}: HelmetBookSearchProp
                         {searchedBooks.map(book => (
                             <BookItem
                                 key={book.id}
-                                actions={[{id: "select", labelKey: "Select", type: "default", Icon: PlusIcon}]}
+                                actions={[{id: "select", label: "Select", type: "default", Icon: PlusIcon}]}
                                 onAction={(actionId) => {
                                     if (actionId === "select") {
                                         selectBook(book)

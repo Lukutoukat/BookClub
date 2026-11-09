@@ -73,7 +73,11 @@ const BooksPage = () => {
 
             <BookList
                 books={books}
-                actions={[{id: "delete", type: "destructive", labelKey: "Delete", Icon: Trash2Icon}]}
+                actions={[{id: "delete", type: "destructive", label: "Delete", Icon: Trash2Icon, confirmation: {
+                        title: "Book Deletion",
+                        description: "Are you sure you want to delete this book? This action cannot be undone.",
+                        continue: "Delete"
+                    }}]}
                 onAction={(actionId, book) => {
                     if (actionId === "delete") {
                         void deleteBook(book)

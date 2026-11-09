@@ -13,6 +13,7 @@ import {
 import BookForm from "@/components/BookForm.tsx";
 import HelmetBookSearch from "@/components/book/HelmetBookSearch.tsx";
 import {ToggleGroup, ToggleGroupItem} from "@/components/ui/toggle-group.tsx";
+import {toGeneric} from "@/services/books.ts";
 
 interface BookCreationDialogProps {
     DialogButton: React.ReactElement,
@@ -57,8 +58,12 @@ const BookCreationDialog = ({DialogButton, onSelectBook}: BookCreationDialogProp
                             </>
                         ) : (
                             <>
-                                <BookForm helmetSearch={false} headless={true} cycle_id="" onBookAdded={() => {
-                                    selectBook({id: "meow", title: "Testi"})
+                                <BookForm helmetSearch={false} headless={true} cycle_id="" onBookAdded={(book) => {
+                                    if (book)
+                                        selectBook(toGeneric({
+                                            ...book,
+                                            id: self.crypto.randomUUID(),
+                                        }))
                                 }} />
                             </>
                         )}
