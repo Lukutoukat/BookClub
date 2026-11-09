@@ -6,12 +6,11 @@ export type Notification = {
 
 export interface GenericBook {
 	id: string,
-	title?: string,
+	title: string,
 	year?: string,
 	coverUrl?: string,
 	authors?: string[],
 	pages?: string,
-	description?: string,
 	language?: string,
 	genres?: string[]
 }
