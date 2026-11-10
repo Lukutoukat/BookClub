@@ -9,10 +9,13 @@ import BookCreationDialog from "@/components/book/BookCreationDialog.tsx";
 import bookService, {type CreateBook, toCreateBook, toGeneric} from '@/services/books'
 import {useNotification} from "@/context/NotificationContext.tsx";
 import {getErrorMessage} from "@/lib/errorMessage.ts";
+import {usePageTitle} from '@/hooks/usePageTitle'
 
 const BooksPage = () => {
 	const { t } = useTranslation()
     const {showSuccess, showError} = useNotification()
+
+    usePageTitle(t('labels.books'))
 
     const [books, setBooks] = useState<GenericBook[]>([])
 
