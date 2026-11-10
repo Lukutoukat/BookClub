@@ -73,25 +73,24 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
             <Card className='gap-4 border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur'>
                 <SectionHeader title='Current Cycle'/>
                 <CardContent>
-                    <div className='flex flex-col text-lg mb-6'>
-                        <div className='w-full rounded-3xl p-6 bg-accent'>
-                            <div className='flex flex-row flex-wrap justify-between gap-x-6 gap-y-4 pb-2'>
-                                {/* Chunk 1: Current Phase */}
-                                <div className='flex max-w-full flex-col items-start'>
-                                    <span className='sm:text-base text-sm'>Current Phase</span>
-                                    <span className='text-2xl sm:text-3xl break-words font-bold text-primary'>
-                                    {cycle.phase ? phases[cycle.phase] : 'Unknown'}
-                                    </span>
-                                </div>
-
-                                {/* Chunk 2: Days left */}
-                                <div className='sm:ml-auto flex max-w-full flex-col items-end text-right'>
-                                    <span className='sm:text-base text-sm'>Days left</span>
-                                    <span className='text-2xl sm:text-3xl font-bold text-primary'>
-                                    {days.voting - days.current}
-                                    </span>
-                                </div>
+                    <div className='flex flex-col text-lg mb-6 w-full rounded-3xl p-6 bg-accent'>
+                        <div className='flex flex-row flex-wrap justify-between gap-x-6 gap-y-4 pb-2'>
+                            {/* Current Phase */}
+                            <div className='flex max-w-full flex-col items-start'>
+                                <span className='sm:text-base text-sm'>Current Phase</span>
+                                <span className='text-2xl sm:text-3xl break-words font-bold text-primary'>
+                                {cycle.phase ? phases[cycle.phase] : 'Unknown'}
+                                </span>
                             </div>
+
+                            {/* Days left */}
+                            <div className='sm:ml-auto flex max-w-full flex-col items-end text-right'>
+                                <span className='sm:text-base text-sm'>Days left</span>
+                                <span className='text-2xl sm:text-3xl font-bold text-primary'>
+                                {days.voting - days.current}
+                                </span>
+                            </div>
+
                             {/* <hr />
                             <div className='flex flex-row justify-between'>
                                 <div>
@@ -114,24 +113,20 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
                             </div> */}
                         </div>
                     </div>
-                    
+
+                    {/* Progress */}
                     <div className='w-full flex flex-col pl-2 pr-2 pb-0 pt-2'>
                         <div className='flex relative h-7 sm:h-10 text-xs sm:text-sm translate-y-2' aria-label='labels'>
                             <div className='start absolute left-0 -top-6 bottom-0 flex flex-col items-start'>
-                                <span className='text-left whitespace-pre-line -translate-x-1'>{`${phases['proposal']}\n${formatDate(dates.suggest, language)}`}</span>
+                                <span className='text-left whitespace-pre-line -translate-x-1'>
+                                    {`${phases['proposal']}\n${formatDate(dates.suggest, language)}`}
+                                </span>
                                 <span className='flex-1 border-l-2 border-primary' />
                             </div>
-                            {/* {false && (
-                                <div 
-                                    className={`middle absolute -top-6 bottom-0 flex flex-col items-center -translate-x-1/2`}
-                                    style={{ left: barLeft(days.voting / days.total) }}
-                                >
-                                    <span className='text-center whitespace-pre-line'>{`${middleLabel}\n${formattedDate(dates.votingDate)}`}</span>
-                                    <span className='flex-1 border-l-2 border-gray-400' />
-                                </div>
-                            )} */}
                             <div className='end absolute right-0 -top-6 bottom-0 flex flex-col items-end'>
-                                <span className='text-right whitespace-pre-line translate-x-1'>{`${phases['over']}\n${formatDate(dates.results, language)}`}</span>
+                                <span className='text-right whitespace-pre-line translate-x-1'>
+                                    {`${phases['over']}\n${formatDate(dates.results, language)}`}
+                                </span>
                                 <span className='flex-1 border-l-2 border-primary' />
                             </div>
                         </div>
@@ -148,7 +143,9 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
                                 style={{ left: getProgressPosition(days.voting / days.total) }}
                             >
                                 <span className='flex-1 border-l-2 border-primary' />
-                                <span className='text-center whitespace-pre-line'>{`${phases['voting']}\n${formatDate(dates.voting, language)}`}</span>
+                                <span className='text-center whitespace-pre-line'>
+                                    {`${phases['voting']}\n${formatDate(dates.voting, language)}`}
+                                </span>
                             </div>
                         </div>
                     </div>
