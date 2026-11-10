@@ -62,7 +62,7 @@ describe('BooksPage', () => {
 			render(<BooksPage />)
 
 			await waitFor(() => {
-				expect(screen.getByText('Save books')).toBeDefined()
+				expect(screen.getByText('Save Books')).toBeDefined()
 				expect(screen.getByText('Books')).toBeDefined()
 				expect(
 					screen.getByText(/Save the books you want to read and suggest in the future./i)
@@ -144,7 +144,7 @@ describe('BooksPage', () => {
 			})
 
 			const us = user.setup()
-			const deleteButtons = screen.getAllByTitle('Delete book')
+			const deleteButtons = screen.getAllByTitle('Delete Book')
 			await us.click(deleteButtons[0])
 			const continueButtons = screen.getAllByTitle('Continue')
 			await us.click(continueButtons[0])
@@ -168,7 +168,7 @@ describe('BooksPage', () => {
 			})
 
 			const us = user.setup()
-			const deleteButtons = screen.getAllByTitle('Delete book')
+			const deleteButtons = screen.getAllByTitle('Delete Book')
 			await us.click(deleteButtons[0])
 			const continueButtons = screen.getAllByTitle('Continue')
 			await us.click(continueButtons[0])

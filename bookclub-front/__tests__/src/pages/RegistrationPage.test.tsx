@@ -16,14 +16,14 @@ describe('RegistrationPage', () => {
 		test('renders page title, heading, and description', () => {
 			render(<RegistrationPage />)
 
-			expect(screen.getByText('Join the club')).toBeDefined()
-			expect(screen.getByText('Create an account')).toBeDefined()
+			expect(screen.getByText('Join the Club')).toBeDefined()
+			expect(screen.getByText('Create an Account')).toBeDefined()
 		})
 
 		test('renders registration badge and login link', () => {
 			render(<RegistrationPage />)
 
-			const heading = screen.getByRole('heading', { name: 'Join the club' })
+			const heading = screen.getByRole('heading', { name: 'Join the Club' })
 			const header = heading.closest('header')
 
 			expect(within(header as HTMLElement).getByText('Registration')).toBeDefined()
