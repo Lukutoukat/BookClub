@@ -295,11 +295,16 @@ describe('/api/bookclubmembers', () => {
         }
       })
     })
+it('returns 403 when patching a member and requester is not admin', async () => {
+  const mockMember = {
+    user_id: '2',
+    user_role: 1,
+    bookclub_id: '1'
+  }
 
-it('returns 403 if requester is not an admin', async () => {
   ;(prisma.bookClubMembers.findFirst as jest.Mock)
-    .mockResolvedValueOnce(null) 
-    .mockResolvedValueOnce(mockMember) 
+    .mockResolvedValueOnce(null)
+    .mockResolvedValueOnce(mockMember)
 
   const response = await request(app)
     .patch('/api/bookclubmembers/1/members/2')
