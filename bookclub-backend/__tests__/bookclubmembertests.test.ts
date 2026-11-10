@@ -136,6 +136,18 @@ describe('/api/bookclubmembers', () => {
       expect(response.status).toBe(404)
       expect(response.body).toEqual({ error: 'club not found' })
     })
+
+    it('returns 403 if requester is not a member of the club', async () => {
+      ;(prisma.bookClub.findFirst as jest.Mock).mockResolvedValue({ id: '1' })
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app)
+        .get('/api/bookclubmembers/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({ error: 'permission denied' })
+    })
   })
 
   describe('POST', () => {
@@ -263,17 +275,8 @@ describe('/api/bookclubmembers', () => {
 
       expect(prisma.bookClubMembers.findFirst).not.toHaveBeenCalled()
       expect(prisma.bookClubMembers.updateMany).not.toHaveBeenCalled()
-it('returns 403 if requester is not a member of the club', async () => {
-  ;(prisma.bookClub.findFirst as jest.Mock).mockResolvedValue({ id: '1' })
-  ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
+    })
 
-  const response = await request(app)
-    .get('/api/bookclubmembers/1')
-    .set(authHeaders())
-
-  expect(response.status).toBe(403)
-  expect(response.body).toEqual({ error: 'permission denied' })
-})
     it('returns 404 if member not found', async () => {
       ;(prisma.bookClubMembers.findFirst as jest.Mock)
         .mockResolvedValueOnce(mockAdmin)
