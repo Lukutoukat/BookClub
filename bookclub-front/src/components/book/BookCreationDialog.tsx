@@ -14,6 +14,7 @@ import BookForm from "@/components/BookForm.tsx";
 import HelmetBookSearch from "@/components/book/HelmetBookSearch.tsx";
 import {ToggleGroup, ToggleGroupItem} from "@/components/ui/toggle-group.tsx";
 import {toGeneric} from "@/services/books.ts";
+import {useTranslation} from "react-i18next";
 
 interface BookCreationDialogProps {
     DialogButton: React.ReactElement,
@@ -21,6 +22,7 @@ interface BookCreationDialogProps {
 }
 
 const BookCreationDialog = ({DialogButton, onSelectBook}: BookCreationDialogProps) => {
+    const {t} = useTranslation('pages')
 
     const [tab, setTab] = useState<string>("helmet");
     const [open, setOpen] = useState<boolean>(false)
@@ -40,14 +42,14 @@ const BookCreationDialog = ({DialogButton, onSelectBook}: BookCreationDialogProp
                 <div className="min-w-0">
 
                     <DialogHeader>
-                        <DialogTitle className="font-heading text-xl sm:text-4xl">Add a Book</DialogTitle>
+                        <DialogTitle className="font-heading text-xl sm:text-4xl">{t('books.dialog.title')}</DialogTitle>
                     </DialogHeader>
 
                     <div className="flex flex-col gap-3 pt-2 w-full min-w-0">
 
                         <ToggleGroup type="single" value={tab} onValueChange={setTab}>
-                            <ToggleGroupItem value="helmet">Helmet</ToggleGroupItem>
-                            <ToggleGroupItem value="manual">Manual</ToggleGroupItem>
+                            <ToggleGroupItem value="helmet">{t('books.dialog.helmet.tab')}</ToggleGroupItem>
+                            <ToggleGroupItem value="manual">{t('books.dialog.manual.tab')}</ToggleGroupItem>
                         </ToggleGroup>
 
                         {tab === "helmet" ? (

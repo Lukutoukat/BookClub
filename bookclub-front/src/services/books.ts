@@ -25,7 +25,7 @@ export function toGeneric(fields: BookFields): GenericBook {
     return {
         id: fields.id,
         title: fields.name,
-        pages: String(fields.pages),
+        pages: fields.pages ? String(fields.pages) : undefined,
         year: String(fields.year),
         language: fields.language,
         coverUrl: undefined, // TODO: Add support for a cover

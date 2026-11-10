@@ -12,10 +12,10 @@ import {getErrorMessage} from "@/lib/errorMessage.ts";
 import {usePageTitle} from '@/hooks/usePageTitle'
 
 const BooksPage = () => {
-	const { t } = useTranslation()
+	const { t } = useTranslation("pages")
     const {showSuccess, showError} = useNotification()
 
-    usePageTitle(t('labels.books'))
+    usePageTitle(t('labels.books', {ns: "common"}))
 
     const [books, setBooks] = useState<GenericBook[]>([])
 
@@ -41,11 +41,11 @@ const BooksPage = () => {
             const generic: GenericBook = toGeneric(result)
 
             setBooks((books) => books.concat(generic))
+            showSuccess(t('success.bookCreated', {ns: "messages"}))
 
-            showSuccess("Book added!")
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            const message = getErrorMessage(error)
-            showError("Failed to add a book " + message)
+            showError(t('error.api.saveBook', {ns: "messages"}))
         }
     }
 
@@ -53,33 +53,34 @@ const BooksPage = () => {
         try {
             const result = await bookService.removeFromUser(book.id);
             setBooks((books) => books.filter(b => b.id !== result.id))
-            showSuccess("Book deleted!")
+            showSuccess(t('success.bookDeleted', {ns: "messages"}))
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            const message = getErrorMessage(error)
-            showError("Failed to delete a book " + message)
+            showError(t('error.api.deleteBook', {ns: "messages"}))
         }
     }
 
 	return (
 		<>
 			<PageHeader
-				badgeText={t('labels.books')}
-				title={t('books.title', { ns: 'pages' })}
+				badgeText={t('labels.books', { ns: 'common'})}
+				title={t('books.title')}
 				description={t('books.description', { ns: 'pages' })}
 			/>
 
 			<BookCreationDialog onSelectBook={addBook} DialogButton={
 				<div className="flex justify-end">
-					<Button className="max-w-fit">Add a Book</Button>
+					<Button className="max-w-fit">{t('books.createNew')}</Button>
 				</div>
 			} />
 
             <BookList
                 books={books}
-                actions={[{id: "delete", type: "destructive", label: "Delete", Icon: Trash2Icon, confirmation: {
-                        title: "Book Deletion",
-                        description: "Are you sure you want to delete this book? This action cannot be undone.",
-                        continue: "Delete"
+                actions={[{id: "delete", type: "destructive", label: t("books.delete.button"), Icon: Trash2Icon, confirmation: {
+                        title: t("books.delete.title"),
+                        description: t("books.delete.warning"),
+                        continue: t("books.delete.button")
                     }}]}
                 onAction={(actionId, book) => {
                     if (actionId === "delete") {

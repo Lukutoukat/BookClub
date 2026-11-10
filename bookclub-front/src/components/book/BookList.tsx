@@ -1,6 +1,7 @@
 import {cn} from "@/lib/utils.ts";
 import BookItem, {type BookItemAction} from "@/components/book/BookItem.tsx";
 import type {GenericBook} from "@/types.ts";
+import {useTranslation} from "react-i18next";
 
 interface BookListProps {
     books: GenericBook[]
@@ -9,10 +10,12 @@ interface BookListProps {
 }
 
 export const BookList = ({books, actions, onAction}: BookListProps) => {
+    const {t} = useTranslation('pages')
+
     return (
         <>
             <div className={cn("flex flex-col gap-3 w-full")}>
-                <span>{books.length} books</span>
+                <span>{t('books.results', {books: books.length})}</span>
                 {books.map(book =>
                     <BookItem
                         key={book.id}

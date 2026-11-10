@@ -19,6 +19,32 @@
         "title": "Save books",
         "description": "Save the books you want to read and suggest in the future.",
         "createNew": "Create a new book",
+        "delete": {
+          "button": "Delete",
+          "title": "Delete book",
+          "warning": "Deleting a book cannot be undone."
+        },
+        "results": "{{books}} books",
+        "book": {
+          "noAuthors": "No authors",
+          "viewOnHelmet": "View on Helmet"
+        },
+        "dialog": {
+          "title": "Create book",
+          "helmet": {
+            "tab": "Helmet",
+            "search": "Search",
+            "searchEmpty": "Search to see results",
+            "searchNoResults": "No results found",
+            "searchNoMoreResults": "No more results",
+            "tooltipTitle": "Helmet Search",
+            "tooltip": "The search is implemented through a third party, Helmet (finna.fi)",
+            "select": "Select"
+          },
+          "manual": {
+            "tab": "Manual"
+          }
+        },
         "fields": {
             "title": "Title",
             "author": "Author",
@@ -47,10 +73,6 @@
             "wouldRead": "Would read",
             "wontRead": "Won't read",
             "hint": "Votes are saved automatically. You can change your votes during the voting phase."
-        },
-        "delete": {
-            "title": "Delete book",
-            "warning": "Deleting a book cannot be undone."
         }
     },
 

@@ -22,7 +22,7 @@ interface HelmetBookSearchProps {
 }
 
 const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: HelmetBookSearchProps) => {
-    const {t} = useTranslation()
+    const {t} = useTranslation('pages')
 
     const [loading, setLoading] = useState<boolean>(false)
     const [languages, setLanguages] = useState<LanguageCode[]>(defaultLanguages)
@@ -87,15 +87,15 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
                     <PopoverTrigger asChild>
                         <div className="flex ml-1 gap-1 items-center w-fit">
                             <Info color="var(--muted-foreground)" className="size-4"/>
-                            <span className="text-muted-foreground">Book Search</span>
+                            <span className="text-muted-foreground">{t('books.dialog.helmet.search')}</span>
                         </div>
                     </PopoverTrigger>
                     <PopoverContent side="top">
                         <PopoverTitle>
-                            Helmet Search
+                            {t('books.dialog.helmet.tooltipTitle')}
                         </PopoverTitle>
                         <PopoverDescription>
-                            Book search works through a third-party provider Helmet (finna.fi)
+                            {t('books.dialog.helmet.tooltip')}
                         </PopoverDescription>
                     </PopoverContent>
                 </Popover>
@@ -115,7 +115,7 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
                     <InputGroupInput
                         className=""
                         type="text"
-                        placeholder={t('placeholder.misc.search')}
+                        placeholder={t('placeholder.misc.search', {ns: "common"})}
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                     />
@@ -181,12 +181,12 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
                         next={() => void fetchMore({})}
                         hasMore={hasMore}
                         loader={<LoaderCircle color="gray" className="mr-5 animate-spin self-center size-10"/>}
-                        endMessage={<span>No more results</span>}
+                        endMessage={<span>{t('books.dialog.helmet.searchNoMoreResults')}</span>}
                     >
                         {searchedBooks.map(book => (
                             <BookItem
                                 key={book.id}
-                                actions={[{id: "select", label: "Select", type: "default", Icon: PlusIcon}]}
+                                actions={[{id: "select", label: t('books.dialog.helmet.select'), type: "default", Icon: PlusIcon}]}
                                 onAction={(actionId) => {
                                     if (actionId === "select") {
                                         selectBook(book)
@@ -199,9 +199,9 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
 
                 </>) : (<>
                     {!loading && (page === 0 ? (
-                        <span className="">Search to see results</span>
+                        <span>{t('books.dialog.helmet.searchEmpty')}</span>
                     ) : (
-                        <span className="">No results, try another search</span>
+                        <span>{t('books.dialog.helmet.searchNoResults')}</span>
                     ))}
                 </>)}
             </div>

@@ -18,6 +18,33 @@
     "books": {
         "title": "Spara böcker",
         "description": "Spara böckerna du vill läsa och föreslå i framtiden.",
+        "createNew": "Skapa en ny bok",
+        "delete": {
+          "button": "Ta bort",
+          "title": "Ta bort bok",
+          "warning": "Borttagning av boken kan inte ångras."
+        },
+        "results": "{{books}} böcker",
+        "book": {
+          "noAuthors": "Inga författare",
+          "viewOnHelmet": "Visa boken i Helmet"
+        },
+        "dialog": {
+          "title": "Skapa bok",
+          "helmet": {
+            "tab": "Helmet",
+            "search": "Sök",
+            "searchEmpty": "Utför en sökning för att se resultat",
+            "searchNoResults": "Inga resultat för sökordet",
+            "searchNoMoreResults": "Inga fler resultat",
+            "tooltipTitle": "Helmet-sökning",
+            "tooltip": "Sökningen är genomförd via en tredje part, Helmet (finna.fi)",
+            "select": "Välja"
+          },
+          "manual": {
+            "tab": "Manuell"
+          }
+        },
         "fields": {
             "title": "Titel",
             "author": "Författare",
@@ -46,10 +73,6 @@
             "wouldRead": "Skulle läsa",
             "wontRead": "Skulle inte läsa",
             "hint": "Rösterna sparas automatiskt. Du kan ändra dina röster under omröstningsfasen."
-        },
-        "delete": {
-            "title": "Ta bort bok",
-            "warning": "Att ta bort en bok kan inte ångras."
         }
     },
 

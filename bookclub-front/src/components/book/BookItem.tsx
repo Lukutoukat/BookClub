@@ -7,6 +7,7 @@ import {ExternalLink} from "lucide-react";
 import React from "react";
 import {ButtonDialog} from "@/components/ButtonDialog.tsx";
 import {getLanguageLabel, isLanguageCode} from "@/lib/bookLanguages.ts";
+import {useTranslation} from "react-i18next";
 
 const Pad = ({hide = false}: { hide?: boolean }) => <div className={(hide && "hidden sm:block") + " h-3"}/>
 
@@ -31,6 +32,7 @@ interface BookItemProps {
 }
 
 const BookItem = ({book, actions, onAction}: BookItemProps) => {
+    const {t} = useTranslation('pages')
 
     const hasAuthors = book.authors?.length;
     const topAuthors = book.authors?.slice(0, 2) ?? []
@@ -81,7 +83,7 @@ const BookItem = ({book, actions, onAction}: BookItemProps) => {
                                 )}
                             </div>
                         ) : (
-                            <span>No authors</span>
+                            <span>{t('books.book.noAuthors')}</span>
                         )}
                     </div>
 
@@ -103,7 +105,7 @@ const BookItem = ({book, actions, onAction}: BookItemProps) => {
                                     href={'https://helmet.finna.fi/Record/' + book.helmetId}
                                     rel="noreferrer"
                                 >
-                                View on Helmet
+                                {t('books.book.viewOnHelmet')}
                                 <ExternalLink className="h-3.5 w-3.5" aria-hidden="true"/>
                                 </a>
                             </span>
