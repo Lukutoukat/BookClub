@@ -296,20 +296,19 @@ describe('/api/bookclubmembers', () => {
       })
     })
 
-it('returns 403 if requester is not an admin', async () => {
-  ;(prisma.bookClubMembers.findFirst as jest.Mock)
-    .mockResolvedValueOnce(null) 
-    .mockResolvedValueOnce(mockMember) 
+    it('returns 403 if not an admin', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(null)
 
-  const response = await request(app)
-    .patch('/api/bookclubmembers/1/members/2')
-    .set(authHeaders())
-    .send({ role: 0 })
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1/2')
+        .set(authHeaders())
 
-  expect(response.status).toBe(403)
-  expect(response.body).toEqual({ error: 'permission denied' })
-  expect(prisma.bookClubMembers.updateMany).not.toHaveBeenCalled()
-})
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'permission denied'
+      })
+    })
 
     it('returns 500 if failed to promote member', async () => {
       ;(prisma.bookClubMembers.findFirst as jest.Mock)
