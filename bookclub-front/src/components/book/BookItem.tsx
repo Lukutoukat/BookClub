@@ -6,6 +6,7 @@ import {isFetchedProviderBook} from "@/services/book-providers";
 import {ExternalLink} from "lucide-react";
 import React from "react";
 import {ButtonDialog} from "@/components/ButtonDialog.tsx";
+import {getLanguageLabel, isLanguageCode} from "@/lib/bookLanguages.ts";
 
 const Pad = ({hide = false}: { hide?: boolean }) => <div className={(hide && "hidden sm:block") + " h-3"}/>
 
@@ -89,7 +90,11 @@ const BookItem = ({book, actions, onAction}: BookItemProps) => {
                     {/* Other stats */}
                     <div className="text-muted-foreground flex flex-col">
                         {book.pages && <span>{book.pages}</span>}
-                        {book.language && <span>{book.language}</span>}
+                        {book.language && <span>
+                            {isLanguageCode(book.language)
+                                ? getLanguageLabel(book.language)
+                                : book.language}
+                        </span>}
                         {isFinna && (
                             <span className="text-blue-500">
                                 <a

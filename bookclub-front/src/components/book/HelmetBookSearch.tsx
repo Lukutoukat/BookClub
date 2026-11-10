@@ -2,21 +2,30 @@ import {useTranslation} from "react-i18next";
 import {useRef, useState} from "react";
 import type {GenericBook} from "@/types.ts";
 import {Popover, PopoverContent, PopoverDescription, PopoverTitle, PopoverTrigger} from "@/components/ui/popover.tsx";
-import {Info, LoaderCircle, PlusIcon, SearchIcon} from "lucide-react";
+import {ChevronDown, Info, LanguagesIcon, LoaderCircle, PlusIcon, SearchIcon} from "lucide-react";
 import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group.tsx";
 import InfiniteScroll from "react-infinite-scroll-component";
 import BookItem from "@/components/book/BookItem.tsx";
 import {fetchBooks} from "@/services/book-providers";
+import {Button} from "@/components/ui/button.tsx";
+import {ScrollArea} from "@/components/ui/scroll-area.tsx";
+import {getLanguageOptions, type LanguageCode} from "@/lib/bookLanguages.ts";
+
+
+const defaultResultLimit = 10;
+const defaultLanguages: LanguageCode[] = ["fin", "eng"]
 
 interface HelmetBookSearchProps {
     onSelectBook: (book: GenericBook) => void
-    resultLimit?: number
+    resultLimit?: number,
+    defaultLanguages?: string[]
 }
 
-const HelmetBookSearch = ({onSelectBook, resultLimit = 10}: HelmetBookSearchProps) => {
+const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: HelmetBookSearchProps) => {
     const {t} = useTranslation()
 
     const [loading, setLoading] = useState<boolean>(false)
+    const [languages, setLanguages] = useState<LanguageCode[]>(defaultLanguages)
     const [query, setQuery] = useState<string>('')
     const [page, setPage] = useState<number>(0)
     const [searchedBooks, setSearchedBooks] = useState<GenericBook[]>([])
@@ -42,7 +51,7 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = 10}: HelmetBookSearchProp
             title: query,
             limit: resultLimit,
             page: nextPage,
-            languages: ["fin"]
+            languages: languages
         })
 
         if (searchResult.result.length === 0) {
@@ -94,7 +103,7 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = 10}: HelmetBookSearchProp
 
             {/*Search Bar */}
             <form
-                className="flex justify-center items-center"
+                className="flex gap-1 justify-center items-center"
                 onSubmit={(event => {
                     event.preventDefault();
                     event.stopPropagation();
@@ -114,6 +123,42 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = 10}: HelmetBookSearchProp
                         <SearchIcon/>
                     </InputGroupAddon>
                 </InputGroup>
+
+                <Popover modal={true}>
+                    <PopoverTrigger asChild>
+                        <Button type="button" variant="outline">
+                            <LanguagesIcon data-icon="inline-start" />
+                            <span className="hidden sm:block">{t('books.form.languageFilter', {ns: 'pages'})}</span>
+                            <ChevronDown data-icon="inline-end" />
+                        </Button>
+                    </PopoverTrigger>
+
+                    <PopoverContent>
+                        <ScrollArea className="h-40">
+                            {getLanguageOptions().map(({code, label}) => (
+                                <label key={code} className="flex items-center gap-2 py-1">
+                                    <input
+                                        type="checkbox"
+                                        checked={languages.includes(code)}
+                                        onChange={() => {
+                                            if (languages.includes(code)) {
+                                                const newLanguages = languages.filter(
+                                                    (value) => value !== code)
+                                                setLanguages(newLanguages)
+
+                                            } else {
+                                                const newLanguages = [...languages, code]
+                                                setLanguages(newLanguages)
+                                            }
+                                        }}
+                                    />
+                                    {label}
+                                </label>
+                            ))}
+                        </ScrollArea>
+                    </PopoverContent>
+                </Popover>
+
 
                 <button disabled={loading} type="submit"
                         className="flex bg-popover rounded-3xl justify-center ml-1 p-1.5 min-w-10 w-[10vw] cursor-pointer">
