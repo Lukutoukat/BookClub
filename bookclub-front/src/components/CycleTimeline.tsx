@@ -131,7 +131,7 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
                                 </div>
                             )} */}
                             <div className='end absolute right-0 -top-6 bottom-0 flex flex-col items-end'>
-                                <span className='text-right whitespace-pre-line translate-x-1'>{`${phases['voting']}\n${formatDate(dates.results, language)}`}</span>
+                                <span className='text-right whitespace-pre-line translate-x-1'>{`${phases['over']}\n${formatDate(dates.results, language)}`}</span>
                                 <span className='flex-1 border-l-2 border-primary' />
                             </div>
                         </div>
@@ -148,7 +148,7 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
                                 style={{ left: getProgressPosition(days.voting / days.total) }}
                             >
                                 <span className='flex-1 border-l-2 border-primary' />
-                                <span className='text-center whitespace-pre-line'>{`${phases['over']}\n${formatDate(dates.voting, language)}`}</span>
+                                <span className='text-center whitespace-pre-line'>{`${phases['voting']}\n${formatDate(dates.voting, language)}`}</span>
                             </div>
                         </div>
                     </div>
