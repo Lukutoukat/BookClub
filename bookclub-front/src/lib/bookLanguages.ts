@@ -37,6 +37,13 @@ export function getLanguageCodes(): LanguageCode[] {
     return Object.keys(LANGUAGES) as LanguageCode[];
 }
 
+export function getLanguages() {
+    return getLanguageCodes().map(code => ({
+        code: code,
+        label: getLanguageLabel(code)
+    }))
+}
+
 export function getLanguageLabel(code: LanguageCode): string {
     return i18n.t(LANGUAGES[code], {ns: "common"});
 }

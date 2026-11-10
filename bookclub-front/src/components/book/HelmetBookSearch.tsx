@@ -9,7 +9,7 @@ import BookItem from "@/components/book/BookItem.tsx";
 import {fetchBooks} from "@/services/book-providers";
 import {Button} from "@/components/ui/button.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
-import {getLanguageOptions, type LanguageCode} from "@/lib/bookLanguages.ts";
+import {getLanguages, type LanguageCode} from "@/lib/bookLanguages.ts";
 
 
 const defaultResultLimit = 10;
@@ -135,7 +135,7 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
 
                     <PopoverContent>
                         <ScrollArea className="h-40">
-                            {getLanguageOptions().map(({code, label}) => (
+                            {getLanguages().map(({code, label}) => (
                                 <label key={code} className="flex items-center gap-2 py-1">
                                     <input
                                         type="checkbox"
