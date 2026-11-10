@@ -47,7 +47,7 @@ const BookCreationDialog = ({DialogButton, onSelectBook}: BookCreationDialogProp
 
                     <div className="flex flex-col gap-3 pt-2 w-full min-w-0">
 
-                        <ToggleGroup type="single" value={tab} onValueChange={setTab}>
+                        <ToggleGroup type="single" value={tab} onValueChange={(value) => value && setTab(value)}>
                             <ToggleGroupItem value="helmet">{t('books.dialog.helmet.tab')}</ToggleGroupItem>
                             <ToggleGroupItem value="manual">{t('books.dialog.manual.tab')}</ToggleGroupItem>
                         </ToggleGroup>

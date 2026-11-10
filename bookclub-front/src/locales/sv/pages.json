@@ -37,6 +37,7 @@
             "searchEmpty": "Utför en sökning för att se resultat",
             "searchNoResults": "Inga resultat för sökordet",
             "searchNoMoreResults": "Inga fler resultat",
+            "searchFailed": "Sökningen misslyckades, försök igen",
             "tooltipTitle": "Helmet-sökning",
             "tooltip": "Sökningen är genomförd via en tredje part, Helmet (finna.fi)",
             "select": "Välja"

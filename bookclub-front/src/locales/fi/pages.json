@@ -37,6 +37,7 @@
             "searchEmpty": "Suorita haku nähdäksesi tuloksia",
             "searchNoResults": "Ei tuloksia hakusanalla",
             "searchNoMoreResults": "Ei muita tuloksia",
+            "searchFailed": "Haku epäonnistui, yritä uudelleen",
             "tooltipTitle": "Helmet Haku",
             "tooltip": "Haku on toteutettu kolmannen osapuolen, Helmet:in kautta (finna.fi)",
             "select": "Valitse"

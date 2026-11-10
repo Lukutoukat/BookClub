@@ -37,6 +37,7 @@
             "searchEmpty": "Search to see results",
             "searchNoResults": "No results found",
             "searchNoMoreResults": "No more results",
+            "searchFailed": "Failed to search, try again later",
             "tooltipTitle": "Helmet Search",
             "tooltip": "The search is implemented through a third party, Helmet (finna.fi)",
             "select": "Select"

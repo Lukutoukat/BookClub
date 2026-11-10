@@ -95,7 +95,7 @@ export const FinnaProvider: BookProvider<FinnaBookRecord> = {
                     authors: Object.keys(book.authors?.primary ?? {}),
                     genres: book.genres,
                     language: book.languages?.[0],
-                    title: book.title,
+                    title: book.title ?? "",
                     pages: extractPageCount(book),
                     year: book.year
                 };

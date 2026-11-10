@@ -12,7 +12,7 @@ const BookCard = ({book}: BookCardProps) => {
             className="max-w-50 flex flex-col w-full aspect-6/11 text-xl bg-card rounded-xl text-card-foreground shadow-md overflow-hidden">
 
             {/* Cover */}
-            <div className="flex justify-center items-end ounded-xl aspect-2/3 overflow-hidden">
+            <div className="flex justify-center items-end rounded-xl aspect-2/3 overflow-hidden">
                 {book.coverUrl ? (
                     <img alt="Book Cover" className="rounded-xl w-full h-full object-cover" src={book.coverUrl}/>
                 ) : (

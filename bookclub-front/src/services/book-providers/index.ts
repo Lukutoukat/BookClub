@@ -1,4 +1,3 @@
-import {TestProvider} from "@/services/book-providers/test.ts";
 import {FinnaProvider} from "@/services/book-providers/finna.ts";
 import type {GenericBook} from "@/types.ts";
 
@@ -42,7 +41,6 @@ export interface BookProvider<R extends FetchedProviderBook = FetchedProviderBoo
 }
 
 export const providers = {
-    get test() {return TestProvider},
     get finna() {return FinnaProvider},
 };
 

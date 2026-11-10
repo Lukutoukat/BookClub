@@ -121,6 +121,7 @@ const BookItem = ({book, actions, onAction}: BookItemProps) => {
                         <>
                             {confirmation ? (
                                 <ButtonDialog
+                                    key={id}
                                     buttonText={label}
                                     buttonVariant={type === "destructive" ? "destructive" : "default"}
                                     buttonOnClick={() => onAction?.(id)}

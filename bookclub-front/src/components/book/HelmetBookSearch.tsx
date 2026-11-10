@@ -10,6 +10,7 @@ import {fetchBooks} from "@/services/book-providers";
 import {Button} from "@/components/ui/button.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 import {getLanguages, type LanguageCode} from "@/lib/bookLanguages.ts";
+import {useNotification} from "@/context/NotificationContext.tsx";
 
 
 const defaultResultLimit = 10;
@@ -23,6 +24,8 @@ interface HelmetBookSearchProps {
 
 const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: HelmetBookSearchProps) => {
     const {t} = useTranslation('pages')
+
+    const {showError} = useNotification()
 
     const [loading, setLoading] = useState<boolean>(false)
     const [languages, setLanguages] = useState<LanguageCode[]>(defaultLanguages)
@@ -53,6 +56,10 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
             page: nextPage,
             languages: languages
         })
+
+        if (searchResult.error) {
+            showError(t(t('books.dialog.helmet.search')))
+        }
 
         if (searchResult.result.length === 0) {
             setHasMore(false);
@@ -160,7 +167,7 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
                 </Popover>
 
 
-                <button disabled={loading} type="submit"
+                <button disabled={loading} aria-label={t('actions.search', {ns: 'common'})} type="submit"
                         className="flex bg-popover rounded-3xl justify-center ml-1 p-1.5 min-w-10 w-[10vw] cursor-pointer">
                     {loading ? (
                         <LoaderCircle color="gray" className="animate-spin"/>
@@ -172,10 +179,12 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
             </form>
 
             {/* Books */}
-            <div ref={bookContainerRef}
+            <div id="book-search-results"
+                 ref={bookContainerRef}
                  className="max-h-[60vh] min-h-0 overflow-y-scroll scrollbar-thin! scrollbar-thumb-accent-foreground  *:shrink-0">
-                {searchedBooks.length > 1 ? (<>
+                {searchedBooks.length > 0 ? (<>
                     <InfiniteScroll
+                        scrollableTarget="book-search-results"
                         className="flex flex-col gap-2 sm:gap-4 p-1 sm:p-3"
                         dataLength={searchedBooks.length}
                         next={() => void fetchMore({})}
