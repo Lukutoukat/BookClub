@@ -58,7 +58,9 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
         })
 
         if (searchResult.error) {
-            showError(t(t('books.dialog.helmet.search')))
+            showError((t('books.dialog.helmet.searchFailed')))
+            setLoading(false)
+            return
         }
 
         if (searchResult.result.length === 0) {
