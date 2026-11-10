@@ -58,13 +58,6 @@ proposeRouter.get('/:id', userExtractor, async (req: Request, res: Response) => 
       }]
     })
 
-    return res.json(books)
-  } catch (error) {
-    console.error('GET /api/books error:', error)
-    return res.status(500).json({ error: 'database error' })
-  }
-})
-
 proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, res: Response) => {
   const { cycle_id, book_id } = req.params
 
