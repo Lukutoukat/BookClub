@@ -2,9 +2,12 @@ import BookclubForm from '@/components/BookclubForm'
 import { PageHeader } from '../components/PageHeader'
 import { Column } from '@/components/Column'
 import { useTranslation } from 'react-i18next'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 const CreateBookclubPage = () => {
 	const { t } = useTranslation()
+
+	usePageTitle(t('labels.create'))
 
 	return (
 		<>

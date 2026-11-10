@@ -119,7 +119,16 @@
         "threeLevel": "Kolmitasoinen",
         "binary": "Binäärinen",
         "threeLevelDescription": "Kolmitasoinen äänestysjärjestelmä: Jokainen jäsen arvostelee, kuinka halukas hän on lukemaan jokaisen ehdotetun kirjan: haluaa lukea, voisi lukea tai ei halua lukea. Äänestysjärjestelmää ei voi muuttaa kierroksen luomisen jälkeen.",
-        "binaryDescription": "Binäärinen äänestysjärjestelmä: Jokainen jäsen voi äänestää jokaisesta ehdotetusta kirjasta puolesta tai vastaan. Äänestysjärjestelmää ei voi muuttaa kierroksen luomisen jälkeen."
+        "binaryDescription": "Binäärinen äänestysjärjestelmä: Jokainen jäsen voi äänestää jokaisesta ehdotetusta kirjasta puolesta tai vastaan. Äänestysjärjestelmää ei voi muuttaa kierroksen luomisen jälkeen.",
+        "date": {
+            "suggestEndTitle": "Ehdotusvaihe päättyy",
+            "votingEndTitle": "Äänestysvaihe päättyy",
+            "suggestEndDescription": "Aseta päivämäärä ja sulkemisaika ehdotusvaiheelle.",
+            "votingEndDescription": "Aseta päivämäärä ja sulkemisaika äänestysvaiheelle.",
+            "phaseEndTime": "Vaiheen päättymisaika",
+            "chooseDate": "Valitse päivämäärä",
+            "chooseDateTime": "Valitse päivämäärä ja aika"
+        }
     },
 
     "club": {
@@ -142,7 +151,11 @@
             "description": "Muuta kirjakerhon asetuksia.",
             "manageMembers": {
                 "title": "Hallitse jäseniä",
-                "description": "Voit hallita yksittäisiä jäseniä alla"
+                "description": "Voit hallita yksittäisiä jäseniä alla",
+                "promoteQuestion": "Oletko varma, että haluat ylentää jäsenen '{{name}}' ylläpitäjäksi?",
+                "promoteWarning": "Käyttäjä saa ylläpitäjän oikeudet kerholle. Tätä toimintoa ei voi perua.",
+                "deleteQuestion": "Haluatko varmasti poistaa käyttäjän '{{name}}' kerhosta?",
+                "deleteWarning": "Jäsenen poistamista ei voi peruuttaa."
             },
             "manageCycle": {
                 "title": "Hallitse sykliä",
@@ -153,18 +166,16 @@
                 "description": "Voit poistaa kirjakerhosi ja kaikki siihen liittyvät tiedot alla"
             },
             "leaveClub": {
-                "title": "Lähde kerhosta",
-                "description": "Lähde kirjakerhosta",
-                "question": "Oletko varma, että haluat lähteä tästä klubista?",
+                "title": "Poistu kerhosta",
+                "description": "Poistu nykyisestä kirjakerhosta",
+                "question": "Oletko varma, että haluat poistua tästä klubista?",
                 "warning": "Tätä toimintoa ei voi peruuttaa."
             },
             "deleteQuestion": "Haluatko varmasti poistaa tämän kirjakerhon?",
             "deleteWarning": "Kirjakerhon poistamista ei voi peruuttaa."
         },
         "members": {
-            "title": "Kerhon jäsenet",
-            "deleteQuestion": "Haluatko varmasti poistaa käyttäjän '{{name}}' kerhosta?",
-            "deleteWarning": "Jäsenen poistamista ei voi peruuttaa."
+            "title": "Kerhon jäsenet"
         },
         "cycle": {
             "title": "Syklit ({{count}})",
