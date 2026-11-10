@@ -19,6 +19,33 @@
         "title": "Tallenna kirjoja",
         "description": "Tallenna kirjat, jotka haluat lukea ja ehdottaa tulevaisuudessa.",
         "createNew": "Luo uusi kirja",
+        "delete": {
+          "button": "Poista",
+          "title": "Poista kirja",
+          "warning": "Kirjan poistamista ei voi peruuttaa."
+        },
+        "results": "{{books}} kirjaa",
+        "book": {
+          "noAuthors": "Ei kirjoittajia",
+          "viewOnHelmet": "Katso kirja Helmetissä"
+        },
+        "dialog": {
+          "title": "Luo kirja",
+          "helmet": {
+            "tab": "Helmet",
+            "search": "Haku",
+            "searchEmpty": "Suorita haku nähdäksesi tuloksia",
+            "searchNoResults": "Ei tuloksia hakusanalla",
+            "searchNoMoreResults": "Ei muita tuloksia",
+            "searchFailed": "Haku epäonnistui, yritä uudelleen",
+            "tooltipTitle": "Helmet Haku",
+            "tooltip": "Haku on toteutettu kolmannen osapuolen, Helmet:in kautta (finna.fi)",
+            "select": "Valitse"
+          },
+          "manual": {
+            "tab": "Manuaalinen"
+          }
+        },
         "fields": {
             "title": "Nimi",
             "author": "Kirjailija",
@@ -47,10 +74,6 @@
             "wouldRead": "Lukisin",
             "wontRead": "En lukisi",
             "hint": "Äänet tallentuvat automaattisesti. Voit muuttaa ääniäsi äänestysvaiheen aikana."
-        },
-        "delete": {
-            "title": "Poista kirja",
-            "warning": "Kirjan poistamista ei voi peruuttaa."
         }
     },
 
