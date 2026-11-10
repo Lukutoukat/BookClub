@@ -299,19 +299,25 @@ it('returns 403 when patching a member and requester is not admin', async () => 
     bookclub_id: '1'
   }
 
+<<<<<<< HEAD
   ;(prisma.bookClubMembers.findFirst as jest.Mock)
     .mockResolvedValueOnce(null)
     .mockResolvedValueOnce(mockMember)
+=======
+    it('returns 403 if not an admin', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(null)
+>>>>>>> parent of 29c6f94 (Refactor test for non-admin member role update)
 
-  const response = await request(app)
-    .patch('/api/bookclubmembers/1/members/2')
-    .set(authHeaders())
-    .send({ role: 0 })
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1/2')
+        .set(authHeaders())
 
-  expect(response.status).toBe(403)
-  expect(response.body).toEqual({ error: 'permission denied' })
-  expect(prisma.bookClubMembers.updateMany).not.toHaveBeenCalled()
-})
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({
+        error: 'permission denied'
+      })
+    })
 
     it('returns 500 if failed to promote member', async () => {
       ;(prisma.bookClubMembers.findFirst as jest.Mock)
