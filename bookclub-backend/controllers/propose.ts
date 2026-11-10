@@ -57,6 +57,12 @@ proposeRouter.get('/:id', userExtractor, async (req: Request, res: Response) => 
         owned_by_user: user_id === req.user!.id
       }]
     })
+    res.json(books)
+  } catch (error) {
+    console.error('GET /api/propose/:id error:', error)
+    res.status(500).json({ error: 'database error' })
+  }
+})
 
     return res.json(books)
   } catch (error) {
