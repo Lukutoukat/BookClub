@@ -34,6 +34,7 @@
 		"react-day-picker": "^10.0.1",
 		"react-dom": "^19.2.6",
 		"react-i18next": "^17.0.15",
+		"react-infinite-scroll-component": "^7.2.1",
 		"react-router-dom": "^7.15.1",
 		"shadcn": "^4.7.0",
 		"tailwind-merge": "^3.6.0",
