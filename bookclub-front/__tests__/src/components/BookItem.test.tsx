@@ -46,7 +46,7 @@ describe('BookItem', () => {
 		expect(screen.getByText('2024')).toBeInTheDocument()
 		expect(screen.getByText('Fiction')).toBeInTheDocument()
 		expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument()
-		expect(screen.getByTitle('Delete book')).toBeInTheDocument()
+		expect(screen.getByTitle('Delete Book')).toBeInTheDocument()
 	})
 
 	it('calls onEdit when Edit button is clicked', async () => {
@@ -116,7 +116,7 @@ describe('BookItem', () => {
 			/>
 		)
 
-		await user.click(screen.getByTitle('Delete book'))
+		await user.click(screen.getByTitle('Delete Book'))
 		await user.click(screen.getByTitle('Continue'))
 
 		expect(onDelete).toHaveBeenCalledWith('1')

@@ -6,7 +6,7 @@ describe('CreateBookclubPage', () => {
 	test('renders page header content', () => {
 		render(<CreateBookclubPage />)
 
-		expect(screen.getByText('New book club')).toBeDefined()
+		expect(screen.getByText('New Book Club')).toBeDefined()
 		expect(
 			screen.getByText('Create a new book club for you and your friends to enjoy reading together.')
 		).toBeDefined()
