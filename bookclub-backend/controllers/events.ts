@@ -364,14 +364,20 @@ eventRouter.put('/polls/:pollId/resolve', userExtractor, async (
         const maxVotes = Math.max(...poll.options.map(option => option._count.votes))
         const winners = poll.options.filter(option => option._count.votes === maxVotes)
 
-        if (maxVotes === 0 || winners.length < 2) {
+        if (maxVotes > 0 && winners.length < 2) {
             return res.status(400).json({ error: 'Poll does not have a tie to resolve' })
         }
 
         const selectedOption = winners.find(option => option.id === optionId)
 
         if (!selectedOption) {
-            return res.status(400).json({ error: 'Selected option is not among the tied winners' })
+            return res.status(400).json({ error: 'Invalid poll option' })
+        }
+
+        if (maxVotes > 0) {
+            if(!winners.some(option => option.id === optionId)) {
+                return res.status(400).json({ error: 'Selected option is not among the tied winners' })
+            }
         }
 
         const result = await prisma.event.updateMany({

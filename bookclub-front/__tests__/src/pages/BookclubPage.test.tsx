@@ -7,6 +7,7 @@ import BookclubPage from '@/pages/BookclubPage'
 import cycleService from '@/services/cycle'
 import bookclubmembersService from '@/services/bookclubmembers'
 import bookclubService from '@/services/bookclubs'
+import eventService from '@/services/events'
 
 const {mockReload, mockShowError} = vi.hoisted(() => ({
     mockReload: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
@@ -28,6 +29,7 @@ vi.mock('react-router-dom', async (importOriginal) => {
 vi.mock('@/services/cycle')
 vi.mock('@/services/bookclubmembers')
 vi.mock('@/services/bookclubs')
+vi.mock('@/services/events')
 
 vi.mock('@/context/NotificationContext.tsx', async (importOriginal) => {
     const actual = await importOriginal<typeof import('@/context/NotificationContext.tsx')>()
@@ -72,6 +74,12 @@ vi.mock('@/components/CycleHistoryList', () => ({
     default: () => <div>Cycle history</div>,
 }))
 
+vi.mock('@/components/EventList', () => ({
+    default: ({bookclubId, isAdmin}: {bookclubId: string, isAdmin: boolean}) => (
+        <div>Events for {bookclubId} ({isAdmin ? 'admin' : 'member'})</div>
+    ),
+}))
+
 vi.mock('@/components/ButtonDialog', () => ({
     ButtonDialog: ({buttonText, buttonOnClick}: {
         buttonText: string
@@ -92,6 +100,8 @@ describe('BookclubPage', () => {
         mockUseParams.mockReturnValue({bookclubId: BOOKCLUB_ID})
         vi.mocked(bookclubmembersService.get).mockResolvedValue([])
         vi.mocked(bookclubmembersService.getByClubId).mockResolvedValue([])
+        vi.mocked(eventService.getNextEvent).mockResolvedValue(null)
+        vi.mocked(eventService.hasUnansweredPoll).mockResolvedValue(false)
     })
 
     it('redirects to /home when the bookclub id is missing', () => {
@@ -140,6 +150,50 @@ describe('BookclubPage', () => {
 
         await waitFor(() => expect(screen.getByText('Book list')).toBeInTheDocument())
         expect(screen.queryByText('Suggest a book')).not.toBeInTheDocument()
+    })
+
+    it('renders the Events tab and passes the admin status', async () => {
+        vi.mocked(bookclubmembersService.get).mockResolvedValue([
+            {bookclub_id: BOOKCLUB_ID, user_role: 0},
+        ] as any)
+        const user = userEvent.setup()
+
+        render(<BookclubPage/>)
+
+        await user.click(screen.getByRole('tab', {name: 'Events'}))
+
+        expect(await screen.findByText('Events for 1 (admin)')).toBeInTheDocument()
+    })
+
+    it('shows the next upcoming event on the Home tab', async () => {
+        vi.mocked(eventService.getNextEvent).mockResolvedValue({
+            id: 'event-1',
+            bookclub_id: BOOKCLUB_ID,
+            cycle_id: null,
+            title: 'Book night',
+            description: 'Discuss books',
+            meetingDate: '2099-01-20T18:00:00.000Z',
+            createdAt: '2026-01-01T00:00:00.000Z',
+            poll: null,
+        })
+        const user = userEvent.setup()
+        render(<BookclubPage/>)
+
+        await user.click(screen.getByRole('tab', {name: 'Home'}))
+
+        expect(await screen.findByText('Book night')).toBeInTheDocument()
+        expect(screen.getByText('Discuss books')).toBeInTheDocument()
+    })
+
+    it('marks the Events tab when there is an unanswered poll', async () => {
+        vi.mocked(eventService.hasUnansweredPoll).mockResolvedValue(true)
+
+        render(<BookclubPage/>)
+
+        await waitFor(() => {
+            expect(screen.getByRole('tab', {name: 'Events'}).querySelector('.bg-red-500'))
+                .toBeInTheDocument()
+        })
     })
 
     it('reloads the book list when a book is added', async () => {

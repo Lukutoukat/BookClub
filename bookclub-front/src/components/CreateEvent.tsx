@@ -4,7 +4,9 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import eventService from '@/services/events'
-import axios from 'axios'
+import { useNotification } from '@/context/NotificationContext'
+import { getErrorMessage } from '@/lib/errorMessage'
+import { useTranslation } from 'react-i18next'
 
 interface CreateEventProps {
     bookclubId: string,
@@ -12,6 +14,8 @@ interface CreateEventProps {
 }
 
 const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
+    const { t } = useTranslation('pages')
+    const { showError, showSuccess } = useNotification()
     const [ title, setTitle ] = useState('')
     const [ description, setDescription ] = useState('')
     const [ meetingDate, setMeetingDate ] = useState('')
@@ -21,6 +25,12 @@ const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
     
     const isPollEndValid = pollEndsAt !== '' && new Date(pollEndsAt).getTime() > Date.now()
     const arePollOptionsValid = pollOptions.every(option => option !== '' && new Date(option).getTime() > new Date(pollEndsAt).getTime())
+    const isPollEndInPast = pollEndsAt !== '' && new Date(pollEndsAt).getTime() <= Date.now()
+    const hasInvalidPollDates = pollEndsAt !== '' && 
+        pollOptions.some(option => 
+            option !== '' && 
+            new Date(option).getTime() <= new Date(pollEndsAt).getTime()
+        )
 
     const handleCreate = async () => {
         try {
@@ -49,36 +59,33 @@ const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
             setIsPoll(false)
             setPollOptions(['', ''])
             setPollEndsAt('')
+            showSuccess(t('club.events.create.success'))
             onCreated()
 
         } catch (error) {
-            console.error('Error creating event:', error)
-            
-            if (axios.isAxiosError(error)) {
-                console.log('Backend error:', error.response?.data)
-            }
+            showError(getErrorMessage(error))
         }
     }
 
     return (
         <div className="space-y-4">
-            <h3 className="font-semibold">Luo tapahtuma</h3>
+            <h3 className="font-semibold">{t('club.events.create.title')}</h3>
             <div className="space-y-2">
-                <Label htmlFor="event-title">Tapahtuman nimi</Label>
+                <Label htmlFor="event-title">{t('club.events.create.name')}</Label>
                 <Input
                     id="event-title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Esim: Marraskuun lukupiiri"
+                    placeholder={t('club.events.create.namePlaceholder')}
                 />
             </div>
             <div className="space-y-2">
-                <Label htmlFor="event-description">Kuvaus</Label>
+                <Label htmlFor="event-description">{t('club.events.create.description')}</Label>
                 <Textarea
                     id="event-description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Tapahtuman kuvaus..."
+                    placeholder={t('club.events.create.descriptionPlaceholder')}
                 />
             </div>
             <div className="flex items-center space-x-2">
@@ -89,17 +96,17 @@ const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
                     onChange={(e) => setIsPoll(e.target.checked)}
                     className="w-4 h-4 accent-primary"
                 />
-                <Label htmlFor="event-poll">Luo päivämäärä-äänestys</Label>
+                <Label htmlFor="event-poll">{t('club.events.create.createPoll')}</Label>
             </div>
             {!isPoll && (
                 <div className="space-y-2">
-                    <Label htmlFor="event-date">Tapahtuman ajankohta</Label>
+                    <Label htmlFor="event-date">{t('club.events.create.meetingDate')}</Label>
                     <Input
                         id="event-date"
                         type="datetime-local"
                         value={meetingDate}
                         onChange={(e) => setMeetingDate(e.target.value)}
-                        placeholder="Valitse ajankohta"
+                        placeholder={t('club.events.create.selectDate')}
                     />
                 </div>
             )}
@@ -107,7 +114,7 @@ const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
                 <div className="space-y-2">
                     {pollOptions.map((option, index) => (
                         <div key={index} className="space-y-2">
-                            <Label> Vaihtoehto {index + 1} </Label>
+                            <Label> {t('club.events.create.option', { number: index + 1 })} </Label>
                             <div className="flex items-center gap-2">
                                 <Input
                                     type="datetime-local"
@@ -123,7 +130,7 @@ const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
                                         type="button"
                                         variant="outline"
                                         size="icon"
-                                        aria-label="Poista vaihtoehto"
+                                        aria-label={t('club.events.create.removeOption')}
                                         onClick={() => {
                                             setPollOptions(pollOptions.filter((_, i) => i !== index))
                                         }}
@@ -135,14 +142,20 @@ const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
                         </div>
                     ))}
                     <div className="space-y-2">
-                        <Label htmlFor="poll-ends-at">Äänestyksen päättymisaika</Label>
+                        <Label htmlFor="poll-ends-at">{t('club.events.create.pollEndsAt')}</Label>
                         <Input
                             id="poll-ends-at"
                             type="datetime-local"
                             value={pollEndsAt}
                             onChange={(e) => setPollEndsAt(e.target.value)}
-                            placeholder="Valitse päättymisaika"
+                            placeholder={t('club.events.create.selectDate')}
                         />
+                        {isPollEndInPast && (
+                            <p className="text-sm text-destructive" role="alert">{t('club.events.create.pollEndInPast')}</p>
+                        )}
+                        {hasInvalidPollDates && (
+                            <p className="text-sm text-destructive" role="alert">{t('club.events.create.invalidPollDates')}</p>
+                        )}
                     </div>
                     <div className="flex justify-end">
                     <Button
@@ -150,7 +163,7 @@ const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
                         variant="outline"
                         size="icon"
                         onClick={() => setPollOptions([...pollOptions, ''])}
-                        aria-label="Lisää vaihtoehto"
+                        aria-label={t('club.events.create.addOption')}
                     >
                         <span className="text-xl font-bold">+</span>
                     </Button>
@@ -160,7 +173,7 @@ const CreateEvent = ({ bookclubId, onCreated }: CreateEventProps) => {
             <Button onClick={handleCreate} 
                     disabled={!title.trim() ||
                     (isPoll ? !isPollEndValid || !arePollOptionsValid : !meetingDate)}>
-                Luo tapahtuma
+                {t('club.events.create.title')}
             </Button>
         </div>
     )

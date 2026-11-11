@@ -38,6 +38,10 @@ interface CreateEventData {
     }
 }
 
+interface EventActionResponse {
+    message: string
+}
+
 const create = (data: CreateEventData) => {
     return axios
         .post<Event>(baseUrl, data, getAuthConfig())
@@ -52,12 +56,49 @@ const getAll = (bookclubId: string) => {
 
 const vote = (pollId: string, optionIds: string[]) => {
     return axios
-        .put(`${baseUrl}/polls/${pollId}/votes`, { optionIds }, getAuthConfig())
+        .put<EventActionResponse>(`${baseUrl}/polls/${pollId}/votes`, { optionIds }, getAuthConfig())
         .then((res) => res.data)
+}
+
+const resolvePoll = (pollId: string, optionId: string) => {
+    return axios
+        .put<EventActionResponse>(`${baseUrl}/polls/${pollId}/resolve`, { optionId }, getAuthConfig())
+        .then((res) => res.data)
+}
+
+const getNextEvent = (bookclubId: string) => {
+    return getAll(bookclubId).then((events) => {
+        const now = Date.now()
+        const upcomingEvents = events.filter((event) =>
+            event.meetingDate !== null &&
+            new Date(event.meetingDate).getTime() > now
+        )
+
+        upcomingEvents.sort((a, b) =>
+            Date.parse(a.meetingDate ?? '') - Date.parse(b.meetingDate ?? '')
+        )
+
+        return upcomingEvents[0] ?? null
+    })
+}
+
+const hasUnansweredPoll = (bookclubId: string) => {
+    return getAll(bookclubId).then((events) => {
+        const now = Date.now()
+        return events.some(event =>
+            event.poll !== null &&
+            event.meetingDate === null &&
+            new Date(event.poll.endsAt).getTime() > now &&
+            event.poll.options.every(option => option.votes.length === 0)
+        )
+    })
 }
 
 export default {
     getAll,
     create,
-    vote
+    vote,
+    resolvePoll,
+    getNextEvent,
+    hasUnansweredPoll
 }

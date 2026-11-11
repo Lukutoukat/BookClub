@@ -138,6 +138,43 @@
             "history": "History",
             "settings": "Settings"
         },
+        "events": {
+            "create": {
+                "title": "Create Event",
+                "name": "Event Name",
+                "namePlaceholder": "E.g. November Reading Circle",
+                "description": "Event Description",
+                "descriptionPlaceholder": "Event Description...",
+                "meetingDate": "Meeting Date",
+                "createPoll": "Create Date Poll",
+                "option": "Option {{number}}",
+                "pollEndsAt": "Poll Ends At",
+                "selectDate": "Select Date",
+                "addOption": "Add Option",
+                "removeOption": "Remove Option",
+                "success": "Event created successfully!",
+                "invalidPollDates": "Poll options must be after the poll end date.",
+                "pollEndInPast": "Poll end date must be in the future.",
+                "dialogDescription": "Create a new event for the book club."
+            },
+            "list": {
+                "title": "Events",
+                "empty": "No events yet.",
+                "meetingDate": "Meeting Date: ",
+                "meetingDatePending": "Meeting Date: Pending", 
+                "pollEndedAt": "Poll Ended At: ",
+                "pollEndsAt": "Poll Ends At: ",
+                "pollEnded": "Poll Ended",
+                "votes": "Votes",
+                "saveVotes": "Save Votes",
+                "voteSuccess": "Your vote has been saved.",
+                "resolveSuccess": "The meeting date has been confirmed.",
+                "pollTied": "The poll ended in a tie.",
+                "pollNoVotes": "The poll ended without any votes.",
+                "selectMeetingDate": "Select Meeting Date",
+                "nextEvent": "Next Event"
+            }
+        },
         "settings": {
             "title": "Book Club Settings",
             "description": "Change book club settings.",
