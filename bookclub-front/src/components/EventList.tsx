@@ -182,7 +182,7 @@ const EventList = ({ bookclubId, isAdmin, onVoteSaved }: EventListProps) => {
                                             <p>{t('club.events.list.votes')}: {option._count.votes}</p>
                                         </div>
                                     ))}
-                                    <Button onClick={() => handleVote(event.poll.id)} disabled={new Date(event.poll.endsAt).getTime() <= Date.now()}>
+                                    <Button onClick={() => handleVote(event.poll!.id)} disabled={new Date(event.poll.endsAt).getTime() <= Date.now()}>
                                         {t('club.events.list.saveVotes')}
                                     </Button>
                                 </div>
