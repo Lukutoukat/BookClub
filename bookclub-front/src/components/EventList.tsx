@@ -126,7 +126,7 @@ const EventList = ({ bookclubId, isAdmin, onVoteSaved }: EventListProps) => {
                         <DialogTrigger asChild>
                             <Button> {t('club.events.create.title')}</Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className='max-h-[calc(100vh-2rem)] overflow-auto'>
                             <DialogHeader>
                                 <DialogTitle>{t('club.events.create.title')}</DialogTitle>
                                 <DialogDescription>{t('club.events.create.dialogDescription')}</DialogDescription>
