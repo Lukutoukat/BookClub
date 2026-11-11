@@ -21,7 +21,7 @@
         "createNew": "Create a new book",
         "delete": {
           "button": "Delete",
-          "title": "Delete book",
+          "title": "Delete Book",
           "warning": "Deleting a book cannot be undone."
         },
         "results": "{{books}} books",
@@ -74,10 +74,6 @@
             "wouldRead": "Would read",
             "wontRead": "Won't read",
             "hint": "Votes are saved automatically. You can change your votes during the voting phase."
-        },
-        "delete": {
-            "title": "Delete Book",
-            "warning": "Deleting a book cannot be undone."
         }
     },
 
