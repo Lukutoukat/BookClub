@@ -364,6 +364,28 @@ describe('/api/events', () => {
             expect(prisma.event.create).not.toHaveBeenCalled()
         })
 
+        it('returns 400 if poll option dates are duplicated', async () => {
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+
+            const response = await request(app).post('/api/events').set(authHeaders()).send({
+                ...mockEvent,
+                meetingDate: undefined,
+                poll: {
+                    endsAt: '2100-10-20T18:00:00Z',
+                    dates: [
+                        '2100-10-22T18:00:00Z',
+                        '2100-10-22T18:00:00.000Z'
+                    ]
+                }
+            })
+
+            expect(response.status).toBe(400)
+            expect(response.body).toEqual({ error: 'Poll option dates must be unique' })
+            expect(prisma.event.create).not.toHaveBeenCalled()
+        })
+
         it('creates an event with a date poll', async () => {
             ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
                 user_role: 0

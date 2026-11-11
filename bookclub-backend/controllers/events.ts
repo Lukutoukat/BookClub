@@ -78,6 +78,10 @@ eventRouter.post('/', userExtractor, async (req: Request<unknown, unknown, Event
         if (optionDates.some(date => date <= endsAt)) {
             return res.status(400).json({ error: 'Poll option dates must be after the poll end date' })
         }
+
+        if (new Set(optionDates.map(date => date.getTime())).size !== optionDates.length) {
+            return res.status(400).json({ error: 'Poll option dates must be unique' })
+        }
     }
 
     if (meetingDate == null && poll == null) {
