@@ -450,6 +450,9 @@ describe('/api/events', () => {
                     poll: {
                         include: {
                             options: {
+                                orderBy: {
+                                    date: 'asc'
+                                },
                                 include: {
                                     _count: {
                                         select: {
