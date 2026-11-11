@@ -223,7 +223,10 @@ eventRouter.get('/:id', userExtractor, async (req: Request<{ id: string }>, res:
     }
 })
 
-eventRouter.put('/polls/:pollId/votes', userExtractor, async (req: Request<{ pollId: string }>, res: Response) => {
+eventRouter.put('/polls/:pollId/votes', userExtractor, async (
+    req: Request<{ pollId: string }, unknown, { optionIds?: unknown }>,
+    res: Response
+) => {
     if (!req.user) {
         return res.status(401).json({ error: 'user not found' })
     }
@@ -307,7 +310,7 @@ eventRouter.put('/polls/:pollId/votes', userExtractor, async (req: Request<{ pol
 })
 
 eventRouter.put('/polls/:pollId/resolve', userExtractor, async (
-    req: Request<{ pollId: string }>,
+    req: Request<{ pollId: string }, unknown, { optionId?: unknown }>,
     res: Response) => {
     if (!req.user) {
         return res.status(401).json({ error: 'user not found' })
@@ -372,12 +375,6 @@ eventRouter.put('/polls/:pollId/resolve', userExtractor, async (
 
         if (!selectedOption) {
             return res.status(400).json({ error: 'Invalid poll option' })
-        }
-
-        if (maxVotes > 0) {
-            if(!winners.some(option => option.id === optionId)) {
-                return res.status(400).json({ error: 'Selected option is not among the tied winners' })
-            }
         }
 
         const result = await prisma.event.updateMany({

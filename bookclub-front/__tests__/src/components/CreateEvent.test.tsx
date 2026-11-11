@@ -29,7 +29,7 @@ describe('CreateEvent', () => {
                 bookclub_id: 'club-1',
                 title: 'Book night',
                 description: 'Discuss books',
-                meetingDate: '2099-01-20T16:00:00.000Z'
+                meetingDate: new Date('2099-01-20T18:00').toISOString()
             })
             expect(onCreated).toHaveBeenCalledTimes(1)
         })
@@ -57,9 +57,13 @@ describe('CreateEvent', () => {
         await waitFor(() => expect(eventService.create).toHaveBeenCalledWith({
             bookclub_id: 'club-1',
             title: 'Poll night',
+            description: undefined,
             poll: {
-                endsAt: '2099-01-19T16:00:00.000Z',
-                dates: ['2099-01-20T16:00:00.000Z', '2099-01-21T16:00:00.000Z']
+                endsAt: new Date('2099-01-19T18:00').toISOString(),
+                dates: [
+                    new Date('2099-01-20T18:00').toISOString(),
+                    new Date('2099-01-21T18:00').toISOString()
+                ]
             }
         }))
     })
