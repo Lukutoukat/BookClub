@@ -8,6 +8,7 @@ jest.mock('../db.ts', () => ({
       findMany: jest.fn(),
       create: jest.fn(),
       findFirst: jest.fn(),
+      updateMany: jest.fn(),
       deleteMany: jest.fn(),
     },
     user: {
@@ -23,11 +24,13 @@ jest.mock('../db.ts', () => ({
 import { app } from '../index.ts'
 import { prisma } from '../db.ts'
 
-const mockMember_1 = {
-  user_id: '1',
-  user_role: 1,
-  bookclub_id: '1'
-}
+const mockMember_1 = [
+  {
+    id: 'membership-1',
+    user_role: 1,
+    bookclub_id: '1'
+  }
+]
 
 const authHeaders = () => {
   if (!process.env.SECRET) {
@@ -62,12 +65,18 @@ describe('/api/bookclubmembers', () => {
       const response = await request(app).get('/api/bookclubmembers').set(authHeaders())
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual({
-        user_id: '1',
-        user_role: 1,
-        bookclub_id: '1'
+      expect(response.body).toEqual(mockMember_1)
+      expect(response.body[0]).not.toHaveProperty('user_id')
+      expect(prisma.bookClubMembers.findMany).toHaveBeenCalledWith({
+        where: {
+          user_id: '1'
+        },
+        select: {
+          id: true,
+          bookclub_id: true,
+          user_role: true
+        }
       })
-      expect(prisma.bookClubMembers.findMany).toHaveBeenCalledTimes(1)
     })
 
     it('returns 500 if get fails', async () => {
@@ -81,13 +90,10 @@ describe('/api/bookclubmembers', () => {
     it('/api/bookclubmembers/:id returns the club members of specified club', async () => {
       const mockClubMembers = [
         {
-          user_id: '1',
-          user_role: '0',
-          bookclub_id: '1',
+          id: 'membership-1',
+          user_role: 0,
           User: {
-            id: '1',
-            name: 'pekka',
-            email: 'pekka@test.com',
+            name: 'pekka'
           }
         }
       ]
@@ -102,14 +108,17 @@ describe('/api/bookclubmembers', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual(mockClubMembers)
+      expect(response.body[0]).not.toHaveProperty('user_id')
+      expect(response.body[0]).not.toHaveProperty('bookclub_id')
       expect(prisma.bookClubMembers.findMany).toHaveBeenCalledWith({
-        where:{
+        where: {
           bookclub_id: '1'
         },
-        include: {
+        select: {
+          id: true,
+          user_role: true,
           User: {
             select: {
-              id: true,
               name: true
             }
           }
@@ -127,6 +136,18 @@ describe('/api/bookclubmembers', () => {
       expect(response.status).toBe(404)
       expect(response.body).toEqual({ error: 'club not found' })
     })
+
+    it('returns 403 if requester is not a member of the club', async () => {
+      ;(prisma.bookClub.findFirst as jest.Mock).mockResolvedValue({ id: '1' })
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app)
+        .get('/api/bookclubmembers/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({ error: 'permission denied' })
+    })
   })
 
   describe('POST', () => {
@@ -142,7 +163,7 @@ describe('/api/bookclubmembers', () => {
         status: undefined,
         owner_id: '2'
       }
-      ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue(mockMember_1)
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
       ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockbookclub)
       ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
 
@@ -190,7 +211,10 @@ describe('/api/bookclubmembers', () => {
         invite_code: 'ABCDE'
       }
       ;(prisma.bookClubMembers.create as jest.Mock).mockRejectedValue(new Error('failure'))
-      ;(prisma.bookClubMembers.findMany as jest.Mock).mockResolvedValue(mockMember_1)
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue({
+        id: '1',
+        invite_code: 'ABCDE'
+      })
       ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(null)
 
       const response = await request(app)
@@ -201,6 +225,141 @@ describe('/api/bookclubmembers', () => {
       expect(response.status).toBe(500)
       expect(response.body).toEqual({ error: 'database error' })
     })
+
+    it('returns 409, if user is already a member of the club', async () => {
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue({
+        id: '1',
+        invite_code: 'ABCDE'
+      })
+      ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue(mockMember_1[0])
+
+      const response = await request(app)
+        .post('/api/bookclubmembers')
+        .set(authHeaders())
+        .send({ invite_code: 'ABCDE' })
+
+      expect(response.status).toBe(409)
+      expect(response.body).toEqual({ error: 'user already a member of this club' })
+      expect(prisma.bookClubMembers.create).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('PATCH /:id/members/:user_id', () => {
+    const mockAdmin = {
+      user_id: '1',
+      user_role: 0,
+      bookclub_id: '1'
+    }
+    const mockMember = {
+      user_id: '2',
+      user_role: 1,
+      bookclub_id: '1'
+    }
+
+    it('returns 200 if succesfully promoted member', async () => {
+      ;(prisma.bookClubMembers.updateMany as jest.Mock)
+        .mockResolvedValue({ count: 1 })
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(mockAdmin)
+        .mockResolvedValueOnce(mockMember)
+
+      const response = await request(app)
+        .patch('/api/bookclubmembers/1/members/2')
+        .set(authHeaders())
+        .send({ role: 0 })
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual({ count: 1 })
+      expect(prisma.bookClubMembers.findFirst).toHaveBeenNthCalledWith(1, {
+        where: {
+          user_id: '1',
+          user_role: 0,
+          bookclub_id: '1'
+        }
+      })
+      expect(prisma.bookClubMembers.findFirst).toHaveBeenNthCalledWith(2, {
+        where: {
+          user_id: '2',
+          bookclub_id: '1'
+        }
+      })
+      expect(prisma.bookClubMembers.updateMany).toHaveBeenCalledWith({
+        where: {
+          user_id: '2',
+          bookclub_id: '1'
+        },
+        data: {
+          user_role: 0
+        }
+      })
+    })
+
+    it('returns 400 if invalid role', async () => {
+      const response = await request(app)
+        .patch('/api/bookclubmembers/1/members/2')
+        .set(authHeaders())
+        .send({ role: 2 })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ error: 'invalid role' })
+
+      expect(prisma.bookClubMembers.findFirst).not.toHaveBeenCalled()
+      expect(prisma.bookClubMembers.updateMany).not.toHaveBeenCalled()
+    })
+
+    it('returns 404 if member not found', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(mockAdmin)
+        .mockResolvedValueOnce(null)
+
+      const response = await request(app)
+        .patch('/api/bookclubmembers/1/members/3')
+        .set(authHeaders())
+        .send({ role: 0 })
+
+      expect(response.status).toBe(404)
+      expect(prisma.bookClubMembers.findFirst).toHaveBeenNthCalledWith(2, {
+        where: {
+          user_id: '3',
+          bookclub_id: '1'
+        }
+      })
+    })
+
+it('returns 403 if requester is not an admin', async () => {
+  ;(prisma.bookClubMembers.findFirst as jest.Mock)
+    .mockResolvedValueOnce(null) 
+    .mockResolvedValueOnce(mockMember) 
+
+  const response = await request(app)
+    .patch('/api/bookclubmembers/1/members/2')
+    .set(authHeaders())
+    .send({ role: 0 })
+
+  expect(response.status).toBe(403)
+  expect(response.body).toEqual({ error: 'permission denied' })
+  expect(prisma.bookClubMembers.updateMany).not.toHaveBeenCalled()
+})
+
+    it('returns 500 if failed to promote member', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(mockAdmin)
+        .mockResolvedValueOnce(mockMember)
+
+      ;(prisma.bookClubMembers.updateMany as jest.Mock)
+        .mockRejectedValue(new Error('database error'))
+
+      const response = await request(app)
+        .patch('/api/bookclubmembers/1/members/2')
+        .set(authHeaders())
+        .send({ role: 0 })
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({
+        error: 'failed to change user role'
+      })
+      expect(prisma.bookClubMembers.updateMany).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('DELETE /:id', () => {
@@ -208,7 +367,7 @@ describe('/api/bookclubmembers', () => {
       id: '1',
       owner_id: '2'
     }
-    
+
     it('returns 200 if successfully left club', async () => {
       const mockMember = {
         user_id: 1,
@@ -338,7 +497,7 @@ describe('/api/bookclubmembers', () => {
       const response = await request(app)
         .delete('/api/bookclubmembers/1/2')
         .set(authHeaders())
-      
+
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         success: true,

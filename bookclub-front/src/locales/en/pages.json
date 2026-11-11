@@ -1,12 +1,12 @@
 {
     "user": {
-        "title": "Join the club",
+        "title": "Join the Club",
         "description": "Create your own book club and start reading with your friends.",
         "username": "Username",
         "password": "Password",
         "confirmPassword": "Confirm password",
         "emailAddress": "Email address",
-        "registerTitle": "Create an account",
+        "registerTitle": "Create an Account",
         "registerDescription": "Create an account and begin your reading journey with friends.",
         "registerButton": "Create a new account",
         "registerHint": "Double-check the details before creating the account.",
@@ -16,9 +16,36 @@
     },
 
     "books": {
-        "title": "Save books",
+        "title": "Save Books",
         "description": "Save the books you want to read and suggest in the future.",
         "createNew": "Create a new book",
+        "delete": {
+          "button": "Delete",
+          "title": "Delete book",
+          "warning": "Deleting a book cannot be undone."
+        },
+        "results": "{{books}} books",
+        "book": {
+          "noAuthors": "No authors",
+          "viewOnHelmet": "View on Helmet"
+        },
+        "dialog": {
+          "title": "Create book",
+          "helmet": {
+            "tab": "Helmet",
+            "search": "Search",
+            "searchEmpty": "Search to see results",
+            "searchNoResults": "No results found",
+            "searchNoMoreResults": "No more results",
+            "searchFailed": "Failed to search, try again later",
+            "tooltipTitle": "Helmet Search",
+            "tooltip": "The search is implemented through a third party, Helmet (finna.fi)",
+            "select": "Select"
+          },
+          "manual": {
+            "tab": "Manual"
+          }
+        },
         "fields": {
             "title": "Title",
             "author": "Author",
@@ -31,13 +58,13 @@
             "notes": "Notes"
         },
         "form": {
-            "formTitle": "Add a book",
-            "editTitle": "Edit book",
+            "formTitle": "Add a Book",
+            "editTitle": "Edit Book",
             "editDescription": "Edit the details of the book",
             "languageFilter": "Languages"
         },
         "saved": {
-            "title": "Your saved books",
+            "title": "Your Saved Books",
             "empty": "No books yet."
         },
         "votes": {
@@ -49,22 +76,22 @@
             "hint": "Votes are saved automatically. You can change your votes during the voting phase."
         },
         "delete": {
-            "title": "Delete book",
+            "title": "Delete Book",
             "warning": "Deleting a book cannot be undone."
         }
     },
 
     "home": {
-        "title": "Clubs, books and more",
+        "title": "Clubs, Books and More",
         "description": "Manage your book clubs, suggest new books and make decisions together.",
         "clubs": {
-            "title": "Your book clubs",
+            "title": "Your Book Clubs",
             "count_one": "{{count}} book club",
             "count_other": "{{count}} book clubs",
             "empty": "No book clubs yet"
         },
         "joinClub": {
-            "title": "Join a book club",
+            "title": "Join a Book Club",
             "inviteCode": "Invite code",
             "hint": "You'll receive an invite code from your book club administrator."
         }
@@ -103,10 +130,10 @@
     },
 
     "createClub": {
-        "title": "New book club",
+        "title": "New Book Club",
         "description": "Create a new book club for you and your friends to enjoy reading together.",
         "form": {
-            "title": "Create a new book club",
+            "title": "Create a New Book Club",
             "fieldLabel": "Name your book club",
             "hint": "Double-check for spelling mistakes before creating a new book club."
         }
@@ -119,16 +146,25 @@
         "threeLevel": "Three-level",
         "binary": "Binary",
         "threeLevelDescription": "Three-level voting system: Each member rates how willing they are to read each proposed book: want to read, could read, or do not want to read. The voting system cannot be changed after the cycle is created.",
-        "binaryDescription": "Binary voting system: Each member can vote for or against each proposed book. The voting system cannot be changed after the cycle is created."
+        "binaryDescription": "Binary voting system: Each member can vote for or against each proposed book. The voting system cannot be changed after the cycle is created.",
+        "date": {
+            "suggestEndTitle": "Suggestion Phase Ends",
+            "votingEndTitle": "Voting Phase Ends",
+            "suggestEndDescription": "Set the date and closing time for suggestions phase.",
+            "votingEndDescription": "Set the date and closing time for voting phase.",
+            "phaseEndTime": "Phase end time",
+            "chooseDate": "Choose a date",
+            "chooseDateTime": "Choose date and time"
+        }
     },
 
     "club": {
         "notFound": "Book club not found",
         "missingId": "Missing book club id",
         "description": "Suggest books and decide your next read together.",
-        "adminPanelTitle": "Manage your book club",
+        "adminPanelTitle": "Manage Your Book Club",
         "invite": {
-            "title": "Copied invite code!",
+            "title": "Copied Invite Code!",
             "description": "The invite code is copied to the clipboard and can be pasted and shared to friends."
         },
         "tabs": {
@@ -180,7 +216,11 @@
             "description": "Change book club settings.",
             "manageMembers": {
                 "title": "Manage Members",
-                "description": "You can manage individual members below"
+                "description": "You can manage individual members below",
+                "promoteQuestion": "Are you sure you want to promote '{{name}}' to admin?",
+                "promoteWarning": "The member will have access to admin privileges. This action cannot be undone.",
+                "deleteQuestion": "Are you sure you want to remove '{{name}}' from the club?",
+                "deleteWarning": "Once the member is removed, it cannot be undone."
             },
             "manageCycle": {
                 "title": "Manage Cycle",
@@ -191,7 +231,7 @@
                 "description": "You can remove your book club and all information related to it below"
             },
             "leaveClub": {
-                "title": "Leave club",
+                "title": "Leave Club",
                 "description": "Leave the book club",
                 "question": "Are you sure you want to leave the club?",
                 "warning": "This action cannot be undone."
@@ -200,9 +240,7 @@
             "deleteWarning": "Once the book club is deleted, it cannot be undone."
         },
         "members": {
-            "title": "Club Members",
-            "deleteQuestion": "Are you sure you want to remove user '{{name}}' from the club?",
-            "deleteWarning": "Once the member is removed, it cannot be undone."
+            "title": "Club Members"
         },
         "cycle": {
             "title": "Cycles ({{count}})",
@@ -222,19 +260,19 @@
                 "votingEnd": "Voting End Time"
             },
             "suggest": {
-                "title": "Suggest book",
+                "title": "Suggest Book",
                 "description": "Search saved books, switch to your previously suggested books, or create a new book to suggest!"
             },
             "bookSelector": {
                 "searchSaved": "Search saved",
                 "searchSuggested": "Search suggested",
                 "empty": "No books found.",
-                "confirmTitle": "Are you sure?",
+                "confirmTitle": "Are You Sure?",
                 "confirmText": "Do you want to suggest '{{name}}'?"
             },
             "bookList": {
                 "defaultDescription": "Books: ",
-                "suggestedDescription": "Suggested books",
+                "suggestedDescription": "Suggested Books",
                 "empty": "No books suggested yet. Be the first to add one!"
             }
         }

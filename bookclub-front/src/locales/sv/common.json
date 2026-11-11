@@ -23,9 +23,12 @@
         "loginTab": "Gå till inloggning",
         "registerTab": "Gå till registrering",
         "createBook": "Skapa en ny bok",
-        "leaveClub": "Källa"
+        "leaveClub": "Källa",
+        "promote": "Befordra"
     },
     "labels": {
+        "pageTitle": "{{page}} · Bokklubb",
+        "clubPageTitle": "{{page}} · {{club}}",
         "home": "Hem",
         "books": "Böcker",
         "create": "Skapa",
@@ -34,6 +37,8 @@
         "login": "Inloggning",
         "cycle": "Ny cykel",
         "registration": "Registrering",
+        "members": "Medlemmar",
+        "history": "Historik",
         "loggedInAs": "Inloggad som: {{name}}",
         "error": "Fel: ",
         "confirmation": "Bekräftelse: ",
@@ -59,5 +64,35 @@
         "buttonText": "Klicka här",
         "buttonAlertTitle": "Är du helt säker?",
         "buttonAlertDescription": "Den här åtgärden måste godkännas genom att klicka på fortsätt."
+    },
+    "languages": {
+      "fin": "Finska",
+      "eng": "Engelska",
+      "swe": "Svenska",
+      "rus": "Ryska",
+      "deu": "Tyska",
+      "est": "Estniska",
+      "fra": "Franska",
+      "spa": "Spanska",
+      "ara": "Arabiska",
+      "zho": "Kinesiska",
+      "fas": "Persiska",
+      "ita": "Italienska",
+      "ukr": "Ukrainska",
+      "tur": "Turkiska",
+      "jpn": "Japanska",
+      "por": "Portugisiska",
+      "vie": "Vietnamesiska",
+      "sqi": "Albanska",
+      "tha": "Thailändska",
+      "dan": "Danska",
+      "nor": "Norska",
+      "pol": "Polska",
+      "som": "Somaliska",
+      "bem": "Bemba",
+      "ckb": "Centralkurdiska",
+      "hun": "Ungerska",
+      "ron": "Rumänska",
+      "kur": "Kurdiska"
     }
 }

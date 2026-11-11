@@ -14,40 +14,60 @@ interface ProposeRequest {
 proposeRouter.get('/:id', userExtractor, async (req: Request, res: Response) => {
   const cycleId = req.params.id as string
 
-  if (req.user) {
-    try {
-      const proposedBooks = await prisma.bookProposed.findMany({
-        where: {
-          cycle_id: cycleId,
-        },
-        include: {
-          Book: true
-        },
-        orderBy: {
-          createdAt: 'desc'
+  if (!req.user) {
+    return res.status(401).json({ error: 'user not found' })
+  }
+
+  try {
+    const proposedBooks = await prisma.bookProposed.findMany({
+      where: {
+        cycle_id: cycleId
+      },
+      select: {
+        id: true,
+        Book: {
+          select: {
+            id: true,
+            isbn: true,
+            name: true,
+            author: true,
+            year: true,
+            pages: true,
+            comment: true,
+            language: true,
+            genre: true,
+            createdAt: true,
+            user_id: true
+          }
         }
-      })
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
 
-      const books = proposedBooks
-        .filter((p) => p.Book)
-        .map((p) => ({
-          ...p.Book,
-          proposal_id: p.id,
-          owned_by_user: p.Book?.user_id === req.user?.id
-        }))
+    const books = proposedBooks.flatMap((proposal) => {
+      if (!proposal.Book) return []
 
-      res.json(books)
-    } catch (error) {
-      console.error('GET /api/books error:', error)
-      res.status(500).json({ error: 'database error' })
-    }
-  } else {
-    res.status(401).json({ error: 'user not found' })
+      const { user_id, ...book } = proposal.Book
+
+      return [{
+        ...book,
+        proposal_id: proposal.id,
+        owned_by_user: user_id === req.user!.id
+      }]
+    })
+
+    return res.json(books)
+  } catch (error) {
+    console.error('GET /api/books error:', error)
+    return res.status(500).json({ error: 'database error' })
   }
 })
 
 proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, res: Response) => {
   const { cycle_id, book_id } = req.params
+
   if (req.user) {
     try {
       const proposal = await prisma.bookProposed.findFirst({
@@ -77,6 +97,7 @@ proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, 
       res.status(500).json({ error: 'database error' })
     }
   }
+
   return
 })
 
@@ -85,10 +106,12 @@ proposeRouter.post(
   userExtractor,
   async (req: Request<unknown, unknown, ProposeRequest>, res: Response) => {
     const newPropose: ProposeRequest = req.body
+
     if (!newPropose.bookclub_id || !newPropose.book_id) {
       res.status(400).json({ error: 'bookclub_id and book_id are required in the body' })
       return
     }
+
     if (req.user) {
       try {
         const cycleResult = await prisma.cycle.findFirst({
@@ -104,6 +127,7 @@ proposeRouter.post(
             createdAt: true
           }
         })
+
         if (!cycleResult) {
           res.status(400).json({ error: 'No active cycle for the book club!' })
           return
@@ -115,6 +139,7 @@ proposeRouter.post(
           },
           select: { id: true }
         })
+
         if (!bookResult) {
           res.status(400).json({ error: 'Book does not exist!' })
           return
@@ -132,10 +157,12 @@ proposeRouter.post(
           },
           select: { id: true }
         })
+
         if (!bookClubMembersResult) {
           res.status(400).json({ error: 'User is not member of book club!' })
           return
         }
+
         const bookProposedResult = await prisma.bookProposed.findFirst({
           where: {
             cycle_id: cycleResult.id,
@@ -143,6 +170,7 @@ proposeRouter.post(
           },
           select: { id: true }
         })
+
         if (bookProposedResult) {
           res.status(400).json({ error: 'Book already proposed for this cycle!' })
           return
@@ -163,6 +191,7 @@ proposeRouter.post(
     } else {
       res.status(401).json({ error: 'user not found' })
     }
+
     return
   }
 )

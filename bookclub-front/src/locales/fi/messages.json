@@ -7,10 +7,12 @@
     },
     "success": {
         "bookCreated": "Kirja luotu onnistuneesti!",
+        "bookDeleted": "Kirja poistettu onnistuneesti!",
         "bookProposed": "Kirja ehdotettu onnistuneesti!",
         "register": "Rekisteröityminen tallennettu.",
         "memberRemoved": "Kerhon jäsen poistettu onnistuneesti.",
-        "leftClub": "Kerhosta lähdettiin onnistuneesti."
+        "leftClub": "Kerhosta lähdettiin onnistuneesti.",
+        "promotedMember": "Käyttäjän ylentäminen ylläpitäjäksi onnistui."
     },
     "error": {
         "api": {
@@ -29,7 +31,8 @@
             "helmetLoadLanguages": "Kielten lataaminen epäonnistui.",
             "helmetNoBooks": "Kirjoja ei löytynyt.",
             "helmetSearch": "Haku epäonnistui.",
-            "leftClub": "Seurasta poistuminen epäonnistui."
+            "leftClub": "Seurasta poistuminen epäonnistui.",
+            "promotedMember": "Käyttäjän ylentäminen ylläpitäjäksi epäonnistui."
         },
         "validation": {
             "invalidInviteCode": "Anna 5:n merkin pituinen koodi.",

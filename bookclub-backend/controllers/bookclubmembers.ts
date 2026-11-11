@@ -19,22 +19,27 @@ BookClubMembersRouter.get('/', userExtractor, async (req: Request, res: Response
       error: 'missing token'
     })
   }
+
   if (req.user) {
     try {
       const result = await prisma.bookClubMembers.findMany({
         where: {
           user_id: req.user.id
+        },
+        select: {
+          id: true,
+          bookclub_id: true,
+          user_role: true
         }
       })
-      res.json(result)
+      return res.json(result)
     } catch (error) {
       console.error('GET /api/bookclubs error:', error)
-      res.status(500).json({ error: 'database error' })
+      return res.status(500).json({ error: 'database error' })
     }
   } else {
-    res.status(401).json({ error: 'user not found' })
+    return res.status(401).json({ error: 'user not found' })
   }
-  return
 })
 
 BookClubMembersRouter.get('/:id', userExtractor, async (req: Request, res: Response) => {
@@ -48,6 +53,7 @@ BookClubMembersRouter.get('/:id', userExtractor, async (req: Request, res: Respo
     const isClub = await prisma.bookClub.findFirst({
       where: { id: bookclub_id }
     })
+
     const isMember = await prisma.bookClubMembers.findFirst({
       where: { user_id: req.user.id, bookclub_id }
     })
@@ -55,22 +61,24 @@ BookClubMembersRouter.get('/:id', userExtractor, async (req: Request, res: Respo
     if (!isClub) {
       return res.status(404).json({ error: 'club not found' })
     }
+
     if (!isMember) {
       return res.status(403).json({ error: 'permission denied' })
     }
 
     const result = await prisma.bookClubMembers.findMany({
-      where: { bookclub_id: req.params.id.toString() },
-      include: {
+      where: { bookclub_id },
+      select: {
+        id: true,
+        user_role: true,
         User: {
           select: {
-            id: true,
             name: true
           }
         }
       }
     })
-    
+
     return res.json(result)
   } catch (error) {
     console.error('GET /api/bookclubmembers/:id error:', error)
@@ -89,9 +97,9 @@ BookClubMembersRouter.post(
         const result = await prisma.bookClub.findUnique({
           where: { invite_code: newBookClub.invite_code }
         })
+
         if (!result) {
-          res.status(400).json({ error: 'Invalid invite code.' })
-          return
+          return res.status(400).json({ error: 'Invalid invite code.' })
         }
 
         const existingMembership = await prisma.bookClubMembers.findFirst({
@@ -113,24 +121,66 @@ BookClubMembersRouter.post(
             bookclub_id: result.id
           }
         })
-        res.json(newBookClub)
+
+        return res.json(newBookClub)
       } catch (error) {
         console.error('POST /api/bookclubs error:', error)
-        res.status(500).json({ error: 'database error' })
+        return res.status(500).json({ error: 'database error' })
       }
-      return
     } else {
-      res.status(401).json({ error: 'user not found' })
+      return res.status(401).json({ error: 'user not found' })
     }
   }
 )
+
+BookClubMembersRouter.patch('/:id/members/:user_id', userExtractor, async (req: Request, res: Response) => {
+  const bookclub_id = req.params.id as string
+  const user_id = req.params.user_id as string
+  const { role } = req.body as { role: number }
+
+  if (!req.user) {
+    return res.status(401).json({ error: 'user not authenticated' })
+  }
+
+  if (role !== 0 && role !== 1) {
+    return res.status(400).json({ error: 'invalid role' })
+  }
+
+  try {
+    const isAdmin = await prisma.bookClubMembers.findFirst({
+      where: { user_id: req.user.id, user_role: 0, bookclub_id }
+    })
+
+    const targetMember = await prisma.bookClubMembers.findFirst({
+      where: { user_id, bookclub_id }
+    })
+
+    if (!targetMember) {
+      return res.status(404).json({ error: 'member not found' })
+    }
+
+    if (!isAdmin) {
+      return res.status(403).json({ error: 'permission denied' })
+    }
+
+    const updated = await prisma.bookClubMembers.updateMany({
+      where: { user_id, bookclub_id },
+      data: { user_role: role }
+    })
+
+    return res.status(200).json(updated)
+  } catch (error) {
+    console.error('PATCH /api/bookclubmembers/:id/members/:user_id error:', error)
+    return res.status(500).json({ error: 'failed to change user role' })
+  }
+})
 
 BookClubMembersRouter.delete('/:id', userExtractor, async (req: Request, res: Response) => {
   const bookclub_id = req.params.id as string
   const user_id = req.user?.id
 
   if (!req.user) {
-    return res.status(401).json({ error: 'user not authenticated'})
+    return res.status(401).json({ error: 'user not authenticated' })
   }
 
   try {
@@ -154,7 +204,7 @@ BookClubMembersRouter.delete('/:id', userExtractor, async (req: Request, res: Re
 
     return res.status(200).json({ success: true, message: 'successfully left club' })
   } catch (error) {
-    console.error('DELETE /api/bookclubmembers/:id error: ', error) 
+    console.error('DELETE /api/bookclubmembers/:id error: ', error)
     return res.status(500).json({ error: 'failed to leave club' })
   }
 })
@@ -171,12 +221,13 @@ BookClubMembersRouter.delete('/:id/:user_id', userExtractor, async (req: Request
     const isAdmin = await prisma.bookClubMembers.findFirst({
       where: { user_id: req.user.id, user_role: 0, bookclub_id }
     })
+
     const targetMember = await prisma.bookClubMembers.findFirst({
       where: { user_id, bookclub_id }
     })
 
     if (!isAdmin) {
-      return res.status(403).json({ error: 'permission denied'})
+      return res.status(403).json({ error: 'permission denied' })
     }
 
     if (!targetMember) {
@@ -186,7 +237,7 @@ BookClubMembersRouter.delete('/:id/:user_id', userExtractor, async (req: Request
     if (targetMember.user_role === 0) {
       return res.status(403).json({ error: 'cannot delete an admin member' })
     }
-    
+
     await prisma.bookClubMembers.deleteMany({ where: { bookclub_id, user_id } })
 
     return res.status(200).json({ success: true, message: 'member removed successfully' })

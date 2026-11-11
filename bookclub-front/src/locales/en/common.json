@@ -23,9 +23,12 @@
         "loginTab": "Go to login",
         "registerTab": "Go to registration",
         "createBook": "Create a new book",
-        "leaveClub": "Leave"
+        "leaveClub": "Leave",
+        "promote": "Promote"
     },
     "labels": {
+        "pageTitle": "{{page}} · Bookclub",
+        "clubPageTitle": "{{page}} · {{club}}",
         "home": "Home",
         "books": "Books",
         "create": "Create",
@@ -34,6 +37,8 @@
         "login": "Login",
         "cycle": "New Cycle",
         "registration": "Registration",
+        "members": "Members",
+        "history": "History",
         "loggedInAs": "Logged in as: {{name}}",
         "error": "Error: ",
         "confirmation": "Confirmation: ",
@@ -66,5 +71,35 @@
         "buttonText": "Click me",
         "buttonAlertTitle": "Are you absolutely sure?",
         "buttonAlertDescription": "This action needs to be accepted by clicking continue."
+    },
+    "languages": {
+      "fin": "Finnish",
+      "eng": "English",
+      "swe": "Swedish",
+      "rus": "Russian",
+      "deu": "German",
+      "est": "Estonian",
+      "fra": "French",
+      "spa": "Spanish",
+      "ara": "Arabic",
+      "zho": "Chinese",
+      "fas": "Persian",
+      "ita": "Italian",
+      "ukr": "Ukrainian",
+      "tur": "Turkish",
+      "jpn": "Japanese",
+      "por": "Portuguese",
+      "vie": "Vietnamese",
+      "sqi": "Albanian",
+      "tha": "Thai",
+      "dan": "Danish",
+      "nor": "Norwegian",
+      "pol": "Polish",
+      "som": "Somali",
+      "bem": "Bemba",
+      "ckb": "Central Kurdish",
+      "hun": "Hungarian",
+      "ron": "Romanian",
+      "kur": "Kurdish"
     }
 }

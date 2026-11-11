@@ -18,6 +18,34 @@
     "books": {
         "title": "Spara böcker",
         "description": "Spara böckerna du vill läsa och föreslå i framtiden.",
+        "createNew": "Skapa en ny bok",
+        "delete": {
+          "button": "Ta bort",
+          "title": "Ta bort bok",
+          "warning": "Borttagning av boken kan inte ångras."
+        },
+        "results": "{{books}} böcker",
+        "book": {
+          "noAuthors": "Inga författare",
+          "viewOnHelmet": "Visa boken i Helmet"
+        },
+        "dialog": {
+          "title": "Skapa bok",
+          "helmet": {
+            "tab": "Helmet",
+            "search": "Sök",
+            "searchEmpty": "Utför en sökning för att se resultat",
+            "searchNoResults": "Inga resultat för sökordet",
+            "searchNoMoreResults": "Inga fler resultat",
+            "searchFailed": "Sökningen misslyckades, försök igen",
+            "tooltipTitle": "Helmet-sökning",
+            "tooltip": "Sökningen är genomförd via en tredje part, Helmet (finna.fi)",
+            "select": "Välja"
+          },
+          "manual": {
+            "tab": "Manuell"
+          }
+        },
         "fields": {
             "title": "Titel",
             "author": "Författare",
@@ -46,10 +74,6 @@
             "wouldRead": "Skulle läsa",
             "wontRead": "Skulle inte läsa",
             "hint": "Rösterna sparas automatiskt. Du kan ändra dina röster under omröstningsfasen."
-        },
-        "delete": {
-            "title": "Ta bort bok",
-            "warning": "Att ta bort en bok kan inte ångras."
         }
     },
 
@@ -118,7 +142,16 @@
         "threeLevel": "Tre nivåer",
         "binary": "Binärt",
         "threeLevelDescription": "Tre-nivå röstningssystem: Varje medlem betygsätter hur villig de är att läsa varje föreslagen bok: vill läsa, kan tänka sig att läsa eller vill inte läsa. Röstningssystemet kan inte ändras efter att cykeln har skapats.",
-        "binaryDescription": "Binärt röstningssystem: Varje medlem kan rösta för eller emot varje föreslagen bok. Röstningssystemet kan inte ändras efter att cykeln har skapats."
+        "binaryDescription": "Binärt röstningssystem: Varje medlem kan rösta för eller emot varje föreslagen bok. Röstningssystemet kan inte ändras efter att cykeln har skapats.",
+        "date": {
+            "suggestEndTitle": "Förslagsfasen slutar",
+            "votingEndTitle": "Omrötsningsfasen slutar",
+            "suggestEndDescription": "Välja datum och sluttid för förslagsfasen.",
+            "votingEndDescription": "Välja datum och sluttid för omröstningsfasen.",
+            "phaseEndTime": "Fasens sluttid",
+            "chooseDate": "Välj ett datum",
+            "chooseDateTime": "Välj datum och tid"
+        }
     },
 
     "club": {
@@ -179,7 +212,11 @@
             "description": "Ändra bokklubbens inställningar.",
             "manageMembers": {
                 "title": "Hantera medlemmar",
-                "description": "Du kan hantera enskilda medlemmar nedan"
+                "description": "Du kan hantera enskilda medlemmar nedan",
+                "promoteQuestion": "Är du säker på att du vill göra '{{name}}' till administratör?",
+                "promoteWarning": "Användaren tilldelas administratörsrättigheter för klubben. Denna åtgärd kan inte ångras.",
+                "deleteQuestion": "Är du säker på att du vill ta bort användaren '{{name}}' från klubben?",
+                "deleteWarning": "När medlemmen har tagits bort kan det inte ångras."
             },
             "manageCycle": {
                 "title": "Hantera cykel",
@@ -199,9 +236,7 @@
             "deleteWarning": "När bokklubben har tagits bort kan det inte ångras."
         },
         "members": {
-            "title": "Klubbmedlemmar",
-            "deleteQuestion": "Är du säker på att du vill ta bort användaren '{{name}}' från klubben?",
-            "deleteWarning": "När medlemmen har tagits bort kan det inte ångras."
+            "title": "Klubbmedlemmar"
         },
         "cycle": {
             "title": "Cykler ({{count}})",
