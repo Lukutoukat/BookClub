@@ -114,7 +114,7 @@ describe('BookList', () => {
 			const us = user.setup()
 
 			await screen.findByText('Book 1')
-			const deleteButtons = screen.getAllByTitle('Delete book')
+			const deleteButtons = screen.getAllByTitle('Delete Book')
 			await us.click(deleteButtons[0])
 			const continueButtons = screen.getAllByTitle('Continue')
 			await us.click(continueButtons[0])
@@ -220,7 +220,7 @@ describe('BookList', () => {
 			renderComponent()
 			const us = user.setup()
 			await screen.findByText('Book 1') // wait for books to load
-			const deleteButtons = screen.getAllByTitle('Delete book')
+			const deleteButtons = screen.getAllByTitle('Delete Book')
 			await us.click(deleteButtons[0])
 			const continueButtons = screen.getAllByTitle('Continue')
 			await us.click(continueButtons[0])
@@ -231,7 +231,7 @@ describe('BookList', () => {
 		test('does not show delete button when onDelete is undefined', async () => {
 			renderComponent()
 			await screen.findByText('Book 1')
-			expect(screen.queryByTitle('Delete book')).toBeDefined() // button should exist since BookList always shows delete
+			expect(screen.queryByTitle('Delete Book')).toBeDefined() // button should exist since BookList always shows delete
 		})
 	})
 

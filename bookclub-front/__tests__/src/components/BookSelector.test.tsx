@@ -134,7 +134,7 @@ describe('BookSelector', () => {
 		await user.click(screen.getByText('The Great Gatsby'))
 
 		await waitFor(() => {
-			expect(screen.getByText('Are you sure?')).toBeInTheDocument()
+			expect(screen.getByText('Are You Sure?')).toBeInTheDocument()
 			expect(screen.getByText(/Do you want to suggest 'The Great Gatsby'?/)).toBeInTheDocument()
 		})
 	})
@@ -154,7 +154,7 @@ describe('BookSelector', () => {
 		await user.click(screen.getByText('The Great Gatsby'))
 
 		await waitFor(() => {
-			expect(screen.getByText('Are you sure?')).toBeInTheDocument()
+			expect(screen.getByText('Are You Sure?')).toBeInTheDocument()
 		})
 
 		const continueButton = screen.getByRole('button', { name: /continue/i })
@@ -185,7 +185,7 @@ describe('BookSelector', () => {
 		await user.click(screen.getByText('The Great Gatsby'))
 
 		await waitFor(() => {
-			expect(screen.getByText('Are you sure?')).toBeInTheDocument()
+			expect(screen.getByText('Are You Sure?')).toBeInTheDocument()
 		})
 
 		const continueButton = screen.getByRole('button', { name: /continue/i })
@@ -232,14 +232,14 @@ describe('BookSelector', () => {
 		await user.click(screen.getByText('The Great Gatsby'))
 
 		await waitFor(() => {
-			expect(screen.getByText('Are you sure?')).toBeInTheDocument()
+			expect(screen.getByText('Are You Sure?')).toBeInTheDocument()
 		})
 
 		const cancelButton = screen.getByRole('button', { name: /Cancel/i })
 		await user.click(cancelButton)
 
 		await waitFor(() => {
-			expect(screen.queryByText('Are you sure?')).not.toBeInTheDocument()
+			expect(screen.queryByText('Are You Sure?')).not.toBeInTheDocument()
 		})
 	})
 

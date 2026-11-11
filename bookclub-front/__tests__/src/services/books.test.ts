@@ -1,129 +1,227 @@
 import axios from 'axios'
-import { test, expect, vi } from 'vitest'
-import type { Mocked } from 'vitest'
-import books from '../../../src/services/books'
+import {test, expect, vi, describe, beforeEach} from 'vitest'
+import type {Mocked} from 'vitest'
+import books, {toGeneric, toCreateBook, type BookFields} from '../../../src/services/books'
+import type {GenericBook} from '@/types'
 
 vi.mock('axios')
 
+vi.mock('@/services/auth', () => ({
+    getAuthConfig: () => ({headers: {Authorization: null}}),
+}))
+
 const mockedAxios = axios as Mocked<typeof axios>
 
-const mockBook = {
-	isbn: '1234567890',
-	name: 'Book 1',
-	author: 'Author 1',
-	year: 1,
-	pages: 100,
-	comment: 'Comment 1',
-	language: 'Language 1',
-	genre: 'Genre 1'
+const authConfig = expect.objectContaining({
+    headers: expect.objectContaining({Authorization: null}),
+})
+
+const mockBook: BookFields = {
+    id: '1',
+    isbn: '1234567890',
+    name: 'Book 1',
+    author: 'Author 1',
+    year: 2020,
+    pages: 100,
+    comment: 'Comment 1',
+    language: 'English',
+    genre: 'Fiction',
 }
 
-test('getAll returns all books', async () => {
-	const mockBooks = [mockBook]
+describe('books service', () => {
+    beforeEach(() => {
+        vi.clearAllMocks()
+    })
 
-	mockedAxios.get.mockResolvedValue({
-		data: mockBooks
-	})
+    describe('toGeneric', () => {
+        test('maps every present field', () => {
+            expect(toGeneric(mockBook)).toEqual({
+                id: '1',
+                title: 'Book 1',
+                pages: '100',
+                year: '2020',
+                language: 'English',
+                coverUrl: undefined,
+                authors: ['Author 1'],
+                genres: ['Fiction'],
+            })
+        })
 
-	const result = await books.getAll()
+        test('handles optional fields being absent', () => {
+            const result = toGeneric({
+                id: '1',
+                name: 'Book 1',
+                author: 'Author 1',
+                year: 2020,
+            })
+            expect(result.pages).toBeUndefined()
+            expect(result.language).toBeUndefined()
+            expect(result.genres).toBeUndefined()
+        })
 
-	expect(result).toEqual(mockBooks)
-})
+        test('converts year and pages to strings', () => {
+            const result = toGeneric(mockBook)
+            expect(result.year).toBe('2020')
+            expect(result.pages).toBe('100')
+            expect(typeof result.year).toBe('string')
+            expect(typeof result.pages).toBe('string')
+        })
 
-test('getPreviousSuggestions returns previously suggested books', async () => {
-	const mockBooks = [mockBook]
+        test('always sets coverUrl to undefined', () => {
+            expect(toGeneric(mockBook).coverUrl).toBeUndefined()
+        })
 
-	mockedAxios.get.mockResolvedValue({
-		data: mockBooks
-	})
+        test('wraps author and genre into single-element arrays', () => {
+            const result = toGeneric(mockBook)
+            expect(result.authors).toEqual(['Author 1'])
+            expect(result.genres).toEqual(['Fiction'])
+        })
+    })
 
-	const result = await books.getPreviousSuggestions()
+    describe('toCreateBook', () => {
+        const generic: GenericBook = {
+            id: 'g1',
+            title: 'Book 1',
+            authors: ['Author 1'],
+            year: '2020',
+            pages: '100 pages',
+            language: 'English',
+            genres: ['Fiction'],
+        }
 
-	expect(mockedAxios.get).toHaveBeenCalledWith(
-		'/api/books/previousSuggestions',
-		expect.objectContaining({
-			headers: expect.objectContaining({
-				Authorization: null
-			})
-		})
-	)
-	expect(result).toEqual(mockBooks)
-})
+        test('maps all fields', () => {
+            expect(toCreateBook(generic)).toEqual({
+                name: 'Book 1',
+                author: 'Author 1',
+                year: 2020,
+                pages: 100,
+                comment: undefined,
+                language: 'English',
+                genre: 'Fiction',
+                proposal_id: undefined,
+                owned_by_user: false,
+            })
+        })
 
-test('create returns created book', async () => {
-	mockedAxios.post.mockResolvedValue({
-		data: mockBook
-	})
+        test('extracts leading integer from pages string', () => {
+            expect(toCreateBook({...generic, pages: '100 pages'}).pages).toBe(100)
+            expect(toCreateBook({...generic, pages: '50-60'}).pages).toBe(50)
+            expect(toCreateBook({...generic, pages: '123abc'}).pages).toBe(123)
+        })
 
-	const result = await books.create(mockBook)
+        test('leaves pages undefined when missing', () => {
+            expect(toCreateBook({...generic, pages: undefined}).pages).toBeUndefined()
+        })
 
-	expect(mockedAxios.post).toHaveBeenCalledWith(
-		'/api/books',
-		mockBook,
-		expect.objectContaining({
-			headers: expect.objectContaining({
-				Authorization: null
-			})
-		})
-	)
-	expect(result).toEqual(mockBook)
-})
+        test('defaults year to 2000 when missing', () => {
+            expect(toCreateBook({...generic, year: undefined}).year).toBe(2000)
+        })
 
-test('createForPropose returns created book for a cycle', async () => {
-	mockedAxios.post.mockResolvedValue({
-		data: mockBook
-	})
+        test('defaults author to empty string when authors absent or empty', () => {
+            expect(toCreateBook({...generic, authors: undefined}).author).toBe('')
+            expect(toCreateBook({...generic, authors: []}).author).toBe('')
+        })
 
-	const result = await books.createForPropose('cycle-1', mockBook)
+        test('leaves genre undefined when genres absent or empty', () => {
+            expect(toCreateBook({...generic, genres: undefined}).genre).toBeUndefined()
+            expect(toCreateBook({...generic, genres: []}).genre).toBeUndefined()
+        })
 
-	expect(mockedAxios.post).toHaveBeenCalledWith(
-		'/api/books/cycle-1',
-		mockBook,
-		expect.objectContaining({
-			headers: expect.objectContaining({
-				Authorization: null
-			})
-		})
-	)
-	expect(result).toEqual(mockBook)
-})
+        test('always sets comment, proposal_id to undefined and owned_by_user to false', () => {
+            const result = toCreateBook(generic)
+            expect(result.comment).toBeUndefined()
+            expect(result.proposal_id).toBeUndefined()
+            expect(result.owned_by_user).toBe(false)
+        })
+    })
 
-test('updates book correctly', async () => {
-	const mockBookWithId = { ...mockBook, id: '1' }
+    describe('getAll', () => {
+        test('calls GET /api/books and returns the data', async () => {
+            mockedAxios.get.mockResolvedValue({data: [mockBook]})
 
-	mockedAxios.put.mockResolvedValue({ data: mockBookWithId })
+            const result = await books.getAll()
 
-	const result = await books.update(mockBookWithId.id, mockBookWithId)
+            expect(mockedAxios.get).toHaveBeenCalledWith('/api/books', authConfig)
+            expect(result).toEqual([mockBook])
+        })
 
-	expect(mockedAxios.put).toHaveBeenCalledWith(
-		`/api/books/${mockBookWithId.id}`,
-		mockBookWithId,
-		expect.objectContaining({
-			headers: expect.objectContaining({
-				Authorization: null
-			})
-		})
-	)
-	expect(result).toEqual(mockBookWithId)
-})
+        test('returns an empty array when there are no books', async () => {
+            mockedAxios.get.mockResolvedValue({data: []})
+            expect(await books.getAll()).toEqual([])
+        })
+    })
 
-test('remove from user deletes the correct book', async () => {
-	const mockBookWithId = {
-		...mockBook,
-		id: '1'
-	}
+    describe('getPreviousSuggestions', () => {
+        test('calls the previousSuggestions endpoint', async () => {
+            mockedAxios.get.mockResolvedValue({data: [mockBook]})
 
-	mockedAxios.put.mockResolvedValue({ data: mockBookWithId })
+            const result = await books.getPreviousSuggestions()
 
-	await books.removeFromUser(mockBookWithId.id)
+            expect(mockedAxios.get).toHaveBeenCalledWith(
+                '/api/books/previousSuggestions',
+                authConfig
+            )
+            expect(result).toEqual([mockBook])
+        })
+    })
 
-	expect(mockedAxios.put).toHaveBeenCalledWith(
-		`/api/books/${mockBookWithId.id}/remove`,
-		{},
-		expect.objectContaining({
-			headers: expect.objectContaining({
-				Authorization: null
-			})
-		})
-	)
+    describe('create', () => {
+        test('posts to /api/books and returns the created book', async () => {
+            const payload = {...mockBook}
+            mockedAxios.post.mockResolvedValue({data: mockBook})
+
+            const result = await books.create(payload)
+
+            expect(mockedAxios.post).toHaveBeenCalledWith('/api/books', payload, authConfig)
+            expect(result).toEqual(mockBook)
+        })
+    })
+
+    describe('createForPropose', () => {
+        test('posts to the cycle-scoped endpoint', async () => {
+            mockedAxios.post.mockResolvedValue({data: mockBook})
+
+            const result = await books.createForPropose('cycle-1', mockBook)
+
+            expect(mockedAxios.post).toHaveBeenCalledWith(
+                '/api/books/cycle-1',
+                mockBook,
+                authConfig
+            )
+            expect(result).toEqual(mockBook)
+        })
+    })
+
+    describe('update', () => {
+        test('puts to the book-scoped endpoint', async () => {
+            mockedAxios.put.mockResolvedValue({data: mockBook})
+
+            const result = await books.update('1', mockBook)
+
+            expect(mockedAxios.put).toHaveBeenCalledWith('/api/books/1', mockBook, authConfig)
+            expect(result).toEqual(mockBook)
+        })
+    })
+
+    describe('removeFromUser', () => {
+        test('puts to the remove endpoint with an empty body', async () => {
+            mockedAxios.put.mockResolvedValue({data: mockBook})
+
+            await books.removeFromUser('1')
+
+            expect(mockedAxios.put).toHaveBeenCalledWith('/api/books/1/remove', {}, authConfig)
+        })
+
+        test('uses the id passed in the URL', async () => {
+            mockedAxios.put.mockResolvedValue({data: mockBook})
+
+            await books.removeFromUser('abc-123')
+
+            expect(mockedAxios.put).toHaveBeenCalledWith(
+                '/api/books/abc-123/remove',
+                {},
+                authConfig
+            )
+        })
+    })
 })

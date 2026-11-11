@@ -16,7 +16,7 @@ describe('LoginPage', () => {
 		test('renders page title, heading, and description', () => {
 			render(<LoginPage />)
 
-			expect(screen.getByText('Join the club')).toBeDefined()
+			expect(screen.getByText('Join the Club')).toBeDefined()
 			expect(
 				screen.getByText('Create your own book club and start reading with your friends.')
 			).toBeDefined()
@@ -25,7 +25,7 @@ describe('LoginPage', () => {
 		test('renders login badge and login link', () => {
 			render(<LoginPage />)
 
-			const heading = screen.getByRole('heading', { name: 'Join the club' })
+			const heading = screen.getByRole('heading', { name: 'Join the Club' })
 			const header = heading.closest('header')
 
 			expect(within(header as HTMLElement).getByText('Login')).toBeDefined()
