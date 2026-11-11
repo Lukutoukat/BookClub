@@ -338,6 +338,7 @@ const BookclubPage = () => {
 	const activeTab = searchParams.get('tab') ?? 'home'
 	const tabTitles: Record<string, string> = {
 		'home': t('labels.home', { ns: 'common' }),
+		'events': t('labels.events', { ns: 'common' }),
 		'members': t('labels.members', { ns: 'common' }),
 		'history': t('labels.history', { ns: 'common' }),
 		'settings': t('labels.settings', { ns: 'common' })
