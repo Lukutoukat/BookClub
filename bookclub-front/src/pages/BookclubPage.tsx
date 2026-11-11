@@ -39,18 +39,24 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 
 	useEffect(() => {
 		const fetchHomeData = async () => {
-			try {
-				const [cycle, event] = await Promise.all([
-					cycleService.getLatestCycle(bookclubId),
-					eventService.getNextEvent(bookclubId)
-				])
-				setCurrentCycle(cycle)
-				setNextEvent(event)
-			} catch (error) {
-				showError(getErrorMessage(error))
-			} finally {
-				setLoading(false)
+			const [cycleResult, eventResult] = await Promise.allSettled([
+				cycleService.getLatestCycle(bookclubId),
+				eventService.getNextEvent(bookclubId)
+			])
+
+			if (cycleResult.status === 'fulfilled') {
+				setCurrentCycle(cycleResult.value)
+			} else {
+				showError(getErrorMessage(cycleResult.reason))
 			}
+
+			if (eventResult.status === 'fulfilled') {
+				setNextEvent(eventResult.value)
+			} else {
+				showError(getErrorMessage(eventResult.reason))
+			}
+
+			setLoading(false)
 		}
 
 		void fetchHomeData()

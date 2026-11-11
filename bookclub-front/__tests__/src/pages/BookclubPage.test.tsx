@@ -128,6 +128,21 @@ describe('BookclubPage', () => {
         })
     })
 
+    it('keeps the home content when loading the next event fails', async () => {
+        vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
+            id: 1,
+            phase: 'proposal',
+        } as any)
+        vi.mocked(eventService.getNextEvent).mockRejectedValue(new Error('events failed'))
+
+        render(<BookclubPage/>)
+
+        await waitFor(() => {
+            expect(screen.getByText('Book list')).toBeInTheDocument()
+            expect(mockShowError).toHaveBeenCalledWith('events failed')
+        })
+    })
+
     it('renders the voting phase without the suggest-book form', async () => {
         vi.mocked(cycleService.getLatestCycle).mockResolvedValue({
             id: 2,
