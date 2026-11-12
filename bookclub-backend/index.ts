@@ -11,6 +11,7 @@ import cycleRouter from './controllers/cycle.ts'
 import proposeRouter from './controllers/propose.ts'
 import voteRouter from './controllers/vote.ts'
 import resultRouter from './controllers/results.ts'
+import eventRouter from './controllers/events.ts'
 
 import tokenExtractor from './middleware/tokenExtractor.ts'
 
@@ -26,6 +27,7 @@ app.use('/api/propose', proposeRouter)
 app.use('/api/vote', voteRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/results', resultRouter)
+app.use('/api/events', eventRouter)
 
 app.get('/ping', (_req, res) => {
   res.send('pong')
