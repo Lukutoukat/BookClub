@@ -15,14 +15,16 @@ export interface CycleFields {
 export interface CycleWithStatus {
 	id: string
 	bookclub_id?: string
+	createdAt?: Date
 	proposalEnd?: Date
 	votingEnd?: Date
 	votingSystem?: string
-	phase?: string
+	phase?: CyclePhase
 }
 
 export type Cycle = CycleFields
 export type CreateCycle = Omit<CycleFields, 'id'>
+export type CyclePhase = 'proposal' | 'voting' | 'over'
 
 const getClubCycles = (bookclubId: string) => {
 	return axios
@@ -40,7 +42,7 @@ const getLatestCycle = (bookclubId: string) => {
 			}
 			const now = new Date()
 
-			let phase = 'proposal'
+			let phase: 'proposal' | 'voting' | 'over' = 'proposal'
 			if (cycle.proposalEnd && new Date(cycle.proposalEnd) < now) {
 				phase = 'voting'
 			}

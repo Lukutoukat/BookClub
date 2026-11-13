@@ -18,6 +18,7 @@ import {useNotification} from "@/context/NotificationContext.tsx";
 import { useTranslation } from 'react-i18next'
 import { ButtonDialog } from '@/components/ButtonDialog'
 import { Button } from '@/components/ui/button'
+import { CycleTimeline } from '@/components/CycleTimeline'
 
 /**
  *  HOME TAB
@@ -62,7 +63,12 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 		)
 	}
 
-	return (<>
+	return (
+		<>
+			{currentCycle && (
+				<CycleTimeline bookclubId={bookclubId} cycle={currentCycle}/>
+			)}
+
 			{/* PROPOSAL PHASE */}
 			{currentCycle?.phase === 'proposal' && (
 				<>
