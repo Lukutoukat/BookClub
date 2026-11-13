@@ -36,6 +36,7 @@ services:
       - DATABASE_URL=postgresql://username:password@test-db:5432/test-db
       - POSTGRES_HOST=test-db
       - POSTGRES_PASSWORD=password
+      - SECRET=test-only-secret
       - CHOKIDAR_USEPOLLING=true
       - REQUEST_ORIGIN=localhost:3003
       - NODE_ENV=production
