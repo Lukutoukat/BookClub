@@ -227,7 +227,7 @@
                     "name": "Voting"
                 },
                 "over": {
-                    "title": "Results",
+                    "title": "Voting Results",
                     "description": "Check the results of the vote below",
                     "name": "Results"
                 }
