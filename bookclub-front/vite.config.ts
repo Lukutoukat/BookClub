@@ -8,6 +8,7 @@ export default defineConfig({
 	plugins: [react(), tailwindcss()],
 	server: {
 		host: '0.0.0.0',
+		allowedHosts: ['frontend'],
 		hmr: {
 			host: 'localhost',
 			clientPort: 13000

@@ -7,6 +7,7 @@
     },
     "success": {
         "bookCreated": "Kirja luotu onnistuneesti!",
+        "bookDeleted": "Kirja poistettu onnistuneesti!",
         "bookProposed": "Kirja ehdotettu onnistuneesti!",
         "register": "Rekisteröityminen tallennettu.",
         "memberRemoved": "Kerhon jäsen poistettu onnistuneesti.",

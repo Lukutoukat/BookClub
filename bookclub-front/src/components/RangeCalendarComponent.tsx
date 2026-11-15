@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CalendarIcon } from 'lucide-react'
 import { type DateRange } from 'react-day-picker'
+import { enUS, fi, sv } from 'react-day-picker/locale'
 import { useTranslation } from 'react-i18next'
 
 import { Calendar } from '@/components/ui/calendar'
@@ -29,6 +30,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 	const [openPicker, setOpenPicker] = useState<'suggestions' | 'voting' | null>(null)
 	const { t, i18n } = useTranslation('pages')
 	const currentLanguage = i18n.resolvedLanguage ?? i18n.language
+	const calendarLocale = currentLanguage.startsWith('fi') ? fi : currentLanguage.startsWith('sv') ? sv : enUS
 
 	useEffect(() => {
 		if (dateRange?.from) setStartTime(formatTimeValue(dateRange.from))
@@ -43,12 +45,12 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 	}
 
 	const formatDate = (date: Date | undefined) => {
-		if (!date) return 'Choose a date'
+		if (!date) return t('newCycleSettings.date.chooseDate')
 		return new Intl.DateTimeFormat(currentLanguage).format(date)
 	}
 
 	const formatDateTime = (date: Date | undefined) => {
-		if (!date) return 'Choose date and time'
+		if (!date) return t('newCycleSettings.date.chooseDateTime')
 		return `${formatDate(date)} · ${formatTimeValue(date)}`
 	}
 
@@ -108,8 +110,8 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 						<Field className="min-w-0">
 							<div className="space-y-3 rounded-lg border border-border/70 bg-background/60 p-3 sm:p-4">
 								<div>
-									<p className="text-sm font-semibold text-foreground">Suggestion phase ends</p>
-									<p className="mt-1 text-xs text-muted-foreground">Set the date and closing time for suggestions phase.</p>
+									<p className="text-sm font-semibold text-foreground">{t('newCycleSettings.date.suggestEndTitle')}</p>
+									<p className="mt-1 text-xs text-muted-foreground">{t('newCycleSettings.date.suggestEndDescription')}</p>
 								</div>
 								<FieldContent className="gap-3">
 									<Popover
@@ -118,7 +120,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 									>
 										<PopoverTrigger asChild>
 											<InputField asChild className="h-9">
-												<Button type="button" variant="outline" aria-label="Suggestion phase ends" className="justify-between gap-3 whitespace-normal text-left">
+												<Button type="button" variant="outline" aria-label={t('newCycleSettings.date.suggestEndTitle')} className="justify-between gap-3 whitespace-normal text-left">
 													<span className={dateRange?.from ? 'font-medium text-foreground' : 'text-muted-foreground'}>
 														{formatDateTime(dateRange?.from)}
 													</span>
@@ -129,6 +131,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 										<PopoverContent align="start" className="w-auto p-2">
 											<Calendar
 												mode="single"
+													locale={calendarLocale}
 												selected={dateRange?.from}
 												defaultMonth={dateRange?.from ?? new Date()}
 												onSelect={handleSuggestionsDateSelect}
@@ -137,7 +140,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 											/>
 										</PopoverContent>
 									</Popover>
-									<TimePicker label="Phase end time" id="time-from" value={startTime} onChange={handleStartTimeChange} disabled={!dateRange?.from} />
+									<TimePicker label={t('newCycleSettings.date.phaseEndTime')} id="time-from" value={startTime} onChange={handleStartTimeChange} disabled={!dateRange?.from} />
 								</FieldContent>
 							</div>
 						</Field>
@@ -145,8 +148,8 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 						<Field className="min-w-0">
 							<div className="space-y-3 rounded-lg border border-border/70 bg-background/60 p-3 sm:p-4">
 								<div>
-									<p className="text-sm font-semibold text-foreground">Voting phase ends</p>
-									<p className="mt-1 text-xs text-muted-foreground">Set the date and closing time for voting phase.</p>
+									<p className="text-sm font-semibold text-foreground">{t('newCycleSettings.date.votingEndTitle')}</p>
+									<p className="mt-1 text-xs text-muted-foreground">{t('newCycleSettings.date.votingEndDescription')}</p>
 								</div>
 								<FieldContent className="gap-3">
 									<Popover
@@ -155,7 +158,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 									>
 										<PopoverTrigger asChild>
 											<InputField asChild className="h-9">
-												<Button type="button" variant="outline" aria-label="Voting phase ends" className="justify-between gap-3 whitespace-normal text-left">
+												<Button type="button" variant="outline" aria-label={t('newCycleSettings.date.votingEndTitle')} className="justify-between gap-3 whitespace-normal text-left">
 													<span className={dateRange?.to ? 'font-medium text-foreground' : 'text-muted-foreground'}>
 														{formatDateTime(dateRange?.to)}
 													</span>
@@ -166,6 +169,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 										<PopoverContent align="start" className="w-auto p-2">
 											<Calendar
 												mode="single"
+													locale={calendarLocale}
 												selected={dateRange?.to}
 												defaultMonth={dateRange?.to ?? dateRange?.from ?? new Date()}
 												onSelect={handleVotingDateSelect}
@@ -174,7 +178,7 @@ export const RangeCalendarComponent = ({ dateRange, setDateRange, children }: Pr
 											/>
 										</PopoverContent>
 									</Popover>
-									<TimePicker label="Phase end time" id="time-to" value={endTime} onChange={handleEndTimeChange} disabled={!dateRange?.to} />
+									<TimePicker label={t('newCycleSettings.date.phaseEndTime')} id="time-to" value={endTime} onChange={handleEndTimeChange} disabled={!dateRange?.to} />
 								</FieldContent>
 							</div>
 						</Field>

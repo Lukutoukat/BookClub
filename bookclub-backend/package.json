@@ -8,12 +8,13 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
+    "test:ci": "node --experimental-strip-types index.ts",
     "test": "jest",
     "coverage": "jest --coverage",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "start": "node index.ts",
-    "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
+    "start": "node index.ts",  
+    "dev": "npx prisma generate && concurrently \"tsc --watch\" \"node --watch index.ts\""
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
