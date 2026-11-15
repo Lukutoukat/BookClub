@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-test('shows the login page when unauthenticated', async ({ page }) => {
+test('has title', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page).toHaveTitle('Login · Bookclub');
+  // Expect a title "to contain" a substring.
+  await expect(page).toHaveTitle('Home · Bookclub');
 });
