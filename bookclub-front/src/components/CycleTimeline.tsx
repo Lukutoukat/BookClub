@@ -8,11 +8,6 @@ type CycleTimelineProps = {
     cycle: CycleWithStatus
 }
 
-type PhaseInfo = {
-    title: string,
-    description: string
-}
-
 type CycleData = {
     dates: {
         suggest: Date
