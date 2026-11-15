@@ -18,7 +18,7 @@ export default defineConfig({
 		},
 		proxy: {
 			'/api': {
-				target: 'http://bookclub-backend:3003',
+				target: 'http://backend:3003',
 				changeOrigin: true
 			}
 		}
