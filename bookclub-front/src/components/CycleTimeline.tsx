@@ -1,11 +1,10 @@
-import Timeline from './HorizontalTimeline'
+import HorizontalTimeline from './HorizontalTimeline'
 import { Card, CardContent } from '@/components/ui/card'
 import { type CycleWithStatus, type CyclePhase } from '@/services/cycle'
 import { SectionHeader } from '@/components/SectionHeader'
 import { useTranslation } from 'react-i18next'
 
 type CycleTimelineProps = {
-    bookclubId: string
     cycle: CycleWithStatus
 }
 
@@ -15,11 +14,6 @@ type PhaseInfo = {
 }
 
 type CycleData = {
-    days: {
-        current: number
-        voting: number
-        total: number
-    }
     dates: {
         suggest: Date
         voting: Date
@@ -31,8 +25,9 @@ type CycleData = {
 const MIN_IN_MS = 60000
 const HOUR_IN_MS = 60 * MIN_IN_MS
 const DAY_IN_MS = 24 * HOUR_IN_MS
+const PHASE_ORDER: CyclePhase[] = ['proposal', 'voting', 'over']
 
-const phases: Record<CyclePhase, PhaseInfo> = {
+const phaseLabels: Record<CyclePhase, PhaseInfo> = {
         proposal: {
             title: 'Suggest Books',
             description: 'Suggest which book should be read next'
@@ -55,40 +50,17 @@ const getCycleData = (cycle: CycleWithStatus): CycleData | null => {
         voting: new Date(cycle.proposalEnd),
         results: new Date(cycle.votingEnd)
     }
-
-    const calcDays = (from: Date, to: Date) =>
-        Math.ceil((to.getTime() - from.getTime()) / DAY_IN_MS) - 1
-
-    const days = {
-        current: calcDays(dates.suggest, new Date()),
-        voting: calcDays(dates.suggest, dates.voting),
-        total: calcDays(dates.suggest, dates.results)
-    }
+    
     const phase = cycle.phase
 
-    return { days, dates, phase }
+    return { dates, phase }
 }
 
-const getProgressPosition = (ratio: number) => `calc(0.7px + (100% - 1.4px) * ${ratio})`
-const formatDate = (date: Date, language: string) =>
-    date.toLocaleDateString(language, {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric'
-    })
-
-const getTime = (currentDate: Date, goalDate: Date) => {
-    const currentTime = goalDate.getTime() - currentDate.getTime()
-
-    if (currentTime <= 0) return { time: 0, timeUnit: 'minute' }
-
-    const timeInfo = currentTime >= DAY_IN_MS 
-        ? { time: Math.floor(currentTime / DAY_IN_MS), timeUnit: 'day' }
-        : currentTime >= HOUR_IN_MS
-            ? { time: Math.floor((currentTime / HOUR_IN_MS) % 24), timeUnit: 'hour' }
-            : { time: Math.floor((currentTime / MIN_IN_MS) % 60), timeUnit: 'minute' }
-
-    return timeInfo
+const getTime = (now: Date, goal: Date) => {
+    const currentTime = goal.getTime() - now.getTime()
+    if (currentTime >= DAY_IN_MS) return { time: Math.floor(currentTime / DAY_IN_MS), timeUnit: 'day' }
+    if (currentTime >= HOUR_IN_MS) return { time: Math.floor(currentTime / HOUR_IN_MS), timeUnit: 'hour' }
+    return { time: Math.max(0, Math.floor(currentTime / MIN_IN_MS)), timeUnit: 'minute' }
 }
 
 const getUnit = (locale: string, unit: string, value: number) => {
@@ -103,37 +75,21 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
     const timeline = getCycleData(cycle)
     if (!timeline) return null
 
-    const { days, dates, phase } = timeline
+    const { dates, phase } = timeline
     const language = i18n.resolvedLanguage ?? i18n.language
-    const progress = Math.min(100, Math.max(0, (days.current / days.total) * 100))
     const goalDate = phase === 'proposal' ? dates.voting : dates.results
-    const { time, timeUnit } = getTime(new Date(Date.now()), goalDate)
+    const { time, timeUnit } = getTime(new Date(), goalDate)
     const unitLabel = getUnit(language, timeUnit, time)
     const nextPhase = phase === 'proposal' ? 'Voting' : 'Results'
-    const phaseNumber = cycle.phase === 'proposal' ? 0 : cycle.phase === 'voting' ? 1 : 2
+    const phaseNumber = PHASE_ORDER.indexOf(phase)
+
+    const formatDateTime = (date: Date) =>
+        `${date.toLocaleDateString()}\n${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
 
     const cycleProgression = [
-        {
-            title: "Suggestions",
-            date: `${dates.suggest.toLocaleDateString()}\n${dates.suggest.toLocaleTimeString(
-                [],
-                { hour: '2-digit', minute: '2-digit' }
-            )}`
-        },
-        {
-            title: "Voting",
-            date: `${dates.voting.toLocaleDateString()}\n${dates.voting.toLocaleTimeString(
-                [],
-                { hour: '2-digit', minute: '2-digit' }
-            )}`
-        },
-        {
-            title: "Results",
-            date: `${dates.results.toLocaleDateString()}\n${dates.results.toLocaleTimeString(
-                [],
-                { hour: '2-digit', minute: '2-digit' }
-            )}`
-        },
+        { title: 'Suggestions', date: formatDateTime(dates.suggest) },
+        { title: 'Voting', date: formatDateTime(dates.voting) },
+        { title: 'Results', date: formatDateTime(dates.results) },
     ]
 
     return (
@@ -143,8 +99,8 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
                 <div className='flex w-full flex-col gap-4 sm:flex-row justify-normal sm:justify-between mb-6 rounded-3xl bg-accent'>
                     <div className='flex flex-col flex-wrap pt-4 sm:py-4 px-6'>
                         <span className='break-words'>Current Phase</span>
-                        <span className='break-words font-heading text-2xl sm:text-3xl mb-3 mt-1 font-medium text-primary-contrast'>{phases[phase].title}</span>
-                        <span className='break-words text-muted-foreground'>{phases[phase].description}</span>
+                        <span className='break-words font-heading text-2xl sm:text-3xl mb-3 mt-1 font-medium text-primary-contrast'>{phaseLabels[phase].title}</span>
+                        <span className='break-words text-muted-foreground'>{phaseLabels[phase].description}</span>
                     </div>
                     
                     <hr className='inline sm:hidden border-secondary' />
@@ -162,9 +118,9 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
                 </div>
 
                 <div className='px-10 pt-2'>
-                    <Timeline steps={cycleProgression} current={phaseNumber} />
+                    <HorizontalTimeline steps={cycleProgression} current={phaseNumber} />
                 </div>
             </CardContent>
         </Card>
     )
-} 
+}
