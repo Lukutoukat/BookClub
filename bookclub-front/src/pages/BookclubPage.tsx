@@ -66,7 +66,7 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 	return (
 		<>
 			{currentCycle && (
-				<CycleTimeline bookclubId={bookclubId} cycle={currentCycle}/>
+				<CycleTimeline cycle={currentCycle}/>
 			)}
 
 			{/* PROPOSAL PHASE */}
