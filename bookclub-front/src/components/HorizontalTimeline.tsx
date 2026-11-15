@@ -40,7 +40,7 @@ const HorizontalTimeline = ({ steps, current }: TimelineProps) => {
                             'flex flex-col items-center text-center',
                             (isFirst || isLast) && 'w-4 whitespace-nowrap'
                         )}>
-							<span className={cn('mt-3 text-sm font-medium', !done && 'text-muted-foreground')}>{title}</span>
+							<span className={cn('mt-3 text-[0.82rem] sm:text-sm font-medium', !done && 'text-muted-foreground')}>{title}</span>
 							<span className="mt-1 text-xs whitespace-pre-line text-muted-foreground">{date}</span>
 						</div>
 					</div>

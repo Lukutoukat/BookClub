@@ -179,6 +179,28 @@
                 "endCurrentPhase": "Päätä nykyinen vaihe",
                 "warning": "Nykyinen vaihe päätetään, eikä tätä toimintoa voi peruuttaa."
             },
+            "info": {
+                "title": "Nykyinen sykli",
+                "phaseTitle": "Nykyinen vaihe",
+                "timeLeft": "Aikaa jäljellä",
+                "nextPhase": "Seuraava vaihe: {{phase}}",
+                "cycleOver": "Sykli on päättynyt",
+                "proposal": {
+                    "title": "Ehdota kirjoja",
+                    "description": "Ehdota kirjaa jonka haluaisit lukea seuraavaksi",
+                    "name": "Ehdotukset"
+                },
+                "voting": {
+                    "title": "Äänestä kirjoja",
+                    "description": "Äänestä kirjoja joita haluaisit lukea seuraavaksi",
+                    "name": "Äänestys"
+                },
+                "over": {
+                    "title": "Äänestyksen tulokset",
+                    "description": "Tarkista äänestyksen tulokset alhaalta",
+                    "name": "Tulokset"
+                }
+            },
             "calendar": {
                 "title": "Valitse päivämäärät",
                 "description": "Valitse ehdotus- ja äänestysvaiheiden päättymispäivät.",
