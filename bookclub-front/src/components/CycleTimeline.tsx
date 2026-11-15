@@ -73,7 +73,7 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
     ]
 
     return (
-        <Card className='mb-6 border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur'>
+        <Card data-testid='progress-card' className='mb-6 border-border/60 bg-card/90 shadow-lg shadow-slate-950/5 backdrop-blur'>
             <SectionHeader title={t('club.cycle.info.title')} />
             <CardContent className='px-4'>
                 <div className='flex w-full flex-col sm:flex-row justify-normal sm:justify-between mb-6 rounded-3xl bg-accent'>
@@ -99,7 +99,7 @@ export const CycleTimeline = ({ cycle }: CycleTimelineProps) => {
                     )}
                 </div>
 
-                <div className='overflow-x-auto pt-2'>
+                <div data-testid='timeline' className='overflow-x-auto pt-2'>
                     <div className='min-w-[15rem] px-12'>
                         <HorizontalTimeline steps={cycleProgression} current={phaseNumber} />
                     </div>
