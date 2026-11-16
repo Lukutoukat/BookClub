@@ -95,11 +95,9 @@ describe('books service', () => {
         test('maps all fields', () => {
             expect(toCreateBook(generic)).toEqual({
                 name: 'Book 1',
-                isbn: "g1",
                 author: 'Author 1',
                 year: 2020,
                 pages: 100,
-                comment: undefined,
                 language: 'English',
                 genre: 'Fiction',
                 extra_data: {
