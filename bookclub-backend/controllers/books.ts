@@ -1,21 +1,10 @@
 import express, { type Request, type Response } from 'express'
 import { prisma } from '../db.ts'
 import userExtractor from '../middleware/userExtractor.ts'
+import {Book, createBook, parseBook, toSafeBook} from "../services/bookService.ts";
 
 const bookRouter = express.Router()
 
-interface Book {
-  id?: string
-  name: string
-  author: string
-  year: number
-  isbn?: string
-  pages?: number
-  comment?: string
-  language?: string
-  genre?: string
-  user_id?: string
-}
 
 bookRouter.get('/', userExtractor, async (req: Request, res: Response) => {
   if (req.user) {
@@ -63,31 +52,24 @@ bookRouter.get('/previousSuggestions', userExtractor, async (req: Request, res: 
 })
 
 bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
-  const newBook: Book = req.body as Book
-  if (req.user) {
-    try {
-      const created = await prisma.book.create({
-        data: {
-          isbn: newBook.isbn,
-          name: newBook.name,
-          author: newBook.author,
-          year: newBook.year,
-          pages: newBook.pages,
-          comment: newBook.comment,
-          language: newBook.language,
-          genre: newBook.genre,
-          user_id: req.user.id
-        }
-      })
-      return res.json(created)
-    } catch (error) {
-      console.error('POST /api/books error:', error)
-      return res.status(500).json({ error: 'database error' })
+    if (!req.user) {
+        return res.status(401).json({error: 'user not found'})
     }
-  } else {
-    res.status(401).json({ error: 'user not found' })
-  }
-  return
+
+    const newBook = parseBook(req.body)
+    if (!newBook) {
+        return res.status(400).json({error: "invalid request body"})
+    }
+
+    try {
+        const book = await createBook(newBook, req.user.id)
+        const safeBook = toSafeBook(book)
+
+        return res.json(safeBook)
+    } catch (error) {
+        console.error('POST /api/books error:', error)
+        return res.status(500).json({error: 'service error'})
+    }
 })
 
 type cycleIdParams = {
