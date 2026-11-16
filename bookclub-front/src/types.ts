@@ -4,6 +4,27 @@ export type Notification = {
 	type: 'success' | 'error'
 }
 
+/* Book returned by backend from /api/books */
+export interface SavedBook {
+    id?: string,
+    isbn?: string,
+    name?: string,
+    author?: string,
+    year?: number,
+    pages?: number,
+    comment?: string,
+    language?: string,
+    genre?: string,
+    extra_data?: {
+        helmet_id?: string
+    }
+}
+
+/* Used to submit a new book to /api/books */
+export type CreateSavedBook = Omit<SavedBook, 'id'>
+
+
+/* Generic book type used by the app */
 export interface GenericBook {
 	id: string,
 	title: string,
@@ -12,5 +33,6 @@ export interface GenericBook {
 	authors?: string[],
 	pages?: string,
 	language?: string,
-	genres?: string[]
+	genres?: string[],
+    helmetId?: string
 }

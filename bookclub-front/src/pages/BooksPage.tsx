@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react'
 import {PageHeader} from '@/components/PageHeader'
 import {useTranslation} from 'react-i18next'
-import type {GenericBook} from "@/types.ts";
+import type {CreateSavedBook, GenericBook} from "@/types.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {Trash2Icon} from "lucide-react";
 import {BookList} from "@/components/book/BookList.tsx";
 import BookCreationDialog from "@/components/book/BookCreationDialog.tsx";
-import bookService, {type CreateBook, toCreateBook, toGeneric} from '@/services/books'
+import bookService, {toCreateBook, toGeneric} from '@/services/books'
 import {useNotification} from "@/context/NotificationContext.tsx";
 import {getErrorMessage} from "@/lib/errorMessage.ts";
 import {usePageTitle} from '@/hooks/usePageTitle'
@@ -34,7 +34,7 @@ const BooksPage = () => {
 
     // TODO: Refactor to just use generic book
     const addBook = async (book: GenericBook) => {
-        const createdBook: CreateBook = toCreateBook(book)
+        const createdBook: CreateSavedBook = toCreateBook(book)
 
         try {
             const result = await bookService.create(createdBook)
@@ -52,6 +52,7 @@ const BooksPage = () => {
     const deleteBook = async (book: GenericBook) => {
         try {
             const result = await bookService.removeFromUser(book.id);
+
             setBooks((books) => books.filter(b => b.id !== result.id))
             showSuccess(t('success.bookDeleted', {ns: "messages"}))
 

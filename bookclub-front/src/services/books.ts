@@ -1,6 +1,6 @@
-import axios from 'axios'
-import {getAuthConfig} from '@/services/auth'
-import type {GenericBook} from "@/types.ts";
+import type {CreateSavedBook, GenericBook, SavedBook} from "@/types.ts";
+import {getAuthConfig} from "@/services/auth.ts";
+import axios from "axios";
 
 const baseUrl = '/api/books'
 
@@ -19,69 +19,76 @@ export interface BookFields {
 }
 
 export type Book = BookFields
-export type CreateBook = Omit<BookFields, 'id'>
 
-export function toGeneric(fields: BookFields): GenericBook {
+
+export function toGeneric(savedBook: SavedBook): GenericBook {
     return {
-        id: fields.id,
-        title: fields.name,
-        pages: fields.pages ? String(fields.pages) : undefined,
-        year: String(fields.year),
-        language: fields.language,
-        coverUrl: undefined, // TODO: Add support for a cover
-        authors: [fields.author],
-        genres: fields.genre ? [fields.genre] : undefined,
+        id: "",
+        title: "",
+        // id: savedBook.id,
+        // title: savedBook.name,
+        pages: savedBook.pages ? String(savedBook.pages) : undefined,
+        year: String(savedBook.year),
+        language: savedBook.language,
+        coverUrl: undefined, // TODO
+        authors: [],
+        //authors: [savedBook.author],
+        genres: savedBook.genre ? [savedBook.genre] : undefined,
+        helmetId: "",
+
     }
 }
 
-export function toCreateBook(book: GenericBook): CreateBook {
+export function toCreateBook(genericBook: GenericBook): CreateSavedBook {
     return {
-        name: book.title,
-        author: book.authors?.[0] ?? "",
-        year: book.year ? Number(book.year) : 2000,
+        isbn: genericBook.id,
+        name: genericBook.title,
+        author: genericBook.authors?.[0] ?? "",
+        year: genericBook.year ? Number(genericBook.year) : 2000,
         // Gets the first int in string
-        pages: book.pages ? Number(book.pages.replace(/(^\d+)(.+$)/i, '$1')) : undefined,
+        pages: genericBook.pages ? Number(genericBook.pages.replace(/(^\d+)(.+$)/i, '$1')) : undefined,
         comment: undefined,
-        language: book.language,
-        genre: book.genres?.[0],
-        proposal_id: undefined,
-        owned_by_user: false
+        language: genericBook.language,
+        genre: genericBook.genres?.[0],
+        extra_data: {
+            helmet_id: genericBook.helmetId
+        }
     }
 }
 
 const getAll = () => {
 	return axios
-		.get<Book[]>(baseUrl, getAuthConfig())
+		.get<SavedBook[]>(baseUrl, getAuthConfig())
 		.then((res) => res.data)
 }
 
 const getPreviousSuggestions = () => {
 	return axios
-		.get<Book[]>(`${baseUrl}/previousSuggestions`, getAuthConfig())
+		.get<SavedBook[]>(`${baseUrl}/previousSuggestions`, getAuthConfig())
 		.then((res) => res.data)
 }
 
-const create = (book: CreateBook) => {
+const create = (book: CreateSavedBook) => {
 	return axios
-		.post<Book>(baseUrl, book, getAuthConfig())
+		.post<SavedBook>(baseUrl, book, getAuthConfig())
 		.then((res) => res.data)
 }
 
-const createForPropose = (cycle_id: string, book: CreateBook) => {
+const createForPropose = (cycle_id: string, book: CreateSavedBook) => {
 	return axios
-		.post<Book>(`${baseUrl}/${cycle_id}`, book, getAuthConfig())
+		.post<SavedBook>(`${baseUrl}/${cycle_id}`, book, getAuthConfig())
 		.then((res) => res.data)
 }
 
 const update = (id: string, book: BookFields) => {
 	return axios
-		.put<Book>(`${baseUrl}/${id}`, book, getAuthConfig())
+		.put<SavedBook>(`${baseUrl}/${id}`, book, getAuthConfig())
 		.then((res) => res.data)
 }
 
 const removeFromUser = (id: string) => {
 	return axios
-		.put<Book>(`${baseUrl}/${id}/remove`, {}, getAuthConfig())
+		.put<SavedBook>(`${baseUrl}/${id}/remove`, {}, getAuthConfig())
 		.then((res) => res.data)
 }
 
