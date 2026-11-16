@@ -165,9 +165,47 @@
         },
         "tabs": {
             "home": "Etusivu",
+            "events": "Tapahtumat",
             "members": "Jäsenet",
             "history": "Historia",
             "settings": "Asetukset"
+        },
+        "events": {
+            "create": {
+                "title": "Luo tapahtuma",
+                "name": "Tapahtuman nimi",
+                "namePlaceholder": "Esim. Marraskuun lukupiiri",
+                "description": "Tapahtuman kuvaus",
+                "descriptionPlaceholder": "Tapahtuman kuvaus...",
+                "meetingDate": "Tapaamisen ajankohta",
+                "createPoll": "Luo päivämäärä-äänestys",
+                "option": "Vaihtoehto {{number}}",
+                "pollEndsAt": "Äänestys päättyy",
+                "selectDate": "Valitse ajankohta",
+                "addOption": "Lisää vaihtoehto",
+                "removeOption": "Poista vaihtoehto",
+                "success": "Tapahtuma luotu onnistuneesti!",
+                "invalidPollDates": "Äänestyksen päättymispäivämäärän on oltava ennen kaikkia vaihtoehtoisia päivämääriä.",
+                "pollEndInPast": "Äänestyksen päättymispäivämäärän on oltava tulevaisuudessa.",
+                "dialogDescription": "Luo uusi tapahtuma kirjakerhoon."
+            },
+            "list": {
+                "title": "Tapahtumat",
+                "empty": "Ei vielä tapahtumia.",
+                "meetingDate": "Tapaamisen ajankohta: ",
+                "meetingDatePending": "Tapaamisen ajankohtaa ei ole vielä päätetty",
+                "pollEndedAt": "Äänestys päättyi: ",
+                "pollEndsAt": "Äänestys päättyy :",
+                "pollEnded": "Äänestys on päättynyt.",
+                "votes": "Äänet",
+                "saveVotes": "Tallenna äänet",
+                "voteSuccess": "Äänesi on tallennettu.",
+                "resolveSuccess": "Tapaamisen ajankohta on vahvistettu.",
+                "pollTied": "Äänestys päättyi tasatilanteeseen.",
+                "pollNoVotes": "Äänestys päättyi ilman ääniä.",
+                "selectMeetingDate": "Valitse tapaamisen ajankohta",
+                "nextEvent": "Seuraava tapahtuma"
+            }
         },
         "settings": {
             "title": "Kirjakerhon asetukset",

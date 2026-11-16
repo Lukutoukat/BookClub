@@ -165,9 +165,47 @@
         },
         "tabs": {
             "home": "Hem",
+            "events": "Evenemang",
             "members": "Medlemmar",
             "history": "Historik",
             "settings": "Inställningar"
+        },
+        "events": {
+            "create": {
+                "title": "Skapa evenemang",
+                "name": "Evenemangsnamn",
+                "namePlaceholder": "T.ex. Novemberläsning",
+                "description": "Evenemangbeskrivning",
+                "descriptionPlaceholder": "Evenemangbeskrivning...",
+                "meetingDate": "Mötesdatum",
+                "createPoll": "Skapa datumomröstning",
+                "option": "Alternativ {{number}}",
+                "pollEndsAt": "Omröstningen slutar vid",
+                "selectDate": "Välj datum",
+                "addOption": "Lägg till alternativ",
+                "removeOption": "Ta bort alternativ",
+                "success": "Evenemang skapat framgångsrikt!",
+                "invalidPollDates": "Alla alternativ måste vara efter omröstningens slutdatum.",
+                "pollEndInPast": "Omröstningens slutdatum måste vara i framtiden.",
+                "dialogDescription": "Skapa ett nytt evenemang för bokklubben."
+            },
+            "list": {
+                "title": "Evenemang",
+                "empty": "Inga evenemang ännu.",
+                "meetingDate": "Mötesdatum:",
+                "meetingDatePending": "Mötesdatum: Pågående",
+                "pollEndedAt": "Omröstningen avslutades: ",
+                "pollEndsAt": "Omröstningen slutar: ",
+                "pollEnded": "Omröstningen har avslutats",
+                "votes": "Röster",
+                "saveVotes": "Spara röster",
+                "voteSuccess": "Din röst har sparats.",
+                "resolveSuccess": "Mötesdatumet har bekräftats.",
+                "pollTied": "Omröstningen avslutades i oavgjort läge.",
+                "pollNoVotes": "Omröstningen avslutades utan några röster.",
+                "selectMeetingDate": "Välj mötesdatum",
+                "nextEvent": "Nästa evenemang"
+            }
         },
         "settings": {
             "title": "Bokklubbsinställningar",

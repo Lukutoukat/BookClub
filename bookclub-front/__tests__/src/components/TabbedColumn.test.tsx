@@ -17,10 +17,10 @@ const SearchParamDisplay = () => {
     return <div data-testid="search-param">{params.get('tab')}</div>
 }
 
-const renderComponent = (initialEntries = ['/']) => {
+const renderComponent = (initialEntries = ['/'], tabsToRender = tabs) => {
     return render(
         <MemoryRouter initialEntries={initialEntries}>
-            <TabbedColumn tabs={tabs}/>
+            <TabbedColumn tabs={tabsToRender}/>
             <SearchParamDisplay/>
         </MemoryRouter>
     )
@@ -72,5 +72,15 @@ describe('TabbedColumn', () => {
         renderComponent(['/?tab=settings'])
         expect(screen.getByText('Content Settings')).toBeVisible()
         expect(screen.queryByText('Content Home')).not.toBeInTheDocument()
+    })
+
+    it('shows a notification indicator for tabs that require attention', () => {
+        renderComponent(['/'], [
+            {...tabs[0], showNotification: true},
+            ...tabs.slice(1)
+        ])
+
+        expect(screen.getByRole('tab', {name: 'Home'}).querySelector('.bg-red-500')).toBeInTheDocument()
+        expect(screen.getByRole('tab', {name: 'Members'}).querySelector('.bg-red-500')).not.toBeInTheDocument()
     })
 })
