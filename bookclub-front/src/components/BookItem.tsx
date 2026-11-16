@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Book } from '@/services/books'
+import { type Book } from '@/types'
 import { type VoteFields } from '@/services/vote'
 import { formatISBN } from '@/lib/isbnValidator'
 import { Badge } from '@/components/ui/badge'
