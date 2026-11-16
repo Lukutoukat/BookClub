@@ -30,7 +30,7 @@ export type Book = BookFields
 
 /* Book returned by backend from /api/books */
 export interface SavedBook {
-    id?: string,
+    id: string,
     isbn?: string,
     name?: string,
     author?: string,
@@ -51,8 +51,8 @@ export type CreateSavedBook = Omit<SavedBook, 'id'>
 /* Generic book type used by the app */
 export interface GenericBook {
 	id: string,
-	title: string,
-	year?: string,
+	title?: string,
+	year?: number,
 	coverUrl?: string,
 	authors?: string[],
 	pages?: string,

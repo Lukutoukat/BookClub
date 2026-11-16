@@ -1,41 +1,36 @@
-import type {CreateSavedBook, GenericBook, SavedBook} from "@/types.ts";
+import type {BookFields, CreateSavedBook, GenericBook, SavedBook} from "@/types.ts";
 import {getAuthConfig} from "@/services/auth.ts";
 import axios from "axios";
+import {resolveBookCoverUrl} from "@/services/book-providers/finna.ts";
 
 const baseUrl = '/api/books'
 
-export interface BookFields {
-	id: string
-	isbn?: string
-	name: string
-	author: string
-	year: number
-	pages?: number
-	comment?: string
-	language?: string
-	genre?: string
-	proposal_id?: string
-	owned_by_user?: boolean
+/**
+ * Function to resolve a cover URL for the given saved book.
+ * Returns undefined if book does not have a cover.
+ */
+export async function resolveCoverUrl(savedBook: SavedBook): Promise<string | undefined> {
+    const helmetId = savedBook.extra_data?.helmet_id
+    if (!helmetId) {
+        return undefined
+    }
+    return resolveBookCoverUrl(helmetId)
 }
 
-export type Book = BookFields
-
-
-export function toGeneric(savedBook: SavedBook): GenericBook {
+export async function toGeneric(savedBook: SavedBook): Promise<GenericBook> {
+    const coverUrl = await resolveCoverUrl(savedBook)
     return {
-        id: "",
-        title: "",
-        // id: savedBook.id,
-        // title: savedBook.name,
+        id: savedBook.id,
+        title: savedBook.name,
         pages: savedBook.pages ? String(savedBook.pages) : undefined,
-        year: String(savedBook.year),
+        year: savedBook.year,
         language: savedBook.language,
-        coverUrl: undefined, // TODO
-        authors: [],
-        //authors: [savedBook.author],
+        coverUrl: coverUrl,
+        authors: savedBook.author ? [savedBook.author] : [],
         genres: savedBook.genre ? [savedBook.genre] : undefined,
-        helmetId: "",
-
+        extraData: {
+            helmetId: savedBook.extra_data?.helmet_id
+        }
     }
 }
 
@@ -43,15 +38,14 @@ export function toCreateBook(genericBook: GenericBook): CreateSavedBook {
     return {
         isbn: genericBook.id,
         name: genericBook.title,
-        author: genericBook.authors?.[0] ?? "",
-        year: genericBook.year ? Number(genericBook.year) : 2000,
+        author: genericBook.authors?.[0] ?? undefined,
+        year: genericBook.year,
         // Gets the first int in string
         pages: genericBook.pages ? Number(genericBook.pages.replace(/(^\d+)(.+$)/i, '$1')) : undefined,
-        comment: undefined,
         language: genericBook.language,
         genre: genericBook.genres?.[0],
         extra_data: {
-            helmet_id: genericBook.helmetId
+            helmet_id: genericBook.extraData?.helmetId
         }
     }
 }

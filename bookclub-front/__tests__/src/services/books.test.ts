@@ -1,8 +1,8 @@
 import axios from 'axios'
 import {test, expect, vi, describe, beforeEach} from 'vitest'
 import type {Mocked} from 'vitest'
-import books, {toGeneric, toCreateBook, type BookFields} from '../../../src/services/books'
-import type {GenericBook} from '@/types'
+import books, {toGeneric, toCreateBook} from '../../../src/services/books'
+import type {GenericBook, BookFields} from '@/types'
 
 vi.mock('axios')
 
@@ -34,21 +34,24 @@ describe('books service', () => {
     })
 
     describe('toGeneric', () => {
-        test('maps every present field', () => {
-            expect(toGeneric(mockBook)).toEqual({
+        test('maps every present field', async () => {
+            expect(await toGeneric(mockBook)).toEqual({
                 id: '1',
                 title: 'Book 1',
                 pages: '100',
-                year: '2020',
+                year: 2020,
                 language: 'English',
                 coverUrl: undefined,
                 authors: ['Author 1'],
                 genres: ['Fiction'],
+                extraData: {
+                    helmetId: undefined
+                }
             })
         })
 
-        test('handles optional fields being absent', () => {
-            const result = toGeneric({
+        test('handles optional fields being absent', async () => {
+            const result = await toGeneric({
                 id: '1',
                 name: 'Book 1',
                 author: 'Author 1',
@@ -59,20 +62,20 @@ describe('books service', () => {
             expect(result.genres).toBeUndefined()
         })
 
-        test('converts year and pages to strings', () => {
-            const result = toGeneric(mockBook)
-            expect(result.year).toBe('2020')
+        test('converts year and pages to strings', async () => {
+            const result = await toGeneric(mockBook)
+            expect(result.year).toBe(2020)
             expect(result.pages).toBe('100')
-            expect(typeof result.year).toBe('string')
+            expect(typeof result.year).toBe('number')
             expect(typeof result.pages).toBe('string')
         })
 
-        test('always sets coverUrl to undefined', () => {
-            expect(toGeneric(mockBook).coverUrl).toBeUndefined()
+        test('always sets coverUrl to undefined', async () => {
+            expect(await toGeneric(mockBook).coverUrl).toBeUndefined()
         })
 
-        test('wraps author and genre into single-element arrays', () => {
-            const result = toGeneric(mockBook)
+        test('wraps author and genre into single-element arrays', async () => {
+            const result = await toGeneric(mockBook)
             expect(result.authors).toEqual(['Author 1'])
             expect(result.genres).toEqual(['Fiction'])
         })
@@ -83,7 +86,7 @@ describe('books service', () => {
             id: 'g1',
             title: 'Book 1',
             authors: ['Author 1'],
-            year: '2020',
+            year: 2020,
             pages: '100 pages',
             language: 'English',
             genres: ['Fiction'],
@@ -92,14 +95,16 @@ describe('books service', () => {
         test('maps all fields', () => {
             expect(toCreateBook(generic)).toEqual({
                 name: 'Book 1',
+                isbn: "g1",
                 author: 'Author 1',
                 year: 2020,
                 pages: 100,
                 comment: undefined,
                 language: 'English',
                 genre: 'Fiction',
-                proposal_id: undefined,
-                owned_by_user: false,
+                extra_data: {
+                    helmet_id: undefined
+                }
             })
         })
 
@@ -113,13 +118,13 @@ describe('books service', () => {
             expect(toCreateBook({...generic, pages: undefined}).pages).toBeUndefined()
         })
 
-        test('defaults year to 2000 when missing', () => {
-            expect(toCreateBook({...generic, year: undefined}).year).toBe(2000)
+        test('defaults year to undefined when missing', () => {
+            expect(toCreateBook({...generic, year: undefined}).year).toBe(undefined)
         })
 
         test('defaults author to empty string when authors absent or empty', () => {
-            expect(toCreateBook({...generic, authors: undefined}).author).toBe('')
-            expect(toCreateBook({...generic, authors: []}).author).toBe('')
+            expect(toCreateBook({...generic, authors: undefined}).author).toBe(undefined)
+            expect(toCreateBook({...generic, authors: []}).author).toBe(undefined)
         })
 
         test('leaves genre undefined when genres absent or empty', () => {
@@ -131,7 +136,6 @@ describe('books service', () => {
             const result = toCreateBook(generic)
             expect(result.comment).toBeUndefined()
             expect(result.proposal_id).toBeUndefined()
-            expect(result.owned_by_user).toBe(false)
         })
     })
 

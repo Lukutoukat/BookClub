@@ -61,7 +61,7 @@ describe('FinnaProvider', () => {
                 id: 'book1',
                 helmetId: 'book1',
                 title: '1984',
-                year: '2021',
+                year: 2021,
                 language: 'eng',
                 authors: ['George Orwell'],
                 genres: ['Dystopia'],

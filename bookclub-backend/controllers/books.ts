@@ -1,54 +1,58 @@
-import express, { type Request, type Response } from 'express'
-import { prisma } from '../db.ts'
+import express, {type Request, type Response} from 'express'
+import {prisma} from '../db.ts'
 import userExtractor from '../middleware/userExtractor.ts'
-import {Book, createBook, parseBook, toSafeBook} from "../services/bookService.ts";
+import {type Book, createBook, parseBook, parseCreateBook, toSafeBook} from "../services/bookService.ts";
 
 const bookRouter = express.Router()
 
 
 bookRouter.get('/', userExtractor, async (req: Request, res: Response) => {
-  if (req.user) {
-    try {
-      const result = await prisma.book.findMany({
-        where: {
-          user_id: req.user.id
-        },
-        orderBy: {
-          createdAt: 'desc'
-        }
-      })
-      res.json(result)
-    } catch (error) {
-      console.error('GET /api/books error:', error)
-      res.status(500).json({ error: 'database error' })
+    if (!req.user) {
+        return res.status(401).json({error: 'user not found'})
     }
-  } else {
-    res.status(401).json({ error: 'user not found' })
-  }
-  return
+
+    try {
+        const savedBooks = await prisma.book.findMany({
+            where: {
+                user_id: req.user.id
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
+
+        return res.json(savedBooks.map(savedBook =>
+            toSafeBook(parseBook(savedBook)!)
+        ))
+    } catch (error) {
+        console.error('GET /api/books error:', error)
+        return res.status(500).json({error: 'database error'})
+    }
 })
 
 bookRouter.get('/previousSuggestions', userExtractor, async (req: Request, res: Response) => {
-  if (req.user) {
-    try {
-      const books = await prisma.book.findMany({
-        where: {
-          BookProposed: {
-            some: {
-              user_id: req.user.id
-            }
-          }
-        }
-      })
-      res.json(books)
-    } catch (error) {
-      console.error('GET /api/books error:', error)
-      res.status(500).json({ error: 'database error' })
+    if (!req.user) {
+        return res.status(401).json({error: 'user not found'})
     }
-  } else {
-    res.status(401).json({ error: 'user not found' })
-  }
-  return
+
+    try {
+        const savedBooks = await prisma.book.findMany({
+            where: {
+                BookProposed: {
+                    some: {
+                        user_id: req.user.id
+                    }
+                }
+            }
+        })
+
+        return res.json(savedBooks.map(savedBook =>
+            toSafeBook(parseBook(savedBook)!)
+        ))
+    } catch (error) {
+        console.error('GET /api/books error:', error)
+        return res.status(500).json({error: 'database error'})
+    }
 })
 
 bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
@@ -56,7 +60,7 @@ bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
         return res.status(401).json({error: 'user not found'})
     }
 
-    const newBook = parseBook(req.body)
+    const newBook = parseCreateBook(req.body)
     if (!newBook) {
         return res.status(400).json({error: "invalid request body"})
     }
