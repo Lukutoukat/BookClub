@@ -4,6 +4,30 @@ export type Notification = {
 	type: 'success' | 'error'
 }
 
+/**
+ *  Legacy book type
+ *  @Deprecated Use GenericBook or SavedBook instead
+ */
+export interface BookFields {
+    id: string
+    isbn?: string
+    name: string
+    author: string
+    year: number
+    pages?: number
+    comment?: string
+    language?: string
+    genre?: string
+    proposal_id?: string
+    owned_by_user?: boolean
+}
+
+/**
+ *  Legacy book type
+ *  @Deprecated Use GenericBook or SavedBook instead
+ */
+export type Book = BookFields
+
 /* Book returned by backend from /api/books */
 export interface SavedBook {
     id?: string,
@@ -34,5 +58,7 @@ export interface GenericBook {
 	pages?: string,
 	language?: string,
 	genres?: string[],
-    helmetId?: string
+    extraData?: {
+        helmetId?: string
+    }
 }
