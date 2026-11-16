@@ -36,7 +36,6 @@ export async function toGeneric(savedBook: SavedBook): Promise<GenericBook> {
 
 export function toCreateBook(genericBook: GenericBook): CreateSavedBook {
     return {
-        isbn: genericBook.id,
         name: genericBook.title,
         author: genericBook.authors?.[0] ?? undefined,
         year: genericBook.year,

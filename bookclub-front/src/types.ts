@@ -44,7 +44,7 @@ export interface SavedBook {
     }
 }
 
-/* Used to submit a new book to /api/books */
+/* Book sent to /api/books to submit a new book */
 export type CreateSavedBook = Omit<SavedBook, 'id'>
 
 

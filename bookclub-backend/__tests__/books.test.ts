@@ -84,7 +84,7 @@ describe('/api/books', () => {
       const response = await request(app).get('/api/books').set(authHeaders())
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual(mockBooks)
+      expect(response.body).toEqual(mockBooks.map(({user_id, ...rest}) => rest))
       expect(prisma.book.findMany).toHaveBeenCalledTimes(1)
     })
 
@@ -107,7 +107,8 @@ describe('/api/books', () => {
       const response = await request(app).post('/api/books').set(authHeaders()).send(newBook)
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual(newBook)
+      const {user_id, ...expectedResponse} = newBook
+      expect(response.body).toEqual(expectedResponse)
       expect(prisma.book.create).toHaveBeenCalledTimes(1)
       expect(prisma.book.create).toHaveBeenCalledWith({
         data: {
@@ -119,7 +120,8 @@ describe('/api/books', () => {
           comment: 'Comment 1',
           language: 'English',
           genre: 'Fiction',
-          user_id: '1'
+          user_id: '1',
+          extra_data: {helmet_id: undefined}
         }
       })
     })
@@ -133,7 +135,7 @@ describe('/api/books', () => {
       const response = await request(app).post('/api/books').set(authHeaders()).send(newBook)
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ error: 'database error' })
+      expect(response.body).toEqual({ error: 'service error' })
     })
   })
 
