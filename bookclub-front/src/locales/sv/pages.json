@@ -211,6 +211,28 @@
                 "endCurrentPhase": "Avsluta nuvarande fas",
                 "warning": "Den nuvarande fasen avslutas och åtgärden kan inte ångras."
             },
+            "info": {
+                "title": "Nuvarande cykel",
+                "phaseTitle": "Nuvarande fas",
+                "timeLeft": "Tid kvar",
+                "nextPhase": "Nästa fas: {{phase}}",
+                "cycleOver": "Cykeln har avslutats",
+                "proposal": {
+                    "title": "Föreslå böcker",
+                    "description": "Föreslå en bok som du skulle vilja läsa härnäst",
+                    "name": "Förslag"
+                },
+                "voting": {
+                    "title": "Rösta på böcker",
+                    "description": "Rösta på böcker som du skulle vilja läsa härnäst",
+                    "name": "Omröstning"
+                },
+                "over": {
+                    "title": "Omröstningens resultat",
+                    "description": "Kontrollera omröstningens resultat nedan",
+                    "name": "Resultat"
+                }
+            },
             "calendar": {
                 "title": "Välj datum",
                 "description": "Välj slutdatum för förslagsfasen och omröstningsfasen.",
