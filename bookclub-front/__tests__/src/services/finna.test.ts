@@ -125,6 +125,20 @@ test('searchHelmetBooks returns grouped books', async () => {
     expect(result.resultCount).toBe(4)
 })
 
+test('searchHelmetBooks excludes audiobooks', async () => {
+    mockedAxios.get.mockResolvedValue({
+        data: {
+            resultCount: 0,
+            records: []
+        }
+    })
+
+    await finnaService.searchHelmetBooks("1984", ["eng"], 1)
+
+    const params = mockedAxios.get.mock.calls[0][1]?.params as URLSearchParams
+    expect(params.getAll("filter[]")).toContain('-format:"1/Book/AudioBook/"')
+})
+
 test('searchHelmetBooks returns empty books when records are missing', async () => {
     mockedAxios.get.mockResolvedValue({
         data: {

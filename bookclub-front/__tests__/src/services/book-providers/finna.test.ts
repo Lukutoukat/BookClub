@@ -111,6 +111,7 @@ describe('FinnaProvider', () => {
             const filters = params.getAll('filter[]')
             expect(filters).toContain('~language:"fin"')
             expect(filters).toContain('~language:"swe"')
+            expect(filters).toContain('-format:"1/Book/AudioBook/"')
         })
 
         test('handles books with only an id', async () => {
