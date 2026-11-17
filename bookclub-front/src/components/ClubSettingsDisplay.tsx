@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import bookclubService from '../services/bookclubs'
 import { useNavigate } from 'react-router-dom'
 import { PageHeader } from './PageHeader'
 import { ButtonDialog } from './ButtonDialog'
@@ -9,6 +9,7 @@ import { useNotification } from '@/context/NotificationContext.tsx'
 import { getErrorMessage } from '@/lib/errorMessage.ts'
 import { useTranslation } from 'react-i18next'
 import { Input } from '@/components/ui/input'
+import { useState } from 'react'
 
 type Props = {
 	bookclubId: string
@@ -19,7 +20,7 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 	const navigate = useNavigate()
 	const { showError } = useNotification()
 	const [isSuggestionLimitEnabled, setIsSuggestionLimitEnabled] = useState(false)
-	const [suggestionLimitAmount, setSuggestionLimitAmount] = useState<number>(5)
+	const [suggestionLimitAmount, setSuggestionLimitAmount] = useState(5)
 
 	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
 		event.preventDefault()
@@ -46,16 +47,16 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 				}}
 			/>
 			<Card className="card-base">
-				<SectionHeader 
+				<SectionHeader
 					title={t('club.settings.manageMembers.title')}
 					description={t('club.settings.manageMembers.description')}
 				/>
 				<CardContent>
-					<BookclubMemberList 
+					<BookclubMemberList
 						bookclubId={bookclubId}
 						canManageMembers={true}
 						className='member-list'
-					/> 	
+					/>
 				</CardContent>
 				<SectionHeader
 					title={t('club.settings.manageClub.title')}
