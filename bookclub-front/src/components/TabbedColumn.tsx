@@ -8,6 +8,7 @@ export interface Tab<Id extends string = string> {
 	id: Id
 	label: string
 	content: React.ReactNode
+	showNotification?: boolean
 }
 
 interface TabbedColumnProps<Id extends string> {
@@ -40,8 +41,14 @@ export const TabbedColumn = <Id extends string>({ tabs }: TabbedColumnProps<Id>)
 					<CardContent className="flex gap-1 overflow-scroll">
 						{tabs.map((tab) => (
 							<Tabs.Trigger key={tab.id} value={tab.id}>
-								<Badge className="text-base" variant={tab.id === currentTab ? 'default' : 'ghost'}>
+								<Badge className="text-base flex items-center gap-2" variant={tab.id === currentTab ? 'default' : 'ghost'}>
 									{tab.label}
+									{tab.showNotification && (
+										<span
+											className="h-2 w-2 rounded-full bg-red-500"
+											aria-hidden="true"
+										/>
+									)}
 								</Badge>
 							</Tabs.Trigger>
 						))}
