@@ -12,8 +12,15 @@ jest.mock('../db.ts', () => ({
       findUnique: jest.fn(),
       update: jest.fn()
     },
+    bookClub: {
+      findUnique: jest.fn()
+    },
+    cycle: {
+      findUnique: jest.fn()
+    },
     bookProposed: {
-      create: jest.fn()
+      create: jest.fn(),
+      count: jest.fn()
     },
     user: {
       findUnique: jest.fn()
@@ -69,6 +76,9 @@ describe('/api/books', () => {
       email: 'matti@test.com',
       name: 'matti'
     })
+    ;(prisma.bookProposed.count as jest.Mock).mockResolvedValue(0)
+    ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(null)
+    ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue(null)
   })
 
   afterEach(() => {
@@ -140,7 +150,6 @@ describe('/api/books', () => {
   describe('POST/:cycle_id', () => {
     it('creates a book and proposes it to the cycle', async () => {
       const cycle_id = '1'
-
       const newBook = {
         isbn: '1234567890',
         name: 'Book 1',
@@ -151,13 +160,17 @@ describe('/api/books', () => {
         language: 'English',
         genre: 'Fiction'
       }
-
       const createdBook = {
         id: '1',
         ...newBook,
         user_id: '1'
       }
 
+      ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue({ id: cycle_id, bookclub_id: 'club-1' })
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue({
+        suggestionLimitEnabled: false,
+        suggestionLimit: null
+      })
       ;(prisma.book.create as jest.Mock).mockResolvedValue(createdBook)
       ;(prisma.bookProposed.create as jest.Mock).mockResolvedValue({ id: '1' })
 
@@ -169,6 +182,8 @@ describe('/api/books', () => {
       expect(response.status).toBe(200)
       expect(response.body).toEqual(newBook)
 
+      expect(prisma.cycle.findUnique).toHaveBeenCalledTimes(1)
+      expect(prisma.bookClub.findUnique).toHaveBeenCalledTimes(1)
       expect(prisma.book.create).toHaveBeenCalledTimes(1)
       expect(prisma.book.create).toHaveBeenCalledWith({
         data: {
@@ -194,8 +209,39 @@ describe('/api/books', () => {
       })
     })
 
+    it('returns 400 if the user has reached the suggestion limit', async () => {
+      const cycle_id = '1'
+      const newBook = {
+        isbn: '1234567890',
+        name: 'Book 1',
+        author: 'Author 1',
+        year: 2024,
+        pages: 100,
+        comment: 'Comment 1',
+        language: 'English',
+        genre: 'Fiction'
+      }
+
+      ;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue({ id: cycle_id, bookclub_id: 'club-1' })
+      ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue({
+        suggestionLimitEnabled: true,
+        suggestionLimit: 1
+      })
+      ;(prisma.bookProposed.count as jest.Mock).mockResolvedValue(1)
+
+      const response = await request(app)
+        .post(`/api/books/${cycle_id}`)
+        .set(authHeaders())
+        .send(newBook)
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ error: 'suggestion_limit_reached' })
+      expect(prisma.book.create).not.toHaveBeenCalled()
+      expect(prisma.bookProposed.create).not.toHaveBeenCalled()
+    })
+
     it('returns 500 if database fails', async () => {
-      ;(prisma.book.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
+      ;(prisma.cycle.findUnique as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
       const response = await request(app).post('/api/books/1').set(authHeaders()).send({
         isbn: '1234567890',
