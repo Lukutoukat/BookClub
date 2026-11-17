@@ -66,7 +66,7 @@ bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
   const newBook: Book = req.body as Book
   if (req.user) {
     try {
-      await prisma.book.create({
+      const created = await prisma.book.create({
         data: {
           isbn: newBook.isbn,
           name: newBook.name,
@@ -79,7 +79,7 @@ bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
           user_id: req.user.id
         }
       })
-      return res.json(newBook)
+      return res.json(created)
     } catch (error) {
       console.error('POST /api/books error:', error)
       return res.status(500).json({ error: 'database error' })

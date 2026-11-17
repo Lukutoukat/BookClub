@@ -19,6 +19,33 @@
         "title": "Tallenna kirjoja",
         "description": "Tallenna kirjat, jotka haluat lukea ja ehdottaa tulevaisuudessa.",
         "createNew": "Luo uusi kirja",
+        "delete": {
+          "button": "Poista",
+          "title": "Poista kirja",
+          "warning": "Kirjan poistamista ei voi peruuttaa."
+        },
+        "results": "{{books}} kirjaa",
+        "book": {
+          "noAuthors": "Ei kirjoittajia",
+          "viewOnHelmet": "Katso kirja Helmetissä"
+        },
+        "dialog": {
+          "title": "Luo kirja",
+          "helmet": {
+            "tab": "Helmet",
+            "search": "Haku",
+            "searchEmpty": "Suorita haku nähdäksesi tuloksia",
+            "searchNoResults": "Ei tuloksia hakusanalla",
+            "searchNoMoreResults": "Ei muita tuloksia",
+            "searchFailed": "Haku epäonnistui, yritä uudelleen",
+            "tooltipTitle": "Helmet Haku",
+            "tooltip": "Haku on toteutettu kolmannen osapuolen, Helmet:in kautta (finna.fi)",
+            "select": "Valitse"
+          },
+          "manual": {
+            "tab": "Manuaalinen"
+          }
+        },
         "fields": {
             "title": "Nimi",
             "author": "Kirjailija",
@@ -47,10 +74,6 @@
             "wouldRead": "Lukisin",
             "wontRead": "En lukisi",
             "hint": "Äänet tallentuvat automaattisesti. Voit muuttaa ääniäsi äänestysvaiheen aikana."
-        },
-        "delete": {
-            "title": "Poista kirja",
-            "warning": "Kirjan poistamista ei voi peruuttaa."
         }
     },
 
@@ -142,9 +165,47 @@
         },
         "tabs": {
             "home": "Etusivu",
+            "events": "Tapahtumat",
             "members": "Jäsenet",
             "history": "Historia",
             "settings": "Asetukset"
+        },
+        "events": {
+            "create": {
+                "title": "Luo tapahtuma",
+                "name": "Tapahtuman nimi",
+                "namePlaceholder": "Esim. Marraskuun lukupiiri",
+                "description": "Tapahtuman kuvaus",
+                "descriptionPlaceholder": "Tapahtuman kuvaus...",
+                "meetingDate": "Tapaamisen ajankohta",
+                "createPoll": "Luo päivämäärä-äänestys",
+                "option": "Vaihtoehto {{number}}",
+                "pollEndsAt": "Äänestys päättyy",
+                "selectDate": "Valitse ajankohta",
+                "addOption": "Lisää vaihtoehto",
+                "removeOption": "Poista vaihtoehto",
+                "success": "Tapahtuma luotu onnistuneesti!",
+                "invalidPollDates": "Äänestyksen päättymispäivämäärän on oltava ennen kaikkia vaihtoehtoisia päivämääriä.",
+                "pollEndInPast": "Äänestyksen päättymispäivämäärän on oltava tulevaisuudessa.",
+                "dialogDescription": "Luo uusi tapahtuma kirjakerhoon."
+            },
+            "list": {
+                "title": "Tapahtumat",
+                "empty": "Ei vielä tapahtumia.",
+                "meetingDate": "Tapaamisen ajankohta: ",
+                "meetingDatePending": "Tapaamisen ajankohtaa ei ole vielä päätetty",
+                "pollEndedAt": "Äänestys päättyi: ",
+                "pollEndsAt": "Äänestys päättyy :",
+                "pollEnded": "Äänestys on päättynyt.",
+                "votes": "Äänet",
+                "saveVotes": "Tallenna äänet",
+                "voteSuccess": "Äänesi on tallennettu.",
+                "resolveSuccess": "Tapaamisen ajankohta on vahvistettu.",
+                "pollTied": "Äänestys päättyi tasatilanteeseen.",
+                "pollNoVotes": "Äänestys päättyi ilman ääniä.",
+                "selectMeetingDate": "Valitse tapaamisen ajankohta",
+                "nextEvent": "Seuraava tapahtuma"
+            }
         },
         "settings": {
             "title": "Kirjakerhon asetukset",
@@ -187,6 +248,28 @@
                 "winning": "Voittaja:",
                 "endCurrentPhase": "Päätä nykyinen vaihe",
                 "warning": "Nykyinen vaihe päätetään, eikä tätä toimintoa voi peruuttaa."
+            },
+            "info": {
+                "title": "Nykyinen sykli",
+                "phaseTitle": "Nykyinen vaihe",
+                "timeLeft": "Aikaa jäljellä",
+                "nextPhase": "Seuraava vaihe: {{phase}}",
+                "cycleOver": "Sykli on päättynyt",
+                "proposal": {
+                    "title": "Ehdota kirjoja",
+                    "description": "Ehdota kirjaa jonka haluaisit lukea seuraavaksi",
+                    "name": "Ehdotukset"
+                },
+                "voting": {
+                    "title": "Äänestä kirjoja",
+                    "description": "Äänestä kirjoja joita haluaisit lukea seuraavaksi",
+                    "name": "Äänestys"
+                },
+                "over": {
+                    "title": "Äänestyksen tulokset",
+                    "description": "Tarkista äänestyksen tulokset alhaalta",
+                    "name": "Tulokset"
+                }
             },
             "calendar": {
                 "title": "Valitse päivämäärät",

@@ -1,179 +1,169 @@
-import { render, screen, waitFor } from '@/utils/test-utils'
+import {render, screen, waitFor} from '@testing-library/react'
 import user from '@testing-library/user-event'
-import { BrowserRouter } from 'react-router-dom'
-import BooksPage from '@/pages/BooksPage'
-import BookList from '@/components/BookList'
-import { type Book } from '@/services/books'
+import {describe, test, expect, vi, beforeEach} from 'vitest'
+import BooksPage from '@/pages/BooksPage.tsx'
 import bookService from '@/services/books'
-import { test, expect, describe, vi, beforeEach } from 'vitest'
+import type {GenericBook} from '@/types'
 
-vi.mock('../../../src/services/books')
+const mocks = vi.hoisted(() => ({
+    showSuccess: vi.fn(),
+    showError: vi.fn(),
+}))
 
-// Mock ResizeObserver for ScrollArea component
-class MockResizeObserver {
-	observe = vi.fn()
-	unobserve = vi.fn()
-	disconnect = vi.fn()
-}
-globalThis.ResizeObserver = MockResizeObserver as any
+vi.mock('@/services/books', () => ({
+    default: {
+        getAll: vi.fn(),
+        create: vi.fn(),
+        removeFromUser: vi.fn(),
+    },
+    toGeneric: (b: any) => b,
+    toCreateBook: (b: any) => b,
+}))
 
-const mockBook = (overrides?: Partial<Book>): Book => ({
-	id: 1,
-	isbn: '9780451524935',
-	name: 'Book 1',
-	author: 'Author 1',
-	year: 2024,
-	pages: 100,
-	comment: 'Comment 1',
-	language: 'English',
-	genre: 'Fiction',
-	...overrides
-})
+vi.mock('@/context/NotificationContext.tsx', () => ({
+    useNotification: () => ({showSuccess: mocks.showSuccess, showError: mocks.showError}),
+}))
+
+vi.mock('@/hooks/usePageTitle', () => ({usePageTitle: vi.fn()}))
+
+vi.mock('react-i18next', () => ({
+    useTranslation: () => ({t: (key: string) => key}),
+}))
+
+vi.mock('@/components/PageHeader', () => ({
+    PageHeader: ({badgeText, title, description}: any) => (
+        <div data-testid="page-header">
+            <span>{badgeText}</span>
+            <span>{title}</span>
+            <span>{description}</span>
+        </div>
+    ),
+}))
+
+vi.mock('@/components/book/BookCreationDialog', () => ({
+    default: ({onSelectBook, DialogButton}: any) => (
+        <div data-testid="book-creation-dialog">
+            {DialogButton}
+            <button
+                data-testid="trigger-add"
+                onClick={() => onSelectBook({id: 'new-book', name: 'New Book', author: 'A'})}
+            >
+                add
+            </button>
+        </div>
+    ),
+}))
+
+vi.mock('@/components/book/BookList', () => ({
+    BookList: ({books, onAction}: any) => (
+        <div data-testid="book-list">
+            {books.map((b: any) => (
+                <div key={b.id} data-testid={`book-${b.id}`}>
+                    <span>{b.name}</span>
+                    <button data-testid={`delete-${b.id}`} onClick={() => onAction?.('delete', b)}>
+                        delete
+                    </button>
+                </div>
+            ))}
+        </div>
+    ),
+}))
+
+const mockBook = (overrides: Partial<GenericBook> = {}): GenericBook =>
+    ({id: '1', name: 'Book 1', author: 'Author 1', ...overrides} as GenericBook)
 
 describe('BooksPage', () => {
-	const mockBooks = (count: number = 2): Book[] => {
-		const isbns = ['9780451524935', '9780596007126', '9781234567897']
-		return Array.from({ length: count }, (_, i) =>
-			mockBook({
-				id: i + 1,
-				isbn: isbns[i] || `978012345678${i}`,
-				name: `Book ${i + 1}`
-			})
-		)
-	}
+    beforeEach(() => vi.clearAllMocks())
 
-	const setupMocks = (overrides?: { books?: Book[] | null; error?: boolean }) => {
-		const books = overrides?.books ?? mockBooks()
-		if (overrides?.error) {
-			vi.mocked(bookService.getAll).mockRejectedValue(new Error('Network error'))
-		} else {
-			vi.mocked(bookService.getAll).mockResolvedValue(books)
-		}
-	}
+    test('renders page header with correct title/description/badge', async () => {
+        vi.mocked(bookService.getAll).mockResolvedValue([])
+        render(<BooksPage/>)
 
-	beforeEach(() => {
-		vi.clearAllMocks()
-	})
+        expect(screen.getByText('books.title')).toBeDefined()
+        expect(screen.getByText('books.description')).toBeDefined()
+        expect(screen.getByText('labels.books')).toBeDefined()
 
-	describe('page structure', () => {
-		test('displays page title, description, and navigation', async () => {
-			setupMocks({ books: [] })
+        await waitFor(() => expect(bookService.getAll).toHaveBeenCalled())
+    })
 
-			render(<BooksPage />)
+    test('loads and displays books on mount', async () => {
+        vi.mocked(bookService.getAll).mockResolvedValue([
+            mockBook(),
+            mockBook({id: '2', name: 'Book 2'}),
+        ])
+        render(<BooksPage/>)
 
-			await waitFor(() => {
-				expect(screen.getByText('Save books')).toBeDefined()
-				expect(screen.getByText('Books')).toBeDefined()
-				expect(
-					screen.getByText(/Save the books you want to read and suggest in the future./i)
-				).toBeDefined()
-			})
-		})
-	})
+        await waitFor(() => {
+            expect(screen.getByTestId('book-1')).toBeDefined()
+            expect(screen.getByTestId('book-2')).toBeDefined()
+        })
+        expect(bookService.getAll).toHaveBeenCalledTimes(1)
+    })
 
-	describe('loading state', () => {
-		test('shows loading state on mount', () => {
-			vi.mocked(bookService.getAll).mockImplementation(() => new Promise(() => {}))
+    test('shows error notification when loading fails', async () => {
+        vi.mocked(bookService.getAll).mockRejectedValue(new Error('boom'))
+        render(<BooksPage/>)
 
-			render(<BooksPage />)
+        await waitFor(() => expect(mocks.showError).toHaveBeenCalled())
+    })
 
-			expect(screen.getByText('Loading books...')).toBeDefined()
-		})
-	})
+    test('creates a new book and appends it to the list', async () => {
+        vi.mocked(bookService.getAll).mockResolvedValue([])
+        vi.mocked(bookService.create).mockResolvedValue({id: 'new-book', name: 'New Book'} as any)
 
-	describe('displaying books', () => {
-		test('loads and displays multiple books with correct count', async () => {
-			setupMocks({ books: mockBooks(3) })
+        render(<BooksPage/>)
+        await waitFor(() => expect(bookService.getAll).toHaveBeenCalled())
 
-			render(<BookList show="savedBooks" />)
+        const us = user.setup()
+        await us.click(screen.getByTestId('trigger-add'))
 
-			await waitFor(() => {
-				expect(screen.getByText('Book 1')).toBeDefined()
-				expect(screen.getByText('Book 2')).toBeDefined()
-				expect(screen.getByText('Book 3')).toBeDefined()
-				expect(screen.getByText('Books: (3)')).toBeDefined()
-			})
-		})
+        await waitFor(() => {
+            expect(bookService.create).toHaveBeenCalled()
+            expect(mocks.showSuccess).toHaveBeenCalled()
+            expect(screen.getByTestId('book-new-book')).toBeDefined()
+        })
+    })
 
-		test('displays singular "book" for single book', async () => {
-			setupMocks({ books: mockBooks(1) })
+    test('shows error notification when create fails', async () => {
+        vi.mocked(bookService.getAll).mockResolvedValue([])
+        vi.mocked(bookService.create).mockRejectedValue(new Error('boom'))
 
-			render(<BookList show="savedBooks" />)
+        render(<BooksPage/>)
+        await waitFor(() => expect(bookService.getAll).toHaveBeenCalled())
 
-			await waitFor(() => {
-				expect(screen.getByText('Book 1')).toBeDefined()
-				expect(screen.getByText('Books: (1)')).toBeDefined()
-			})
-		})
-	})
+        const us = user.setup()
+        await us.click(screen.getByTestId('trigger-add'))
 
-	describe('empty and error states', () => {
-		test('displays empty state when no books', async () => {
-			setupMocks({ books: [] })
+        await waitFor(() => expect(mocks.showError).toHaveBeenCalled())
+    })
 
-			render(<BooksPage />)
+    test('deletes a book and removes it from the list', async () => {
+        vi.mocked(bookService.getAll).mockResolvedValue([mockBook()])
+        vi.mocked(bookService.removeFromUser).mockResolvedValue({id: '1', status: 200} as any)
 
-			await waitFor(() => {
-				expect(screen.getByText('No books yet.')).toBeDefined()
-			})
-		})
+        render(<BooksPage/>)
+        await waitFor(() => expect(screen.getByTestId('book-1')).toBeDefined())
 
-		test('displays error message when loading fails', async () => {
-			setupMocks({ error: true })
+        const us = user.setup()
+        await us.click(screen.getByTestId('delete-1'))
 
-			render(<BooksPage />)
+        await waitFor(() => {
+            expect(bookService.removeFromUser).toHaveBeenCalledWith('1')
+            expect(screen.queryByTestId('book-1')).toBeNull()
+            expect(mocks.showSuccess).toHaveBeenCalled()
+        })
+    })
 
-			await waitFor(() => {
-				expect(screen.getByText('Failed to load books.')).toBeDefined()
-			})
-		})
-	})
+    test('shows error notification when delete fails', async () => {
+        vi.mocked(bookService.getAll).mockResolvedValue([mockBook()])
+        vi.mocked(bookService.removeFromUser).mockRejectedValue(new Error('boom'))
 
-	describe('book deletion', () => {
-		test('deletes book via service and removes from display when confirmation is accepted', async () => {
-			setupMocks({ books: mockBooks(2) })
-			vi.mocked(bookService.removeFromUser).mockResolvedValue({
-				status: 200
-			} as any)
-			vi.spyOn(window, 'confirm').mockReturnValue(true)
-			render(<BooksPage />)
+        render(<BooksPage/>)
+        await waitFor(() => expect(screen.getByTestId('book-1')).toBeDefined())
 
-			await waitFor(() => {
-				expect(screen.getByText('Book 1')).toBeDefined()
-				expect(screen.getByText('Book 2')).toBeDefined()
-			})
+        const us = user.setup()
+        await us.click(screen.getByTestId('delete-1'))
 
-			const us = user.setup()
-			const deleteButtons = screen.getAllByTitle('Delete book')
-			await us.click(deleteButtons[0])
-			const continueButtons = screen.getAllByTitle('Continue')
-			await us.click(continueButtons[0])
-
-			await waitFor(() => {
-				expect(bookService.removeFromUser).toHaveBeenCalledWith(1)
-				expect(screen.queryByText('Book 1')).toBeNull()
-			})
-		})
-
-		test('calls service with correct isbn on delete', async () => {
-			setupMocks({ books: mockBooks(1) })
-			vi.mocked(bookService.removeFromUser).mockResolvedValue({
-				status: 200
-			} as any)
-
-			render(<BooksPage />)
-
-			await waitFor(() => {
-				expect(screen.getByText('Book 1')).toBeDefined()
-			})
-
-			const us = user.setup()
-			const deleteButtons = screen.getAllByTitle('Delete book')
-			await us.click(deleteButtons[0])
-			const continueButtons = screen.getAllByTitle('Continue')
-			await us.click(continueButtons[0])
-
-			expect(bookService.removeFromUser).toHaveBeenCalledWith(1)
-		})
-	})
+        await waitFor(() => expect(mocks.showError).toHaveBeenCalled())
+    })
 })

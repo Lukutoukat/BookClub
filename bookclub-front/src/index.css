@@ -18,11 +18,12 @@
 	--popover: oklch(0.9913 0.0029 84.5588);
 	--popover-foreground: oklch(0.2103 0.0059 285.8852);
 	--primary: oklch(0.3959 0.0599 20.092);
+	--primary-contrast: oklch(31.278% 0.0546 20.607);
 	--primary-foreground: oklch(0.9885 0.0057 84.5659);
 	--secondary: oklch(0.9232 0.0026 48.7171);
 	--secondary-foreground: oklch(0.2103 0.0059 285.8852);
 	--muted: oklch(0.9585 0.0098 87.4715);
-	--muted-foreground: oklch(0.5534 0.0116 58.0708);
+	--muted-foreground: oklch(43.044% 0.0125 48.266);
 	--accent: oklch(0.9585 0.0098 87.4715);
 	--accent-foreground: oklch(0.2103 0.0059 285.8852);
 	--destructive: oklch(0.4437 0.1613 26.8994);
@@ -80,14 +81,15 @@
 	--popover: oklch(0.19 0.02 25);
 	--popover-foreground: oklch(0.9 0.015 40);
 
-	--primary: oklch(0.45 0.1 25);
+	--primary: oklch(49.379% 0.1099 24.728);
+	--primary-contrast: oklch(72.895% 0.07015 18.841);
 	--primary-foreground: oklch(0.95 0.01 40);
 
 	--secondary: oklch(0.22 0.02 25);
 	--secondary-foreground: oklch(0.9 0.015 40);
 
 	--muted: oklch(0.22 0.02 25);
-	--muted-foreground: oklch(0.72 0.02 40);
+	--muted-foreground: oklch(75.626% 0.01554 43.905);
 
 	--accent: oklch(0.26 0.03 25);
 	--accent-foreground: oklch(0.9 0.015 40);
@@ -123,11 +125,13 @@
 	--color-popover: var(--popover);
 	--color-popover-foreground: var(--popover-foreground);
 	--color-primary: var(--primary);
+	--color-primary-contrast: var(--primary-contrast);
 	--color-primary-foreground: var(--primary-foreground);
 	--color-secondary: var(--secondary);
 	--color-secondary-foreground: var(--secondary-foreground);
 	--color-muted: var(--muted);
 	--color-muted-foreground: var(--muted-foreground);
+	--color-muted-foreground-lighter: var(--muted-foreground-lighter);
 	--color-accent: var(--accent);
 	--color-accent-foreground: var(--accent-foreground);
 	--color-destructive: var(--destructive);
@@ -219,7 +223,7 @@
 	}
 
 	.page-shell {
-		@apply flex-1 min-w-0 px-4 py-6 sm:px-6 lg:px-8 mx-auto flex w-full flex-col gap-6 sm:gap-8 max-w-full 2xl:max-w-[85%];
+		@apply flex-1 min-w-0 px-0 py-6 sm:px-6 lg:px-8 mx-auto flex w-full flex-col gap-6 sm:gap-8 max-w-full 2xl:max-w-[85%];
 	}
 
 	.section-header {
