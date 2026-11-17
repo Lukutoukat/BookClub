@@ -38,6 +38,7 @@ const searchHelmetBooks = async (query: string, languages: string[], page: numbe
     params.append("lookfor", query)
     params.append("sort", "relevance")
     params.append("filter[]", 'format:"0/Book/"')
+    params.append("filter[]", '-format:"1/Book/AudioBook/"')
     params.append("filter[]", 'building:"0/Helmet/"')
     languages.forEach((language) => {
         params.append("filter[]", `~language:"${language}"`)
