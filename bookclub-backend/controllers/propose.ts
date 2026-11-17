@@ -53,29 +53,44 @@ proposeRouter.get('/:id', userExtractor, async (req: Request, res: Response) => 
   }
 })
 
-proposeRouter.delete('/:cycle_id/:book_id', userExtractor, async (req: Request, res: Response) => {
-  const { cycle_id, book_id } = req.params
-  if (!req.user) {
-    return res.status(401).json({ error: 'user not found' })
-  }
+proposeRouter.delete(
+  '/:cycle_id/:book_id',
+  userExtractor,
+  async (req: Request<{ cycle_id: string; book_id: string }>, res: Response) => {
+    const { cycle_id, book_id } = req.params
 
-  try {
-    const proposal = await prisma.bookProposed.findFirst({
-      where: { book_id, cycle_id, user_id: req.user.id }
-    })
-    if (!proposal) {
-      return res.status(403).json({ error: 'not authorized to delete this proposal' })
+    if (!req.user) {
+      return res.status(401).json({ error: 'user not found' })
     }
 
-    await prisma.bookProposed.deleteMany({
-      where: { book_id, cycle_id, user_id: req.user.id }
-    })
-    return res.json({ message: 'Proposed book removed successfully' })
-  } catch (error) {
-    console.error('DELETE /api/propose/:id error:', error)
-    return res.status(500).json({ error: 'database error' })
+    try {
+      const proposal = await prisma.bookProposed.findFirst({
+        where: {
+          book_id,
+          cycle_id,
+          user_id: req.user.id
+        }
+      })
+
+      if (!proposal) {
+        return res.status(403).json({ error: 'not authorized to delete this proposal' })
+      }
+
+      await prisma.bookProposed.deleteMany({
+        where: {
+          book_id,
+          cycle_id,
+          user_id: req.user.id
+        }
+      })
+
+      return res.json({ message: 'Proposed book removed successfully' })
+    } catch (error) {
+      console.error('DELETE /api/propose/:id error:', error)
+      return res.status(500).json({ error: 'database error' })
+    }
   }
-})
+)
 
 proposeRouter.post(
   '/',
