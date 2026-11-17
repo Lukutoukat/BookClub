@@ -1,8 +1,9 @@
 import axios from 'axios'
-import {test, expect, vi, describe, beforeEach} from 'vitest'
 import type {Mocked} from 'vitest'
-import books, {toGeneric, toCreateBook} from '../../../src/services/books'
-import type {GenericBook, BookFields} from '@/types'
+import {beforeEach, describe, expect, test, vi} from 'vitest'
+import books, {resolveCoverUrl, toCreateBook, toGeneric} from '../../../src/services/books'
+import {resolveBookCoverUrl} from '@/services/book-providers/finna'
+import type {BookFields, GenericBook, SavedBook} from '@/types'
 
 vi.mock('axios')
 
@@ -10,7 +11,12 @@ vi.mock('@/services/auth', () => ({
     getAuthConfig: () => ({headers: {Authorization: null}}),
 }))
 
+vi.mock('@/services/book-providers/finna', () => ({
+    resolveBookCoverUrl: vi.fn(),
+}))
+
 const mockedAxios = axios as Mocked<typeof axios>
+const mockedResolveCover = vi.mocked(resolveBookCoverUrl)
 
 const authConfig = expect.objectContaining({
     headers: expect.objectContaining({Authorization: null}),
@@ -28,14 +34,50 @@ const mockBook: BookFields = {
     genre: 'Fiction',
 }
 
+const bookWithHelmet = (helmet_id?: string | null): SavedBook =>
+    ({...mockBook, extra_data: {helmet_id}}) as SavedBook
+
 describe('books service', () => {
     beforeEach(() => {
         vi.clearAllMocks()
     })
 
+    describe('resolveCoverUrl', () => {
+        test('returns undefined when extra_data is missing', async () => {
+            expect(await resolveCoverUrl(mockBook as SavedBook)).toBeUndefined()
+            expect(mockedResolveCover).not.toHaveBeenCalled()
+        })
+
+        test('returns undefined when helmet_id is missing', async () => {
+            expect(await resolveCoverUrl(bookWithHelmet(undefined))).toBeUndefined()
+            expect(mockedResolveCover).not.toHaveBeenCalled()
+        })
+
+        test('returns undefined when helmet_id is null', async () => {
+            expect(await resolveCoverUrl(bookWithHelmet(null))).toBeUndefined()
+            expect(mockedResolveCover).not.toHaveBeenCalled()
+        })
+
+        test('delegates to resolveBookCoverUrl when helmet_id is present', async () => {
+            mockedResolveCover.mockResolvedValue('https://cover/123.jpg')
+
+            const result = await resolveCoverUrl(bookWithHelmet('h123'))
+
+            expect(mockedResolveCover).toHaveBeenCalledWith('h123')
+            expect(result).toBe('https://cover/123.jpg')
+        })
+
+        test('propagates undefined from resolveBookCoverUrl', async () => {
+            mockedResolveCover.mockResolvedValue(undefined)
+
+            expect(await resolveCoverUrl(bookWithHelmet('h1'))).toBeUndefined()
+            expect(mockedResolveCover).toHaveBeenCalledWith('h1')
+        })
+    })
+
     describe('toGeneric', () => {
         test('maps every present field', async () => {
-            expect(await toGeneric(mockBook)).toEqual({
+            expect(await toGeneric(mockBook as SavedBook)).toEqual({
                 id: '1',
                 title: 'Book 1',
                 pages: '100',
@@ -56,26 +98,43 @@ describe('books service', () => {
                 name: 'Book 1',
                 author: 'Author 1',
                 year: 2020,
-            })
+            } as SavedBook)
             expect(result.pages).toBeUndefined()
             expect(result.language).toBeUndefined()
             expect(result.genres).toBeUndefined()
         })
 
+        test('returns empty authors array when author is missing', async () => {
+            const result = await toGeneric({
+                ...mockBook,
+                author: undefined,
+            } as SavedBook)
+            expect(result.authors).toEqual([])
+        })
+
         test('converts year and pages to strings', async () => {
-            const result = await toGeneric(mockBook)
+            const result = await toGeneric(mockBook as SavedBook)
             expect(result.year).toBe(2020)
             expect(result.pages).toBe('100')
             expect(typeof result.year).toBe('number')
             expect(typeof result.pages).toBe('string')
         })
 
-        test('always sets coverUrl to undefined', async () => {
-            expect(await toGeneric(mockBook).coverUrl).toBeUndefined()
+        test('always sets coverUrl to undefined when there is no helmet_id', async () => {
+            expect((await toGeneric(mockBook as SavedBook)).coverUrl).toBeUndefined()
+        })
+
+        test('resolves coverUrl when helmet_id is present', async () => {
+            mockedResolveCover.mockResolvedValue('https://cover/abc.jpg')
+
+            const result = await toGeneric(bookWithHelmet('abc'))
+
+            expect(mockedResolveCover).toHaveBeenCalledWith('abc')
+            expect(result.coverUrl).toBe('https://cover/abc.jpg')
         })
 
         test('wraps author and genre into single-element arrays', async () => {
-            const result = await toGeneric(mockBook)
+            const result = await toGeneric(mockBook as SavedBook)
             expect(result.authors).toEqual(['Author 1'])
             expect(result.genres).toEqual(['Fiction'])
         })
