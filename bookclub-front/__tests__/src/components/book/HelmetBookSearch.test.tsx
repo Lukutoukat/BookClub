@@ -38,15 +38,6 @@ vi.mock('lucide-react', () => ({
     SearchIcon: () => <span />,
 }))
 
-vi.mock('lucide-react', () => ({
-    ChevronDown: () => <span/>,
-    Info: () => <span/>,
-    LanguagesIcon: () => <span/>,
-    LoaderCircle: () => <span data-testid="loader"/>,
-    PlusIcon: () => <span/>,
-    SearchIcon: () => <span/>,
-}))
-
 vi.mock('react-infinite-scroll-component', () => ({
     default: ({children, next, hasMore, endMessage}: any) => (
         <div data-testid="infinite-scroll">
