@@ -133,9 +133,9 @@ BookClubMembersRouter.post(
   }
 )
 
-BookClubMembersRouter.patch('/:id/members/:user_id', userExtractor, async (req: Request, res: Response) => {
+BookClubMembersRouter.patch('/:id/members/:membership_id', userExtractor, async (req: Request, res: Response) => {
   const bookclub_id = req.params.id as string
-  const user_id = req.params.user_id as string
+  const membership_id = req.params.membership_id as string
   const { role } = req.body as { role: number }
 
   if (!req.user) {
@@ -152,7 +152,10 @@ BookClubMembersRouter.patch('/:id/members/:user_id', userExtractor, async (req: 
     })
 
     const targetMember = await prisma.bookClubMembers.findFirst({
-      where: { user_id, bookclub_id }
+      where: { 
+        id: membership_id,
+        bookclub_id
+      }
     })
 
     if (!targetMember) {
@@ -164,13 +167,13 @@ BookClubMembersRouter.patch('/:id/members/:user_id', userExtractor, async (req: 
     }
 
     const updated = await prisma.bookClubMembers.updateMany({
-      where: { user_id, bookclub_id },
+      where: { id: membership_id, bookclub_id },
       data: { user_role: role }
     })
 
     return res.status(200).json(updated)
   } catch (error) {
-    console.error('PATCH /api/bookclubmembers/:id/members/:user_id error:', error)
+    console.error('PATCH /api/bookclubmembers/:id/members/:membership_id error:', error)
     return res.status(500).json({ error: 'failed to change user role' })
   }
 })
@@ -209,9 +212,9 @@ BookClubMembersRouter.delete('/:id', userExtractor, async (req: Request, res: Re
   }
 })
 
-BookClubMembersRouter.delete('/:id/:user_id', userExtractor, async (req: Request, res: Response) => {
+BookClubMembersRouter.delete('/:id/:membership_id', userExtractor, async (req: Request, res: Response) => {
   const bookclub_id = req.params.id as string
-  const user_id = req.params.user_id as string
+  const membership_id = req.params.membership_id as string
 
   if (!req.user) {
     return res.status(401).json({ error: 'user not authenticated' })
@@ -223,7 +226,7 @@ BookClubMembersRouter.delete('/:id/:user_id', userExtractor, async (req: Request
     })
 
     const targetMember = await prisma.bookClubMembers.findFirst({
-      where: { user_id, bookclub_id }
+      where: { id: membership_id, bookclub_id }
     })
 
     if (!isAdmin) {
@@ -238,11 +241,11 @@ BookClubMembersRouter.delete('/:id/:user_id', userExtractor, async (req: Request
       return res.status(403).json({ error: 'cannot delete an admin member' })
     }
 
-    await prisma.bookClubMembers.deleteMany({ where: { bookclub_id, user_id } })
+    await prisma.bookClubMembers.deleteMany({ where: { bookclub_id, id: membership_id } })
 
     return res.status(200).json({ success: true, message: 'member removed successfully' })
   } catch (error) {
-    console.error('DELETE /api/bookclubmembers/:id/:user_id error:', error)
+    console.error('DELETE /api/bookclubmembers/:id/:membership_id error:', error)
     return res.status(500).json({ error: 'failed to delete member' })
   }
 })
