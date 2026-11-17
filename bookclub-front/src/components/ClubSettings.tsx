@@ -30,9 +30,10 @@ const ClubSettings = () => {
     try {
       await bookclubmembersService.create(inviteCode)
       setMessage(t('success.joinedClub'))
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        setMessage(error.response?.data?.error ?? t('error.api.joinClub'))
+        const apiError = (error.response?.data as { error?: string } | undefined)?.error
+        setMessage(apiError ?? t('error.api.joinClub'))
       } else {
         setMessage(t('error.api.joinClub'))
       }
