@@ -23,7 +23,9 @@ const bookSchema = z.object({
     extra_data: bookExtraDataSchema.nullish().optional()
 })
 
-const createBookSchema = bookSchema.omit({user_id: true, id: true})
+const createBookSchema = bookSchema.omit({user_id: true, id: true}).extend({
+    name: z.string() // Make name required for creation requests
+})
 const safeBookSchema = bookSchema.omit({ user_id: true })
 
 export type Book = z.infer<typeof bookSchema>
