@@ -262,10 +262,20 @@ const BookclubPage = () => {
 		}
 	}, [bookclubId, showError])
 
-	useEffect(() => {
-		if (!bookclubId) return
-		void bookclubService.get(bookclubId).then((bookclub) => setBookclubName(bookclub?.name ?? ''))
-	}, [bookclubId])
+useEffect(() => {
+    const fetchClubName = async () => {
+        if (!bookclubId) return
+
+        try {
+            const bookclub = await bookclubService.get(bookclubId)
+            setBookclubName(bookclub?.name ?? '')
+        } catch {
+            showError('Unable to fetch club name')
+        }
+    }
+
+    void fetchClubName()
+}, [bookclubId, showError])
 
 	useEffect(() => {
 		const checkAdminStatus = async () => {

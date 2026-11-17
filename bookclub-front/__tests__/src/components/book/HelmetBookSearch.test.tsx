@@ -28,6 +28,17 @@ vi.mock('react-i18next', () => ({
 }))
 
 vi.mock('lucide-react', () => ({
+    ChevronDown: () => <span />,
+    ChevronLeft: () => <span />,
+    ChevronRight: () => <span />,
+    Info: () => <span />,
+    LanguagesIcon: () => <span />,
+    LoaderCircle: () => <span data-testid="loader" />,
+    PlusIcon: () => <span />,
+    SearchIcon: () => <span />,
+}))
+
+vi.mock('lucide-react', () => ({
     ChevronDown: () => <span/>,
     Info: () => <span/>,
     LanguagesIcon: () => <span/>,
