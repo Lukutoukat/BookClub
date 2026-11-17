@@ -1,0 +1,11 @@
+{
+  "suggestionLimit": {
+    "enable": "Begränsa förslag per medlem",
+    "amount": "Högsta antal förslag per medlem",
+    "saving": "Sparar…",
+    "saved": "Inställningarna för förslagsgränsen har sparats.",
+    "saveFailed": "Det gick inte att spara inställningarna för förslagsgränsen.",
+    "invalid": "Ange ett heltal större än noll.",
+    "reached": "Du har nått det högsta antalet förslag för den här omgången."
+  }
+}

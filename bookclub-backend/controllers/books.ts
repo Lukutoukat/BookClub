@@ -21,12 +21,8 @@ bookRouter.get('/', userExtractor, async (req: Request, res: Response) => {
   if (req.user) {
     try {
       const result = await prisma.book.findMany({
-        where: {
-          user_id: req.user.id
-        },
-        orderBy: {
-          createdAt: 'desc'
-        }
+        where: { user_id: req.user.id },
+        orderBy: { createdAt: 'desc' }
       })
       res.json(result)
     } catch (error) {
@@ -43,13 +39,7 @@ bookRouter.get('/previousSuggestions', userExtractor, async (req: Request, res: 
   if (req.user) {
     try {
       const books = await prisma.book.findMany({
-        where: {
-          BookProposed: {
-            some: {
-              user_id: req.user.id
-            }
-          }
-        }
+        where: { BookProposed: { some: { user_id: req.user.id } } }
       })
       res.json(books)
     } catch (error) {
@@ -100,61 +90,72 @@ bookRouter.post(
   async (req: Request<cycleIdParams, unknown, Book>, res: Response) => {
     const { cycle_id } = req.params
     const newBook: Book = req.body
-    if (req.user) {
-      try {
-        const createdBook = await prisma.book.create({
-          data: {
-            isbn: newBook.isbn,
-            name: newBook.name,
-            author: newBook.author,
-            year: newBook.year,
-            pages: newBook.pages,
-            comment: newBook.comment,
-            language: newBook.language,
-            genre: newBook.genre,
-            user_id: req.user.id
-          }
-        })
-
-        await prisma.bookProposed.create({
-          data: {
-            book_id: createdBook.id,
-            user_id: createdBook.user_id,
-            cycle_id: cycle_id
-          }
-        })
-
-        return res.json(newBook)
-      } catch (error) {
-        console.error('POST /api/books error:', error)
-        return res.status(500).json({ error: 'database error' })
-      }
-    } else {
-      res.status(401).json({ error: 'user not found' })
+    if (!req.user) {
+      return res.status(401).json({ error: 'user not found' })
     }
-    return
+
+    try {
+      const cycle = await prisma.cycle.findUnique({
+        where: { id: cycle_id },
+        select: { id: true, bookclub_id: true }
+      })
+      if (!cycle?.bookclub_id) {
+        return res.status(404).json({ error: 'Cycle not found or not associated with a book club' })
+      }
+
+      const club = await prisma.bookClub.findUnique({
+        where: { id: cycle.bookclub_id },
+        select: { suggestionLimitEnabled: true, suggestionLimit: true }
+      })
+      if (club?.suggestionLimitEnabled && club.suggestionLimit !== null) {
+        const proposalCount = await prisma.bookProposed.count({
+          where: { cycle_id, user_id: req.user.id }
+        })
+        if (proposalCount >= club.suggestionLimit) {
+          return res.status(400).json({ error: 'suggestion_limit_reached' })
+        }
+      }
+
+      const createdBook = await prisma.book.create({
+        data: {
+          isbn: newBook.isbn,
+          name: newBook.name,
+          author: newBook.author,
+          year: newBook.year,
+          pages: newBook.pages,
+          comment: newBook.comment,
+          language: newBook.language,
+          genre: newBook.genre,
+          user_id: req.user.id
+        }
+      })
+
+      await prisma.bookProposed.create({
+        data: {
+          book_id: createdBook.id,
+          user_id: createdBook.user_id,
+          cycle_id
+        }
+      })
+
+      return res.json(newBook)
+    } catch (error) {
+      console.error('POST /api/books/:cycle_id error:', error)
+      return res.status(500).json({ error: 'database error' })
+    }
   }
 )
 
 bookRouter.put('/:id', userExtractor, async (req: Request, res: Response) => {
   const updatedBook: Book = req.body as Book
-
   if (req.user) {
     try {
-      const book = await prisma.book.findUnique({
-        where: { id: updatedBook.id }
-      })
-
+      const book = await prisma.book.findUnique({ where: { id: updatedBook.id } })
       if (!book) {
-        return res.status(404).json({
-          error: 'book not found'
-        })
+        return res.status(404).json({ error: 'book not found' })
       }
-
       if (book.user_id !== req.user.id) {
-        return res.status(403).json({
-          error: 'not authorized to update this book'
-        })
+        return res.status(403).json({ error: 'not authorized to update this book' })
       }
 
       const result = await prisma.book.update({
@@ -171,7 +172,6 @@ bookRouter.put('/:id', userExtractor, async (req: Request, res: Response) => {
           genre: updatedBook.genre
         }
       })
-
       return res.json(result)
     } catch (error) {
       console.error('PUT /api/books/:id error:', error)
@@ -185,7 +185,6 @@ bookRouter.put('/:id', userExtractor, async (req: Request, res: Response) => {
 
 bookRouter.put('/:id/remove', userExtractor, async (req, res) => {
   const id: string = req.params.id as string
-
   if (!req.user) {
     return res.status(401).json({ error: 'user not found' })
   }
@@ -193,21 +192,16 @@ bookRouter.put('/:id/remove', userExtractor, async (req, res) => {
   try {
     const book = await prisma.book.findUnique({ where: { id } })
     if (!book) return res.status(404).json({ error: 'book not found' })
-
     if (book.user_id !== req.user.id) {
       return res.status(403).json({ error: 'not authorized to remove this book' })
     }
 
-    const result = await prisma.book.update({
-      where: { id },
-      data: { user_id: null }
-    })
+    const result = await prisma.book.update({ where: { id }, data: { user_id: null } })
     return res.json(result)
   } catch (error) {
     console.error('PUT /api/books/:id/remove error: ', error)
     res.status(500).json({ error: 'database error' })
   }
-  return
 })
 
 export default bookRouter
