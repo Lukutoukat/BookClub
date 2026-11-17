@@ -157,7 +157,8 @@ describe('/api/propose', () => {
 
     it('returns 400 if user is not a member of bookclub', async () => {
       ;(prisma.cycle.findFirst as jest.Mock).mockResolvedValue({
-        id: '1'
+        id: '1',
+        bookclub_id: '1'
       })
       ;(prisma.book.findUnique as jest.Mock).mockResolvedValue({
         id: '1'
@@ -174,7 +175,8 @@ describe('/api/propose', () => {
 
     it('returns 400 if book is already proposed for the cycle', async () => {
       ;(prisma.cycle.findFirst as jest.Mock).mockResolvedValue({
-        id: '1'
+        id: '1',
+        bookclub_id: '1'
       })
       ;(prisma.book.findUnique as jest.Mock).mockResolvedValue({
         id: '1'
