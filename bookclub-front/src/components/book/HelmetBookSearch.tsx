@@ -1,17 +1,15 @@
 import {useTranslation} from "react-i18next";
-import {useRef, useState} from "react";
+import {useState} from "react";
 import type {GenericBook} from "@/types.ts";
 import {Popover, PopoverContent, PopoverDescription, PopoverTitle, PopoverTrigger} from "@/components/ui/popover.tsx";
-import {ChevronDown, Info, LanguagesIcon, LoaderCircle, PlusIcon, SearchIcon} from "lucide-react";
+import {ChevronDown, ChevronLeft, ChevronRight, Info, LanguagesIcon, LoaderCircle, PlusIcon, SearchIcon} from "lucide-react";
 import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group.tsx";
-import InfiniteScroll from "react-infinite-scroll-component";
 import BookItem from "@/components/book/BookItem.tsx";
 import {fetchBooks} from "@/services/book-providers";
 import {Button} from "@/components/ui/button.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 import {getLanguages, type LanguageCode} from "@/lib/bookLanguages.ts";
 import {useNotification} from "@/context/NotificationContext.tsx";
-
 
 const defaultResultLimit = 10;
 const defaultLanguages: LanguageCode[] = ["fin", "eng"]
@@ -24,7 +22,6 @@ interface HelmetBookSearchProps {
 
 const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: HelmetBookSearchProps) => {
     const {t} = useTranslation('pages')
-
     const {showError} = useNotification()
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -32,54 +29,43 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
     const [query, setQuery] = useState<string>('')
     const [page, setPage] = useState<number>(0)
     const [searchedBooks, setSearchedBooks] = useState<GenericBook[]>([])
-    const [hasMore, setHasMore] = useState<boolean>(true)
-    const bookContainerRef = useRef<HTMLDivElement>(null)
+    const [hasMore, setHasMore] = useState<boolean>(false)
 
-    const fetchMore = async ({reset = false}: { reset?: boolean }) => {
-        if (query.trim().length < 1) {
+    const fetchPage = async (pageToFetch: number) => {
+        if (query.trim().length < 1 || loading) {
             return
-        }
-
-        const nextPage = reset ? 1 : page + 1
-
-        if (reset) {
-            setPage(1)
-            setSearchedBooks([])
-            setHasMore(true)
         }
 
         setLoading(true)
+        try {
+            const searchResult = await fetchBooks({
+                title: query,
+                limit: resultLimit,
+                page: pageToFetch,
+                languages
+            })
 
-        const searchResult = await fetchBooks({
-            title: query,
-            limit: resultLimit,
-            page: nextPage,
-            languages: languages
-        })
+            if (searchResult.error) {
+                showError(t('books.dialog.helmet.searchFailed'))
+                return
+            }
 
-        if (searchResult.error) {
-            showError((t('books.dialog.helmet.searchFailed')))
+            setSearchedBooks(searchResult.result)
+            setPage(pageToFetch)
+            setHasMore(searchResult.result.length === resultLimit)
+        } catch {
+            showError(t('books.dialog.helmet.searchFailed'))
+        } finally {
             setLoading(false)
-            return
         }
-
-        if (searchResult.result.length === 0) {
-            setHasMore(false);
-            setLoading(false)
-            return
-        }
-        setSearchedBooks(prev => [...prev, ...searchResult.result])
-        setPage(nextPage)
-        setLoading(false)
     }
-
 
     const reset = () => {
         setLoading(false)
         setQuery('')
         setPage(0)
         setSearchedBooks([])
-        setHasMore(true)
+        setHasMore(false)
     }
 
     const selectBook = (book: GenericBook) => {
@@ -87,10 +73,13 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
         reset()
     }
 
+    const submitSearch = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        void fetchPage(1)
+    }
+
     return (
         <div className="flex flex-col gap-3 w-full min-w-0">
-
-            {/* Search Hints */}
             <div className="flex">
                 <Popover>
                     <PopoverTrigger asChild>
@@ -100,37 +89,21 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
                         </div>
                     </PopoverTrigger>
                     <PopoverContent side="top">
-                        <PopoverTitle>
-                            {t('books.dialog.helmet.tooltipTitle')}
-                        </PopoverTitle>
-                        <PopoverDescription>
-                            {t('books.dialog.helmet.tooltip')}
-                        </PopoverDescription>
+                        <PopoverTitle>{t('books.dialog.helmet.tooltipTitle')}</PopoverTitle>
+                        <PopoverDescription>{t('books.dialog.helmet.tooltip')}</PopoverDescription>
                     </PopoverContent>
                 </Popover>
             </div>
 
-            {/*Search Bar */}
-            <form
-                className="flex gap-1 justify-center items-center"
-                onSubmit={(event => {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    void fetchMore({reset: true});
-                })}>
-
+            <form className="flex gap-1 justify-center items-center" onSubmit={submitSearch}>
                 <InputGroup>
                     <InputGroupInput
-                        className=""
                         type="text"
                         placeholder={t('placeholder.misc.search', {ns: "common"})}
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                     />
-                    <InputGroupAddon>
-                        <SearchIcon/>
-                    </InputGroupAddon>
+                    <InputGroupAddon><SearchIcon/></InputGroupAddon>
                 </InputGroup>
 
                 <Popover modal={true}>
@@ -141,7 +114,6 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
                             <ChevronDown data-icon="inline-end" />
                         </Button>
                     </PopoverTrigger>
-
                     <PopoverContent>
                         <ScrollArea className="h-40">
                             {getLanguages().map(({code, label}) => (
@@ -151,13 +123,9 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
                                         checked={languages.includes(code)}
                                         onChange={() => {
                                             if (languages.includes(code)) {
-                                                const newLanguages = languages.filter(
-                                                    (value) => value !== code)
-                                                setLanguages(newLanguages)
-
+                                                setLanguages(languages.filter((value) => value !== code))
                                             } else {
-                                                const newLanguages = [...languages, code]
-                                                setLanguages(newLanguages)
+                                                setLanguages([...languages, code])
                                             }
                                         }}
                                     />
@@ -168,54 +136,55 @@ const HelmetBookSearch = ({onSelectBook, resultLimit = defaultResultLimit}: Helm
                     </PopoverContent>
                 </Popover>
 
-
-                <button disabled={loading} aria-label={t('actions.search', {ns: 'common'})} type="submit"
-                        className="flex bg-popover rounded-3xl justify-center ml-1 p-1.5 min-w-10 w-[10vw] cursor-pointer">
-                    {loading ? (
-                        <LoaderCircle color="gray" className="animate-spin"/>
-                    ) : (
-                        <SearchIcon/>
-                    )}
-                </button>
-
+                <Button disabled={loading} aria-label={t('actions.search', {ns: 'common'})} type="submit" className="ml-1 min-w-10">
+                    {loading ? <LoaderCircle color="gray" className="animate-spin"/> : <SearchIcon/>}
+                </Button>
             </form>
 
-            {/* Books */}
-            <div id="book-search-results"
-                 ref={bookContainerRef}
-                 className="max-h-[60vh] min-h-0 overflow-y-scroll scrollbar-thin! scrollbar-thumb-accent-foreground  *:shrink-0">
-                {searchedBooks.length > 0 ? (<>
-                    <InfiniteScroll
-                        scrollableTarget="book-search-results"
-                        className="flex flex-col gap-2 sm:gap-4 p-1 sm:p-3"
-                        dataLength={searchedBooks.length}
-                        next={() => void fetchMore({})}
-                        hasMore={hasMore}
-                        loader={<LoaderCircle color="gray" className="mr-5 animate-spin self-center size-10"/>}
-                        endMessage={<span>{t('books.dialog.helmet.searchNoMoreResults')}</span>}
-                    >
+            <div className="max-h-[60vh] min-h-0 overflow-y-auto scrollbar-thin! scrollbar-thumb-accent-foreground">
+                {searchedBooks.length > 0 ? (
+                    <div className="flex flex-col gap-2 sm:gap-4 p-1 sm:p-3">
                         {searchedBooks.map(book => (
                             <BookItem
                                 key={book.id}
                                 actions={[{id: "select", label: t('books.dialog.helmet.select'), type: "default", Icon: PlusIcon}]}
                                 onAction={(actionId) => {
-                                    if (actionId === "select") {
-                                        selectBook(book)
-                                    }
+                                    if (actionId === "select") selectBook(book)
                                 }}
                                 book={book}
                             />
                         ))}
-                    </InfiniteScroll>
-
-                </>) : (<>
-                    {!loading && (page === 0 ? (
-                        <span>{t('books.dialog.helmet.searchEmpty')}</span>
-                    ) : (
-                        <span>{t('books.dialog.helmet.searchNoResults')}</span>
-                    ))}
-                </>)}
+                    </div>
+                ) : (
+                    !loading && <span>{page === 0 ? t('books.dialog.helmet.searchEmpty') : t('books.dialog.helmet.searchNoResults')}</span>
+                )}
             </div>
+
+            {page > 0 && (
+                <div className="flex items-center justify-center gap-3">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        aria-label={t('books.dialog.helmet.previousPage')}
+                        disabled={loading || page <= 1}
+                        onClick={() => void fetchPage(page - 1)}
+                    >
+                        <ChevronLeft />
+                    </Button>
+                    <span>{t('books.dialog.helmet.page', {page})}</span>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        aria-label={t('books.dialog.helmet.nextPage')}
+                        disabled={loading || !hasMore}
+                        onClick={() => void fetchPage(page + 1)}
+                    >
+                        <ChevronRight />
+                    </Button>
+                </div>
+            )}
         </div>
     )
 }
