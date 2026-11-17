@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react'
 import {PageHeader} from '@/components/PageHeader'
 import {useTranslation} from 'react-i18next'
-import type {GenericBook} from "@/types.ts";
+import type {CreateSavedBook, GenericBook} from "@/types.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {Trash2Icon} from "lucide-react";
 import {BookList} from "@/components/book/BookList.tsx";
 import BookCreationDialog from "@/components/book/BookCreationDialog.tsx";
-import bookService, {type CreateBook, toCreateBook, toGeneric} from '@/services/books'
+import bookService, {toCreateBook, toGeneric} from '@/services/books'
 import {useNotification} from "@/context/NotificationContext.tsx";
 import {getErrorMessage} from "@/lib/errorMessage.ts";
 import {usePageTitle} from '@/hooks/usePageTitle'
@@ -22,8 +22,9 @@ const BooksPage = () => {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const books = await bookService.getAll()
-                setBooks(books.map(toGeneric))
+                const savedBooks = await bookService.getAll()
+                const genericBooks = await Promise.all(savedBooks.map(book => toGeneric(book)))
+                setBooks(genericBooks)
             } catch (error) {
                 showError(getErrorMessage(error))
             }
@@ -32,15 +33,14 @@ const BooksPage = () => {
         void fetchBooks()
     }, [])
 
-    // TODO: Refactor to just use generic book
     const addBook = async (book: GenericBook) => {
-        const createdBook: CreateBook = toCreateBook(book)
+        const createBook: CreateSavedBook = toCreateBook(book)
 
         try {
-            const result = await bookService.create(createdBook)
-            const generic: GenericBook = toGeneric(result)
+            const savedBook = await bookService.create(createBook)
+            const genericBook: GenericBook = await toGeneric(savedBook)
 
-            setBooks((books) => books.concat(generic))
+            setBooks((books) => books.concat(genericBook))
             showSuccess(t('success.bookCreated', {ns: "messages"}))
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -52,6 +52,7 @@ const BooksPage = () => {
     const deleteBook = async (book: GenericBook) => {
         try {
             const result = await bookService.removeFromUser(book.id);
+
             setBooks((books) => books.filter(b => b.id !== result.id))
             showSuccess(t('success.bookDeleted', {ns: "messages"}))
 

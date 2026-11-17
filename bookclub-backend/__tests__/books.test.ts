@@ -84,7 +84,7 @@ describe('/api/books', () => {
       const response = await request(app).get('/api/books').set(authHeaders())
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual(mockBooks)
+      expect(response.body).toEqual(mockBooks.map(({user_id, ...rest}) => rest))
       expect(prisma.book.findMany).toHaveBeenCalledTimes(1)
     })
 
@@ -94,7 +94,43 @@ describe('/api/books', () => {
       const response = await request(app).get('/api/books').set(authHeaders())
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ error: 'database error' })
+      expect(response.body).toEqual({error: 'database error'})
+    })
+
+    it('returns 401 if user not found', async () => {
+      const response = await request(app).get('/api/books')
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({error: 'invalid token'})
+    })
+  })
+
+  describe('GET /previousSuggestions', () => {
+    it('returns previously suggested books', async () => {
+      const mockBooks = [mockBook_1, mockBook_2]
+      ;(prisma.book.findMany as jest.Mock).mockResolvedValue(mockBooks)
+
+      const response = await request(app).get('/api/books/previousSuggestions').set(authHeaders())
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual(mockBooks.map(({user_id, ...rest}) => rest))
+      expect(prisma.book.findMany).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns 500 if get fails', async () => {
+      ;(prisma.book.findMany as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+      const response = await request(app).get('/api/books/previousSuggestions').set(authHeaders())
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({error: 'database error'})
+    })
+
+    it('returns 401 if user not found', async () => {
+      const response = await request(app).get('/api/books/previousSuggestions')
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({error: 'invalid token'})
     })
   })
 
@@ -107,7 +143,8 @@ describe('/api/books', () => {
       const response = await request(app).post('/api/books').set(authHeaders()).send(newBook)
 
       expect(response.status).toBe(200)
-      expect(response.body).toEqual(newBook)
+      const {user_id, ...expectedResponse} = newBook
+      expect(response.body).toEqual(expectedResponse)
       expect(prisma.book.create).toHaveBeenCalledTimes(1)
       expect(prisma.book.create).toHaveBeenCalledWith({
         data: {
@@ -119,21 +156,37 @@ describe('/api/books', () => {
           comment: 'Comment 1',
           language: 'English',
           genre: 'Fiction',
-          user_id: '1'
+          user_id: '1',
+          extra_data: {helmet_id: undefined}
         }
       })
     })
 
     it('returns 500 if post fails', async () => {
       const newBook = {
-        isbn: '1234567890'
+          isbn: '1234567890',
+          name: 'Book 1'
       }
       ;(prisma.book.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
 
       const response = await request(app).post('/api/books').set(authHeaders()).send(newBook)
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ error: 'database error' })
+      expect(response.body).toEqual({error: 'service error'})
+    })
+
+    it('returns 400 if invalid request body', async () => {
+      const response = await request(app).post('/api/books').set(authHeaders()).send({})
+
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({error: 'invalid request body'})
+    })
+
+    it('returns 401 if user not found', async () => {
+      const response = await request(app).post('/api/books').send({})
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({error: 'invalid token'})
     })
   })
 
@@ -207,6 +260,36 @@ describe('/api/books', () => {
 
       expect(prisma.bookProposed.create).not.toHaveBeenCalled()
     })
+
+    it('returns 500 if bookProposed create fails', async () => {
+      const newBook = {
+        isbn: '1234567890',
+        name: 'Book 1',
+        author: 'Author 1',
+        year: 2024,
+        pages: 100,
+        comment: 'Comment 1',
+        language: 'English',
+        genre: 'Fiction'
+      }
+      const createdBook = {id: '1', ...newBook, user_id: '1'}
+      ;(prisma.book.create as jest.Mock).mockResolvedValue(createdBook)
+      ;(prisma.bookProposed.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+      const response = await request(app).post('/api/books/1').set(authHeaders()).send(newBook)
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({error: 'database error'})
+      expect(prisma.book.create).toHaveBeenCalledTimes(1)
+      expect(prisma.bookProposed.create).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns 401 if user not found', async () => {
+      const response = await request(app).post('/api/books/1').send({})
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({error: 'invalid token'})
+    })
   })
 
   describe('PUT', () => {
@@ -235,7 +318,32 @@ describe('/api/books', () => {
       const response = await request(app).put('/api/books/1/remove').set(authHeaders())
 
       expect(response.status).toBe(500)
-      expect(response.body).toEqual({ error: 'database error' })
+      expect(response.body).toEqual({error: 'database error'})
+    })
+
+    it('returns 404 if book not found', async () => {
+      ;(prisma.book.findUnique as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app).put('/api/books/1/remove').set(authHeaders())
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({error: 'book not found'})
+    })
+
+    it('returns 403 if not authorized', async () => {
+      ;(prisma.book.findUnique as jest.Mock).mockResolvedValue({...mockBook_1, user_id: '2'})
+
+      const response = await request(app).put('/api/books/1/remove').set(authHeaders())
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({error: 'not authorized to remove this book'})
+    })
+
+    it('returns 401 if user not found', async () => {
+      const response = await request(app).put('/api/books/1/remove')
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({error: 'invalid token'})
     })
   })
 
@@ -275,6 +383,41 @@ describe('/api/books', () => {
           genre: 'Fiction'
         }
       })
+    })
+
+    it('returns 404 if book not found', async () => {
+      ;(prisma.book.findUnique as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app).put('/api/books/1').set(authHeaders()).send(mockBook_1)
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({error: 'book not found'})
+    })
+
+    it('returns 403 if not authorized', async () => {
+      ;(prisma.book.findUnique as jest.Mock).mockResolvedValue({...mockBook_1, user_id: '2'})
+
+      const response = await request(app).put('/api/books/1').set(authHeaders()).send(mockBook_1)
+
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({error: 'not authorized to update this book'})
+    })
+
+    it('returns 500 if update fails', async () => {
+      ;(prisma.book.findUnique as jest.Mock).mockResolvedValue(mockBook_1)
+      ;(prisma.book.update as jest.Mock).mockRejectedValue(new Error('Database failed'))
+
+      const response = await request(app).put('/api/books/1').set(authHeaders()).send(mockBook_1)
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({error: 'database error'})
+    })
+
+    it('returns 401 if user not found', async () => {
+      const response = await request(app).put('/api/books/1').send(mockBook_1)
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({error: 'invalid token'})
     })
   })
 })

@@ -60,12 +60,13 @@ const BookCreationDialog = ({DialogButton, onSelectBook}: BookCreationDialogProp
                             </>
                         ) : (
                             <>
-                                <BookForm helmetSearch={false} headless={true} cycle_id="" onBookAdded={(book) => {
-                                    if (book)
-                                        selectBook(toGeneric({
+                                <BookForm helmetSearch={false} headless={true} cycle_id="" onBookAdded={async (book) => {
+                                    if (book) {
+                                        selectBook(await toGeneric({
                                             ...book,
                                             id: self.crypto.randomUUID(),
                                         }))
+                                    }
                                 }} />
                             </>
                         )}

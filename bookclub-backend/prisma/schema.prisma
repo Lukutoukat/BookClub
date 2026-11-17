@@ -18,6 +18,7 @@ model Book {
   comment      String?
   language     String?
   genre        String?
+  extra_data   Json?          @db.JsonB
   user_id      String?
   createdAt    DateTime?      @default(now())
   user         User?          @relation(fields: [user_id], onDelete: SetNull, references: [id])

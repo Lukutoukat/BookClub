@@ -1,6 +1,7 @@
 import { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react'
 
-import bookService, { type Book } from '@/services/books'
+import bookService from '@/services/books'
+import {type Book, type BookFields} from "@/types.ts"
 import proposeService from '@/services/propose'
 import voteService, { type VoteFields } from '@/services/vote'
 import resultService from '@/services/results'
@@ -71,7 +72,7 @@ const BookList = forwardRef<BookListHandle, BookListProps>((props, ref) => {
 			}
 			if (show === 'savedBooks') {
 				const loadedBooks = await bookService.getAll()
-				setBooks(loadedBooks)
+				setBooks(loadedBooks as BookFields[])
 			}
 		} catch {
 			setErrorMessage(t('error.api.loadBooks', { ns: 'messages' }))

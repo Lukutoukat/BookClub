@@ -31,7 +31,8 @@
     "pg": "^8.20.0",
     "prisma": "^6.19.3",
     "qs": "^6.15.2",
-    "typescript-eslint": "^8.59.3"
+    "typescript-eslint": "^8.59.3",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@jest/globals": "^30.4.1",
