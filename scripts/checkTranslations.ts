@@ -57,14 +57,16 @@ const compareJson = (
 ) => {
   const missing = Object.keys(reference).filter(key => !(key in target) && !skippable.includes(key))
   const empty = Object.keys(target).filter(key => target[key] === '')
+  const unexpected = Object.keys(target).filter(key => !(key in reference))
 
-  if (missing.length === 0 && empty.length === 0) {
+  if (missing.length === 0 && empty.length === 0 && unexpected.length === 0) {
     return undefined
   }
 
   return {
     missing: missing.length ? missing : undefined,
-    empty: empty.length ? empty : undefined
+    empty: empty.length ? empty : undefined,
+    unexpected: unexpected.length ? unexpected : undefined,
   }
 }
 
@@ -81,13 +83,19 @@ const testTranslations = () => {
       
       if (comparison?.missing) {
         comparison.missing.forEach(key => {
-          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(missing)`)
+          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(missing)${RESET}`)
         })
       }
 
       if (comparison?.empty) {
         comparison.empty.forEach(key => {
-          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(empty)`)
+          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(empty)${RESET}`)
+        })
+      }
+
+      if (comparison?.unexpected) {
+        comparison.unexpected.forEach(key => {
+          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(unexpected)${RESET}`)
         })
       }
     }
@@ -96,6 +104,7 @@ const testTranslations = () => {
   if (errors.length > 0) {
     console.log('::error::Translation file error: missing / empty translation keys detected!\n')
     console.log(errors.join('\n'))
+    console.log('\n')
     process.exitCode = 1
   } else {
     console.log('::notice::All translation file tests passed!')
