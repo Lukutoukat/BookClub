@@ -102,9 +102,9 @@ const testTranslations = () => {
   }
 
   if (errors.length > 0) {
-    console.log('::error::Translation file error: missing / empty translation keys detected!\n')
+    console.log('::error::Translation file issues detected!\n')
     console.log(errors.join('\n'))
-    console.log('\n')
+    console.log('')
     process.exitCode = 1
   } else {
     console.log('::notice::All translation file tests passed!')
