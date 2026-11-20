@@ -167,6 +167,29 @@ describe('EventList', () => {
         expect(screen.queryByRole('Delete')).not.toBeInTheDocument()
     })
 
+    it('deletes an event and refreshes the event list', async () => {
+        vi.mocked(eventService.getAll)
+            .mockResolvedValueOnce([meetingEvent])
+            .mockResolvedValueOnce([])
+        vi.mocked(eventService.remove).mockResolvedValue({message: 'Event deleted successfully'})
+        const onVoteSaved = vi.fn()
+        const user = userEvent.setup()
+
+        render(<EventList bookclubId="club-1" isAdmin onVoteSaved={onVoteSaved}/>)
+
+        expect(await screen.findByText('Book night')).toBeInTheDocument()
+        await user.click(screen.getByTitle('Delete'))
+        await user.click(within(screen.getByRole('alertdialog')).getByRole('button', {name: 'Delete'}))
+
+        await waitFor(() => {
+            expect(eventService.remove).toHaveBeenCalledWith('event-1')
+            expect(eventService.getAll).toHaveBeenCalledTimes(2)
+            expect(onVoteSaved).toHaveBeenCalledTimes(1)
+            expect(screen.queryByText('Book night')).not.toBeInTheDocument()
+        })
+        expect(await screen.findByText('No events yet.')).toBeInTheDocument()
+    })
+
     it('shows an error when deleting an event fails', async () => {
         vi.mocked(eventService.getAll).mockResolvedValue([meetingEvent])
         vi.mocked(eventService.remove).mockRejectedValue(new Error('delete failed'))

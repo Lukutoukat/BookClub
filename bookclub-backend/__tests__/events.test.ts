@@ -1040,6 +1040,15 @@ describe('/api/events', () => {
     })
 
     describe('DELETE', () => {
+        it('returns 401 if user is not authenticated', async () => {
+            const response = await request(app)
+                .delete('/api/events/event-1')
+                .set('x-no-user', 'true')
+
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBe('user not found')
+        })
+
         it('deletes an event if user is an admin', async () => {
             ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
                 user_role: 0
@@ -1089,6 +1098,22 @@ describe('/api/events', () => {
 
             expect(response.status).toBe(403)
             expect(response.body.error).toBe('Only club admins can delete events')
+        })
+
+        it('returns 500 if event deletion fails', async () => {
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue({
+                id: 'event-1',
+                bookclub_id: '1'
+            })
+            ;(prisma.event.delete as jest.Mock).mockRejectedValue(new Error('database error'))
+
+            const response = await request(app).delete('/api/events/event-1').set(authHeaders())
+
+            expect(response.status).toBe(500)
+            expect(response.body.error).toBe('database error')
         })
     })
 })
