@@ -205,6 +205,11 @@
                 "pollNoVotes": "Äänestys päättyi ilman ääniä.",
                 "selectMeetingDate": "Valitse tapaamisen ajankohta",
                 "nextEvent": "Seuraava tapahtuma"
+            },
+            "delete": {
+                "confirm": "Haluatko varmasti poistaa tapahtuman '{{name}}'?",
+                "warning": "Tapahtuma ja siihen liittyvät tiedot poistetaan pysyvästi. Tätä toimintoa ei voi peruuttaa.",
+                "success": "Tapahtuma poistettu onnistuneesti!"
             }
         },
         "settings": {

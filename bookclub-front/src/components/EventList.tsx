@@ -60,7 +60,7 @@ const EventList = ({ bookclubId, isAdmin, onVoteSaved }: EventListProps) => {
             await eventService.remove(eventId)
             await fetchEvents()
             onVoteSaved?.()
-            showSuccess(t('club.events.delete.deleteSuccess'))
+            showSuccess(t('club.events.delete.success'))
         } catch (error) {
             showError(getErrorMessage(error))
         }
@@ -158,7 +158,7 @@ const EventList = ({ bookclubId, isAdmin, onVoteSaved }: EventListProps) => {
             ) : (
                 events.map((event) => (
                     <Card key={event.id}>
-                        <CardContent>
+                        <CardContent className="relative pr-16">
                             <h3 className="font-semibold">{event.title}</h3>
 
                             {isAdmin && (
@@ -166,7 +166,7 @@ const EventList = ({ bookclubId, isAdmin, onVoteSaved }: EventListProps) => {
                                     buttonText=""
                                     buttonTitle={t('actions.delete', { ns: 'common' })}
                                     buttonVariant="ghost"
-                                    buttonClassName="text-red-600 hover:text-red-800 hover:bg-red-50"
+                                    buttonClassName="absolute top-4 right-4 text-destructive hover:text-destructive/80"
                                     alertDialogText={t('club.events.delete.confirm', { name: event.title })}
                                     alertDialogDescription={t('club.events.delete.warning')}
                                     alertDialogContinueText={t('actions.delete', { ns: 'common' })}

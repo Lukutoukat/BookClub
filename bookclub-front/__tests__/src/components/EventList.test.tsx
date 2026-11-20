@@ -1,5 +1,5 @@
 import {describe, expect, it, vi, beforeEach} from 'vitest'
-import {render, screen, waitFor} from '@/utils/test-utils'
+import {render, screen, waitFor, within} from '@/utils/test-utils'
 import userEvent from '@testing-library/user-event'
 import EventList from '@/components/EventList'
 import eventService, {type Event} from '@/services/events'
@@ -157,5 +157,32 @@ describe('EventList', () => {
 
         await waitFor(() => expect(eventService.vote).toHaveBeenCalledWith('poll-1', ['option-1']))
         expect(eventService.getAll).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not show the delete button for non-admins', async () => {
+        vi.mocked(eventService.getAll).mockResolvedValue([meetingEvent])
+        
+        render(<EventList bookclubId="club-1" isAdmin={false}/>)
+        expect(await screen.findByText('Book night')).toBeInTheDocument()
+        expect(screen.queryByRole('Delete')).not.toBeInTheDocument()
+    })
+
+    it('shows an error when deleting an event fails', async () => {
+        vi.mocked(eventService.getAll).mockResolvedValue([meetingEvent])
+        vi.mocked(eventService.remove).mockRejectedValue(new Error('delete failed'))
+        const user = userEvent.setup()
+
+        render(<EventList bookclubId="club-1" isAdmin/>)
+
+        expect(await screen.findByText('Book night')).toBeInTheDocument()
+        await user.click(screen.getByTitle('Delete'))
+        const confirm = screen.getByRole('alertdialog')
+        expect(confirm).toBeInTheDocument()
+        await user.click(within(confirm).getByRole('button', {name: 'Delete'}))
+
+        expect(await screen.findByText('delete failed')).toBeInTheDocument()
+        expect(eventService.remove).toHaveBeenCalledWith('event-1')
+        expect(eventService.getAll).toHaveBeenCalledTimes(1)
+        expect(screen.getByText('Book night')).toBeInTheDocument()
     })
 })
