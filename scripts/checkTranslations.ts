@@ -10,6 +10,10 @@ import svCommon from '../bookclub-front/src/locales/sv/common.json'
 import svMessages from '../bookclub-front/src/locales/sv/messages.json'
 import svPages from '../bookclub-front/src/locales/sv/pages.json'
 
+const RED = '\x1b[31m'
+const YELLOW = '\x1b[33m'
+const RESET = '\x1b[0m'
+
 const files = ['common', 'messages', 'pages'] as const
 
 type TranslationObject = {
@@ -72,20 +76,18 @@ const testTranslations = () => {
 
   const errors: string[] = []
   for (const locale in translations) {
-    const result: Record<string, unknown> = { locale }
-
     for (const file of files) {
       const comparison = compareJson(reference[file], flattenJson(translations[locale][file]))
       
       if (comparison?.missing) {
         comparison.missing.forEach(key => {
-          errors.push(`[${locale}/${file}] ::error::${key} (missing)`)
+          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(missing)`)
         })
       }
 
       if (comparison?.empty) {
         comparison.empty.forEach(key => {
-          errors.push(`[${locale}/${file}] ::error::${key} (empty)`)
+          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(empty)`)
         })
       }
     }
