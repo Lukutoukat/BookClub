@@ -70,28 +70,33 @@ const testTranslations = () => {
     reference[file] = flattenJson(translations.en[file])
   }
 
-  const finalResult = []
+  const errors: string[] = []
   for (const locale in translations) {
     const result: Record<string, unknown> = { locale }
 
     for (const file of files) {
       const comparison = compareJson(reference[file], flattenJson(translations[locale][file]))
-      if (comparison) {
-        result[file] = comparison
+      
+      if (comparison?.missing) {
+        comparison.missing.forEach(key => {
+          errors.push(`[${locale}/${file}] ::error::${key} (missing)`)
+        })
       }
-    }
 
-    if (Object.keys(result).length > 1) {
-      finalResult.push(result)
+      if (comparison?.empty) {
+        comparison.empty.forEach(key => {
+          errors.push(`[${locale}/${file}] ::error::${key} (empty)`)
+        })
+      }
     }
   }
 
-  if (finalResult.length > 0) {
-    console.error('Translation file error: missing / empty translation keys detected!')
-    console.dir(finalResult, { depth: null })
+  if (errors.length > 0) {
+    console.log('::error::Translation file error: missing / empty translation keys detected!\n')
+    console.log(errors.join('\n'))
     process.exitCode = 1
   } else {
-    console.log('All translation file tests passed!')
+    console.log('::notice::All translation file tests passed!')
   }
 }
 
