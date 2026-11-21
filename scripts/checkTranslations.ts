@@ -5,8 +5,6 @@ type TranslationObject = {
   [key: string]: string | TranslationObject
 }
 
-const namespaces = ['common', 'messages', 'pages'] as const
-
 const RED = '\x1b[31m'
 const YELLOW = '\x1b[33m'
 const RESET = '\x1b[0m'
@@ -25,6 +23,10 @@ const localesRoot = path.resolve(__dirname, '../bookclub-front/src/locales')
 const locales = readdirSync(localesRoot, { withFileTypes: true })
   .filter(locale => locale.isDirectory())
   .map(locale => locale.name)
+  
+const namespaces = readdirSync(path.join(localesRoot, 'en'))
+  .filter(file => file.endsWith('.json'))
+  .map(file => path.basename(file, '.json'))
 
 const translations: Record<string, Record<string, TranslationObject>> = {}
 for (const locale of locales) {
@@ -89,7 +91,18 @@ const testTranslations = () => {
   }
 
   for (const locale in translations) {
+    for (const namespace in translations[locale]) {
+      if (!namespaces.includes(namespace)) {
+        errors.push(`${RED}[${locale}/${namespace}] ${RESET}namespace ${YELLOW}(unexpected)${RESET}`)
+      }
+    }
+
     for (const namespace of namespaces) {
+      if (!translations[locale][namespace]) {
+        errors.push(`${RED}[${locale}/${namespace}] ${RESET}namespace ${YELLOW}(missing)${RESET}`)
+        continue
+      }
+
       const comparison = compareJson(reference[namespace], flattenJson(translations[locale][namespace]))
       
       addErrors(comparison?.missing, locale, namespace, 'missing')
