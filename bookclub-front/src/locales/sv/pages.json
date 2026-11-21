@@ -205,6 +205,11 @@
                 "pollNoVotes": "Omröstningen avslutades utan några röster.",
                 "selectMeetingDate": "Välj mötesdatum",
                 "nextEvent": "Nästa evenemang"
+            },
+            "delete": {
+                "confirm": "Är du säker på att du vill ta bort evenemanget '{{name}}'?",
+                "warning": "Evenemanget och all relaterad information kommer att tas bort permanent. Denna åtgärd kan inte ångras.",
+                "success": "Evenemanget har tagits bort."
             }
         },
         "settings": {

@@ -83,6 +83,20 @@ describe('events service', () => {
         )
     })
 
+    it('deletes an event', async () => {
+        mockedAxios.delete.mockResolvedValue({
+            data: {message: 'Event deleted successfully'}
+        })
+
+        const result = await eventService.remove('event-1')
+
+        expect(mockedAxios.delete).toHaveBeenCalledWith(
+            '/api/events/event-1',
+            expect.objectContaining({headers: expect.any(Object)})
+        )
+        expect(result).toEqual({message: 'Event deleted successfully'})
+    })
+
     it('returns the next future meeting ordered by date', async () => {
         const laterEvent = {...event, id: 'event-2', meetingDate: '2026-01-30T18:00:00.000Z'}
         const earlierEvent = {...event, meetingDate: '2026-01-15T18:00:00.000Z'}

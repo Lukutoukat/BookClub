@@ -32,6 +32,7 @@ COPY ./bookclub-backend/package-lock.json ./
 
 COPY ./bookclub-backend/controllers ./controllers
 COPY ./bookclub-backend/middleware ./middleware
+COPY ./bookclub-backend/services ./services
 
 # Install production dependencies only
 RUN npm ci --omit=dev
