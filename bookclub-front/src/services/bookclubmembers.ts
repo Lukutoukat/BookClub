@@ -5,7 +5,6 @@ const baseUrl = '/api/bookclubmembers'
 
 export interface BookclubMember {
 	id: string
-	user_id: string
 	user_role: number
 	invite_code: string
 	bookclub_id: string
@@ -34,9 +33,9 @@ const getByClubId = (club_id: string) => {
 	return axios.get<BookclubMember[]>(`${baseUrl}/${club_id}`, getAuthConfig()).then((res) => res.data)
 }
 
-const changeRole = (club_id: string, user_id: string, role: number) => {
+const changeRole = (club_id: string, membership_id: string, role: number) => {
 	return axios
-		.patch<BookclubMember>(`${baseUrl}/${club_id}/members/${user_id}`, { role }, getAuthConfig())
+		.patch<BookclubMember>(`${baseUrl}/${club_id}/members/${membership_id}`, { role }, getAuthConfig())
 		.then((res) => res.data)
 }
 
@@ -44,8 +43,8 @@ const leaveClub = (club_id: string) => {
 	return axios.delete<BookclubMember>(`${baseUrl}/${club_id}`, getAuthConfig()).then((res) => res.data)
 }
 
-const remove = (club_id: string, user_id: string) => {
-	return axios.delete<BookclubMember>(`${baseUrl}/${club_id}/${user_id}`, getAuthConfig()).then((res) => res.data)
+const remove = (club_id: string, membership_id: string) => {
+	return axios.delete<BookclubMember>(`${baseUrl}/${club_id}/${membership_id}`, getAuthConfig()).then((res) => res.data)
 }
 
 export default {

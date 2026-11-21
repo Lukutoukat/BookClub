@@ -28,10 +28,10 @@ test('patch returns patched bookclubmember', async () => {
 		data: { count: 1 }
 	})
 
-	const result = await bookclubmembers.changeRole('1', '2', 0)
+	const result = await bookclubmembers.changeRole('1', 'membership-2', 0)
 
 	expect(mockedAxios.patch).toHaveBeenCalledWith(
-		'/api/bookclubmembers/1/members/2',
+		'/api/bookclubmembers/1/members/membership-2',
 		{ role: 0 },
 		expect.anything()
 	)
