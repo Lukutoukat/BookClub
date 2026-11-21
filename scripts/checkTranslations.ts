@@ -1,32 +1,37 @@
-import enCommon from '../bookclub-front/src/locales/en/common.json'
-import enMessages from '../bookclub-front/src/locales/en/messages.json'
-import enPages from '../bookclub-front/src/locales/en/pages.json'
-
-import fiCommon from '../bookclub-front/src/locales/fi/common.json'
-import fiMessages from '../bookclub-front/src/locales/fi/messages.json'
-import fiPages from '../bookclub-front/src/locales/fi/pages.json'
-
-import svCommon from '../bookclub-front/src/locales/sv/common.json'
-import svMessages from '../bookclub-front/src/locales/sv/messages.json'
-import svPages from '../bookclub-front/src/locales/sv/pages.json'
-
-const RED = '\x1b[31m'
-const YELLOW = '\x1b[33m'
-const RESET = '\x1b[0m'
-
-const files = ['common', 'messages', 'pages'] as const
+import { readdirSync, readFileSync } from 'node:fs'
+import path from 'node:path'
 
 type TranslationObject = {
   [key: string]: string | TranslationObject
 }
 
-type TranslationFiles = Record<(typeof files)[number], TranslationObject>
+const RED = '\x1b[31m'
+const YELLOW = '\x1b[33m'
+const RESET = '\x1b[0m'
 
-const translations: Record<string, TranslationFiles> = {
-  en: { common: enCommon, messages: enMessages, pages: enPages },
-  fi: { common: fiCommon, messages: fiMessages, pages: fiPages },
-  sv: { common: svCommon, messages: svMessages, pages: svPages }
+const localesRoot = path.resolve(__dirname, '../bookclub-front/src/locales')
+const locales = readdirSync(localesRoot, { withFileTypes: true })
+  .filter(locale => locale.isDirectory())
+  .map(locale => locale.name)
+
+const translations: Record<string, Record<string, TranslationObject>> = {}
+for (const locale of locales) {
+  const localePath = path.join(localesRoot, locale)
+  const files = readdirSync(localePath)
+    .filter(file => file.endsWith('.json'))
+
+  translations[locale] = {}
+  for (const file of files) {
+    const namespace = path.basename(file, '.json')
+    const filePath = path.join(localePath, file)
+
+    translations[locale][namespace] = JSON.parse(
+      readFileSync(filePath, 'utf-8')
+    )
+  }
 }
+
+const files = ['common', 'messages', 'pages'] as const
 
 const skippable = [
   'labels.points',
