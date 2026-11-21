@@ -5,9 +5,21 @@ type TranslationObject = {
   [key: string]: string | TranslationObject
 }
 
+const namespaces = ['common', 'messages', 'pages'] as const
+
 const RED = '\x1b[31m'
 const YELLOW = '\x1b[33m'
 const RESET = '\x1b[0m'
+
+const skippable = [
+  'labels.points',
+  'placeholder.bookForm.title',
+  'placeholder.bookForm.author',
+  'placeholder.bookForm.year',
+  'placeholder.bookForm.pages',
+  'placeholder.bookForm.isbn',
+  'placeholder.misc.clubName'
+]
 
 const localesRoot = path.resolve(__dirname, '../bookclub-front/src/locales')
 const locales = readdirSync(localesRoot, { withFileTypes: true })
@@ -30,18 +42,6 @@ for (const locale of locales) {
     )
   }
 }
-
-const files = ['common', 'messages', 'pages'] as const
-
-const skippable = [
-  'labels.points',
-  'placeholder.bookForm.title',
-  'placeholder.bookForm.author',
-  'placeholder.bookForm.year',
-  'placeholder.bookForm.pages',
-  'placeholder.bookForm.isbn',
-  'placeholder.misc.clubName'
-]
 
 const flattenJson = (obj: TranslationObject, prefix = '') => {
   const flattened: Record<string, string> = {}
@@ -77,32 +77,24 @@ const compareJson = (
 
 const testTranslations = () => {
   const reference: Record<string, Record<string, string>> = {}
-  for (const file of files) {
-    reference[file] = flattenJson(translations.en[file])
+  for (const namespace of namespaces) {
+    reference[namespace] = flattenJson(translations.en[namespace])
   }
 
   const errors: string[] = []
+  const addErrors = (keys: string[] | undefined, locale: string, namespace: string, type: string) => {
+    keys?.forEach(key => {
+      errors.push(`${RED}[${locale}/${namespace}] ${RESET}${key} ${YELLOW}(${type})${RESET}`)
+    })
+  }
+
   for (const locale in translations) {
-    for (const file of files) {
-      const comparison = compareJson(reference[file], flattenJson(translations[locale][file]))
+    for (const namespace of namespaces) {
+      const comparison = compareJson(reference[namespace], flattenJson(translations[locale][namespace]))
       
-      if (comparison?.missing) {
-        comparison.missing.forEach(key => {
-          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(missing)${RESET}`)
-        })
-      }
-
-      if (comparison?.empty) {
-        comparison.empty.forEach(key => {
-          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(empty)${RESET}`)
-        })
-      }
-
-      if (comparison?.unexpected) {
-        comparison.unexpected.forEach(key => {
-          errors.push(`${RED}[${locale}/${file}] ${RESET}${key} ${YELLOW}(unexpected)${RESET}`)
-        })
-      }
+      addErrors(comparison?.missing, locale, namespace, 'missing')
+      addErrors(comparison?.empty, locale, namespace, 'empty')
+      addErrors(comparison?.unexpected, locale, namespace, 'unexpected')
     }
   }
 
