@@ -205,6 +205,11 @@
                 "pollNoVotes": "The poll ended without any votes.",
                 "selectMeetingDate": "Select Meeting Date",
                 "nextEvent": "Next Event"
+            },
+            "delete": {
+                "confirm": "Are you sure you want to delete the event '{{name}}'?",
+                "warning": "The event and all related information will be permanently deleted. This action cannot be undone.",
+                "success": "Event deleted successfully!"
             }
         },
         "settings": {
