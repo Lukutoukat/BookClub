@@ -66,14 +66,10 @@ const compareJson = (
   const empty = Object.keys(target).filter(key => target[key] === '')
   const unexpected = Object.keys(target).filter(key => !(key in reference))
 
-  if (missing.length === 0 && empty.length === 0 && unexpected.length === 0) {
-    return undefined
-  }
-
   return {
-    missing: missing.length ? missing : undefined,
-    empty: empty.length ? empty : undefined,
-    unexpected: unexpected.length ? unexpected : undefined,
+    missing,
+    empty,
+    unexpected,
   }
 }
 
@@ -84,8 +80,8 @@ const testTranslations = () => {
   }
 
   const errors: string[] = []
-  const addErrors = (keys: string[] | undefined, locale: string, namespace: string, type: string) => {
-    keys?.forEach(key => {
+  const addErrors = (keys: string[], locale: string, namespace: string, type: string) => {
+    keys.forEach(key => {
       errors.push(`${RED}[${locale}/${namespace}] ${RESET}${key} ${YELLOW}(${type})${RESET}`)
     })
   }
@@ -105,9 +101,9 @@ const testTranslations = () => {
 
       const comparison = compareJson(reference[namespace], flattenJson(translations[locale][namespace]))
       
-      addErrors(comparison?.missing, locale, namespace, 'missing')
-      addErrors(comparison?.empty, locale, namespace, 'empty')
-      addErrors(comparison?.unexpected, locale, namespace, 'unexpected')
+      addErrors(comparison.missing, locale, namespace, 'missing')
+      addErrors(comparison.empty, locale, namespace, 'empty')
+      addErrors(comparison.unexpected, locale, namespace, 'unexpected')
     }
   }
 
