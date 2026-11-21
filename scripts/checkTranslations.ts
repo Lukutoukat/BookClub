@@ -6,6 +6,7 @@ type TranslationObject = {
 }
 
 const RED = '\x1b[31m'
+const GREEN = '\x1b[32m'
 const YELLOW = '\x1b[33m'
 const RESET = '\x1b[0m'
 
@@ -113,7 +114,7 @@ const testTranslations = () => {
     console.log('')
     process.exitCode = 1
   } else {
-    console.log('::notice::All translation file tests passed!')
+    console.log(`${GREEN}All translation file tests passed!${RESET}`)
   }
 }
 
