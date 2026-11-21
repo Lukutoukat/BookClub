@@ -89,13 +89,13 @@ const testTranslations = () => {
   for (const locale in translations) {
     for (const namespace in translations[locale]) {
       if (!namespaces.includes(namespace)) {
-        errors.push(`${RED}[${locale}/${namespace}] ${RESET}namespace ${YELLOW}(unexpected)${RESET}`)
+        addErrors(['namespace'], locale, namespace, 'unexpected')
       }
     }
-
+    
     for (const namespace of namespaces) {
       if (!translations[locale][namespace]) {
-        errors.push(`${RED}[${locale}/${namespace}] ${RESET}namespace ${YELLOW}(missing)${RESET}`)
+        addErrors(['namespace'], locale, namespace, 'missing')
         continue
       }
 
