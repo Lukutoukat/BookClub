@@ -122,7 +122,10 @@ BookClubMembersRouter.post(
           }
         })
 
-        return res.json(newBookClub)
+        return res.json({
+          ...newBookClub,
+          bookclub_id: result.id
+        })
       } catch (error) {
         console.error('POST /api/bookclubs error:', error)
         return res.status(500).json({ error: 'database error' })
