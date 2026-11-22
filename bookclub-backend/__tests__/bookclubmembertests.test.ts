@@ -174,6 +174,7 @@ describe('/api/bookclubmembers', () => {
 
       expect(response.status).toBe(200)
       expect(response.body.user_role).toBe(1)
+      expect(response.body.bookclub_id).toBe('1')
     })
 
     it('returns 409 when user is already a member of the club', async () => {
