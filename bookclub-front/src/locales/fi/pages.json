@@ -259,7 +259,6 @@
                 "phaseTitle": "Nykyinen vaihe",
                 "timeLeft": "Aikaa jäljellä",
                 "nextPhase": "Seuraava vaihe: {{phase}}",
-                "cycleOver": "Sykli on päättynyt",
                 "proposal": {
                     "title": "Ehdota kirjoja",
                     "description": "Ehdota kirjaa jonka haluaisit lukea seuraavaksi",

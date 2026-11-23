@@ -259,7 +259,6 @@
                 "phaseTitle": "Nuvarande fas",
                 "timeLeft": "Tid kvar",
                 "nextPhase": "Nästa fas: {{phase}}",
-                "cycleOver": "Cykeln har avslutats",
                 "proposal": {
                     "title": "Föreslå böcker",
                     "description": "Föreslå en bok som du skulle vilja läsa härnäst",
