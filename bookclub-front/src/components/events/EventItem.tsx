@@ -23,6 +23,8 @@ const formatDateTime = (date: string, year = false) =>
     })
 
 const EventInfo = ({event}: {event: Event}) => {
+    const { t } = useTranslation('pages')
+
     let formattedDate: string | undefined = undefined
     if (event.meetingDate) {
         const date = new Date(event.meetingDate)
@@ -46,7 +48,7 @@ const EventInfo = ({event}: {event: Event}) => {
             </div>
             <div className="flex flex-col min-w-0 flex-1">
                 <div className="text-muted-foreground text-xs sm:text-sm mb-1">
-                    {formattedDate ?? ("This event has no set date")}
+                    {formattedDate ?? t('club.events.list.meetingDatePending')}
                 </div>
                 <div title={event.title} className="font-semibold text-base line-clamp-2 leading-5">
                     {event.title}
@@ -80,6 +82,7 @@ interface EventVoteProps {
 }
 
 const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} : EventVoteProps) => {
+    const {t} = useTranslation('pages')
     const {id: pollId, options, endsAt, winningOptionId} = poll
     const initialOptions = options
         .filter((value) => value.votedByUser)
@@ -130,16 +133,13 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
     return (
         <div className="flex flex-col gap-2">
             <div className="flex flex-col mt-2">
-                <span className="font-bold leading-none">Vote</span>
-
+                <span className="font-bold leading-none">{t('club.events.list.vote')}</span>
 
                 {!hasEnded &&
-                    <span className="text-muted-foreground">Select dates that fit you for this meeting</span>
+                    <span className="text-muted-foreground">{t('club.events.list.selectMeetingDate')}</span>
                 }
 
-                <span className="text-xs text-muted-foreground mt-1">
-                    {hasEnded ? `Ended on ${voteEndDateTime}` : `Voting open until ${voteEndDateTime}`}
-                </span>
+
             </div>
 
             <div className="flex flex-col gap-5">
@@ -159,10 +159,13 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
                                 {/* Vote field */}
                                 <Field orientation="horizontal" data-disabled={disabled}>
 
+                                    {/* Icon or checkbox */}
                                     {state === "won" ? (
                                         <CircleCheck/>
                                     ) : state === "tie" ? (
-                                        <Button onClick={() => onResolveTie?.(optionId)} size="xs">Resolve</Button>
+                                        <Button onClick={() => onResolveTie?.(optionId)} size="xs">
+                                            {t('club.events.list.resolve')}
+                                        </Button>
                                     ) : (
                                         <Checkbox
                                             id={checkboxKey}
@@ -173,7 +176,10 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
                                         />
                                     )}
 
+                                    {/* Option label */}
                                     <FieldLabel htmlFor={checkboxKey} className="font-mono">{optionDate}</FieldLabel>
+
+                                    {/* Option vote amount */}
                                     <span className="self-end text-muted-foreground">{votes}</span>
                                 </Field>
 
@@ -187,8 +193,11 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
                             </FieldGroup>
                         )
                     })}
+                    <span className="text-xs text-muted-foreground mt-1">
+                        {(hasEnded ? t('club.events.list.pollEndedAt') : t('club.events.list.pollEndsAt')) + voteEndDateTime}
+                    </span>
                     {totalVotes > 0 && (
-                        <span className="text-muted-foreground">{totalVotes} votes</span>
+                        <span className="text-muted-foreground">{t('club.events.list.votes', {votes: totalVotes})}</span>
                     )}
                 </div>
             </div>
@@ -213,8 +222,6 @@ interface EventItemProps {
 
 
 const EventItem = ({event, minimal = false, canResolveTies = false, onChangeVotes, onResolveTie}: EventItemProps) => {
-    const {t} = useTranslation('pages')
-
     return (
         <div className="w-full">
             <EventInfo event={event}/>
