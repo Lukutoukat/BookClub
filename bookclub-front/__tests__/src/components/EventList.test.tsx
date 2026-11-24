@@ -6,6 +6,12 @@ import eventService, {type Event} from '@/services/events'
 
 vi.mock('@/services/events')
 
+vi.mock('@/components/CreateEvent', () => ({
+    default: ({onCreated}: { onCreated: () => void }) => (
+        <button type="button" onClick={onCreated}>trigger-created</button>
+    ),
+}))
+
 vi.mock('@/components/events/EventItem.tsx', () => ({
     default: (props: {
         event: Event
@@ -173,5 +179,56 @@ describe('EventList', () => {
         expect(eventService.remove).toHaveBeenCalledWith('event-1')
         expect(eventService.getAll).toHaveBeenCalledTimes(1)
         expect(screen.getByText('Book night')).toBeInTheDocument()
+    })
+
+    it('shows an error when loading events fails', async () => {
+        vi.mocked(eventService.getAll).mockRejectedValue(new Error('load failed'))
+
+        render(<EventList bookclubId="club-1" isAdmin={false}/>)
+
+        expect(await screen.findByText('load failed')).toBeInTheDocument()
+    })
+
+    it('shows an error when resolving a poll fails', async () => {
+        vi.mocked(eventService.getAll).mockResolvedValue([pollEvent])
+        vi.mocked(eventService.resolvePoll).mockRejectedValue(new Error('resolve failed'))
+        const user = userEvent.setup()
+
+        render(<EventList bookclubId="club-1" isAdmin/>)
+
+        await user.click(await screen.findByRole('button', {name: 'trigger-resolve'}))
+
+        expect(await screen.findByText('resolve failed')).toBeInTheDocument()
+    })
+
+    it('refreshes events and closes the dialog after creating an event', async () => {
+        vi.mocked(eventService.getAll)
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([meetingEvent])
+        const user = userEvent.setup()
+
+        render(<EventList bookclubId="club-1" isAdmin/>)
+
+        await screen.findByText('No events yet.')
+        await user.click(screen.getByRole('button', {name: 'Create Event'}))
+        await user.click(screen.getByRole('button', {name: 'trigger-created'}))
+
+        await waitFor(() => expect(eventService.getAll).toHaveBeenCalledTimes(2))
+        expect(await screen.findByText('Book night')).toBeInTheDocument()
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    })
+
+    it('ignores vote and resolve callbacks for events without a poll', async () => {
+        vi.mocked(eventService.getAll).mockResolvedValue([meetingEvent])
+        const user = userEvent.setup()
+
+        render(<EventList bookclubId="club-1" isAdmin/>)
+
+        await screen.findByText('Book night')
+        await user.click(screen.getByRole('button', {name: 'trigger-vote'}))
+        await user.click(screen.getByRole('button', {name: 'trigger-resolve'}))
+
+        expect(eventService.vote).not.toHaveBeenCalled()
+        expect(eventService.resolvePoll).not.toHaveBeenCalled()
     })
 })

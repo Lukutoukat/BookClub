@@ -91,11 +91,6 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
     const [selected, setSelected] = useState<string[]>(initialOptions)
 
     const selectOption = (optionId: string, check: boolean) => {
-        const isSelected = selected.includes(optionId)
-        if (isSelected === check) {
-            return
-        }
-
         setSelected(check
             ? [...selected, optionId]
             : selected.filter(id => id !== optionId)
