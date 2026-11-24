@@ -8,6 +8,9 @@ import { BookclubMemberList } from './BookclubMemberList'
 import { useNotification } from '@/context/NotificationContext.tsx'
 import { getErrorMessage } from '@/lib/errorMessage.ts'
 import { useTranslation } from 'react-i18next'
+import { Input } from '@/components/ui/input'
+import { useState } from 'react'
+
 type Props = {
 	bookclubId: string
 }
@@ -16,6 +19,9 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 	const { t } = useTranslation('pages')
 	const navigate = useNavigate()
 	const { showError } = useNotification()
+	const [isSuggestionLimitEnabled, setIsSuggestionLimitEnabled] = useState(false)
+	const [suggestionLimitAmount, setSuggestionLimitAmount] = useState(5)
+
 	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
 		event.preventDefault()
 		try {
@@ -41,22 +47,54 @@ export const ClubSettingsDisplay = ({ bookclubId }: Props) => {
 				}}
 			/>
 			<Card className="card-base">
-				<SectionHeader 
+				<SectionHeader
 					title={t('club.settings.manageMembers.title')}
 					description={t('club.settings.manageMembers.description')}
 				/>
 				<CardContent>
-					<BookclubMemberList 
+					<BookclubMemberList
 						bookclubId={bookclubId}
 						canManageMembers={true}
 						className='member-list'
-					/>	
+					/>
 				</CardContent>
 				<SectionHeader
 					title={t('club.settings.manageClub.title')}
 					description={t('club.settings.manageClub.description')}
 				/>
-				<CardContent className="card-content">
+				<CardContent className="card-content space-y-4">
+					<div className="space-y-3">
+						<label className="flex items-center gap-3 text-sm font-medium">
+							<input
+								type="checkbox"
+								checked={isSuggestionLimitEnabled}
+								onChange={(event) => setIsSuggestionLimitEnabled(event.target.checked)}
+								className="h-4 w-4"
+							/>
+							<span>{t('club.settings.suggestionLimit', { defaultValue: 'Suggestion limit' })}</span>
+						</label>
+
+						{isSuggestionLimitEnabled && (
+							<div className="space-y-2">
+								<label htmlFor="suggestion-limit-amount" className="block text-sm font-medium">
+									{t('club.settings.allowedSuggestionAmount', { defaultValue: 'Allowed suggestion amount' })}
+								</label>
+								<Input
+									id="suggestion-limit-amount"
+									type="number"
+									min={1}
+									step={1}
+									value={suggestionLimitAmount}
+									onChange={(event) => {
+										const nextValue = Number(event.target.value)
+										setSuggestionLimitAmount(Number.isFinite(nextValue) && nextValue > 0 ? nextValue : 1)
+									}}
+									className="max-w-32"
+								/>
+							</div>
+						)}
+					</div>
+
 					<ButtonDialog
 						buttonText={t('actions.deleteClub', { ns: 'common' })}
 						buttonOnClick={handleDeletion}

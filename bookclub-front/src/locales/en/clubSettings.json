@@ -1,0 +1,11 @@
+{
+  "suggestionLimit": {
+    "enable": "Limit suggestions per member",
+    "amount": "Maximum suggestions per member",
+    "saving": "Saving…",
+    "saved": "Suggestion limit settings saved.",
+    "saveFailed": "Unable to save suggestion limit settings.",
+    "invalid": "Enter a whole number greater than zero.",
+    "reached": "You have reached the maximum number of suggestions for this cycle."
+  }
+}

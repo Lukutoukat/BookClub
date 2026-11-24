@@ -12,27 +12,22 @@ import {BookclubMemberList} from '@/components/BookclubMemberList'
 import {Card, CardContent} from '@/components/ui/card'
 import {SectionHeader} from '@/components/SectionHeader'
 import {type Tab, TabbedColumn} from '@/components/TabbedColumn.tsx'
-import {Skeleton} from "@/components/ui/skeleton.tsx";
-import {getErrorMessage} from "@/lib/errorMessage.ts";
-import {useNotification} from "@/context/NotificationContext.tsx";
-import { useTranslation } from 'react-i18next'
-import { ButtonDialog } from '@/components/ButtonDialog'
-import { Button } from '@/components/ui/button'
-import { CycleTimeline } from '@/components/CycleTimeline'
+import {Skeleton} from "@/components/ui/skeleton.tsx"
+import {getErrorMessage} from "@/lib/errorMessage.ts"
+import {useNotification} from "@/context/NotificationContext.tsx"
+import {useTranslation} from 'react-i18next'
+import {ButtonDialog} from '@/components/ButtonDialog'
+import {Button} from '@/components/ui/button'
+import {Input} from '@/components/ui/input'
+import {CycleTimeline} from '@/components/CycleTimeline'
 import EventList from '@/components/EventList'
-import eventService, { type Event } from '@/services/events'
+import eventService, {type Event} from '@/services/events'
 
-/**
- *  HOME TAB
- */
-interface HomeTabProps {
-	bookclubId: string,
-}
+interface HomeTabProps { bookclubId: string }
 
 const HomeTab = ({bookclubId}: HomeTabProps) => {
 	const {t, i18n} = useTranslation('pages')
 	const {showError} = useNotification()
-
 	const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
 	const [nextEvent, setNextEvent] = useState<Event | null>(null)
 	const [loading, setLoading] = useState(true)
@@ -44,365 +39,195 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 				cycleService.getLatestCycle(bookclubId),
 				eventService.getNextEvent(bookclubId)
 			])
-
-			if (cycleResult.status === 'fulfilled') {
-				setCurrentCycle(cycleResult.value)
-			} else {
-				showError(getErrorMessage(cycleResult.reason))
-			}
-
-			if (eventResult.status === 'fulfilled') {
-				setNextEvent(eventResult.value)
-			} else {
-				showError(getErrorMessage(eventResult.reason))
-			}
-
+			if (cycleResult.status === 'fulfilled') setCurrentCycle(cycleResult.value)
+			else showError(getErrorMessage(cycleResult.reason))
+			if (eventResult.status === 'fulfilled') setNextEvent(eventResult.value)
+			else showError(getErrorMessage(eventResult.reason))
 			setLoading(false)
 		}
-
 		void fetchHomeData()
-	}, [bookclubId])
+	}, [bookclubId, showError])
 
 	const handleBookAdded = async () => {
 		await bookListRef.current?.reload()
 	}
 
-	// Return a loading skeleton
-	if (loading) {
-		return (
-			<Skeleton>
-				<Card className="h-30"/>
-			</Skeleton>
-		)
-	}
+	if (loading) return <Skeleton><Card className="h-30"/></Skeleton>
 
 	return (
 		<>
-			{/* CURRENT CYCLE PROGRESS */}
-			{currentCycle && (
-				<CycleTimeline cycle={currentCycle}/>
-			)}
-			
-			{/* NEXT EVENT */}
+			{currentCycle && <CycleTimeline cycle={currentCycle}/>} 
 			{nextEvent?.meetingDate && (
 				<Card className="mb-4">
 					<SectionHeader title={t('club.events.list.nextEvent')}/>
 					<CardContent>
 						<h3 className="font-semibold">{nextEvent.title}</h3>
-						<p>
-							{t('club.events.list.meetingDate')} {new Date(nextEvent.meetingDate).toLocaleString(i18n.language)}
-						</p>
-						{nextEvent.description && (
-							<p>{nextEvent.description}</p>
-						)}
+						<p>{t('club.events.list.meetingDate')} {new Date(nextEvent.meetingDate).toLocaleString(i18n.language)}</p>
+						{nextEvent.description && <p>{nextEvent.description}</p>}
 					</CardContent>
 				</Card>
 			)}
-
-			{/* PROPOSAL PHASE */}
 			{currentCycle?.phase === 'proposal' && (
 				<>
-					<SuggestBook
-						onBookAdded={handleBookAdded}
-						bookclubId={bookclubId}
-						cycle_id={currentCycle.id}
-					/>
+					<SuggestBook onBookAdded={handleBookAdded} bookclubId={bookclubId} cycle_id={currentCycle.id}/>
 					<br/>
-					<BookList
-						ref={bookListRef}
-						show="proposedBooks"
-						cycleId={currentCycle.id}
+					<BookList ref={bookListRef} show="proposedBooks" cycleId={currentCycle.id}
 						description={t('club.cycle.bookList.suggestedDescription')}
-						emptyMessage={t('club.cycle.bookList.empty')}
-					/>
+						emptyMessage={t('club.cycle.bookList.empty')}/>
 				</>
 			)}
-
-			{/* VOTING PHASE */}
-			{currentCycle?.phase === 'voting' && (
-				<>
-					<BookList ref={bookListRef} show="votedBooks" cycleId={currentCycle.id} votingSystem={currentCycle.votingSystem}/>
-				</>
-			)}
-
-			{/* RESULTS PHASE */}
-			{currentCycle?.phase === 'over' && (
-				<>
-					<BookList ref={bookListRef} show="over" cycleId={currentCycle.id}/>
-				</>
-			)}
+			{currentCycle?.phase === 'voting' && <BookList ref={bookListRef} show="votedBooks" cycleId={currentCycle.id} votingSystem={currentCycle.votingSystem}/>} 
+			{currentCycle?.phase === 'over' && <BookList ref={bookListRef} show="over" cycleId={currentCycle.id}/>} 
 		</>
 	)
 }
 
-
-/**
- *  MEMBERS TAB
- */
-interface MembersTabProps {
-	bookclubId: string
-}
-
-const MembersTab = ( {bookclubId} : MembersTabProps ) => {
+interface MembersTabProps { bookclubId: string }
+const MembersTab = ({bookclubId}: MembersTabProps) => {
 	const {t} = useTranslation('pages')
-
-	return (
-		<>
-			{/* CLUB MEMBER LIST */}
-			<Card>
-				<SectionHeader title={t('club.members.title')}/>
-				<CardContent>
-					<BookclubMemberList
-						bookclubId={bookclubId}
-						canManageMembers={false}
-						className="member-list"
-					/>
-				</CardContent>
-			</Card>
-		</>
-	)
+	return <Card><SectionHeader title={t('club.members.title')}/><CardContent><BookclubMemberList bookclubId={bookclubId} canManageMembers={false} className="member-list"/></CardContent></Card>
 }
 
-/**
- *  HISTORY TAB
- */
-interface HistoryTabProps {
-	bookclubId: string
-}
+interface HistoryTabProps { bookclubId: string }
+const HistoryTab = ({bookclubId}: HistoryTabProps) => <CycleHistoryList bookclubId={bookclubId}/>
 
-const HistoryTab = ( {bookclubId } : HistoryTabProps) => {
-	return (
-		<>
-			<CycleHistoryList bookclubId={bookclubId}/>
-		</>
-	)
-}
+interface EventsTabProps { bookclubId: string, isAdmin: boolean, onVoteSaved?: () => void }
+const EventsTab = ({bookclubId, isAdmin, onVoteSaved}: EventsTabProps) => <EventList bookclubId={bookclubId} isAdmin={isAdmin} onVoteSaved={onVoteSaved}/>
 
-/**
- * EVENTS TAB
- */
-interface EventsTabProps {
-	bookclubId: string
-	isAdmin: boolean
-	onVoteSaved?: () => void
-}
+interface SettingsTabProps { bookclubId: string, isAdmin: boolean }
 
-const EventsTab = ( {bookclubId, isAdmin, onVoteSaved } : EventsTabProps) => {
-	return (
-		<>
-			<EventList bookclubId={bookclubId} isAdmin={isAdmin} onVoteSaved={onVoteSaved}/>
-		</>
-	)
-}
-
-/**
- *  SETTINGS TAB
- */
-interface SettingsTabProps {
-	bookclubId: string
-	isAdmin: boolean
-}
-
-const SettingsTab = ( {bookclubId, isAdmin } : SettingsTabProps) => {
-	const { t } = useTranslation('pages')
+const SettingsTab = ({bookclubId, isAdmin}: SettingsTabProps) => {
+	const {t} = useTranslation('pages')
 	const navigate = useNavigate()
-	const { showSuccess, showError } = useNotification()
+	const {showSuccess, showError} = useNotification()
+	const [suggestionLimitEnabled, setSuggestionLimitEnabled] = useState(false)
+	const [suggestionLimit, setSuggestionLimit] = useState('')
+	const [isSavingSuggestionSettings, setIsSavingSuggestionSettings] = useState(false)
+
+	useEffect(() => {
+		let isMounted = true
+		const loadSuggestionSettings = async () => {
+			try {
+				const club = await bookclubService.get(bookclubId)
+				if (!isMounted || !club) return
+				setSuggestionLimitEnabled(club.suggestionLimitEnabled ?? false)
+				setSuggestionLimit(club.suggestionLimit?.toString() ?? '')
+			} catch {
+				// Keep default settings if the club could not be loaded.
+			}
+		}
+		void loadSuggestionSettings()
+		return () => { isMounted = false }
+	}, [bookclubId])
+
+	const handleSuggestionSettingsSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		const amount = Number(suggestionLimit)
+		if (suggestionLimitEnabled && (!Number.isInteger(amount) || amount < 1)) {
+			showError(t('club.settings.suggestionLimit.invalid', {defaultValue: 'Enter a whole number greater than zero.'}))
+			return
+		}
+		setIsSavingSuggestionSettings(true)
+		try {
+			await bookclubService.updateSuggestionSettings(bookclubId, { suggestionLimitEnabled, suggestionLimit: suggestionLimitEnabled ? amount : null })
+			showSuccess(t('club.settings.suggestionLimit.saved', {defaultValue: 'Suggestion limit settings saved.'}))
+		} catch (error) {
+			showError(getErrorMessage(error, t('club.settings.suggestionLimit.saveFailed', {defaultValue: 'Unable to save suggestion limit settings.'})))
+		} finally {
+			setIsSavingSuggestionSettings(false)
+		}
+	}
 
 	const handleClubLeave = async () => {
 		try {
 			await bookclubmembersService.leaveClub(bookclubId)
 			await navigate('/home')
-			showSuccess(t('success.leftClub', { ns: 'messages' }))
-		} catch {
-			showError(t('error.api.leftClub', { ns: 'messages' }))
-		}
-	}	
+			showSuccess(t('success.leftClub', {ns: 'messages'}))
+		} catch { showError(t('error.api.leftClub', {ns: 'messages'})) }
+	}
 	const handleDeletion = async (event: React.SyntheticEvent<HTMLButtonElement>) => {
 		event.preventDefault()
 		try {
 			await bookclubService.remove(bookclubId)
-			await navigate('/home', { replace: true })
-		} catch {
-			showError(t('error.api.deleteClub', { ns: 'messages' }))
-		}
+			await navigate('/home', {replace: true})
+		} catch { showError(t('error.api.deleteClub', {ns: 'messages'})) }
 	}
-	
+
 	return (
 		<>
-			{isAdmin && (
-				<>
-				<Card className="card-base">
-					<SectionHeader 
-						title={t('club.settings.manageMembers.title')}
-						description={t('club.settings.manageMembers.description')}
-					/>
-					<CardContent>
-						<BookclubMemberList 
-							bookclubId={bookclubId}
-							canManageMembers={true}
-							className='member-list'
-						/>	
-					</CardContent>
-					<SectionHeader
-						title={t('club.settings.manageCycle.title')}
-						description={t('club.settings.manageCycle.description')}
-					/>
-					<CardContent className='card-content'>
-						<Button asChild className="flex-1 min-w-0">
-							<Link to={`/newcycle/${bookclubId}`}>{t('actions.manageCycle', { ns: 'common' })}</Link>
-						</Button>
-					</CardContent>
-					<SectionHeader
-						title={t('club.settings.manageClub.title')}
-						description={t('club.settings.manageClub.description')}
-					/>
-					<CardContent className="card-content">
-						<ButtonDialog
-							buttonText={t('actions.deleteClub', { ns: 'common' })}
-							buttonOnClick={handleDeletion}
-							alertDialogDescription={t('club.settings.deleteWarning')}
-							alertDialogContinueText={t('actions.delete', { ns: 'common' })}
-							alertDialogText={t('club.settings.deleteQuestion')}
-						/>
-					</CardContent>
-				</Card>
-				<br/>
-				</>
-			)}
-			{!isAdmin && (
-				<Card>
-					<SectionHeader 
-						title={t('club.settings.leaveClub.title')}
-						description={t('club.settings.leaveClub.description')}
-					/>
-					<CardContent>
-						<ButtonDialog
-							buttonText={t('actions.leaveClub', { ns: 'common' })}
-							buttonOnClick={handleClubLeave}
-							alertDialogDescription={t('club.settings.leaveClub.warning')}
-							alertDialogContinueText={t('actions.leaveClub', { ns: 'common' })}
-							alertDialogText={t('club.settings.leaveClub.question')}
-						/>
-					</CardContent>
-				</Card>
-			)}
+			{isAdmin && <><Card className="card-base">
+				<SectionHeader title={t('club.settings.manageMembers.title')} description={t('club.settings.manageMembers.description')}/>
+				<CardContent><BookclubMemberList bookclubId={bookclubId} canManageMembers={true} className='member-list'/></CardContent>
+				<SectionHeader title={t('club.settings.manageCycle.title')} description={t('club.settings.manageCycle.description')}/>
+				<CardContent className='card-content'><Button asChild className="flex-1 min-w-0"><Link to={`/newcycle/${bookclubId}`}>{t('actions.manageCycle', {ns: 'common'})}</Link></Button></CardContent>
+				<SectionHeader title={t('club.settings.manageClub.title')} description={t('club.settings.manageClub.description')}/>
+				<CardContent className="card-content space-y-4">
+					<form className="space-y-4" onSubmit={handleSuggestionSettingsSubmit}>
+						<label htmlFor="suggestion-limit-enabled" className="flex items-center gap-3 text-sm font-medium">
+							<input id="suggestion-limit-enabled" type="checkbox" checked={suggestionLimitEnabled} onChange={(event) => setSuggestionLimitEnabled(event.target.checked)} className="h-4 w-4"/> 
+							{t('club.settings.suggestionLimit.enable', {defaultValue: 'Enable suggestion limit'})}
+						</label>
+						{suggestionLimitEnabled && <div className="max-w-xs space-y-2"><label htmlFor="suggestion-limit-amount" className="block text-sm font-medium">{t('club.settings.suggestionLimit.amount', {defaultValue: 'Allowed suggestion amount'})}</label><Input id="suggestion-limit-amount" type="number" min={1} step={1} required value={suggestionLimit} onChange={(event) => setSuggestionLimit(event.target.value)}/></div>}
+						<Button type="submit" disabled={isSavingSuggestionSettings}>{isSavingSuggestionSettings ? t('club.settings.suggestionLimit.saving', {defaultValue: 'Saving…'}) : t('actions.update', {ns: 'common'})}</Button>
+					</form>
+					<ButtonDialog buttonText={t('actions.deleteClub', {ns: 'common'})} buttonOnClick={handleDeletion} alertDialogDescription={t('club.settings.deleteWarning')} alertDialogContinueText={t('actions.delete', {ns: 'common'})} alertDialogText={t('club.settings.deleteQuestion')}/>
+				</CardContent>
+			</Card><br/></>}
+			{!isAdmin && <Card><SectionHeader title={t('club.settings.leaveClub.title')} description={t('club.settings.leaveClub.description')}/><CardContent><ButtonDialog buttonText={t('actions.leaveClub', {ns: 'common'})} buttonOnClick={handleClubLeave} alertDialogDescription={t('club.settings.leaveClub.warning')} alertDialogContinueText={t('actions.leaveClub', {ns: 'common'})} alertDialogText={t('club.settings.leaveClub.question')}/></CardContent></Card>}
 		</>
 	)
 }
 
-/**
- *  PAGE
- */
 const BookclubPage = () => {
 	const {t} = useTranslation('pages')
-	const { bookclubId } = useParams<{ bookclubId: string }>()
+	const {bookclubId} = useParams<{bookclubId: string}>()
 	const [searchParams] = useSearchParams()
-	const [bookclubName, setBookclubName] = useState<string>('')
+	const [bookclubName, setBookclubName] = useState('')
 	const [isAdmin, setIsAdmin] = useState(false)
 	const [hasUnansweredPoll, setHasUnansweredPoll] = useState(false)
-	const { showError } = useNotification()
+	const {showError} = useNotification()
 	const navigate = useNavigate()
 	const refreshUnansweredPoll = useCallback(async () => {
 		if (!bookclubId) return
-		try {
-			const result = await eventService.hasUnansweredPoll(bookclubId)
-			setHasUnansweredPoll(result)
-		} catch (error) {
-			showError(getErrorMessage(error))
-		}
+		try { setHasUnansweredPoll(await eventService.hasUnansweredPoll(bookclubId)) }
+		catch (error) { showError(getErrorMessage(error)) }
 	}, [bookclubId, showError])
 
 	useEffect(() => {
 		const fetchClubName = async () => {
 			if (!bookclubId) return
-
-			try {
-				const bookclub = await bookclubService.get(bookclubId)
-				setBookclubName(bookclub?.name ?? '')
-			} catch {
-				showError('Unable to fetch club name')
-			}
+			try { const bookclub = await bookclubService.get(bookclubId); setBookclubName(bookclub?.name ?? '') }
+			catch { showError('Unable to fetch club name') }
 		}
-
 		void fetchClubName()
-	}, [bookclubId])
+	}, [bookclubId, showError])
 
 	useEffect(() => {
 		const checkAdminStatus = async () => {
 			try {
 				const memberships = await bookclubmembersService.get()
-				const isAdminMember = memberships.some(
-					(member) => member.bookclub_id === bookclubId && member.user_role === 0
-				)
-				setIsAdmin(isAdminMember)
+				setIsAdmin(memberships.some((member) => member.bookclub_id === bookclubId && member.user_role === 0))
 			} catch (error) {
-				const errorMessage = getErrorMessage(error)
-				showError('Failed to check admin status: ' + errorMessage)
+				showError('Failed to check admin status: ' + getErrorMessage(error))
 				setIsAdmin(false)
 			}
 		}
-
-		if (bookclubId) {
-			void checkAdminStatus()
-			void refreshUnansweredPoll()
-		}
+		if (bookclubId) { void checkAdminStatus(); void refreshUnansweredPoll() }
 	}, [bookclubId, refreshUnansweredPoll, showError])
 
 	const activeTab = searchParams.get('tab') ?? 'home'
-	const tabTitles: Record<string, string> = {
-		'home': t('labels.home', { ns: 'common' }),
-		'events': t('labels.events', { ns: 'common' }),
-		'members': t('labels.members', { ns: 'common' }),
-		'history': t('labels.history', { ns: 'common' }),
-		'settings': t('labels.settings', { ns: 'common' })
-	}
+	const tabTitles: Record<string, string> = {home: t('labels.home', {ns: 'common'}), events: t('labels.events', {ns: 'common'}), members: t('labels.members', {ns: 'common'}), history: t('labels.history', {ns: 'common'}), settings: t('labels.settings', {ns: 'common'})}
 	usePageTitle(tabTitles[activeTab] ?? tabTitles.home, bookclubName)
+	if (!bookclubId) { void navigate('/home'); return null }
 
-	// Missing ID parameter
-	// -> Redirect to home page
-	if (!bookclubId) {
-		void navigate('/home')
-		return null
-	}
-
-	// Create memoized tabs
-	const tabs: Tab[] = useMemo<Tab[]>(() =>
-		[
-			{
-				id: 'home',
-				label: t('club.tabs.home'),
-				content: <HomeTab bookclubId={bookclubId}/>
-			},
-			{
-				id: 'events',
-				label: t('club.tabs.events'),
-				showNotification: hasUnansweredPoll,
-				content: <EventsTab bookclubId={bookclubId} isAdmin={isAdmin} onVoteSaved={refreshUnansweredPoll}
-				/>
-			},
-			{
-				id: 'members',
-				label: t('club.tabs.members'),
-				content: <MembersTab bookclubId={bookclubId}/>
-			},
-			{
-				id: 'history',
-				label: t('club.tabs.history'),
-				content: <HistoryTab bookclubId={bookclubId}/>
-			},
-			{
-				id: 'settings',
-				label: t('club.tabs.settings'),
-				content: <SettingsTab bookclubId={bookclubId} isAdmin={isAdmin}/>
-			}
-		], [bookclubId, isAdmin, hasUnansweredPoll, refreshUnansweredPoll, t])
-
-	return (
-		<>
-			<BookclubComponent bookclubId={bookclubId} />
-			<TabbedColumn tabs={tabs} />
-		</>
-	)
+	const tabs: Tab[] = useMemo(() => [
+		{id: 'home', label: t('club.tabs.home'), content: <HomeTab bookclubId={bookclubId}/>},
+		{id: 'events', label: t('club.tabs.events'), showNotification: hasUnansweredPoll, content: <EventsTab bookclubId={bookclubId} isAdmin={isAdmin} onVoteSaved={refreshUnansweredPoll}/>},
+		{id: 'members', label: t('club.tabs.members'), content: <MembersTab bookclubId={bookclubId}/>},
+		{id: 'history', label: t('club.tabs.history'), content: <HistoryTab bookclubId={bookclubId}/>},
+		{id: 'settings', label: t('club.tabs.settings'), content: <SettingsTab bookclubId={bookclubId} isAdmin={isAdmin}/>}
+	], [bookclubId, isAdmin, hasUnansweredPoll, refreshUnansweredPoll, t])
+	return <><BookclubComponent bookclubId={bookclubId}/><TabbedColumn tabs={tabs}/></>
 }
 
 export default BookclubPage

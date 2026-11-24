@@ -1,0 +1,11 @@
+{
+  "suggestionLimit": {
+    "enable": "Rajoita ehdotuksia jäsentä kohden",
+    "amount": "Ehdotusten enimmäismäärä jäsentä kohden",
+    "saving": "Tallennetaan…",
+    "saved": "Ehdotusrajan asetukset tallennettu.",
+    "saveFailed": "Ehdotusrajan asetusten tallentaminen epäonnistui.",
+    "invalid": "Anna positiivinen kokonaisluku.",
+    "reached": "Olet saavuttanut tämän kierroksen ehdotusten enimmäismäärän."
+  }
+}

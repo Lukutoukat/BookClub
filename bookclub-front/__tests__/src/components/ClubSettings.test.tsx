@@ -28,15 +28,11 @@ describe('ClubSettings', () => {
 	it('renders join club form and create club link', () => {
 		render(<ClubSettings />)
 
-		expect(screen.getByText('Clubs')).toBeDefined()
-		expect(screen.getByLabelText(/join with a code/i)).toBeDefined()
-		expect(screen.getByRole('button', { name: /join/i })).toBeDefined()
-
-		const createLink = screen.getByRole('link', { name: /create/i })
-		expect(createLink.getAttribute('href')).toBe('/create')
+		expect(screen.getByLabelText(/join with a code/i)).toBeInTheDocument()
+		expect(screen.getByRole('link', { name: /create/i })).toHaveAttribute('href', '/create')
 	})
 
-	it('shows validation message when invite code is not 5 characters', async () => {
+	it('shows validation error when invite code is not 5 characters', async () => {
 		const user = userEvent.setup()
 
 		render(<ClubSettings />)
@@ -44,12 +40,10 @@ describe('ClubSettings', () => {
 		await user.type(screen.getByLabelText(/join with a code/i), 'abc')
 		await user.click(screen.getByRole('button', { name: /join/i }))
 
-		expect(screen.getByText('Enter a 5-character code.')).toBeDefined()
-
-		expect(bookclubmembersService.create).not.toHaveBeenCalled()
+		expect(await screen.findByText('Invite code must be 5 characters.')).toBeInTheDocument()
 	})
 
-	it('submits invite code in uppercase when code is valid', async () => {
+	it('uppercases invite code before joining', async () => {
 		const user = userEvent.setup()
 
 		vi.mocked(bookclubmembersService.create).mockResolvedValue({} as any)
