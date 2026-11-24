@@ -25,6 +25,7 @@ describe('ClubMemberList', () => {
 	})
   
     const mockMember1 = {
+        id: 'membership-1',
         user_id: '1',
         user_role: 1,
         bookclub_id: '1',
@@ -35,6 +36,7 @@ describe('ClubMemberList', () => {
         }
     }
     const mockMember2 = {
+        id: 'membership-2',
         user_id: '2',
         user_role: 0,
         bookclub_id: '1',
@@ -45,6 +47,7 @@ describe('ClubMemberList', () => {
         }
     }
     const mockAdmin = {
+        id: 'membership-3',
         user_id: '3',
         user_role: 0,
         bookclub_id: '1',
@@ -94,7 +97,7 @@ describe('ClubMemberList', () => {
 		await user.click(continueButton)
 
 		await waitFor(() => {
-			expect(memberService.remove).toHaveBeenCalledWith('1', '1')
+			expect(memberService.remove).toHaveBeenCalledWith('1', 'membership-1')
 			expect(screen.queryByText('Pekka')).not.toBeInTheDocument()
 		})
 	})
