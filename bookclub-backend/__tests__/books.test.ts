@@ -318,9 +318,20 @@ describe('/api/books', () => {
         language: 'English',
         genre: 'Fiction'
       }
-      const createdBook = {id: '1', ...newBook, user_id: '1'}
-      ;(prisma.book.create as jest.Mock).mockResolvedValue(createdBook)
-      ;(prisma.bookProposed.create as jest.Mock).mockRejectedValue(new Error('Database failed'))
+const createdBook = { id: '1', ...newBook, user_id: '1' }
+
+;(prisma.cycle.findUnique as jest.Mock).mockResolvedValue({
+  id: '1',
+  bookclub_id: 'club-1'
+})
+;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue({
+  suggestionLimitEnabled: false,
+  suggestionLimit: null
+})
+;(prisma.book.create as jest.Mock).mockResolvedValue(createdBook)
+;(prisma.bookProposed.create as jest.Mock).mockRejectedValue(
+  new Error('Database failed')
+)
 
       const response = await request(app).post('/api/books/1').set(authHeaders()).send(newBook)
 
