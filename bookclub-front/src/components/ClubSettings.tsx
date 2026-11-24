@@ -23,19 +23,34 @@ const ClubSettings = () => {
 
   const handleJoinSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (inviteCode.invite_code.trim().length !== 5) {
-      setMessage(t('error.validation.inviteCode'))
+
+    const trimmedCode = inviteCode.invite_code.trim()
+    if (trimmedCode.length !== 5) {
+      setMessage(t('error.validation.inviteCode', {
+        defaultValue: 'Invite code must be 5 characters.'
+      }))
       return
     }
+
     try {
-      await bookclubmembersService.create(inviteCode)
-      setMessage(t('success.joinedClub'))
+      await bookclubmembersService.create({
+        invite_code: trimmedCode.toUpperCase(),
+        user_role: 1
+      })
+      setInviteCode(emptyJoinRequest)
+      setMessage(t('success.joinedClub', {
+        defaultValue: 'Joined club successfully.'
+      }))
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const apiError = (error.response?.data as { error?: string } | undefined)?.error
-        setMessage(apiError ?? t('error.api.joinClub'))
+        setMessage(apiError ?? t('error.api.joinClub', {
+          defaultValue: 'Registration failed.'
+        }))
       } else {
-        setMessage(t('error.api.joinClub'))
+        setMessage(t('error.api.joinClub', {
+          defaultValue: 'Unexpected error occurred.'
+        }))
       }
     }
   }
