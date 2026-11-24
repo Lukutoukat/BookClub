@@ -74,9 +74,6 @@ bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
         console.error('POST /api/books error:', error)
         return res.status(500).json({error: 'service error'})
     }
-  }
-
-  return res.status(401).json({ error: 'user not found' })
 })
 
 type cycleIdParams = {
