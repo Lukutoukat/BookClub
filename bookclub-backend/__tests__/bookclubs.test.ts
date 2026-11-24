@@ -4,12 +4,13 @@ import request from 'supertest'
 
 jest.mock('../db.ts', () => ({
   prisma: {
-    bookClub: {
-      findMany: jest.fn(),
-      create: jest.fn(),
-      delete: jest.fn(),
-      findUnique: jest.fn()
-    },
+	bookClub: {
+	  findMany: jest.fn(),
+	  create: jest.fn(),
+	  delete: jest.fn(),
+	  findUnique: jest.fn(),
+	  update: jest.fn()
+	},
     bookClubMembers: {
       create: jest.fn()
     }
@@ -229,6 +230,186 @@ describe('/api/bookclubs', () => {
       expect(response.body).toEqual({ error: 'user not found' })
     })
   })
+describe('PATCH /:id/settings', () => {
+  it('updates suggestion limit settings successfully', async () => {
+    const updatedClub = {
+      ...mockBookClubOwner,
+      suggestionLimitEnabled: true,
+      suggestionLimit: 5
+    }
+
+    ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOwner)
+    ;(prisma.bookClub.update as jest.Mock).mockResolvedValue(updatedClub)
+
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: true,
+        suggestionLimit: 5
+      })
+
+    expect(response.status).toBe(200)
+    expect(response.body).toEqual(updatedClub)
+
+    expect(prisma.bookClub.update).toHaveBeenCalledWith({
+      where: { id: '1' },
+      data: {
+        suggestionLimitEnabled: true,
+        suggestionLimit: 5
+      }
+    })
+  })
+
+  it('allows disabling suggestion limit', async () => {
+    ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOwner)
+    ;(prisma.bookClub.update as jest.Mock).mockResolvedValue({
+      ...mockBookClubOwner,
+      suggestionLimitEnabled: false,
+      suggestionLimit: null
+    })
+
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: false
+      })
+
+    expect(response.status).toBe(200)
+    expect(prisma.bookClub.update).toHaveBeenCalledWith({
+      where: { id: '1' },
+      data: {
+        suggestionLimitEnabled: false,
+        suggestionLimit: null
+      }
+    })
+  })
+
+  it('returns 400 if suggestionLimitEnabled is not a boolean', async () => {
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: 'true',
+        suggestionLimit: 5
+      })
+
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual({
+      error: 'suggestionLimitEnabled must be a boolean'
+    })
+  })
+
+  it('returns 400 if suggestionLimit is missing when enabled', async () => {
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: true
+      })
+
+    expect(response.status).toBe(400)
+  })
+
+  it('returns 400 if suggestionLimit is zero or negative', async () => {
+    for (const limit of [0, -1]) {
+      const response = await request(app)
+        .patch('/api/bookclubs/1/settings')
+        .send({
+          suggestionLimitEnabled: true,
+          suggestionLimit: limit
+        })
+
+      expect(response.status).toBe(400)
+    }
+  })
+
+  it('returns 400 if suggestionLimit is not an integer', async () => {
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: true,
+        suggestionLimit: 2.5
+      })
+
+    expect(response.status).toBe(400)
+  })
+
+  it('returns 404 if club does not exist', async () => {
+    ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(null)
+
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: true,
+        suggestionLimit: 5
+      })
+
+    expect(response.status).toBe(404)
+    expect(response.body).toEqual({ error: 'Unknown club' })
+  })
+
+  it('returns 403 if user is not the owner', async () => {
+    ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOther)
+
+    const response = await request(app)
+      .patch('/api/bookclubs/2/settings')
+      .send({
+        suggestionLimitEnabled: true,
+        suggestionLimit: 5
+      })
+
+    expect(response.status).toBe(403)
+    expect(response.body).toEqual({
+      error: 'Must be owner of the club to update settings'
+    })
+  })
+
+  it('returns 500 if database lookup fails', async () => {
+    ;(prisma.bookClub.findUnique as jest.Mock).mockRejectedValue(
+      new Error('Database failed')
+    )
+
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: true,
+        suggestionLimit: 5
+      })
+
+    expect(response.status).toBe(500)
+    expect(response.body).toEqual({ error: 'database error' })
+  })
+
+  it('returns 500 if updating settings fails', async () => {
+    ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOwner)
+    ;(prisma.bookClub.update as jest.Mock).mockRejectedValue(
+      new Error('Database failed')
+    )
+
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: true,
+        suggestionLimit: 5
+      })
+
+    expect(response.status).toBe(500)
+    expect(response.body).toEqual({ error: 'database error' })
+  })
+
+  it('returns 401 if user is missing', async () => {
+    setNoUser()
+
+    const response = await request(app)
+      .patch('/api/bookclubs/1/settings')
+      .send({
+        suggestionLimitEnabled: true,
+        suggestionLimit: 5
+      })
+
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual({ error: 'Missing user' })
+  })
+})
+
 
   describe('DELETE /:id', () => {
     it('deletes a bookclub owned by user', async () => {
