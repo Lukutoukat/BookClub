@@ -49,3 +49,45 @@ test('get returns all bookclubmembers', async () => {
 
 	expect(result).toEqual(mockMembers)
 })
+
+test('getByClubId returns members for the specified club', async () => {
+	const mockMembers = [mockMember]
+
+	mockedAxios.get.mockResolvedValue({
+		data: mockMembers
+	})
+
+	const result = await bookclubmembers.getByClubId('1')
+
+	expect(mockedAxios.get).toHaveBeenCalledWith(
+		'/api/bookclubmembers/1',
+		expect.anything()
+	)
+	expect(result).toEqual(mockMembers)
+})
+
+test('leaveClub deletes the current user membership', async () => {
+	const response = { success: true, message: 'successfully left club' }
+	mockedAxios.delete.mockResolvedValue({ data: response })
+
+	const result = await bookclubmembers.leaveClub('1')
+
+	expect(mockedAxios.delete).toHaveBeenCalledWith(
+		'/api/bookclubmembers/1',
+		expect.anything()
+	)
+	expect(result).toEqual(response)
+})
+
+test('remove deletes a member from the club', async () => {
+	const response = { success: true, message: 'member removed successfully' }
+	mockedAxios.delete.mockResolvedValue({ data: response })
+
+	const result = await bookclubmembers.remove('1', 'membership-2')
+
+	expect(mockedAxios.delete).toHaveBeenCalledWith(
+		'/api/bookclubmembers/1/membership-2',
+		expect.anything()
+	)
+	expect(result).toEqual(response)
+})

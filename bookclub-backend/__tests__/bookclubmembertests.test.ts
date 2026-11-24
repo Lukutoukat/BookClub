@@ -476,6 +476,20 @@ it('returns 403 if requester is not an admin', async () => {
       })
       expect(prisma.bookClubMembers.deleteMany).toHaveBeenCalledTimes(1)
     })
+
+    it('returns 401 if authenticated token belongs to no user', async () => {
+      ;(prisma.user.findUnique as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1')
+        .set(authHeaders())
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({
+        error: 'user not authenticated'
+      })
+      expect(prisma.bookClubMembers.deleteMany).not.toHaveBeenCalled()
+    })
   })
 
   describe('DELETE /:id/:user_id', () => {
@@ -562,6 +576,37 @@ it('returns 403 if requester is not an admin', async () => {
       expect(response.body).toEqual({
         error: 'cannot delete an admin member'
       })
+    })
+
+    it('returns 401 if authenticated token belongs to no user', async () => {
+      ;(prisma.user.findUnique as jest.Mock).mockResolvedValue(null)
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1/membership-2')
+        .set(authHeaders())
+
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({
+        error: 'user not authenticated'
+      })
+    })
+
+    it('returns 500 if failed to delete member', async () => {
+      ;(prisma.bookClubMembers.findFirst as jest.Mock)
+        .mockResolvedValueOnce(mockAdmin)
+        .mockResolvedValueOnce(mockMember)
+      ;(prisma.bookClubMembers.deleteMany as jest.Mock)
+        .mockRejectedValue(new Error('database error'))
+
+      const response = await request(app)
+        .delete('/api/bookclubmembers/1/membership-2')
+        .set(authHeaders())
+
+      expect(response.status).toBe(500)
+      expect(response.body).toEqual({
+        error: 'failed to delete member'
+      })
+      expect(prisma.bookClubMembers.deleteMany).toHaveBeenCalledTimes(1)
     })
   })
 })
