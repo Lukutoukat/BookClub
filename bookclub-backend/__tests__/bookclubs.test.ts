@@ -231,6 +231,49 @@ describe('/api/bookclubs', () => {
     })
   })
 describe('PATCH /:id/settings', () => {
+it('returns 401 if user is missing', async () => {
+  setNoUser()
+
+  const response = await request(app)
+    .patch('/api/bookclubs/1/settings')
+    .send({
+      suggestionLimitEnabled: true,
+      suggestionLimit: 5
+    })
+
+  expect(response.status).toBe(401)
+  expect(response.body).toEqual({ error: 'Missing user' })
+})
+
+it('returns 404 if bookclub does not exist', async () => {
+  ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(null)
+
+  const response = await request(app)
+    .patch('/api/bookclubs/1/settings')
+    .send({
+      suggestionLimitEnabled: true,
+      suggestionLimit: 5
+    })
+
+  expect(response.status).toBe(404)
+  expect(response.body).toEqual({ error: 'Unknown club' })
+})
+
+it('returns 403 if user is not the owner', async () => {
+  ;(prisma.bookClub.findUnique as jest.Mock).mockResolvedValue(mockBookClubOther)
+
+  const response = await request(app)
+    .patch('/api/bookclubs/2/settings')
+    .send({
+      suggestionLimitEnabled: true,
+      suggestionLimit: 5
+    })
+
+  expect(response.status).toBe(403)
+  expect(response.body).toEqual({
+    error: 'Must be owner of the club to update settings'
+  })
+})
   it('updates suggestion limit settings successfully', async () => {
     const updatedClub = {
       ...mockBookClubOwner,
