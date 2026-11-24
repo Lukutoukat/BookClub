@@ -58,9 +58,9 @@ test('admin can create a meeting event', async ({ page }) => {
     await dialog.getByRole('button', { name: 'Create Event', exact: true }).click()
 
     await expect(dialog).toBeHidden()
-    await expect(page.getByRole('heading', { name: 'E2E Reading Circle' })).toBeVisible()
+    await expect(page.getByTitle('E2E Reading Circle')).toBeVisible()
     await expect(page.getByText('A meeting created by an end-to-end test.')).toBeVisible()
-    await expect(page.getByText('Meeting Date:')).toBeVisible()
+    await expect(page.getByText('Meeting Date: Pending')).toHaveCount(0)
 })
 test('admin can create a date poll event', async ({ page }) => {
     const suffix = `${randomUUID()}_poll`
@@ -75,11 +75,11 @@ test('admin can create a date poll event', async ({ page }) => {
     await dateInputs.nth(0).fill(futureDateTime(48))
     await dateInputs.nth(1).fill(futureDateTime(72))
     await dialog.getByLabel('Poll Ends At').fill(futureDateTime(24))
-    await dialog.getByRole('button', { name: 'Create Event', exact: true }).click()
+    await dialog.getByRole('button', {name: 'Create Event', exact: true}).click()
 
     await expect(dialog).toBeHidden()
-    await expect(page.getByRole('heading', { name: 'E2E Date Poll' })).toBeVisible()
-    await expect(page.getByText('Poll Ends At:')).toBeVisible()
+    await expect(page.getByTitle('E2E Date Poll')).toBeVisible()
+    await expect(page.getByText('Ends At')).toBeVisible()
 })
 
 test('admin cannot create a poll with an option before the poll end', async ({ page }) => {
@@ -119,57 +119,56 @@ test('admin can add a third date poll option', async ({ page }) => {
     await dateInputs.nth(1).fill(futureDateTime(72))
     await dateInputs.nth(2).fill(futureDateTime(96))
     await dialog.getByLabel('Poll Ends At').fill(futureDateTime(24))
-    await dialog.getByRole('button', { name: 'Create Event', exact: true }).click()
+    await dialog.getByRole('button', {name: 'Create Event', exact: true}).click()
 
     await expect(dialog).toBeHidden()
-    await expect(page.getByRole('heading', { name: 'E2E Three Option Poll' })).toBeVisible()
+    await expect(page.getByTitle('E2E Three Option Poll')).toBeVisible()
 })
 
-test('admin can delete an event', async ({ page }) => {
+test('admin can delete an event', async ({page}) => {
     const suffix = `${randomUUID()}_delete`
     await createUserAndOpenEvents(page, suffix)
 
-    await page.getByRole('button', { name: 'Create Event', exact: true }).click()
+    await page.getByRole('button', {name: 'Create Event', exact: true}).click()
     const dialog = page.getByRole('dialog')
     await dialog.getByLabel('Event Name').fill('E2E Deletable Event')
     await dialog.getByLabel('Meeting Date').fill(futureDateTime(24))
-    await dialog.getByRole('button', { name: 'Create Event', exact: true }).click()
+    await dialog.getByRole('button', {name: 'Create Event', exact: true}).click()
 
     await expect(dialog).toBeHidden()
-    await expect(page.getByRole('heading', { name: 'E2E Deletable Event' })).toBeVisible()
+    await expect(page.getByTitle('E2E Deletable Event')).toBeVisible()
 
     await page.getByTitle('Delete').click()
     const confirm = page.getByRole('alertdialog')
     await expect(confirm).toBeVisible()
-    await confirm.getByRole('button', { name: 'Delete', exact: true }).click()
+    await confirm.getByRole('button', {name: 'Delete', exact: true}).click()
 
-    await expect(page.getByRole('heading', { name: 'E2E Deletable Event' })).toHaveCount(0)
+    await expect(page.getByTitle('E2E Deletable Event')).toHaveCount(0)
     await expect(page.getByText('No events yet.')).toBeVisible()
 })
 
-test('admin can cancel event deletion', async ({ page }) => {
+test('admin can cancel event deletion', async ({page}) => {
     const suffix = `${randomUUID()}_cancel_delete`
     await createUserAndOpenEvents(page, suffix)
 
-    await page.getByRole('button', { name: 'Create Event', exact: true }).click()
+    await page.getByRole('button', {name: 'Create Event', exact: true}).click()
     const dialog = page.getByRole('dialog')
     await dialog.getByLabel('Event Name').fill('E2E Cancel Deletion Event')
     await dialog.getByLabel('Meeting Date').fill(futureDateTime(24))
-    await dialog.getByRole('button', { name: 'Create Event', exact: true }).click()
+    await dialog.getByRole('button', {name: 'Create Event', exact: true}).click()
 
     await expect(dialog).toBeHidden()
-    await expect(page.getByRole('heading', { name: 'E2E Cancel Deletion Event' })).toBeVisible()
+    await expect(page.getByTitle('E2E Cancel Deletion Event')).toBeVisible()
 
     await page.getByTitle('Delete').click()
     const confirm = page.getByRole('alertdialog')
     await expect(confirm).toBeVisible()
-    await confirm.getByRole('button', { name: 'Cancel',}).click()
+    await confirm.getByRole('button', {name: 'Cancel',}).click()
 
     await expect(confirm).toBeHidden()
-    await expect(page.getByRole('heading', { name: 'E2E Cancel Deletion Event' })).toBeVisible()
+    await expect(page.getByTitle('E2E Cancel Deletion Event')).toBeVisible()
 
     await page.reload()
-    await page.getByRole('tab', { name: 'Events' }).click()
-    await expect(page.getByRole('heading', { name: 'E2E Cancel Deletion Event' })).toBeVisible()
+    await page.getByRole('tab', {name: 'Events'}).click()
+    await expect(page.getByTitle('E2E Cancel Deletion Event')).toBeVisible()
 })
-

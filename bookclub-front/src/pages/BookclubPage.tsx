@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button'
 import { CycleTimeline } from '@/components/CycleTimeline'
 import EventList from '@/components/EventList'
 import eventService, { type Event } from '@/services/events'
+import EventItem from "@/components/events/EventItem.tsx";
 
 /**
  *  HOME TAB
@@ -30,7 +31,7 @@ interface HomeTabProps {
 }
 
 const HomeTab = ({bookclubId}: HomeTabProps) => {
-	const {t, i18n} = useTranslation('pages')
+	const {t} = useTranslation('pages')
 	const {showError} = useNotification()
 
 	const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
@@ -85,19 +86,13 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 			
 			{/* NEXT EVENT */}
 			{nextEvent?.meetingDate && (
-				<Card className="mb-4">
-					<SectionHeader title={t('club.events.list.nextEvent')}/>
-					<CardContent>
-						<h3 className="font-semibold">{nextEvent.title}</h3>
-						<p>
-							{t('club.events.list.meetingDate')} {new Date(nextEvent.meetingDate).toLocaleString(i18n.language)}
-						</p>
-						{nextEvent.description && (
-							<p>{nextEvent.description}</p>
-						)}
-					</CardContent>
-				</Card>
-			)}
+                <Card size="sm" className="mb-4">
+                    <SectionHeader title={t('club.events.list.nextEvent')}/>
+                    <CardContent className="flex flex-col gap-5">
+                        <EventItem event={nextEvent} minimal={true} />
+                    </CardContent>
+                </Card>
+            )}
 
 			{/* PROPOSAL PHASE */}
 			{currentCycle?.phase === 'proposal' && (
