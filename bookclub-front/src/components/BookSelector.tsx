@@ -83,22 +83,12 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 		const handleOutsideClick = (event: MouseEvent) => {
 			if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
 				setOpen(false)
-
-				// If clicked away, revert the input text to the currently selected book (if any)
-				if (selectedBookId) {
-					const book = books.find((b) => b.id === selectedBookId)
-					if (book && inputValue !== book.name) {
-						setInputValue(book.name)
-					}
-				} else {
-					setInputValue('')
-				}
 			}
 		}
 
 		document.addEventListener('mousedown', handleOutsideClick)
 		return () => document.removeEventListener('mousedown', handleOutsideClick)
-	}, [books, selectedBookId, inputValue])
+	}, [])
 
 	const handleSelect = (bookId: string) => {
 		const book = books.find((b) => b.id === bookId)
@@ -108,6 +98,10 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 			setShowConfirmation(true)
 		}
 		setOpen(false)
+	}
+
+	const cancelSelection = () => {
+		setSelectedBookId(null)
 	}
 
 	const submitSelectedBook = async () => {
@@ -152,7 +146,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel>{t('actions.cancel', { ns: 'common' })}</AlertDialogCancel>
+						<AlertDialogCancel onClick={cancelSelection}>{t('actions.cancel', { ns: 'common' })}</AlertDialogCancel>
 						<AlertDialogAction onClick={submitSelectedBook}>{t('actions.continue', { ns: 'common' })}</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -170,6 +164,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 						value={inputValue}
 						onValueChange={(search: string) => {
 							setInputValue(search)
+							setSelectedBookId(null)
 							if (!open) setOpen(true) // Open dropdown as user types
 						}}
 						onFocus={() => setOpen(true)}

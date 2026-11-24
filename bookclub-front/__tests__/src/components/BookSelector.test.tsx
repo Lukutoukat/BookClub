@@ -218,11 +218,11 @@ describe('BookSelector', () => {
 		})
 	})
 
-	it('should close confirmation dialog when clicking Cancel', async () => {
+	it('should preserve the text after cancelling and allow clearing it without restoring the book name', async () => {
 		const user = userEvent.setup()
 		render(<BookSelector bookclubId="club1" />)
 
-		const input = screen.getByPlaceholderText('Search saved')
+		const input = screen.getByPlaceholderText('Search saved') as HTMLInputElement
 		await user.click(input)
 
 		await waitFor(() => {
@@ -241,6 +241,29 @@ describe('BookSelector', () => {
 		await waitFor(() => {
 			expect(screen.queryByText('Are You Sure?')).not.toBeInTheDocument()
 		})
+
+		expect(input.value).toBe('The Great Gatsby')
+		await user.clear(input)
+		await user.click(document.body)
+		expect(input.value).toBe('')
+	})
+
+	it('should close the dropdown on outside click without clearing the search text', async () => {
+		const user = userEvent.setup()
+		render(<BookSelector bookclubId="club1" />)
+
+		const input = screen.getByPlaceholderText('Search saved') as HTMLInputElement
+		await user.click(input)
+		await user.type(input, 'Gatsby')
+
+		await waitFor(() => {
+			expect(screen.getByText('The Great Gatsby')).toBeInTheDocument()
+		})
+
+		await user.click(document.body)
+
+		expect(input.value).toBe('Gatsby')
+		expect(screen.queryByText('The Great Gatsby')).not.toBeInTheDocument()
 	})
 
 	it('should show "Loading books..." while fetching', async () => {
