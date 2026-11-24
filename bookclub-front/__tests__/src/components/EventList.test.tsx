@@ -6,6 +6,24 @@ import eventService, {type Event} from '@/services/events'
 
 vi.mock('@/services/events')
 
+vi.mock('@/components/events/EventItem.tsx', () => ({
+    default: (props: {
+        event: Event
+        onChangeVotes?: (optionIds: string[]) => void
+        onResolveTie?: (optionId: string) => void
+    }) => (
+        <div>
+            <span>{props.event.title}</span>
+            <button type="button" onClick={() => props.onChangeVotes?.(['option-1'])}>
+                trigger-vote
+            </button>
+            <button type="button" onClick={() => props.onResolveTie?.('option-1')}>
+                trigger-resolve
+            </button>
+        </div>
+    )
+}))
+
 const meetingEvent: Event = {
     id: 'event-1',
     bookclub_id: 'club-1',
@@ -28,18 +46,6 @@ const pollEvent: Event = {
         options: [
             {id: 'option-1', date: '2099-01-20T18:00:00.000Z', _count: {votes: 0}, votes: []},
             {id: 'option-2', date: '2099-01-21T18:00:00.000Z', _count: {votes: 0}, votes: []}
-        ]
-    }
-}
-
-const endedPollEvent: Event = {
-    ...pollEvent,
-    poll: {
-        ...pollEvent.poll!,
-        endsAt: '2020-01-19T18:00:00.000Z',
-        options: [
-            {id: 'option-1', date: '2020-01-20T18:00:00.000Z', _count: {votes: 1}, votes: []},
-            {id: 'option-2', date: '2020-01-21T18:00:00.000Z', _count: {votes: 1}, votes: []}
         ]
     }
 }
@@ -70,36 +76,35 @@ describe('EventList', () => {
         expect(screen.getByText('Create a new event for the book club.')).toBeInTheDocument()
     })
 
-    it('saves selected poll votes and refreshes the events', async () => {
+    it('saves poll votes and refreshes the events', async () => {
         vi.mocked(eventService.getAll)
             .mockResolvedValueOnce([pollEvent])
             .mockResolvedValueOnce([pollEvent])
         vi.mocked(eventService.vote).mockResolvedValue({} as any)
+        const onVoteSaved = vi.fn()
         const user = userEvent.setup()
 
-        render(<EventList bookclubId="club-1" isAdmin={false}/>)
+        render(<EventList bookclubId="club-1" isAdmin={false} onVoteSaved={onVoteSaved}/>)
 
-        const option = await screen.findByLabelText(/1\/20\/2099/)
-        await user.click(option)
-        await user.click(screen.getByRole('button', {name: 'Save Votes'}))
+        await user.click(await screen.findByRole('button', {name: 'trigger-vote'}))
 
         await waitFor(() => {
             expect(eventService.vote).toHaveBeenCalledWith('poll-1', ['option-1'])
             expect(eventService.getAll).toHaveBeenCalledTimes(2)
+            expect(onVoteSaved).toHaveBeenCalledTimes(1)
         })
     })
 
-    it('renders a finished tied poll and resolves the selected date as an admin', async () => {
+    it('resolves a poll as an admin and refreshes the events', async () => {
         vi.mocked(eventService.getAll)
-            .mockResolvedValueOnce([endedPollEvent])
-            .mockResolvedValueOnce([meetingEvent])
+            .mockResolvedValueOnce([pollEvent])
+            .mockResolvedValueOnce([pollEvent])
         vi.mocked(eventService.resolvePoll).mockResolvedValue({} as any)
         const user = userEvent.setup()
 
         render(<EventList bookclubId="club-1" isAdmin/>)
 
-        expect(await screen.findByText('The poll ended in a tie.')).toBeInTheDocument()
-        await user.click(screen.getByRole('button', {name: /1\/20\/2020/}))
+        await user.click(await screen.findByRole('button', {name: 'trigger-resolve'}))
 
         await waitFor(() => {
             expect(eventService.resolvePoll).toHaveBeenCalledWith('poll-1', 'option-1')
@@ -107,53 +112,14 @@ describe('EventList', () => {
         })
     })
 
-    it('allows an admin to resolve a finished poll with no votes', async () => {
-        const noVotesEvent = {
-            ...endedPollEvent,
-            poll: {
-                ...endedPollEvent.poll!,
-                options: endedPollEvent.poll!.options.map((option) => ({
-                    ...option,
-                    _count: {votes: 0}
-                }))
-            }
-        }
-        vi.mocked(eventService.getAll)
-            .mockResolvedValueOnce([noVotesEvent])
-            .mockResolvedValueOnce([meetingEvent])
-        vi.mocked(eventService.resolvePoll).mockResolvedValue({} as any)
-        const user = userEvent.setup()
-
-        render(<EventList bookclubId="club-1" isAdmin/>)
-
-        expect(await screen.findByText('The poll ended without any votes.')).toBeInTheDocument()
-        await user.click(screen.getByRole('button', {name: /1\/20\/2020/}))
-
-        await waitFor(() => {
-            expect(eventService.resolvePoll).toHaveBeenCalledWith('poll-1', 'option-1')
-        })
-    })
-
-    it('shows ended poll state and disables voting after the deadline', async () => {
-        vi.mocked(eventService.getAll).mockResolvedValue([endedPollEvent])
-
-        render(<EventList bookclubId="club-1" isAdmin={false}/>)
-
-        expect(await screen.findByText('Poll Ended')).toBeInTheDocument()
-        expect(screen.getAllByRole('checkbox').every((checkbox) => (checkbox as HTMLInputElement).disabled))
-            .toBe(true)
-        expect(screen.getByRole('button', {name: 'Save Votes'})).toBeDisabled()
-    })
-
-    it('handles vote and resolve failures without refreshing events', async () => {
+    it('does not refresh events when voting fails', async () => {
         vi.mocked(eventService.getAll).mockResolvedValue([pollEvent])
         vi.mocked(eventService.vote).mockRejectedValue(new Error('vote failed'))
         const user = userEvent.setup()
 
         render(<EventList bookclubId="club-1" isAdmin={false}/>)
 
-        await user.click(await screen.findByLabelText(/1\/20\/2099/))
-        await user.click(screen.getByRole('button', {name: 'Save Votes'}))
+        await user.click(await screen.findByRole('button', {name: 'trigger-vote'}))
 
         await waitFor(() => expect(eventService.vote).toHaveBeenCalledWith('poll-1', ['option-1']))
         expect(eventService.getAll).toHaveBeenCalledTimes(1)
@@ -161,10 +127,10 @@ describe('EventList', () => {
 
     it('does not show the delete button for non-admins', async () => {
         vi.mocked(eventService.getAll).mockResolvedValue([meetingEvent])
-        
+
         render(<EventList bookclubId="club-1" isAdmin={false}/>)
         expect(await screen.findByText('Book night')).toBeInTheDocument()
-        expect(screen.queryByRole('Delete')).not.toBeInTheDocument()
+        expect(screen.queryByTitle('Delete')).not.toBeInTheDocument()
     })
 
     it('deletes an event and refreshes the event list', async () => {
