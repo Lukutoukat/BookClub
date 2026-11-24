@@ -94,11 +94,18 @@ const hasUnansweredPoll = (bookclubId: string) => {
     })
 }
 
+const remove = (eventId: string) => {
+    return axios
+        .delete<EventActionResponse>(`${baseUrl}/${eventId}`, getAuthConfig())
+        .then((res) => res.data)
+}
+
 export default {
     getAll,
     create,
     vote,
     resolvePoll,
     getNextEvent,
-    hasUnansweredPoll
+    hasUnansweredPoll,
+    remove
 }

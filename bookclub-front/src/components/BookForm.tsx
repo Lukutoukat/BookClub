@@ -1,6 +1,6 @@
 import { useState, useEffect, type ChangeEvent, type SubmitEventHandler } from 'react'
 
-import bookService, { type CreateBook, type Book, type BookFields } from '@/services/books'
+import bookService from '@/services/books'
 import { isValidISBN, cleanISBN } from '@/lib/isbnValidator'
 import { useTranslation } from 'react-i18next'
 
@@ -13,6 +13,7 @@ import { SectionHeader } from './SectionHeader'
 import { useNotification } from '@/context/NotificationContext'
 import { HelmetBookSearch } from './HelmetBookSearch'
 import { getPageCount, getPrimaryAuthor, type FinnaBook } from '@/services/finna'
+import type {Book, BookFields, CreateSavedBook} from "@/types.ts";
 
 interface BookFormState {
 	id?: string
@@ -52,7 +53,7 @@ type BookFormProps = {
 	buttonAction?: () => void
 	secondaryButtonText?: string
 	secondaryButtonAction?: () => void
-	onBookAdded?: (book?: CreateBook) => Promise<void> | void
+	onBookAdded?: (book?: CreateSavedBook) => Promise<void> | void
     helmetSearch?: boolean
     headless?: boolean,
 	cycle_id: string
@@ -217,7 +218,7 @@ const BookForm = ({
 		}
 
         if (headless) {
-            const bookToSubmit: CreateBook = {
+            const bookToSubmit: CreateSavedBook = {
                 isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
                 name: newBook.name,
                 author: newBook.author,
@@ -252,7 +253,7 @@ const BookForm = ({
 					await bookService.update(bookToEdit.id, bookToUpdateSubmit)
 					showSuccess(t('success.bookCreated'))
 				} else {
-					const bookToSubmit: CreateBook = {
+					const bookToSubmit: CreateSavedBook = {
 						isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
 						name: newBook.name,
 						author: newBook.author,
@@ -274,7 +275,7 @@ const BookForm = ({
 					buttonAction()
 				}
 			} else {
-				const bookToSubmit: CreateBook = {
+				const bookToSubmit: CreateSavedBook = {
 					isbn: newBook.isbn ? cleanISBN(newBook.isbn) : undefined,
 					name: newBook.name,
 					author: newBook.author,

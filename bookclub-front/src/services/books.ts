@@ -1,87 +1,87 @@
-import axios from 'axios'
-import {getAuthConfig} from '@/services/auth'
-import type {GenericBook} from "@/types.ts";
+import type {BookFields, CreateSavedBook, GenericBook, SavedBook} from "@/types.ts";
+import {getAuthConfig} from "@/services/auth.ts";
+import axios from "axios";
+import {resolveBookCoverUrl} from "@/services/book-providers/finna.ts";
 
 const baseUrl = '/api/books'
 
-export interface BookFields {
-	id: string
-	isbn?: string
-	name: string
-	author: string
-	year: number
-	pages?: number
-	comment?: string
-	language?: string
-	genre?: string
-	proposal_id?: string
-	owned_by_user?: boolean
+/**
+ * Function to resolve a cover URL for the given saved book.
+ * Returns undefined if book does not have a cover.
+ */
+export async function resolveCoverUrl(savedBook: SavedBook): Promise<string | undefined> {
+    const helmetId = savedBook.extra_data?.helmet_id
+    if (!helmetId) {
+        return undefined
+    }
+    return resolveBookCoverUrl(helmetId)
 }
 
-export type Book = BookFields
-export type CreateBook = Omit<BookFields, 'id'>
-
-export function toGeneric(fields: BookFields): GenericBook {
+export async function toGeneric(savedBook: SavedBook): Promise<GenericBook> {
+    const coverUrl = await resolveCoverUrl(savedBook)
     return {
-        id: fields.id,
-        title: fields.name,
-        pages: fields.pages ? String(fields.pages) : undefined,
-        year: String(fields.year),
-        language: fields.language,
-        coverUrl: undefined, // TODO: Add support for a cover
-        authors: [fields.author],
-        genres: fields.genre ? [fields.genre] : undefined,
+        id: savedBook.id,
+        title: savedBook.name,
+        pages: savedBook.pages ? String(savedBook.pages) : undefined,
+        year: savedBook.year,
+        language: savedBook.language,
+        coverUrl: coverUrl,
+        authors: savedBook.author ? [savedBook.author] : [],
+        genres: savedBook.genre ? [savedBook.genre] : undefined,
+        extraData: {
+            helmetId: savedBook.extra_data?.helmet_id
+        }
     }
 }
 
-export function toCreateBook(book: GenericBook): CreateBook {
+export function toCreateBook(genericBook: GenericBook): CreateSavedBook {
     return {
-        name: book.title,
-        author: book.authors?.[0] ?? "",
-        year: book.year ? Number(book.year) : 2000,
+        name: genericBook.title,
+        author: genericBook.authors?.[0] ?? undefined,
+        year: genericBook.year,
         // Gets the first int in string
-        pages: book.pages ? Number(book.pages.replace(/(^\d+)(.+$)/i, '$1')) : undefined,
-        comment: undefined,
-        language: book.language,
-        genre: book.genres?.[0],
-        proposal_id: undefined,
-        owned_by_user: false
+        pages: genericBook.pages ? Number(genericBook.pages.replace(/(^\d+)(.+$)/i, '$1')) : undefined,
+        language: genericBook.language,
+        genre: genericBook.genres?.[0],
+        extra_data: {
+            helmet_id: genericBook.extraData?.helmetId
+        }
     }
 }
 
 const getAll = () => {
 	return axios
-		.get<Book[]>(baseUrl, getAuthConfig())
+		.get<SavedBook[]>(baseUrl, getAuthConfig())
 		.then((res) => res.data)
 }
 
 const getPreviousSuggestions = () => {
 	return axios
-		.get<Book[]>(`${baseUrl}/previousSuggestions`, getAuthConfig())
+		.get<SavedBook[]>(`${baseUrl}/previousSuggestions`, getAuthConfig())
 		.then((res) => res.data)
 }
 
-const create = (book: CreateBook) => {
+const create = (book: CreateSavedBook) => {
 	return axios
-		.post<Book>(baseUrl, book, getAuthConfig())
+		.post<SavedBook>(baseUrl, book, getAuthConfig())
 		.then((res) => res.data)
 }
 
-const createForPropose = (cycle_id: string, book: CreateBook) => {
+const createForPropose = (cycle_id: string, book: CreateSavedBook) => {
 	return axios
-		.post<Book>(`${baseUrl}/${cycle_id}`, book, getAuthConfig())
+		.post<SavedBook>(`${baseUrl}/${cycle_id}`, book, getAuthConfig())
 		.then((res) => res.data)
 }
 
 const update = (id: string, book: BookFields) => {
 	return axios
-		.put<Book>(`${baseUrl}/${id}`, book, getAuthConfig())
+		.put<SavedBook>(`${baseUrl}/${id}`, book, getAuthConfig())
 		.then((res) => res.data)
 }
 
 const removeFromUser = (id: string) => {
 	return axios
-		.put<Book>(`${baseUrl}/${id}/remove`, {}, getAuthConfig())
+		.put<SavedBook>(`${baseUrl}/${id}/remove`, {}, getAuthConfig())
 		.then((res) => res.data)
 }
 

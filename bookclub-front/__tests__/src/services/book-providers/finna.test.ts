@@ -1,7 +1,7 @@
 import {describe, test, expect, vi, beforeEach} from 'vitest'
 import type {Mocked} from 'vitest'
 import axios from 'axios'
-import {FinnaProvider, isFinnaBookRecord} from '@/services/book-providers/finna.ts'
+import {FinnaProvider, isFinnaBookRecord, resolveBookCoverUrl} from '@/services/book-providers/finna.ts'
 import {BookProviderError} from '@/services/book-providers/index.ts'
 
 vi.mock('axios')
@@ -61,7 +61,7 @@ describe('FinnaProvider', () => {
                 id: 'book1',
                 helmetId: 'book1',
                 title: '1984',
-                year: '2021',
+                year: 2021,
                 language: 'eng',
                 authors: ['George Orwell'],
                 genres: ['Dystopia'],
@@ -111,6 +111,7 @@ describe('FinnaProvider', () => {
             const filters = params.getAll('filter[]')
             expect(filters).toContain('~language:"fin"')
             expect(filters).toContain('~language:"swe"')
+            expect(filters).toContain('-format:"1/Book/AudioBook/"')
         })
 
         test('handles books with only an id', async () => {
@@ -245,5 +246,25 @@ describe('isFinnaBookRecord', () => {
         expect(
             isFinnaBookRecord({provider: 'finna', id: 'x', helmetId: 42} as any),
         ).toBe(false)
+    })
+})
+
+describe('resolveBookCoverUrl', () => {
+    test('returns the cover URL when a real cover exists', async () => {
+        const url = await resolveBookCoverUrl('book1')
+        expect(url).toBe('https://api.finna.fi/Cover/Show?recordid=book1')
+    })
+
+    test('returns undefined when the cover is a placeholder image', async () => {
+        imageWidth = 10
+        imageHeight = 10
+        const url = await resolveBookCoverUrl('book1')
+        expect(url).toBeUndefined()
+    })
+
+    test('returns undefined when the image fails to load', async () => {
+        imageFails = true
+        const url = await resolveBookCoverUrl('book1')
+        expect(url).toBeUndefined()
     })
 })

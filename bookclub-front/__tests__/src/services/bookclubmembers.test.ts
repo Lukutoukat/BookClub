@@ -28,10 +28,10 @@ test('patch returns patched bookclubmember', async () => {
 		data: { count: 1 }
 	})
 
-	const result = await bookclubmembers.changeRole('1', '2', 0)
+	const result = await bookclubmembers.changeRole('1', 'membership-2', 0)
 
 	expect(mockedAxios.patch).toHaveBeenCalledWith(
-		'/api/bookclubmembers/1/members/2',
+		'/api/bookclubmembers/1/members/membership-2',
 		{ role: 0 },
 		expect.anything()
 	)
@@ -48,4 +48,46 @@ test('get returns all bookclubmembers', async () => {
 	const result = await bookclubmembers.get()
 
 	expect(result).toEqual(mockMembers)
+})
+
+test('getByClubId returns members for the specified club', async () => {
+	const mockMembers = [mockMember]
+
+	mockedAxios.get.mockResolvedValue({
+		data: mockMembers
+	})
+
+	const result = await bookclubmembers.getByClubId('1')
+
+	expect(mockedAxios.get).toHaveBeenCalledWith(
+		'/api/bookclubmembers/1',
+		expect.anything()
+	)
+	expect(result).toEqual(mockMembers)
+})
+
+test('leaveClub deletes the current user membership', async () => {
+	const response = { success: true, message: 'successfully left club' }
+	mockedAxios.delete.mockResolvedValue({ data: response })
+
+	const result = await bookclubmembers.leaveClub('1')
+
+	expect(mockedAxios.delete).toHaveBeenCalledWith(
+		'/api/bookclubmembers/1',
+		expect.anything()
+	)
+	expect(result).toEqual(response)
+})
+
+test('remove deletes a member from the club', async () => {
+	const response = { success: true, message: 'member removed successfully' }
+	mockedAxios.delete.mockResolvedValue({ data: response })
+
+	const result = await bookclubmembers.remove('1', 'membership-2')
+
+	expect(mockedAxios.delete).toHaveBeenCalledWith(
+		'/api/bookclubmembers/1/membership-2',
+		expect.anything()
+	)
+	expect(result).toEqual(response)
 })

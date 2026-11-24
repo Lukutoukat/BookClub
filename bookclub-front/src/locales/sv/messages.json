@@ -11,7 +11,8 @@
         "bookProposed": "Boken har föreslagits!",
         "register": "Registreringen har sparats.",
         "memberRemoved": "Klubbmedlemmen har tagits bort.",
-        "promotedMember": "Det gick att uppgradera användaren till administratör."
+        "promotedMember": "Det gick att uppgradera användaren till administratör.",
+        "leftClub": "Avresan från klubben gick bra"
     },
     "error": {
         "api": {
@@ -48,7 +49,8 @@
             "bookAuthorLength": "Författaren får innehålla högst {{maxLength}} tecken.",
             "bookLanguageLength": "Språket får innehålla högst {{maxLength}} tecken.",
             "bookGenreLength": "Genren får innehålla högst {{maxLength}} tecken.",
-            "bookCommentLength": "Kommentaren får innehålla högst {{maxLength}} tecken."
+            "bookCommentLength": "Kommentaren får innehålla högst {{maxLength}} tecken.",
+            "bookclubIdMissing": "Bokklubbens ID saknas"
         },
         "generic": {
             "unexpected": "Ett oväntat fel inträffade."

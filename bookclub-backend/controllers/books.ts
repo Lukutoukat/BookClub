@@ -1,86 +1,78 @@
-import express, { type Request, type Response } from 'express'
-import { prisma } from '../db.ts'
+import express, {type Request, type Response} from 'express'
+import {prisma} from '../db.ts'
 import userExtractor from '../middleware/userExtractor.ts'
+import {type Book, createBook, parseBook, parseCreateBook, toSafeBook} from "../services/bookService.ts";
 
 const bookRouter = express.Router()
 
-interface Book {
-  id?: string
-  name: string
-  author: string
-  year: number
-  isbn?: string
-  pages?: number
-  comment?: string
-  language?: string
-  genre?: string
-  user_id?: string
-}
 
 bookRouter.get('/', userExtractor, async (req: Request, res: Response) => {
-  if (req.user) {
-    try {
-      const result = await prisma.book.findMany({
-        where: {
-          user_id: req.user.id
-        },
-        orderBy: {
-          createdAt: 'desc'
-        }
-      })
-      return res.json(result)
-    } catch (error) {
-      console.error('GET /api/books error:', error)
-      return res.status(500).json({ error: 'database error' })
+    if (!req.user) {
+        return res.status(401).json({error: 'user not found'})
     }
-  }
 
-  return res.status(401).json({ error: 'user not found' })
+    try {
+        const savedBooks = await prisma.book.findMany({
+            where: {
+                user_id: req.user.id
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
+
+        return res.json(savedBooks.map(savedBook =>
+            toSafeBook(parseBook(savedBook)!)
+        ))
+    } catch (error) {
+        console.error('GET /api/books error:', error)
+        return res.status(500).json({error: 'database error'})
+    }
 })
 
 bookRouter.get('/previousSuggestions', userExtractor, async (req: Request, res: Response) => {
-  if (req.user) {
-    try {
-      const books = await prisma.book.findMany({
-        where: {
-          BookProposed: {
-            some: {
-              user_id: req.user.id
-            }
-          }
-        }
-      })
-      return res.json(books)
-    } catch (error) {
-      console.error('GET /api/books error:', error)
-      return res.status(500).json({ error: 'database error' })
+    if (!req.user) {
+        return res.status(401).json({error: 'user not found'})
     }
-  }
 
-  return res.status(401).json({ error: 'user not found' })
+    try {
+        const savedBooks = await prisma.book.findMany({
+            where: {
+                BookProposed: {
+                    some: {
+                        user_id: req.user.id
+                    }
+                }
+            }
+        })
+
+        return res.json(savedBooks.map(savedBook =>
+            toSafeBook(parseBook(savedBook)!)
+        ))
+    } catch (error) {
+        console.error('GET /api/books error:', error)
+        return res.status(500).json({error: 'database error'})
+    }
 })
 
 bookRouter.post('/', userExtractor, async (req: Request, res: Response) => {
-  const newBook: Book = req.body as Book
-  if (req.user) {
+    if (!req.user) {
+        return res.status(401).json({error: 'user not found'})
+    }
+
+    const newBook = parseCreateBook(req.body)
+    if (!newBook) {
+        return res.status(400).json({error: "invalid request body"})
+    }
+
     try {
-      const created = await prisma.book.create({
-        data: {
-          isbn: newBook.isbn,
-          name: newBook.name,
-          author: newBook.author,
-          year: newBook.year,
-          pages: newBook.pages,
-          comment: newBook.comment,
-          language: newBook.language,
-          genre: newBook.genre,
-          user_id: req.user.id
-        }
-      })
-      return res.json(created)
+        const book = await createBook(newBook, req.user.id)
+        const safeBook = toSafeBook(book)
+
+        return res.json(safeBook)
     } catch (error) {
-      console.error('POST /api/books error:', error)
-      return res.status(500).json({ error: 'database error' })
+        console.error('POST /api/books error:', error)
+        return res.status(500).json({error: 'service error'})
     }
   }
 

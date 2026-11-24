@@ -9,7 +9,8 @@ import {
 } from '@/components/ui/command'
 import { useTranslation } from 'react-i18next'
 
-import bookService, { type Book } from '@/services/books'
+import bookService from '@/services/books'
+import {type Book, type BookFields} from "@/types.ts"
 import proposeService from '@/services/propose'
 import { useEffect, useRef, useState } from 'react'
 import { getErrorMessage } from '@/lib/errorMessage'
@@ -60,7 +61,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				selectedDisplay === 'savedBooks'
 					? await bookService.getAll()
 					: await bookService.getPreviousSuggestions()
-			setBooks(loadedBooks)
+			setBooks(loadedBooks as BookFields[])
 			console.log(`Loading book ${selectedDisplay}`)
 		} catch {
 			setErrorMessage(t('error.api.loadBooks', { ns: 'messages' }))

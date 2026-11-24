@@ -401,4 +401,47 @@ eventRouter.put('/polls/:pollId/resolve', userExtractor, async (
     }
 })
 
+eventRouter.delete('/:eventId', userExtractor, async (req: Request<{ eventId: string }>, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'user not found' })
+    }
+
+    const { eventId } = req.params
+    
+    try {
+        const event = await prisma.event.findUnique({
+            where: {
+                id: eventId
+            }
+        })
+
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' })
+        }
+
+        const member = await prisma.bookClubMembers.findFirst({
+            where: {
+                bookclub_id: event.bookclub_id,
+                user_id: req.user.id
+            }
+        })
+        
+        if (!member || member.user_role !== 0) {
+            return res.status(403).json({ error: 'Only club admins can delete events' })
+        }
+
+        await prisma.event.delete({
+            where: {
+                id: eventId
+            }
+        })
+        
+        return res.status(200).json({ message: 'Event deleted successfully' })
+
+    } catch (error) {
+        console.error('Error deleting event:', error)
+        return res.status(500).json({ error: 'database error' })
+    }
+})
+
 export default eventRouter

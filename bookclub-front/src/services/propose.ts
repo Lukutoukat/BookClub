@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getAuthConfig } from '@/services/auth'
-import { type Book } from '@/services/books'
+import {type Book} from "@/types.ts"
 
 const baseUrl = '/api/propose'
 

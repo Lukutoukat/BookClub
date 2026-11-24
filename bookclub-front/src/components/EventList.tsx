@@ -7,6 +7,8 @@ import CreateEvent from '@/components/CreateEvent'
 import { useNotification } from '@/context/NotificationContext'
 import { getErrorMessage } from '@/lib/errorMessage'
 import { useTranslation } from 'react-i18next'
+import { Trash2 } from 'lucide-react'
+import { ButtonDialog } from '@/components/ButtonDialog'
 
 interface EventListProps {
     bookclubId: string
@@ -50,6 +52,17 @@ const EventList = ({ bookclubId, isAdmin, onVoteSaved }: EventListProps) => {
             return <p>{t('club.events.list.pollEndedAt')} {new Date(endsAt).toLocaleString(i18n.language)}</p>
         } else {
             return <p>{t('club.events.list.pollEndsAt')} {new Date(endsAt).toLocaleString(i18n.language)}</p>
+        }
+    }
+
+    const handleDelete = async (eventId: string) => {
+        try {
+            await eventService.remove(eventId)
+            await fetchEvents()
+            onVoteSaved?.()
+            showSuccess(t('club.events.delete.success'))
+        } catch (error) {
+            showError(getErrorMessage(error))
         }
     }
 
@@ -145,8 +158,24 @@ const EventList = ({ bookclubId, isAdmin, onVoteSaved }: EventListProps) => {
             ) : (
                 events.map((event) => (
                     <Card key={event.id}>
-                        <CardContent>
+                        <CardContent className="relative pr-16">
                             <h3 className="font-semibold">{event.title}</h3>
+
+                            {isAdmin && (
+                                <ButtonDialog
+                                    buttonText=""
+                                    buttonTitle={t('actions.delete', { ns: 'common' })}
+                                    buttonVariant="ghost"
+                                    buttonClassName="absolute top-4 right-4 text-destructive hover:text-destructive/80"
+                                    alertDialogText={t('club.events.delete.confirm', { name: event.title })}
+                                    alertDialogDescription={t('club.events.delete.warning')}
+                                    alertDialogContinueText={t('actions.delete', { ns: 'common' })}
+                                    buttonOnClick={() => void handleDelete(event.id)}
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </ButtonDialog>
+                            )}
+
                             {event.description && (<p>{event.description}</p>)}
                             {event.poll && (
                                 <div className="space-y-2">
