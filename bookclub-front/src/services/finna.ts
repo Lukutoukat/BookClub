@@ -88,6 +88,7 @@ const searchHelmetBooks = (query: string, languages: string[], page: number) => 
     params.append("lookfor", query)
     params.append("filter[]", 'format:"0/Book/"')
     params.append("filter[]", 'building:"0/Helmet/"')
+    params.append("filter[]", '-format:"1/Book/AudioBook/"')
     languages.forEach((language) => {
         params.append("filter[]", `~language:"${language}"`)
     })

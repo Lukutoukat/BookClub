@@ -2,10 +2,20 @@ import {type BookProvider, BookProviderError, type FetchedProviderBook} from "@/
 import axios from "axios";
 
 const finnaSearchUrl = 'https://api.finna.fi/v1/search'
-
+const finnaCoverUrl = 'https://api.finna.fi/Cover/Show?recordid='
 
 export interface FinnaAuthors {
     primary?: Record<string, unknown>
+}
+
+/**
+ * Resolve a cover URL for a finna book. Returns a cover URL
+ * only if the cover exists for the given ID.
+ */
+export async function resolveBookCoverUrl(finnaBookId: string): Promise<string | undefined> {
+    const coverUrl = finnaCoverUrl + encodeURIComponent(finnaBookId);
+    const hasCover = await hasRealCover(coverUrl)
+    return hasCover ? coverUrl : undefined
 }
 
 const hasRealCover = (url: string) =>
@@ -38,6 +48,7 @@ const searchHelmetBooks = async (query: string, languages: string[], page: numbe
     params.append("lookfor", query)
     params.append("sort", "relevance")
     params.append("filter[]", 'format:"0/Book/"')
+    params.append("filter[]", '-format:"1/Book/AudioBook/"')
     params.append("filter[]", 'building:"0/Helmet/"')
     languages.forEach((language) => {
         params.append("filter[]", `~language:"${language}"`)
@@ -86,7 +97,7 @@ export const FinnaProvider: BookProvider<FinnaBookRecord> = {
         try {
             const books = await searchHelmetBooks(opts.title ?? "", opts.languages ?? [], opts.page ?? 0, opts.limit ?? 10);
             const bookRecords = await Promise.all(books.map(async (book): Promise<FinnaBookRecord> => {
-                const coverUrl = 'https://api.finna.fi/Cover/Show?recordid=' + encodeURIComponent(book.id);
+                const coverUrl = finnaCoverUrl + encodeURIComponent(book.id);
                 return {
                     provider: 'finna',
                     id: book.id,
@@ -97,7 +108,10 @@ export const FinnaProvider: BookProvider<FinnaBookRecord> = {
                     language: book.languages?.[0],
                     title: book.title ?? "",
                     pages: extractPageCount(book),
-                    year: book.year
+                    year: book.year ? Number(book.year) : undefined,
+                    extraData: {
+                        helmetId: book.id
+                    }
                 };
             }))
 

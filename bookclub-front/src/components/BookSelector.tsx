@@ -9,7 +9,8 @@ import {
 } from '@/components/ui/command'
 import { useTranslation } from 'react-i18next'
 
-import bookService, { type Book } from '@/services/books'
+import bookService from '@/services/books'
+import {type Book, type BookFields} from "@/types.ts"
 import proposeService from '@/services/propose'
 import { useEffect, useRef, useState } from 'react'
 import { getErrorMessage } from '@/lib/errorMessage'
@@ -60,7 +61,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 				selectedDisplay === 'savedBooks'
 					? await bookService.getAll()
 					: await bookService.getPreviousSuggestions()
-			setBooks(loadedBooks)
+			setBooks(loadedBooks as BookFields[])
 			console.log(`Loading book ${selectedDisplay}`)
 		} catch {
 			setErrorMessage(t('error.api.loadBooks', { ns: 'messages' }))
@@ -82,22 +83,12 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 		const handleOutsideClick = (event: MouseEvent) => {
 			if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
 				setOpen(false)
-
-				// If clicked away, revert the input text to the currently selected book (if any)
-				if (selectedBookId) {
-					const book = books.find((b) => b.id === selectedBookId)
-					if (book && inputValue !== book.name) {
-						setInputValue(book.name)
-					}
-				} else {
-					setInputValue('')
-				}
 			}
 		}
 
 		document.addEventListener('mousedown', handleOutsideClick)
 		return () => document.removeEventListener('mousedown', handleOutsideClick)
-	}, [books, selectedBookId, inputValue])
+	}, [])
 
 	const handleSelect = (bookId: string) => {
 		const book = books.find((b) => b.id === bookId)
@@ -107,6 +98,10 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 			setShowConfirmation(true)
 		}
 		setOpen(false)
+	}
+
+	const cancelSelection = () => {
+		setSelectedBookId(null)
 	}
 
 	const submitSelectedBook = async () => {
@@ -151,7 +146,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel>{t('actions.cancel', { ns: 'common' })}</AlertDialogCancel>
+						<AlertDialogCancel onClick={cancelSelection}>{t('actions.cancel', { ns: 'common' })}</AlertDialogCancel>
 						<AlertDialogAction onClick={submitSelectedBook}>{t('actions.continue', { ns: 'common' })}</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -169,6 +164,7 @@ const BookSelector = ({ onBookAdded, bookclubId }: bookSelectorProps) => {
 						value={inputValue}
 						onValueChange={(search: string) => {
 							setInputValue(search)
+							setSelectedBookId(null)
 							if (!open) setOpen(true) // Open dropdown as user types
 						}}
 						onFocus={() => setOpen(true)}

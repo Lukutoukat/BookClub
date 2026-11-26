@@ -1,6 +1,6 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {Link, useNavigate, useParams, useSearchParams} from 'react-router-dom'
-import { usePageTitle } from '@/hooks/usePageTitle'
+import {usePageTitle} from '@/hooks/usePageTitle'
 import {BookclubComponent} from '@/components/BookclubComponent'
 import BookList, {type BookListHandle} from '@/components/BookList'
 import cycleService, {type CycleWithStatus} from '@/services/cycle'
@@ -18,6 +18,10 @@ import {useNotification} from "@/context/NotificationContext.tsx";
 import { useTranslation } from 'react-i18next'
 import { ButtonDialog } from '@/components/ButtonDialog'
 import { Button } from '@/components/ui/button'
+import { CycleTimeline } from '@/components/CycleTimeline'
+import EventList from '@/components/EventList'
+import eventService, { type Event } from '@/services/events'
+import EventItem from "@/components/events/EventItem.tsx";
 
 /**
  *  HOME TAB
@@ -31,22 +35,33 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 	const {showError} = useNotification()
 
 	const [currentCycle, setCurrentCycle] = useState<CycleWithStatus>()
+	const [nextEvent, setNextEvent] = useState<Event | null>(null)
 	const [loading, setLoading] = useState(true)
 	const bookListRef = useRef<BookListHandle>(null)
 
 	useEffect(() => {
-		const fetchCycle = async () => {
-			try {
-				const cycle = await cycleService.getLatestCycle(bookclubId)
-				setCurrentCycle(cycle)
-			} catch (error) {
-				showError(getErrorMessage(error))
-			} finally {
-				setLoading(false)
+		const fetchHomeData = async () => {
+			const [cycleResult, eventResult] = await Promise.allSettled([
+				cycleService.getLatestCycle(bookclubId),
+				eventService.getNextEvent(bookclubId)
+			])
+
+			if (cycleResult.status === 'fulfilled') {
+				setCurrentCycle(cycleResult.value)
+			} else {
+				showError(getErrorMessage(cycleResult.reason))
 			}
+
+			if (eventResult.status === 'fulfilled') {
+				setNextEvent(eventResult.value)
+			} else {
+				showError(getErrorMessage(eventResult.reason))
+			}
+
+			setLoading(false)
 		}
 
-		void fetchCycle()
+		void fetchHomeData()
 	}, [bookclubId])
 
 	const handleBookAdded = async () => {
@@ -62,7 +77,23 @@ const HomeTab = ({bookclubId}: HomeTabProps) => {
 		)
 	}
 
-	return (<>
+	return (
+		<>
+			{/* CURRENT CYCLE PROGRESS */}
+			{currentCycle && (
+				<CycleTimeline cycle={currentCycle}/>
+			)}
+			
+			{/* NEXT EVENT */}
+			{nextEvent?.meetingDate && (
+                <Card size="sm" className="mb-4">
+                    <SectionHeader title={t('club.events.list.nextEvent')}/>
+                    <CardContent className="flex flex-col gap-5">
+                        <EventItem event={nextEvent} minimal={true} />
+                    </CardContent>
+                </Card>
+            )}
+
 			{/* PROPOSAL PHASE */}
 			{currentCycle?.phase === 'proposal' && (
 				<>
@@ -138,6 +169,23 @@ const HistoryTab = ( {bookclubId } : HistoryTabProps) => {
 	return (
 		<>
 			<CycleHistoryList bookclubId={bookclubId}/>
+		</>
+	)
+}
+
+/**
+ * EVENTS TAB
+ */
+interface EventsTabProps {
+	bookclubId: string
+	isAdmin: boolean
+	onVoteSaved?: () => void
+}
+
+const EventsTab = ( {bookclubId, isAdmin, onVoteSaved } : EventsTabProps) => {
+	return (
+		<>
+			<EventList bookclubId={bookclubId} isAdmin={isAdmin} onVoteSaved={onVoteSaved}/>
 		</>
 	)
 }
@@ -246,8 +294,18 @@ const BookclubPage = () => {
 	const [searchParams] = useSearchParams()
 	const [bookclubName, setBookclubName] = useState<string>('')
 	const [isAdmin, setIsAdmin] = useState(false)
+	const [hasUnansweredPoll, setHasUnansweredPoll] = useState(false)
 	const { showError } = useNotification()
 	const navigate = useNavigate()
+	const refreshUnansweredPoll = useCallback(async () => {
+		if (!bookclubId) return
+		try {
+			const result = await eventService.hasUnansweredPoll(bookclubId)
+			setHasUnansweredPoll(result)
+		} catch (error) {
+			showError(getErrorMessage(error))
+		}
+	}, [bookclubId, showError])
 
 	useEffect(() => {
 		const fetchClubName = async () => {
@@ -281,12 +339,14 @@ const BookclubPage = () => {
 
 		if (bookclubId) {
 			void checkAdminStatus()
+			void refreshUnansweredPoll()
 		}
-	}, [bookclubId])
+	}, [bookclubId, refreshUnansweredPoll, showError])
 
 	const activeTab = searchParams.get('tab') ?? 'home'
 	const tabTitles: Record<string, string> = {
 		'home': t('labels.home', { ns: 'common' }),
+		'events': t('labels.events', { ns: 'common' }),
 		'members': t('labels.members', { ns: 'common' }),
 		'history': t('labels.history', { ns: 'common' }),
 		'settings': t('labels.settings', { ns: 'common' })
@@ -309,6 +369,13 @@ const BookclubPage = () => {
 				content: <HomeTab bookclubId={bookclubId}/>
 			},
 			{
+				id: 'events',
+				label: t('club.tabs.events'),
+				showNotification: hasUnansweredPoll,
+				content: <EventsTab bookclubId={bookclubId} isAdmin={isAdmin} onVoteSaved={refreshUnansweredPoll}
+				/>
+			},
+			{
 				id: 'members',
 				label: t('club.tabs.members'),
 				content: <MembersTab bookclubId={bookclubId}/>
@@ -323,7 +390,7 @@ const BookclubPage = () => {
 				label: t('club.tabs.settings'),
 				content: <SettingsTab bookclubId={bookclubId} isAdmin={isAdmin}/>
 			}
-		], [bookclubId, isAdmin, t])
+		], [bookclubId, isAdmin, hasUnansweredPoll, refreshUnansweredPoll, t])
 
 	return (
 		<>

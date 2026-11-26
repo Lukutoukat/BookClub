@@ -165,9 +165,49 @@
         },
         "tabs": {
             "home": "Hem",
+            "events": "Evenemang",
             "members": "Medlemmar",
             "history": "Historik",
             "settings": "Inställningar"
+        },
+        "events": {
+            "create": {
+                "title": "Skapa evenemang",
+                "name": "Evenemangsnamn",
+                "namePlaceholder": "T.ex. Novemberläsning",
+                "description": "Evenemangbeskrivning",
+                "descriptionPlaceholder": "Evenemangbeskrivning...",
+                "meetingDate": "Mötesdatum",
+                "createPoll": "Skapa datumomröstning",
+                "option": "Alternativ {{number}}",
+                "pollEndsAt": "Omröstningen slutar vid",
+                "selectDate": "Välj datum",
+                "addOption": "Lägg till alternativ",
+                "removeOption": "Ta bort alternativ",
+                "success": "Evenemang skapat framgångsrikt!",
+                "invalidPollDates": "Alla alternativ måste vara efter omröstningens slutdatum.",
+                "pollEndInPast": "Omröstningens slutdatum måste vara i framtiden.",
+                "dialogDescription": "Skapa ett nytt evenemang för bokklubben."
+            },
+            "list": {
+                "title": "Evenemang",
+                "empty": "Inga evenemang ännu.",
+                "meetingDatePending": "Mötesdatum: Pågående",
+                "pollEndedAt": "Omröstningen avslutades ",
+                "pollEndsAt": "Slutar vid ",
+                "vote": "Rösta",
+                "votes": "{{votes}} röster",
+                "voteSuccess": "Din röst har sparats.",
+                "resolve": "Välja",
+                "resolveSuccess": "Mötesdatumet har bekräftats.",
+                "selectMeetingDate": "Välj mötesdatum",
+                "nextEvent": "Nästa evenemang"
+            },
+            "delete": {
+                "confirm": "Är du säker på att du vill ta bort evenemanget '{{name}}'?",
+                "warning": "Evenemanget och all relaterad information kommer att tas bort permanent. Denna åtgärd kan inte ångras.",
+                "success": "Evenemanget har tagits bort."
+            }
         },
         "settings": {
             "title": "Bokklubbsinställningar",
@@ -210,6 +250,27 @@
                 "winning": "Vinnande bok:",
                 "endCurrentPhase": "Avsluta nuvarande fas",
                 "warning": "Den nuvarande fasen avslutas och åtgärden kan inte ångras."
+            },
+            "info": {
+                "title": "Nuvarande cykel",
+                "phaseTitle": "Nuvarande fas",
+                "timeLeft": "Tid kvar",
+                "nextPhase": "Nästa fas: {{phase}}",
+                "proposal": {
+                    "title": "Föreslå böcker",
+                    "description": "Föreslå en bok som du skulle vilja läsa härnäst",
+                    "name": "Förslag"
+                },
+                "voting": {
+                    "title": "Rösta på böcker",
+                    "description": "Rösta på böcker som du skulle vilja läsa härnäst",
+                    "name": "Omröstning"
+                },
+                "over": {
+                    "title": "Omröstningens resultat",
+                    "description": "Kontrollera omröstningens resultat nedan",
+                    "name": "Resultat"
+                }
             },
             "calendar": {
                 "title": "Välj datum",

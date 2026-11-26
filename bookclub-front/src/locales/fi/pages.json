@@ -165,9 +165,49 @@
         },
         "tabs": {
             "home": "Etusivu",
+            "events": "Tapahtumat",
             "members": "Jäsenet",
             "history": "Historia",
             "settings": "Asetukset"
+        },
+        "events": {
+            "create": {
+                "title": "Luo tapahtuma",
+                "name": "Tapahtuman nimi",
+                "namePlaceholder": "Esim. Marraskuun lukupiiri",
+                "description": "Tapahtuman kuvaus",
+                "descriptionPlaceholder": "Tapahtuman kuvaus...",
+                "meetingDate": "Tapaamisen ajankohta",
+                "createPoll": "Luo päivämäärä-äänestys",
+                "option": "Vaihtoehto {{number}}",
+                "pollEndsAt": "Äänestys päättyy",
+                "selectDate": "Valitse ajankohta",
+                "addOption": "Lisää vaihtoehto",
+                "removeOption": "Poista vaihtoehto",
+                "success": "Tapahtuma luotu onnistuneesti!",
+                "invalidPollDates": "Äänestyksen päättymispäivämäärän on oltava ennen kaikkia vaihtoehtoisia päivämääriä.",
+                "pollEndInPast": "Äänestyksen päättymispäivämäärän on oltava tulevaisuudessa.",
+                "dialogDescription": "Luo uusi tapahtuma kirjakerhoon."
+            },
+            "list": {
+                "title": "Tapahtumat",
+                "empty": "Ei vielä tapahtumia.",
+                "meetingDatePending": "Tapaamisen ajankohtaa ei ole vielä päätetty",
+                "pollEndedAt": "Äänestys päättyi ",
+                "pollEndsAt": "Päättyy ",
+                "vote": "Äänestys",
+                "votes": "{{votes}} ääntä",
+                "voteSuccess": "Äänesi on tallennettu.",
+                "resolve": "Valitse",
+                "resolveSuccess": "Tapaamisen ajankohta on vahvistettu.",
+                "selectMeetingDate": "Valitse tapaamisen ajankohta",
+                "nextEvent": "Seuraava tapahtuma"
+            },
+            "delete": {
+                "confirm": "Haluatko varmasti poistaa tapahtuman '{{name}}'?",
+                "warning": "Tapahtuma ja siihen liittyvät tiedot poistetaan pysyvästi. Tätä toimintoa ei voi peruuttaa.",
+                "success": "Tapahtuma poistettu onnistuneesti!"
+            }
         },
         "settings": {
             "title": "Kirjakerhon asetukset",
@@ -210,6 +250,27 @@
                 "winning": "Voittaja:",
                 "endCurrentPhase": "Päätä nykyinen vaihe",
                 "warning": "Nykyinen vaihe päätetään, eikä tätä toimintoa voi peruuttaa."
+            },
+            "info": {
+                "title": "Nykyinen sykli",
+                "phaseTitle": "Nykyinen vaihe",
+                "timeLeft": "Aikaa jäljellä",
+                "nextPhase": "Seuraava vaihe: {{phase}}",
+                "proposal": {
+                    "title": "Ehdota kirjoja",
+                    "description": "Ehdota kirjaa jonka haluaisit lukea seuraavaksi",
+                    "name": "Ehdotukset"
+                },
+                "voting": {
+                    "title": "Äänestä kirjoja",
+                    "description": "Äänestä kirjoja joita haluaisit lukea seuraavaksi",
+                    "name": "Äänestys"
+                },
+                "over": {
+                    "title": "Äänestyksen tulokset",
+                    "description": "Tarkista äänestyksen tulokset alhaalta",
+                    "name": "Tulokset"
+                }
             },
             "calendar": {
                 "title": "Valitse päivämäärät",

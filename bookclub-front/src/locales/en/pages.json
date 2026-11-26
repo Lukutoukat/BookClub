@@ -165,9 +165,49 @@
         },
         "tabs": {
             "home": "Home",
+            "events": "Events",
             "members": "Members",
             "history": "History",
             "settings": "Settings"
+        },
+        "events": {
+            "create": {
+                "title": "Create Event",
+                "name": "Event Name",
+                "namePlaceholder": "E.g. November Reading Circle",
+                "description": "Event Description",
+                "descriptionPlaceholder": "Event Description...",
+                "meetingDate": "Meeting Date",
+                "createPoll": "Create Date Poll",
+                "option": "Option {{number}}",
+                "pollEndsAt": "Poll Ends At",
+                "selectDate": "Select Date",
+                "addOption": "Add Option",
+                "removeOption": "Remove Option",
+                "success": "Event created successfully!",
+                "invalidPollDates": "Poll options must be after the poll end date.",
+                "pollEndInPast": "Poll end date must be in the future.",
+                "dialogDescription": "Create a new event for the book club."
+            },
+            "list": {
+                "title": "Events",
+                "empty": "No events yet.",
+                "meetingDatePending": "Meeting Date: Pending",
+                "pollEndedAt": "Poll Ended At ",
+                "pollEndsAt": "Ends At ",
+                "vote": "Vote",
+                "votes": "{{votes}} votes",
+                "voteSuccess": "Your vote has been saved.",
+                "resolve": "Select",
+                "resolveSuccess": "The meeting date has been confirmed.",
+                "selectMeetingDate": "Select Meeting Date",
+                "nextEvent": "Next Event"
+            },
+            "delete": {
+                "confirm": "Are you sure you want to delete the event '{{name}}'?",
+                "warning": "The event and all related information will be permanently deleted. This action cannot be undone.",
+                "success": "Event deleted successfully!"
+            }
         },
         "settings": {
             "title": "Book Club Settings",
@@ -210,6 +250,27 @@
                 "winning": "Winning Book:",
                 "endCurrentPhase": "End current phase",
                 "warning": "The current phase will be ended and this action cannot be undone."
+            },
+            "info": {
+                "title": "Current Cycle",
+                "phaseTitle": "Current Phase",
+                "timeLeft": "Time Left",
+                "nextPhase": "Next phase: {{phase}}",
+                "proposal": {
+                    "title": "Suggest Books",
+                    "description": "Suggest which book should be read next",
+                    "name": "Suggestions"
+                },
+                "voting": {
+                    "title": "Vote Books",
+                    "description": "Vote which books you'd like to read",
+                    "name": "Voting"
+                },
+                "over": {
+                    "title": "Voting Results",
+                    "description": "Check the results of the vote below",
+                    "name": "Results"
+                }
             },
             "calendar": {
                 "title": "Select Dates",

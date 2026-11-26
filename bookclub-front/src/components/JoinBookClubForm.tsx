@@ -10,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
 
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 const emptyJoinRequest: AddBookClubMember = {
 	user_role: 1,
@@ -24,6 +25,7 @@ const JoinBookClubForm = ({ listMutated }: Props) => {
 	const { t } = useTranslation('pages')
 	const [inviteCode, setInviteCode] = useState<AddBookClubMember>(emptyJoinRequest)
 	const [message, setMessage] = useState<string | null>(null)
+	const navigate = useNavigate()
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = event.target
@@ -45,12 +47,13 @@ const JoinBookClubForm = ({ listMutated }: Props) => {
 		}
 
 		try {
-			await bookclubmembersService.create({
+			const club = await bookclubmembersService.create({
 				user_role: 1,
 				invite_code: trimmedCode.toUpperCase()
 			})
 			setInviteCode({ ...emptyJoinRequest })
 			listMutated()
+			void navigate(`/club/${club.bookclub_id}`)
 		} catch (err: unknown) {
 			if (err instanceof AxiosError && err.response?.data) {
 				const errorData = err.response.data as Record<string, unknown>

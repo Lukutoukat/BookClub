@@ -25,11 +25,11 @@ export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: 
             .catch(error => showError('Failed to load club members: ' + getErrorMessage(error)))
     }, [bookclubId])
 
-    const handleMemberPromotion = async (user_id: string) => {
+    const handleMemberPromotion = async (membership_id: string) => {
         try {
-            await memberService.changeRole(bookclubId, user_id, 0)
+            await memberService.changeRole(bookclubId, membership_id, 0)
             setMembers(prev => 
-                prev.map(member => (member.user_id === user_id ? { ...member, user_role: 0 } : member))
+                prev.map(member => (member.id === membership_id ? { ...member, user_role: 0 } : member))
             )
             showSuccess(t('success.promotedMember', { ns: 'messages' }))
         } catch {
@@ -37,10 +37,10 @@ export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: 
         }
     }
 
-    const handleMemberDeletion = async (user_id: string) => {
+    const handleMemberDeletion = async (membership_id: string) => {
         try {
-            await memberService.remove(bookclubId, user_id)
-            setMembers(members.filter(member => member.user_id !== user_id))
+            await memberService.remove(bookclubId, membership_id)
+            setMembers(members.filter(member => member.id !== membership_id))
             showSuccess(t('success.memberRemoved', { ns: 'messages' }))
         } catch (error) {
 			showError('Failed to delete a member: ' + getErrorMessage(error))
@@ -66,7 +66,7 @@ export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: 
                         <div>
                             <ButtonDialog
                                 buttonText={t('actions.promote')}
-                                buttonOnClick={() => handleMemberPromotion(member.user_id)}
+                                buttonOnClick={() => handleMemberPromotion(member.id)}
                                 alertDialogText={t('club.settings.manageMembers.promoteQuestion', { name: member.User?.name, ns: 'pages' })}
                                 alertDialogDescription={t('club.settings.manageMembers.promoteWarning', { ns: 'pages' })}
                                 alertDialogContinueText={t('actions.promote')}
@@ -75,7 +75,7 @@ export const BookclubMemberList = ({ bookclubId, canManageMembers, className }: 
                             />
                             <ButtonDialog
                                 buttonText={t('actions.remove')}
-                                buttonOnClick={() => handleMemberDeletion(member.user_id)}
+                                buttonOnClick={() => handleMemberDeletion(member.id)}
                                 alertDialogText={t('club.settings.manageMembers.deleteQuestion', { name: member.User?.name, ns: 'pages' })}
                                 alertDialogDescription={t('club.settings.manageMembers.deleteWarning', { ns: 'pages' })}
                                 alertDialogContinueText={t('actions.remove')}
