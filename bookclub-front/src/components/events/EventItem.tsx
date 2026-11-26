@@ -12,15 +12,15 @@ type OptionState = "voting" | "tie" | "won"
 const localeCapitalize = (text: string, locale: string) =>
     String(text).charAt(0).toLocaleUpperCase(locale) + String(text).slice(1)
 
-const formatDateTime = (date: string, year = false) =>
-    i18n.format(new Date(date), 'datetime', i18n.language, {
-        month: 'numeric',
-        day: 'numeric',
-        ...(year ? {year: 'numeric'} : {}),
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-    })
+/* Returns a date in format "dd.MM.YYYY, hh:mm" */
+const formatFinnishDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+
+    const time = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    const calendarDate = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`
+
+    return `${calendarDate}, ${time}`
+}
 
 const EventInfo = ({event}: {event: Event}) => {
     const { t } = useTranslation('pages')
@@ -99,7 +99,7 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
     const isSelected = (optionId: string) => selected.includes(optionId)
 
 
-    const voteEndDateTime = formatDateTime(poll.endsAt, true)
+    const voteEndDateTime = formatFinnishDate(poll.endsAt)
 
     const highestVotes = Math.max(...options.map(option => option.votes))
     const totalVotes = options.reduce((sum, option) => sum + option.votes, 0)
@@ -143,7 +143,7 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
                         const disabled = hasEnded && state === "voting"
                         const voteProgress = highestVotes > 0 ? Math.ceil((votes / highestVotes) * 100) : 0
 
-                        const optionDate = formatDateTime(date, false)
+                        const optionDate = formatFinnishDate(date)
 
                         return (
                             <FieldGroup key={optionId} className="gap-3 max-w-120">
