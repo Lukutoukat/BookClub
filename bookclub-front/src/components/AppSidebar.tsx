@@ -1,17 +1,17 @@
 import {
-	Sidebar,
-	SidebarContent,
-	SidebarGroup,
-	SidebarMenu,
-	SidebarMenuItem,
-	SidebarMenuButton,
-	SidebarProvider,
-	SidebarInset
+    Sidebar,
+    SidebarContent,
+    SidebarGroup,
+    SidebarInset,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarProvider, SidebarTrigger
 } from '@/components/ui/sidebar'
-import { Link, useLocation } from 'react-router-dom'
-import { type MenuItem } from './PageMenu'
-import type { ReactNode } from 'react'
-import { PageFooter } from './PageFooter'
+import {Link, useLocation} from 'react-router-dom'
+import {type MenuItem} from './PageMenu'
+import {type ReactNode} from 'react'
+import {PageFooter} from './PageFooter'
 
 interface AppSidebarProps {
 	menuItems: MenuItem[]
@@ -21,9 +21,9 @@ interface AppSidebarProps {
 export function AppSidebar({ menuItems, children }: AppSidebarProps) {
 	const location = useLocation()
 
-	return (
+    return (
 		<SidebarProvider>
-			<Sidebar>
+			<Sidebar variant="inset" collapsible="icon">
 				<SidebarContent>
 					<SidebarGroup>
 						<SidebarMenu>
@@ -45,7 +45,8 @@ export function AppSidebar({ menuItems, children }: AppSidebarProps) {
 				</SidebarContent>
 			</Sidebar>
 			<SidebarInset>
-				{children}
+                <SidebarTrigger className="mr-auto"/>
+                {children}
 				<PageFooter />
 			</SidebarInset>
 		</SidebarProvider>
