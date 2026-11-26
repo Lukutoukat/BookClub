@@ -50,10 +50,10 @@ const EventInfo = ({event}: {event: Event}) => {
                 <div className="text-muted-foreground text-xs sm:text-sm mb-1">
                     {formattedDate ?? t('club.events.list.meetingDatePending')}
                 </div>
-                <div title={event.title} className="font-semibold text-base line-clamp-2 leading-5">
+                <div title={event.title} className="font-semibold text-base line-clamp-2">
                     {event.title}
                 </div>
-                <div className="text-muted-foreground wrap-break-word whitespace-normal line-clamp-4 leading-4">
+                <div className="text-muted-foreground wrap-break-word whitespace-normal line-clamp-4 mt-2">
                     <p>{event.description}</p>
                 </div>
             </div>
@@ -126,15 +126,12 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
     }, [selected])
 
     return (
-        <div className="flex flex-col gap-2">
-            <div className="flex flex-col mt-2">
+        <div className="flex flex-col gap-5">
+            <div className="flex flex-col mt-2 gap-1">
                 <span className="font-bold leading-none">{t('club.events.list.vote')}</span>
-
                 {!hasEnded &&
                     <span className="text-muted-foreground">{t('club.events.list.selectMeetingDate')}</span>
                 }
-
-
             </div>
 
             <div className="flex flex-col gap-5">
@@ -149,7 +146,7 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
                         const optionDate = formatDateTime(date, false)
 
                         return (
-                            <FieldGroup key={optionId} className="gap-2">
+                            <FieldGroup key={optionId} className="gap-3">
 
                                 {/* Vote field */}
                                 <Field orientation="horizontal" data-disabled={disabled}>
