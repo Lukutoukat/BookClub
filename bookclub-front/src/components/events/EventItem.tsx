@@ -146,7 +146,7 @@ const EventVote = ({poll, canResolveTies = false, onResolveTie, onChangeVotes} :
                         const optionDate = formatDateTime(date, false)
 
                         return (
-                            <FieldGroup key={optionId} className="gap-3">
+                            <FieldGroup key={optionId} className="gap-3 max-w-120">
 
                                 {/* Vote field */}
                                 <Field orientation="horizontal" data-disabled={disabled}>
