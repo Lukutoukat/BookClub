@@ -1,72 +1,61 @@
 /// <reference types="jest" />
-
 import request from 'supertest'
 
 jest.mock('../db.ts')
+jest.mock('../services/userService.ts', () => ({
+    ...jest.requireActual('../services/userService.ts'),
+    isExistingUser: jest.fn(),
+    registerUser: jest.fn(),
+}))
 
 import { app } from '../index.ts'
-import { prisma } from '../db.ts'
+import * as userService from '../services/userService.ts'
 
-describe('User Registration', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
+const isExistingUser = userService.isExistingUser as jest.Mock
+const registerUser = userService.registerUser as jest.Mock
 
-    // Default mock: username is available
-    ;(prisma.user.findFirst as jest.Mock).mockResolvedValue(null)
+const validUser = {email: 'a@b.com', name: 'Alice', password: 'secret1'}
 
-    // Default mock: user creation succeeds - returns what was sent
-    ;(prisma.user.create as jest.Mock).mockImplementation(
-      ({ data }: { data: { email: string; name: string; password_hash: string } }) => {
-        return Promise.resolve({
-          id: 1,
-          email: data.email,
-          name: data.name
-        })
-      }
-    )
-  })
-
-  it('should successfully register a new user with valid credentials', async () => {
-    const newUser = {
-      email: 'antero@example.com',
-      name: 'antero',
-      password: 'SalaSana321'
-    }
-
-    const response = await request(app).post('/api/users').send(newUser)
-
-    // Verify the response
-    expect(response.status).toBe(200)
-    expect(response.body).toEqual({
-      id: 1,
-      email: 'antero@example.com',
-      name: 'antero'
+describe('POST /api/users', () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+        isExistingUser.mockResolvedValue(false)
+        registerUser.mockResolvedValue({id: 1})
     })
 
-    // Verify Prisma.user.findFirst was called to check if username exists
-    expect(prisma.user.findFirst).toHaveBeenCalledWith({
-      where: { name: 'antero' }
+    it('creates a user and returns only the id', async () => {
+        const res = await request(app).post('/api/users').send(validUser)
+
+        expect(res.status).toBe(200)
+        expect(res.body).toEqual({id: 1})
     })
 
-    // Verify Prisma.user.findFirst was called to check if email exists
-    expect(prisma.user.findFirst).toHaveBeenCalledWith({
-      where: { email: 'antero@example.com' }
+    it('calls the services with validated body', async () => {
+        await request(app).post('/api/users').send(validUser)
+
+        expect(isExistingUser).toHaveBeenCalledWith(validUser.email, validUser.name)
+        expect(registerUser).toHaveBeenCalledWith(validUser.email, validUser.name, validUser.password)
     })
 
-    // Verify Prisma.user.create was called with hashed password (not plaintext!)
-    expect(prisma.user.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: {
-          email: 'antero@example.com',
-          name: 'antero',
-          password_hash: expect.any(String) // bcrypt hash
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true
-        }
-      })
-    )
-  })
+    it('rejects a duplicate user', async () => {
+        isExistingUser.mockResolvedValue(true)
+
+        const res = await request(app).post('/api/users').send(validUser)
+
+        expect(res.status).toBe(400)
+        expect(res.body).toEqual({error: 'existing_user'})
+        expect(registerUser).not.toHaveBeenCalled()
+    })
+
+    it.each([
+        ['invalid email', {...validUser, email: 'nope'}],
+        ['short password', {...validUser, password: 'x'}],
+        ['missing name', {...validUser, name: undefined}],
+    ])('rejects %s before touching any service', async (_label, body) => {
+        const res = await request(app).post('/api/users').send(body)
+
+        expect(res.status).toBe(400)
+        expect(isExistingUser).not.toHaveBeenCalled()
+        expect(registerUser).not.toHaveBeenCalled()
+    })
 })

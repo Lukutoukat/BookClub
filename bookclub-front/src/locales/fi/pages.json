@@ -10,7 +10,7 @@
         "registerDescription": "Luo tili ja aloita lukumatka ystäviesi kanssa.",
         "registerButton": "Luo uusi tili",
         "registerHint": "Tarkista tiedot vielä kerran ennen tilin luomista.",
-        "passwordHint": "Salasanan on oltava vähintään 8 merkkiä pitkä, ja siinä on oltava isoja ja pieniä kirjaimia sekä numero.",
+        "passwordHint": "Salasanan on oltava vähintään 6 merkkiä pitkä.",
         "loginTitle": "Kirjaudu sisään",
         "loginDescription": "Kirjaudu sisään tilillesi jotta voit olla osa kirjakerhoja."
     },

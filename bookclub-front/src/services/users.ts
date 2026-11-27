@@ -2,17 +2,16 @@ import axios from 'axios'
 import { getAuthConfig } from './auth'
 const baseUrl = '/api/users'
 
-export interface User {
-	id: number
+export type CreateUser = {
 	email: string
 	name: string
 	password: string
 }
 
-export type CreateUser = Omit<User, 'id'>
+export type CreateUserResponse = { id: string }
 
 const create = async (newUser: CreateUser) => {
-	const response = await axios.post<User>(baseUrl, newUser)
+	const response = await axios.post<CreateUserResponse>(baseUrl, newUser)
 	return response.data
 }
 

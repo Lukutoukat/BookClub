@@ -16,6 +16,12 @@
     },
     "error": {
         "api": {
+            "registration": {
+                "failed": "Rekisteröinti epäonnistui.",
+                "invalid_email": "Virheellinen sähköpostiosoite",
+                "password_too_short": "Salasana on liian lyhyt (vähintään 6 merkkiä).",
+                "existing_user": "Käyttäjä tällä osoitteella tai nimellä on jo olemassa."
+            },
             "registrationFailed": "Rekisteröinti epäonnistui.",
             "saveBook": "Kirjan tallentaminen epäonnistui. Yritä uudelleen.",
             "loadBooks": "Kirjojen lataaminen epäonnistui.",

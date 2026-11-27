@@ -18,7 +18,7 @@ const emptyUser: CreateUser = {
 }
 
 const RegistrationForm = () => {
-	const { t } = useTranslation('pages')
+	const { t, i18n } = useTranslation('pages')
 	const [newUser, setNewUser] = useState<CreateUser>(emptyUser)
 	const [confirmPassword, setConfirmPassword] = useState('')
 	const [message, setMessage] = useState<string | null>(null)
@@ -39,7 +39,7 @@ const RegistrationForm = () => {
 	}
 
 	const isValidPassword = (password: string) => {
-		return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)
+		return password.length >= 6
 	}
 
 	const addUser = async (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -51,9 +51,7 @@ const RegistrationForm = () => {
 		}
 
 		if (!isValidPassword(newUser.password)) {
-			alert(
-				t('user.passwordHint')
-			)
+            setMessage(t('user.passwordHint'))
 			return
 		}
 
@@ -67,7 +65,12 @@ const RegistrationForm = () => {
 			if (err instanceof AxiosError && err.response?.data) {
 				const errorData = err.response.data as Record<string, unknown>
 				if (errorData.error && typeof errorData.error === 'string') {
-					setMessage(errorData.error)
+					const errorMessage = errorData.error
+					const translationKey = `error.api.registration.${errorMessage}`
+					const translatedMessage = i18n.exists(translationKey, {ns: 'messages'})
+						? t(translationKey, {ns: 'messages'})
+						: t(`error.api.registration.failed`, {ns: 'messages'})
+					setMessage(translatedMessage)
 				} else {
 					setMessage(t('error.api.registrationFailed', { ns: 'messages' }))
 				}
@@ -136,8 +139,6 @@ const RegistrationForm = () => {
 									autoComplete="new-password"
 									placeholder={t('placeholder.account.password', { ns: 'common' })}
 									required
-									minLength={8}
-									pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
 									title={t('user.passwordHint')}
 								/>
 							</FieldContent>
