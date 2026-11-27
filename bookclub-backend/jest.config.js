@@ -21,7 +21,7 @@ export default {
     '^(\\.{1,2}/.*)\\.js$': '$1'
   },
   roots: ['<rootDir>/__tests__'],
-  testMatch: ['**/__tests__/*.test.ts'],
+  testMatch: ['**/__tests__/**/*.test.ts'],
   moduleFileExtensions: ['ts', 'js'],
   collectCoverageFrom: [
     '**/*.ts',
