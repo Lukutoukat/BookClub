@@ -10,7 +10,7 @@
         "registerDescription": "Skapa ett konto och påbörja din läsresa tillsammans med vänner.",
         "registerButton": "Skapa ett nytt konto",
         "registerHint": "Kontrollera uppgifterna en extra gång innan du skapar kontot.",
-        "passwordHint": "Lösenordet måste vara minst 8 tecken långt och innehålla stora och små bokstäver samt en siffra.",
+        "passwordHint": "Lösenordet måste vara minst 6 tecken långt.",
         "loginTitle": "Inloggning",
         "loginDescription": "Logga in på ditt bokklubbskonto."
     },

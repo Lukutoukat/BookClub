@@ -16,6 +16,12 @@
     },
     "error": {
         "api": {
+            "registration": {
+                "failed": "Registration failed.",
+                "invalid_email": "Invalid email",
+                "password_too_short": "Password is too short (6 characters required).",
+                "existing_user": "A user with this email or name already exists."
+            },
             "registrationFailed": "Registration failed.",
             "saveBook": "Failed to save book. Please try again.",
             "loadBooks": "Failed to load books.",

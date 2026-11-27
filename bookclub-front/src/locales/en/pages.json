@@ -10,7 +10,7 @@
         "registerDescription": "Create an account and begin your reading journey with friends.",
         "registerButton": "Create a new account",
         "registerHint": "Double-check the details before creating the account.",
-        "passwordHint": "Password must be at least 8 characters long and include uppercase, lowercase and a number.",
+        "passwordHint": "Password must be at least 6 characters long.",
         "loginTitle": "Login",
         "loginDescription": "Log in to your book club account."
     },

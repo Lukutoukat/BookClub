@@ -16,6 +16,12 @@
     },
     "error": {
         "api": {
+            "registration": {
+                "failed": "Registreringen misslyckades.",
+                "invalid_email": "Ogiltig e-postadress",
+                "password_too_short": "Lösenordet är för kort (6 tecken krävs).",
+                "existing_user": "En användare med denna e-postadress eller detta namn finns redan."
+            },
             "registrationFailed": "Registreringen misslyckades.",
             "saveBook": "Det gick inte att spara boken. Försök igen.",
             "loadBooks": "Det gick inte att ladda böckerna.",
