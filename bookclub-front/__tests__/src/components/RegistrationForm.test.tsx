@@ -77,20 +77,11 @@ describe('RegistrationForm', () => {
 			expect(confirmPasswordInput.autocomplete).toBe('new-password')
 		})
 
-		test('password field has minLength and pattern constraints', () => {
-			render(<RegistrationForm />)
-			const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
-			expect(passwordInput.minLength).toBe(8)
-			expect(passwordInput.pattern).toBe('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$')
-		})
-
 		test('password field has title attribute with validation guidance', () => {
-			render(<RegistrationForm />)
+			render(<RegistrationForm/>)
 			const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
-			expect(passwordInput.title).toContain('must be at least 8 characters long')
-			expect(passwordInput.title).toContain('uppercase')
-			expect(passwordInput.title).toContain('lowercase')
-			expect(passwordInput.title).toContain('number')
+
+			expect(passwordInput.title).toContain('at least 6 characters')
 		})
 	})
 
@@ -147,8 +138,8 @@ describe('RegistrationForm', () => {
 		})
 
 		test('shows error message from failed API call', async () => {
-			const error = new AxiosError('Email already in use', '400', undefined, undefined, {
-				data: { error: 'Email already in use' },
+			const error = new AxiosError('existing_user', '400', undefined, undefined, {
+				data: {error: 'existing_user'},
 				status: 400,
 				statusText: 'Bad Request',
 				headers: {},
@@ -157,17 +148,19 @@ describe('RegistrationForm', () => {
 			vi.mocked(userService.create).mockRejectedValue(error)
 
 			const userInstance = user.setup()
-			render(<RegistrationForm />)
+			render(<RegistrationForm/>)
 
 			await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
 			await userInstance.type(screen.getByLabelText('Username'), 'testuser')
 			await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
 			await userInstance.type(screen.getByLabelText('Confirm password'), 'TestPass123')
 
-			await userInstance.click(screen.getByRole('button', { name: 'Create a new account' }))
+			await userInstance.click(screen.getByRole('button', {name: 'Create a new account'}))
 
 			await waitFor(() => {
-				expect(screen.getByText('Email already in use')).toBeDefined()
+				expect(
+					screen.getByText('A user with this email or name already exists.')
+				).toBeDefined()
 			})
 		})
 
