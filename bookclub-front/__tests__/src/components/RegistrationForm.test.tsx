@@ -164,6 +164,33 @@ describe('RegistrationForm', () => {
 			})
 		})
 
+		test('unexpected API error shows generic failed error message', async () => {
+			const error = new AxiosError('unknown_error', '400', undefined, undefined, {
+				data: {error: 'unknown_error'},
+				status: 400,
+				statusText: 'Bad Request',
+				headers: {},
+				config: {} as any
+			} as any)
+			vi.mocked(userService.create).mockRejectedValue(error)
+
+			const userInstance = user.setup()
+			render(<RegistrationForm/>)
+
+			await userInstance.type(screen.getByLabelText('Email address'), 'test@example.com')
+			await userInstance.type(screen.getByLabelText('Username'), 'testuser')
+			await userInstance.type(screen.getByLabelText('Password'), 'TestPass123')
+			await userInstance.type(screen.getByLabelText('Confirm password'), 'TestPass123')
+
+			await userInstance.click(screen.getByRole('button', {name: 'Create a new account'}))
+
+			await waitFor(() => {
+				expect(
+					screen.getByText('Registration failed.')
+				).toBeDefined()
+			})
+		})
+
 		test('clears form after successful registration', async () => {
 			vi.mocked(userService.create).mockResolvedValue({} as any)
 
