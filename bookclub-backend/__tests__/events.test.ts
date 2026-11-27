@@ -16,6 +16,7 @@ jest.mock('../db.ts', () => ({
       create: jest.fn(),
       findMany: jest.fn(),
       updateMany: jest.fn(),
+      update: jest.fn(),
       findUnique: jest.fn(),
       delete: jest.fn()
     },
@@ -23,7 +24,12 @@ jest.mock('../db.ts', () => ({
       findUnique: jest.fn()
     },
     eventPoll: {
-      findUnique: jest.fn()
+      findUnique: jest.fn(),
+      update: jest.fn()
+    },
+    pollOption: {
+        deleteMany: jest.fn(),
+        createMany: jest.fn()
     },
     pollVote: {
       deleteMany: jest.fn(),
@@ -78,7 +84,10 @@ describe('/api/events', () => {
         process.env.SECRET = 'testsecret'
         ;(prisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
             return callback({
-                pollVote: prisma.pollVote
+                pollVote: prisma.pollVote,
+                pollOption: prisma.pollOption,
+                eventPoll: prisma.eventPoll,
+                event: prisma.event
             })
         })
     })
@@ -1036,6 +1045,291 @@ describe('/api/events', () => {
             expect(response.status).toBe(403)
             expect(response.body.error).toBe('Only club admins can resolve polls')
             expect(prisma.event.updateMany).not.toHaveBeenCalled()
+        })
+    })
+
+    describe('PATCH', () => {
+        const existingEvent = {
+            id: 'event-1',
+            bookclub_id: '1',
+            title: "Lokakuun tapaaminen",
+            description: "Tämä on testitapahtuma",
+            meetingDate: new Date("2100-10-15T18:00:00Z"),
+            poll:null
+        }
+
+        it('allows an admin to edit an event', async () => {
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(existingEvent)
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            ;(prisma.event.update as jest.Mock).mockResolvedValue({
+                ...existingEvent,
+                title: "Uusi tapahtuman nimi",
+                description: "Tämä on uusi kuvaus"
+            })
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                title: "Uusi tapahtuman nimi",
+                description: "Tämä on uusi kuvaus"
+            })
+
+            expect(response.status).toBe(200)
+            expect(prisma.event.update).toHaveBeenCalledWith({
+                where: { id: 'event-1' },
+                data: {
+                    title: "Uusi tapahtuman nimi",
+                    description: "Tämä on uusi kuvaus"
+                }
+            })
+        })
+
+        it('returns 403 if user is not an admin', async () => {
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(existingEvent)
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 1
+            })
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                title: "Uusi tapahtuman nimi"
+            })
+
+            expect(response.status).toBe(403)
+            expect(response.body.error).toBe('Only club admins can edit events')
+        })
+
+        it('returns 404 if event does not exist', async () => {
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(null)
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                title: "Uusi tapahtuman nimi"
+            })
+
+            expect(response.status).toBe(404)
+            expect(response.body.error).toBe('Event not found')
+        })
+
+        it('returns 400 if title is empty', async () => {
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                title: "  "
+            })
+
+            expect(response.status).toBe(400)
+            expect(response.body.error).toBe('Invalid input data')
+        })
+
+        it('returns 400 if trying to change meeting date of a poll event', async () => {
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue({
+                ...existingEvent,
+                meetingDate: null,
+                poll: {
+                    id: 'poll-1',
+                    endsAt: new Date('2100-10-20T18:00:00Z')
+                }
+            })
+
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                meetingDate: "2100-10-25T18:00:00Z"
+            })
+
+            expect(response.status).toBe(400)
+            expect(response.body.error).toBe('Cannot set meetingDate for an event with a poll')
+            expect(prisma.event.update).not.toHaveBeenCalled()
+        })
+
+        it('allows an admin to update the meeting date', async () => {
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(existingEvent)
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            ;(prisma.event.update as jest.Mock).mockResolvedValue({
+                ...existingEvent,
+                meetingDate: new Date("2100-10-25T18:00:00Z")
+            })
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                meetingDate: "2100-10-25T18:00:00Z"
+            })
+
+            expect(response.status).toBe(200)
+            expect(prisma.event.update).toHaveBeenCalledWith({
+                where: { id: 'event-1' },
+                data: {
+                    meetingDate: new Date("2100-10-25T18:00:00Z")
+                }
+            })
+        })
+
+        it('allows an admin to clear the description', async () => {
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(existingEvent)
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            ;(prisma.event.update as jest.Mock).mockResolvedValue({
+                ...existingEvent,
+                description: null
+            })
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                description: null
+            })
+
+            expect(response.status).toBe(200)
+            expect(prisma.event.update).toHaveBeenCalledWith({
+                where: { id: 'event-1' },
+                data: {
+                    description: null
+                }
+            })
+        })
+
+        it('returns 500 if updating the event fails', async () => {
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(existingEvent)
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            ;(prisma.event.update as jest.Mock).mockRejectedValue(new Error('database error'))
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                title: "Uusi tapahtuman nimi"
+            })
+
+            expect(response.status).toBe(500)
+            expect(response.body.error).toBe('database error')
+        })
+
+        it('preserves unchanged poll options and their votes', async () => {
+            const pollEvent = {
+                ...existingEvent,
+                meetingDate: null,
+                poll: {
+                    id: 'poll-1',
+                    endsAt: new Date('2100-10-20T18:00:00Z'),
+                    options: [
+                        { id: 'option-1', date: new Date('2100-10-22T18:00:00Z') },
+                        { id: 'option-2', date: new Date('2100-10-23T18:00:00Z') }
+                    ]
+                }
+            }
+            
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(pollEvent)
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            ;(prisma.event.update as jest.Mock).mockResolvedValue(pollEvent)
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                poll: {
+                    endsAt: new Date('2100-10-21T18:00:00Z'),
+                    options: [
+                        { id: 'option-1', date: new Date('2100-10-22T18:00:00Z') },
+                        { id: 'option-2', date: new Date('2100-10-23T18:00:00Z') }
+                    ]
+                }
+            })
+
+            expect(response.status).toBe(200)
+            expect(prisma.pollOption.deleteMany).not.toHaveBeenCalled()
+            expect(prisma.pollOption.createMany).not.toHaveBeenCalled()
+            expect(prisma.eventPoll.update).toHaveBeenCalledWith({
+                where: { id: 'poll-1' },
+                data: {
+                    endsAt: new Date('2100-10-21T18:00:00Z')
+                }
+            })
+            expect(prisma.$transaction).toHaveBeenCalledTimes(1)
+        })
+
+        it('replaces a changed poll option while preserving unchanged options', async () => {
+            const pollEvent = {
+                ...existingEvent,
+                meetingDate: null,
+                poll: {
+                    id: 'poll-1',
+                    endsAt: new Date('2100-10-20T18:00:00Z'),
+                    options: [
+                        { id: 'option-1', date: new Date('2100-10-22T18:00:00Z') },
+                        { id: 'option-2', date: new Date('2100-10-23T18:00:00Z') }
+                    ]
+                }
+            }
+
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(pollEvent)
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            ;(prisma.event.update as jest.Mock).mockResolvedValue(pollEvent)
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                poll: {
+                    endsAt: new Date('2100-10-21T18:00:00Z'),
+                    options: [
+                        { id: 'option-1', date: new Date('2100-10-22T18:00:00Z') },
+                        { id: 'option-2', date: new Date('2100-10-24T18:00:00Z') }
+                    ]
+                }
+            })
+            expect(response.status).toBe(200)
+            expect(prisma.pollOption.deleteMany).toHaveBeenCalledWith({
+                where: {
+                    poll_id: 'poll-1',
+                    id: { in: ['option-2'] }
+                }
+            })
+            expect(prisma.pollOption.createMany).toHaveBeenCalledWith({
+                data: [
+                    { poll_id: 'poll-1', date: new Date('2100-10-24T18:00:00Z') }
+                ]
+            })
+            expect(prisma.$transaction).toHaveBeenCalledTimes(1)
+        })
+
+        it('adds a new poll option and removes an omitted option', async () => {
+            const pollEvent = {
+                ...existingEvent,
+                meetingDate: null,
+                poll: {
+                    id: 'poll-1',
+                    endsAt: new Date('2100-10-20T18:00:00Z'),
+                    options: [
+                        { id: 'option-1', date: new Date('2100-10-22T18:00:00Z') },
+                        { id: 'option-2', date: new Date('2100-10-23T18:00:00Z') }
+                    ]
+                }
+            }
+
+            ;(prisma.event.findUnique as jest.Mock).mockResolvedValue(pollEvent)
+            ;(prisma.bookClubMembers.findFirst as jest.Mock).mockResolvedValue({
+                user_role: 0
+            })
+            ;(prisma.event.update as jest.Mock).mockResolvedValue(pollEvent)
+
+            const response = await request(app).patch('/api/events/event-1').set(authHeaders()).send({
+                poll: {
+                    endsAt: new Date('2100-10-21T18:00:00Z'),
+                    options: [
+                        { id: 'option-1', date: new Date('2100-10-22T18:00:00Z') },
+                        { date: new Date('2100-10-24T18:00:00Z')}
+                    ]
+                }
+            })
+            expect(response.status).toBe(200)
+            expect(prisma.pollOption.deleteMany).toHaveBeenCalledWith({
+                where: {
+                    poll_id: 'poll-1',
+                    id: { in: ['option-2'] }
+                }
+            })
+            expect(prisma.pollOption.createMany).toHaveBeenCalledWith({
+                data: [
+                    { poll_id: 'poll-1', date: new Date('2100-10-24T18:00:00Z') }
+                ]
+            })
+            expect(prisma.$transaction).toHaveBeenCalledTimes(1)
         })
     })
 
